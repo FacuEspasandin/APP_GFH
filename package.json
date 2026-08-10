@@ -18,9 +18,11 @@
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
     "test:api": "pnpm --filter @gfh/backend test:api",
-    "test:todo": "pnpm -r test && pnpm --filter @gfh/backend test:api"
+    "test:todo": "pnpm -r test && pnpm --filter @gfh/backend test:api",
+    "capturas": "node scripts/capturas.js"
   },
   "devDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "puppeteer-core": "^25.5.0"
   }
 }

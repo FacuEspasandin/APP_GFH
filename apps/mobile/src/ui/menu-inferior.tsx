@@ -1,5 +1,6 @@
+import { BlurView } from 'expo-blur';
 import { useRouter, useSegments } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icono, type NombreIcono } from '@/ui/iconos';
@@ -91,15 +92,33 @@ export function MenuInferior() {
   return (
     <View
       style={{
-        backgroundColor: c.fondoHeader,
         paddingBottom: insets.bottom,
         shadowColor: '#122A23',
-        shadowOpacity: 0.14,
-        shadowOffset: { width: 0, height: -2 },
-        shadowRadius: 10,
-        elevation: 12,
+        shadowOpacity: 0.16,
+        shadowOffset: { width: 0, height: -3 },
+        shadowRadius: 14,
+        elevation: 14,
       }}
     >
+      {/* Vidrio esmerilado con el color de marca ENCIMA, no en lugar de él.
+          Un blur puro dejaría el texto blanco sobre lo que haya debajo y el
+          contraste cambiaría con cada pantalla: en una lista clara los rótulos
+          desaparecerían. Así el fondo sigue siendo primary —contraste
+          garantizado— y el blur sólo aporta la profundidad. */}
+      <BlurView
+        intensity={40}
+        tint={oscuro ? 'dark' : 'default'}
+        style={StyleSheet.absoluteFill}
+      />
+      <View
+        style={[StyleSheet.absoluteFill, { backgroundColor: c.fondoHeader, opacity: 0.94 }]}
+      />
+      {/* Filo superior claro: el borde de luz que separa la barra del contenido
+          sin necesidad de una línea dura. */}
+      <View
+        style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.14)' }}
+      />
+
       <View className="flex-row" style={{ height: 62, paddingTop: 6, paddingBottom: 8 }}>
         {DESTINOS.map((destino) => {
           const activo = destino.clave === activa;
@@ -114,8 +133,21 @@ export function MenuInferior() {
               accessibilityLabel={destino.titulo}
               className="flex-1 items-center justify-center"
             >
-              <Icono nombre={destino.icono} tamano={21} color={color} />
-              <Text className="font-sans" style={{ color, fontSize: 11, fontWeight: '600', marginTop: 2 }}>
+              {/* Pastilla detrás del ícono activo: marca la sección sin
+                  depender sólo del brillo del blanco, que a 11px se pierde. */}
+              <View
+                className="items-center justify-center rounded-full"
+                style={{
+                  width: 46,
+                  height: 26,
+                  backgroundColor: activo ? 'rgba(255,255,255,0.18)' : 'transparent',
+                }}
+              >
+                <Icono nombre={destino.icono} tamano={20} color={color} />
+              </View>
+              {/* `font-medio` y no `fontWeight`: con fuentes estáticas el peso
+                  es una familia distinta — ver tailwind.config.js. */}
+              <Text className="font-medio" style={{ color, fontSize: 11, marginTop: 1 }}>
                 {destino.titulo}
               </Text>
             </Pressable>

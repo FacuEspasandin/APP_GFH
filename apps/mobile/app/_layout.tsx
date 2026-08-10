@@ -13,6 +13,7 @@ import { registrarManejadorSuscripcionVencida } from '@/api/cliente';
 import { useFuentes } from '@/ui/fuentes';
 import { MenuInferior } from '@/ui/menu-inferior';
 import { activarPantallaCompletaWeb } from '@/ui/pantalla-completa-web';
+import { FondoHeader } from '@/ui/fondo-header';
 import { coloresChrome, ProveedorTema, useTema } from '@/ui/tema';
 
 export default function LayoutRaiz() {
@@ -69,9 +70,11 @@ function Navegacion() {
       <StatusBar style="light" />
       <Stack
         screenOptions={{
+          headerBackground: () => <FondoHeader />,
           headerStyle: { backgroundColor: c.fondoHeader },
           headerTintColor: c.textoHeader,
-          headerTitleStyle: { fontWeight: '700', fontSize: 15 },
+          // Familia y no peso: con fuentes estáticas la negrita es otra familia.
+          headerTitleStyle: { fontFamily: 'IBMPlexSans_700Bold', fontSize: 16 },
           headerBackTitle: 'Atrás',
           contentStyle: { backgroundColor: c.fondoPantalla },
         }}

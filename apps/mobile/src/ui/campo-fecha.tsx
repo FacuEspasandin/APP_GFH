@@ -171,7 +171,7 @@ function Calendario({
                   >
                     <Text
                       className="font-sans text-body"
-                      style={{ color: a === anio ? '#1F5E4A' : '#122A23', fontWeight: a === anio ? '700' : '400' }}
+                      style={{ color: a === anio ? '#1F5E4A' : '#122A23', fontFamily: a === anio ? 'IBMPlexSans_700Bold' : 'IBMPlexSans_400Regular' }}
                     >
                       {a}
                     </Text>
@@ -278,7 +278,7 @@ function GrillaDias({
                   className="font-sans text-body"
                   style={{
                     color: activa ? '#FFFFFF' : futura ? '#C3D0C9' : '#122A23',
-                    fontWeight: activa ? '700' : '400',
+                    fontFamily: activa ? 'IBMPlexSans_700Bold' : 'IBMPlexSans_400Regular',
                   }}
                 >
                   {d}

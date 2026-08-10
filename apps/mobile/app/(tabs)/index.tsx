@@ -7,6 +7,7 @@ import { api } from '@/api/cliente';
 import type { FilaPaciente, Inicio as DatosInicio } from '@/api/tipos';
 import { Icono } from '@/ui/iconos';
 import { FilaAnimada } from '@/ui/animacion';
+import { Superficie } from '@/ui/superficie';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
@@ -142,26 +143,36 @@ function Fila({ paciente }: { paciente: FilaPaciente }) {
   return (
     <Link href={`/paciente/${paciente.id}`} asChild>
       <Pressable
-        className="mb-2 flex-row items-stretch overflow-hidden rounded-card border border-line bg-surface"
         accessibilityRole="button"
         accessibilityLabel={`${paciente.nombre} ${paciente.apellido}, ${paciente.edadAnios} años`}
       >
-        <View style={{ width: 4, backgroundColor: color }} />
-        <View className="flex-1 px-3.5 py-3">
-          <Text className="text-fila font-medio text-ink">
-            {paciente.apellido}, {paciente.nombre}
-          </Text>
-          <Text className="font-sans mt-1 text-meta text-ink-suave">
-            {paciente.edadAnios} años · Clcr{' '}
-            <Text
-              className="font-mono-fuerte"
-              style={{ color, fontVariant: ['tabular-nums'] }}
-            >
-              {paciente.clcrMlMin ?? 'sin dato'}
-            </Text>
-            {paciente.clcrMlMin !== null ? ' mL/min' : ''}
-          </Text>
-        </View>
+        <Superficie elevacion="plana" className="mb-2.5 flex-row items-stretch">
+          <View style={{ width: 4, backgroundColor: color }} />
+          <View className="flex-1 flex-row items-center px-3.5 py-3.5">
+            <View className="flex-1">
+              <Text className="text-fila font-medio text-ink">
+                {paciente.apellido}, {paciente.nombre}
+              </Text>
+              <Text className="font-sans mt-1 text-meta text-ink-suave">
+                {paciente.edadAnios} años
+              </Text>
+            </View>
+            {/* El Clcr alineado a la derecha, en su propio bloque: en una lista
+                de pacientes es la columna que se recorre de arriba abajo, y
+                mezclado en la línea de la edad obligaba a buscarlo. */}
+            <View className="items-end">
+              <Text
+                className="font-mono-fuerte text-fila"
+                style={{ color, fontVariant: ['tabular-nums'] }}
+              >
+                {paciente.clcrMlMin ?? '—'}
+              </Text>
+              <Text className="font-sans text-eyebrow text-ink-suave">
+                {paciente.clcrMlMin !== null ? 'mL/min' : 'sin dato'}
+              </Text>
+            </View>
+          </View>
+        </Superficie>
       </Pressable>
     </Link>
   );

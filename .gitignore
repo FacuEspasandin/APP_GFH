@@ -32,3 +32,6 @@ Thumbs.db
 *.log
 .vscode/
 .idea/
+
+# Capturas de `pnpm capturas` — se regeneran, no se versionan
+.capturas/

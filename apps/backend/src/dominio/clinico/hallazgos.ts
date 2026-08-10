@@ -23,11 +23,33 @@ import {
   type TipoRangoAjuste,
 } from '@gfh/shared-types';
 
+/**
+ * `sulfametoxazol|warfarina` → `Sulfametoxazol + Warfarina`.
+ *
+ * La clave viene normalizada y ordenada del motor de interacciones; acá sólo se
+ * la vuelve legible. No se corrigen tildes: el catálogo ya las trae donde
+ * corresponde y adivinarlas produciría nombres inventados.
+ */
+function parDePrincipiosActivos(parClave: string): string | undefined {
+  const partes = parClave.split('|').filter(Boolean);
+  if (partes.length !== 2) return undefined;
+  return partes.map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(' + ');
+}
+
 export interface Hallazgo {
   clave: string;
   categoria: CategoriaHallazgo;
   rango: RangoGravedad;
   titulo: string;
+  /**
+   * Desambigua el título cuando dos hallazgos distintos lo comparten.
+   *
+   * Pasa con los productos combinados: Bactrim son sulfametoxazol +
+   * trimetoprim, y Warfarina interactúa con los dos. Son dos interacciones
+   * reales y distintas, pero tituladas por nombre comercial quedan idénticas —
+   * el médico ve un duplicado y desconfía de la app.
+   */
+  subtitulo?: string;
   detalle: string;
   /** Prescripciones que toca. Una interacción es UN hallazgo aunque involucre
    *  dos fármacos — por eso es un array y no un id suelto. */
@@ -46,6 +68,8 @@ export interface InteraccionParaHallazgo {
   prescripcionBId: string;
   nombreA: string;
   nombreB: string;
+  /** Par de principios activos, en minúscula y ordenado: `a|b`. */
+  parClave: string;
   severidad: SeveridadInteraccion;
   texto: string;
   estadoValidacion: EstadoValidacion;
@@ -143,6 +167,7 @@ export function unificarHallazgos(entrada: EntradaUnificacion): ResultadoUnifica
       categoria: 'INTERACCION',
       rango: RANGO_POR_SEVERIDAD_INTERACCION[i.severidad],
       titulo: `${i.nombreA} + ${i.nombreB}`,
+      subtitulo: parDePrincipiosActivos(i.parClave),
       detalle: i.texto,
       prescripcionIds: [i.prescripcionAId, i.prescripcionBId],
       estadoValidacion: i.estadoValidacion,

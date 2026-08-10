@@ -22,6 +22,7 @@ const interaccion = (over: Partial<InteraccionParaHallazgo> = {}): InteraccionPa
   prescripcionBId: 'p2',
   nombreA: 'Warfarina',
   nombreB: 'Ibuprofeno',
+  parClave: 'ibuprofeno|warfarina',
   severidad: 'ALTA',
   texto: 'riesgo de sangrado',
   estadoValidacion: 'PENDIENTE',

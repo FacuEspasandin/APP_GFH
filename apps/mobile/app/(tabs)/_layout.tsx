@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import type { ColorValue } from 'react-native';
 
 import { Icono, type NombreIcono } from '@/ui/iconos';
+import { FondoHeader } from '@/ui/fondo-header';
 import { coloresChrome, useTema } from '@/ui/tema';
 
 /**
@@ -25,9 +26,11 @@ export default function LayoutTabs() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: c.fondoHeader },
+        headerBackground: () => <FondoHeader />,
+          headerStyle: { backgroundColor: c.fondoHeader },
         headerTintColor: c.textoHeader,
-        headerTitleStyle: { fontWeight: '700', fontSize: 15 },
+        // Familia y no peso: con fuentes estáticas la negrita es otra familia.
+          headerTitleStyle: { fontFamily: 'IBMPlexSans_700Bold', fontSize: 16 },
         // La barra la dibuja `MenuInferior` en el layout raíz, para que siga
         // visible al entrar a un paciente o a una herramienta. Ésta se oculta
         // en vez de borrarse: el navegador de tabs sigue siendo el que maneja

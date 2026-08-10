@@ -5,6 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import type { CategoriaHallazgo, Cockpit, Hallazgo } from '@/api/tipos';
 import { Cargando, Estado, Pantalla } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
 import { ChipSeveridad, Espina } from '@/ui/severidad';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
@@ -166,44 +167,65 @@ function Tarjeta({
   const ofreceAlternativas =
     hallazgo.categoria === 'INTERACCION' || hallazgo.categoria === 'CONDICION';
 
+  // Los hallazgos graves y moderados se elevan; los informativos quedan planos.
+  // En una lista de catorce, la profundidad ordena la lectura antes de que el
+  // ojo llegue a leer los chips de severidad.
+  const pesa = hallazgo.rango <= 1;
+
   return (
-    <View className="mb-2 flex-row items-stretch overflow-hidden rounded-card border border-line bg-surface">
+    <Superficie elevacion={pesa ? 'media' : 'plana'} className="mb-2.5 flex-row items-stretch">
       <Espina rango={hallazgo.rango} />
-      <View className="flex-1 px-3.5 py-3">
+      <View className="flex-1 px-3.5 py-3.5">
         <View className="flex-row items-start justify-between gap-2">
-          <Text className="flex-1 text-body font-medio text-ink">{hallazgo.titulo}</Text>
+          <Text className="flex-1 text-fila font-medio text-ink">{hallazgo.titulo}</Text>
           <ChipSeveridad rango={hallazgo.rango} />
         </View>
 
+        {hallazgo.subtitulo ? (
+          <Text className="font-mono mt-1 text-meta text-ink-suave">{hallazgo.subtitulo}</Text>
+        ) : null}
+
         {hallazgo.detalle ? (
-          <Text className="font-sans mt-1.5 text-meta leading-5 text-ink-suave">{hallazgo.detalle}</Text>
+          <Text className="font-sans mt-2 text-meta leading-5 text-ink-suave">{hallazgo.detalle}</Text>
         ) : null}
 
         {hallazgo.estadoValidacion === 'PENDIENTE' || hallazgo.mostradoPeseARechazo ? (
-          <Text className="font-sans mt-1.5 text-eyebrow uppercase tracking-wider text-ink-suave">
-            {hallazgo.mostradoPeseARechazo ? 'Observado' : 'Borrador'}
-          </Text>
+          // Antes era una palabra gris suelta que parecía un error de maqueta.
+          // Como pastilla delineada se lee como lo que es: una marca de
+          // procedencia del contenido, no una alerta más.
+          <View className="mt-2.5 flex-row">
+            <View className="flex-row items-center rounded-chip border border-line px-2 py-0.5">
+              <View className="mr-1.5 h-1.5 w-1.5 rounded-full bg-ink-suave" />
+              <Text className="font-medio text-eyebrow uppercase tracking-wider text-ink-suave">
+                {hallazgo.mostradoPeseARechazo ? 'Observado' : 'Sin validar'}
+              </Text>
+            </View>
+          </View>
         ) : null}
 
         {/* Motor §8.1: una interacción ofrece alternativas para los DOS fármacos
             del par; una alerta señala uno solo. */}
         {ofreceAlternativas ? (
-          <View className="mt-2.5 gap-2">
+          <View className="mt-3 flex-row flex-wrap gap-2 border-t border-line pt-3">
             {hallazgo.prescripcionIds.map((pid) => (
+              // Secundarios y no sólidos: lo que importa de esta tarjeta es la
+              // severidad. Dos botones llenos de color de marca competían con
+              // ella y hacían que la alerta se leyera segunda.
               <Pressable
                 key={pid}
                 onPress={() => onAlternativas(pid)}
                 accessibilityRole="button"
-                className="self-start rounded-chip bg-primary px-3 py-2"
+                className="flex-row items-center rounded-chip border border-line bg-paper px-3 py-2"
               >
-                <Text className="text-meta font-fuerte text-white">
+                <Text className="text-meta font-medio text-accent">
                   Alternativas a {nombres.get(pid) ?? 'este fármaco'}
                 </Text>
+                <Text className="ml-1.5 text-meta font-medio text-accent">›</Text>
               </Pressable>
             ))}
           </View>
         ) : null}
       </View>
-    </View>
+    </Superficie>
   );
 }

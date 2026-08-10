@@ -113,6 +113,7 @@ export function evaluarCockpit(
     prescripcionBId: i.prescripcionBId,
     nombreA: nombrePorPrescripcion.get(i.prescripcionAId) ?? '',
     nombreB: nombrePorPrescripcion.get(i.prescripcionBId) ?? '',
+    parClave: i.parClave,
     severidad: i.severidad,
     texto: i.texto,
     estadoValidacion: 'PENDIENTE',

@@ -51,6 +51,8 @@ export interface Hallazgo {
   categoria: CategoriaHallazgo;
   rango: 0 | 1 | 2 | 3;
   titulo: string;
+  /** Desambigua el título cuando dos hallazgos lo comparten (productos combinados). */
+  subtitulo?: string;
   detalle: string;
   prescripcionIds: string[];
   estadoValidacion: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
