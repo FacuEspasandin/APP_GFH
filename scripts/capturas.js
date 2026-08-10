@@ -165,6 +165,7 @@ async function tocar(page, texto) {
     ['/buscador', '06-buscador'],
     ['/herramientas', '07-herramientas'],
     ['/perfil', '08-perfil'],
+    ['/paywall', '09-paywall'],
   ]) {
     await page.goto(`${METRO}${ruta}`, { waitUntil: 'networkidle2' });
     await capturar(page, nombre);

@@ -9,7 +9,10 @@ import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { registrarManejadorSuscripcionVencida } from '@/api/cliente';
+import {
+  registrarManejadorLimitePlan,
+  registrarManejadorSuscripcionVencida,
+} from '@/api/cliente';
 import { useFuentes } from '@/ui/fuentes';
 import { MenuInferior } from '@/ui/menu-inferior';
 import { activarPantallaCompletaWeb } from '@/ui/pantalla-completa-web';
@@ -62,6 +65,13 @@ function Navegacion() {
   useEffect(() => {
     registrarManejadorSuscripcionVencida(() => {
       router.replace('/suscripcion-vencida');
+    });
+
+    // `push` y no `replace`: el médico estaba haciendo algo y tiene que poder
+    // volver a eso cerrando el paywall. Perder la pantalla donde estaba lo
+    // castiga por haber tocado una función paga.
+    registrarManejadorLimitePlan(() => {
+      router.push('/paywall');
     });
   }, [router]);
 

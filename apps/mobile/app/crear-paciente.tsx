@@ -56,13 +56,9 @@ export default function CrearPaciente() {
       await qc.invalidateQueries({ queryKey: ['inicio'] });
       router.back();
     } catch (e) {
-      // El límite del plan gratis no es un error: es el momento de vender. Va
-      // al paywall, no a un mensaje rojo — y NO a la pantalla de bloqueo, que
-      // significa otra cosa ("perdiste el acceso" vs "esto se desbloquea").
-      if (e instanceof ErrorApi && e.codigo === 'LIMITE_PLAN_GRATIS') {
-        router.push('/paywall');
-        return;
-      }
+      // El paywall lo abre el cliente HTTP, para CUALQUIER acción que exceda
+      // el plan. Acá sólo hay que no pisarlo con un mensaje de error rojo.
+      if (e instanceof ErrorApi && e.esLimiteDelPlanGratis) return;
       setError(e instanceof Error ? e.message : 'No se pudo crear el paciente.');
     } finally {
       setEnviando(false);

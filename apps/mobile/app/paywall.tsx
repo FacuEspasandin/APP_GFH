@@ -17,23 +17,38 @@ export default function Paywall() {
 
   return (
     <Pantalla>
-      <Text className="text-grande font-fuerte text-ink">Acceso completo</Text>
+      <Text className="text-grande font-fuerte text-ink">Todos tus pacientes</Text>
       <Text className="font-sans mt-1.5 text-meta leading-5 text-ink-suave">
-        Verificación clínica sobre tus propios pacientes, herramientas sin paciente y el catálogo
-        completo.
+        El plan gratis sigue a un paciente. Con la suscripción cargás todos los que atendés y cada
+        uno se verifica solo.
       </Text>
+
+      {/* Qué se lleva, en concreto. Un paywall que sólo muestra precios obliga
+          al médico a recordar por qué llegó hasta acá. */}
+      <View className="mt-4 rounded-card border border-line bg-surface px-3.5 py-3">
+        {[
+          'Pacientes ilimitados, con su cockpit completo',
+          'Interacciones, ajuste renal y alertas, sobre todos',
+          'Grupos para separar consultorio, CTI o guardia',
+        ].map((linea) => (
+          <View key={linea} className="flex-row items-start py-1">
+            <Text className="mr-2 text-body font-fuerte text-primary">·</Text>
+            <Text className="font-sans flex-1 text-meta leading-5 text-ink">{linea}</Text>
+          </View>
+        ))}
+      </View>
 
       <View className="mt-5">
         <OpcionPlan
           titulo="Anual"
-          precio="USD 44,99"
-          detalle="USD 3,75 por mes · ahorrás 25%"
+          precio="USD 69,99"
+          detalle="USD 5,83 por mes · dos meses gratis"
           activo={plan === 'anual'}
           onPress={() => setPlan('anual')}
         />
         <OpcionPlan
           titulo="Mensual"
-          precio="USD 4,99"
+          precio="USD 6,99"
           detalle="Se renueva todos los meses"
           activo={plan === 'mensual'}
           onPress={() => setPlan('mensual')}

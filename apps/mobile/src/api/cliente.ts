@@ -44,6 +44,11 @@ export class ErrorApi extends Error {
   get esSuscripcionVencida(): boolean {
     return this.codigo === 'SUSCRIPCION_VENCIDA';
   }
+
+  /** El plan gratis no da para esto. No es un error: es el momento de vender. */
+  get esLimiteDelPlanGratis(): boolean {
+    return this.codigo === 'LIMITE_PLAN_GRATIS';
+  }
 }
 
 /**
@@ -56,6 +61,20 @@ export class ErrorApi extends Error {
 let alVencerSuscripcion: (() => void) | null = null;
 export function registrarManejadorSuscripcionVencida(fn: () => void): void {
   alVencerSuscripcion = fn;
+}
+
+/**
+ * Qué hacer cuando una acción excede el plan gratis.
+ *
+ * Va acá y no en cada pantalla: si dependiera de que cada una se acuerde de
+ * atrapar `LIMITE_PLAN_GRATIS`, la primera función paga que agreguemos sin
+ * cablearla le mostraría al médico un mensaje de error en vez del paywall. Con
+ * el manejador central, cualquier acción que el backend rechace por plan abre
+ * la misma pantalla, sin que haya que recordarlo.
+ */
+let alLlegarAlLimite: (() => void) | null = null;
+export function registrarManejadorLimitePlan(fn: () => void): void {
+  alLlegarAlLimite = fn;
 }
 
 interface RespuestaSobre<T> {
@@ -145,6 +164,12 @@ async function pedir<T>(
     // app, así que se maneja una vez y en un solo lugar.
     if (res.status === 403 && codigo === 'SUSCRIPCION_VENCIDA') {
       alVencerSuscripcion?.();
+    }
+
+    // Distinto del anterior: acá no se perdió el acceso, hay algo que se
+    // desbloquea pagando. Por eso el paywall y no la pantalla de bloqueo.
+    if (res.status === 403 && codigo === 'LIMITE_PLAN_GRATIS') {
+      alLlegarAlLimite?.();
     }
 
     throw new ErrorApi(
