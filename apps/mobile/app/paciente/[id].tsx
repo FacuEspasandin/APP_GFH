@@ -139,7 +139,12 @@ export default function CockpitPaciente() {
 
         {/* ---------- 2. Diagnóstico ---------- */}
         <Eyebrow>Diagnóstico</Eyebrow>
-        <View className="mb-5 flex-row flex-wrap gap-2">
+        {/* `justify-between` con ancho fijo, y NO `flex-1` con `flex-wrap`.
+            En web las dos formas se ven igual, pero en el teléfono Yoga no
+            calcula bien el alto de un contenedor que envuelve hijos con
+            `flex: 1`: la segunda fila se dibujaba encima de la sección de
+            abajo. Verificar sólo en el navegador no alcanzó para verlo. */}
+        <View className="mb-5 flex-row flex-wrap justify-between gap-y-2">
           {(Object.keys(NOMBRE_CATEGORIA) as CategoriaHallazgo[]).map((cat) => {
             const n = data.dashboard[cat];
             return (
@@ -152,7 +157,7 @@ export default function CockpitPaciente() {
                 // El ancho va en `contenedor`: lo aplica el Pressable, que es
                 // quien participa de la fila. En `className` se dimensionaría
                 // el View interno y las cuatro saldrían del ancho de su texto.
-                contenedor="min-w-[47%] flex-1"
+                contenedor="w-[48.5%]"
                 className="px-3.5 py-3.5"
                 style={n === 0 ? { opacity: 0.72 } : undefined}
                 onPress={() => router.push(`/paciente/${id}/hallazgos?categoria=${cat}` as never)}

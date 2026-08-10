@@ -1,6 +1,5 @@
 import '../global.css';
 
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -45,9 +44,7 @@ export default function LayoutRaiz() {
       <ProveedorTema>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <BottomSheetModalProvider>
-              <Navegacion />
-            </BottomSheetModalProvider>
+            <Navegacion />
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </ProveedorTema>

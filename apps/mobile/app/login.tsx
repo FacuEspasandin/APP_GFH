@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { z } from 'zod';
 
-import { iniciarSesion } from '@/api/cliente';
+import { api, iniciarSesion } from '@/api/cliente';
 import { Disclaimer } from '@/ui/disclaimer';
 import { useColores } from '@/ui/tema';
 
@@ -45,6 +45,18 @@ export default function Login() {
     try {
       await iniciarSesion(datos.identificador.trim(), datos.password);
       router.replace('/(tabs)');
+
+      // Sin suscripción, se ofrece el plan al entrar. Va con `push` sobre
+      // Inicio y no en lugar de él: el plan gratis es un plan, no una prueba
+      // vencida — el médico tiene que poder cerrarlo y seguir usando la app.
+      // Si falla la consulta no se muestra nada: no vale trabar el ingreso por
+      // un dato de facturación.
+      try {
+        const plan = await api.get<{ vigente: boolean }>('/perfil/plan');
+        if (!plan.vigente) router.push('/paywall');
+      } catch {
+        /* silencio a propósito */
+      }
     } catch (e) {
       setErrorServidor(e instanceof Error ? e.message : 'No se pudo iniciar sesión.');
     }
