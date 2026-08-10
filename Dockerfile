@@ -40,6 +40,10 @@ RUN pnpm install --frozen-lockfile --prod=false --filter @gfh/backend...
 
 COPY packages/ packages/
 COPY apps/backend/ apps/backend/
+# Dato de runtime, no documentación: el módulo de interacciones lo lee al
+# arrancar. La ruta debe quedar en /app/docs/data — es la que resuelve
+# `RUTA_REGLAS_POR_DEFECTO` subiendo cinco niveles desde el loader.
+COPY docs/data/reglas-interaccion.json docs/data/
 
 RUN pnpm --filter @gfh/backend prisma:generate
 

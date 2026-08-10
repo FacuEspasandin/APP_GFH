@@ -6,7 +6,13 @@ node_modules
 # lo declara como proyecto del workspace y sin él `--frozen-lockfile` falla.
 apps/mobile/**
 !apps/mobile/package.json
-docs
+# La documentación no va a la imagen, con una excepción: el catálogo de
+# interacciones NO es documentación aunque viva ahí. Se lee en cada arranque
+# —`CatalogoInteraccionesService.onModuleInit`— y sin él el backend levanta
+# todas las rutas y recién ahí se cae. Los demás JSON de docs/data sólo los usa
+# el seed, que no corre en la imagen.
+docs/**
+!docs/data/reglas-interaccion.json
 *.md
 !README.md
 .git
