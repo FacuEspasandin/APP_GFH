@@ -2,7 +2,10 @@ node_modules
 **/node_modules
 **/.expo
 **/dist
-apps/mobile
+# El código del mobile no va a la imagen, pero su package.json sí: el lockfile
+# lo declara como proyecto del workspace y sin él `--frozen-lockfile` falla.
+apps/mobile/**
+!apps/mobile/package.json
 docs
 *.md
 !README.md
