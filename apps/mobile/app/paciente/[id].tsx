@@ -146,7 +146,11 @@ export default function CockpitPaciente() {
               <SuperficieTocable
                 key={cat}
                 elevacion={n > 0 ? 'media' : 'plana'}
-                className="min-w-[47%] flex-1 px-3.5 py-3.5"
+                // El ancho va en `contenedor`: lo aplica el Pressable, que es
+                // quien participa de la fila. En `className` se dimensionaría
+                // el View interno y las cuatro saldrían del ancho de su texto.
+                contenedor="min-w-[47%] flex-1"
+                className="px-3.5 py-3.5"
                 style={n === 0 ? { opacity: 0.72 } : undefined}
                 onPress={() => router.push(`/paciente/${id}/hallazgos?categoria=${cat}` as never)}
                 accesibilidad={`${NOMBRE_CATEGORIA[cat]}, ${n} hallazgos`}

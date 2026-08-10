@@ -80,13 +80,25 @@ export function SuperficieTocable({
   onPress,
   elevacion = 'plana',
   className = '',
+  contenedor = '',
   style,
   accesibilidad,
 }: {
   children: ReactNode;
   onPress?: () => void;
   elevacion?: Elevacion;
+  /** Cómo se ordena el CONTENIDO de la tarjeta: padding, dirección, alineación. */
   className?: string;
+  /**
+   * Cómo se ubica la tarjeta DENTRO de su padre: `flex-1`, anchos mínimos,
+   * márgenes.
+   *
+   * Va separado porque quien participa del layout del padre es el `Pressable`
+   * de afuera, no la superficie de adentro. Mandar `flex-1` por `className` lo
+   * aplica al `View` interno y el `Pressable` queda en `flex: 0 0 auto`: la
+   * tarjeta se dimensiona por su texto y una grilla de cuatro sale despareja.
+   */
+  contenedor?: string;
   style?: ViewStyle;
   accesibilidad?: string;
 }) {
@@ -109,9 +121,11 @@ export function SuperficieTocable({
       onPressOut={() => setPresionada(false)}
       accessibilityRole={onPress ? 'button' : undefined}
       accessibilityLabel={accesibilidad}
+      className={contenedor}
     >
       {ANIMA ? (
         <MotiView
+          style={{ flex: 1 }}
           animate={{ scale: presionada ? 0.97 : 1, opacity: presionada ? 0.92 : 1 }}
           transition={{ type: 'timing', duration: 120 }}
         >
