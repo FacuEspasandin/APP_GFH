@@ -136,50 +136,52 @@ export function MenuInferior() {
 
   return (
     <>
-      {/* El contenedor reserva el alto de la barra MÁS lo que sobresale el
-          botón, para que ninguna pantalla quede tapada por él. */}
-      <View style={{ paddingBottom: insets.bottom, paddingTop: 22 }}>
-        <View className="mx-3" style={{ position: 'relative' }}>
+      {/* El contenedor reserva lo que sobresale el botón, para que ninguna
+          pantalla quede tapada por él. */}
+      <View style={{ paddingTop: 22 }}>
+        <View style={{ position: 'relative' }}>
+          {/* De borde a borde: el verde llega a los lados de la pantalla y baja
+              hasta el borde inferior, cubriendo el área segura del teléfono.
+              Flotando como pastilla dejaba una franja de papel abajo que no
+              pertenecía a ninguna de las dos superficies. */}
           <View
-            className="flex-row items-center rounded-card"
+            className="flex-row items-start"
             style={{
-              height: 64,
+              height: 64 + insets.bottom,
+              paddingBottom: insets.bottom,
               backgroundColor: c.fondoHeader,
               shadowColor: '#122A23',
               shadowOpacity: 0.18,
-              shadowOffset: { width: 0, height: 4 },
+              shadowOffset: { width: 0, height: -3 },
               shadowRadius: 14,
               elevation: 12,
             }}
           >
-            <View className="flex-1 flex-row" style={{ paddingRight: 30 }}>
+            <View className="flex-1 flex-row" style={{ height: 64, paddingRight: 34 }}>
               {IZQUIERDA.map(item)}
             </View>
-            <View className="flex-1 flex-row" style={{ paddingLeft: 30 }}>
+            <View className="flex-1 flex-row" style={{ height: 64, paddingLeft: 34 }}>
               {DERECHA.map(item)}
             </View>
           </View>
 
-          {/* Botón central. Sobresale por encima de la barra; el borde del
-              color del fondo lo recorta contra ella. */}
-          <Pressable
-            onPress={() => {
-              hapticaSeleccion();
-              setAbierta((v) => !v);
-            }}
-            accessibilityRole="button"
-            accessibilityLabel={abierta ? 'Cerrar herramientas' : 'Herramientas'}
-            accessibilityState={{ expanded: abierta }}
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              left: 0,
-              right: 0,
-              top: -26,
-              alignItems: 'center',
-            }}
+          {/* Botón central.
+              El área tocable mide EXACTAMENTE lo que el botón. Antes se
+              estiraba de borde a borde con el contenido centrado, así que
+              tocar la parte de arriba de "Grupos" o "Buscador" abría las
+              herramientas: el Pressable invisible tapaba media barra. */}
+          <View
+            pointerEvents="box-none"
+            style={{ position: 'absolute', left: 0, right: 0, top: -26, alignItems: 'center' }}
           >
-            <View
+            <Pressable
+              onPress={() => {
+                hapticaSeleccion();
+                setAbierta((v) => !v);
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={abierta ? 'Cerrar herramientas' : 'Herramientas'}
+              accessibilityState={{ expanded: abierta }}
               className="items-center justify-center rounded-full"
               style={{
                 width: 58,
@@ -199,8 +201,8 @@ export function MenuInferior() {
                 tamano={23}
                 color={oscuro ? '#FFFFFF' : c.fondoHeader}
               />
-            </View>
-          </Pressable>
+            </Pressable>
+          </View>
         </View>
       </View>
 

@@ -119,6 +119,16 @@ async function refrescar(): Promise<boolean> {
   return refrescoEnVuelo;
 }
 
+/**
+ * Cuánto se espera antes de darse por vencido.
+ *
+ * Generoso a propósito: el plan gratuito de Render apaga el servicio por
+ * inactividad y despertarlo lleva cerca de un minuto. Cortar antes convertiría
+ * un arranque lento en un error, y el médico reintentaría sobre un servidor que
+ * ya estaba por responder.
+ */
+const TIEMPO_MAXIMO_MS = 75_000;
+
 async function pedir<T>(
   ruta: string,
   opciones: RequestInit = {},
@@ -127,9 +137,17 @@ async function pedir<T>(
   const accessToken = await leer(CLAVE_ACCESS);
 
   let res: Response;
+  // Sin esto, una petición contra un servidor dormido queda esperando para
+  // siempre y la pantalla se queda en skeletons, sin error y sin forma de
+  // reintentar. Pasó con el plan gratuito de Render, que apaga el servicio por
+  // inactividad y tarda cerca de un minuto en despertar.
+  const corte = new AbortController();
+  const reloj = setTimeout(() => corte.abort(), TIEMPO_MAXIMO_MS);
+
   try {
     res = await fetch(`${BASE}${ruta}`, {
       ...opciones,
+      signal: corte.signal,
       headers: {
         // `content-type: application/json` SÓLO cuando hay cuerpo. Fastify
         // rechaza con 400 un request que declara JSON y viene vacío
@@ -141,11 +159,20 @@ async function pedir<T>(
         ...(opciones.headers ?? {}),
       },
     });
-  } catch {
+  } catch (e) {
     // `fetch` sólo tira cuando no llegó a hablar con el servidor: sin red, DNS
     // caído o servidor apagado. Se distingue del error del backend porque el
     // usuario puede hacer algo al respecto.
+    if (e instanceof Error && e.name === 'AbortError') {
+      throw new ErrorApi(
+        'SIN_CONEXION',
+        'El servidor tardó demasiado en responder. Probá de nuevo.',
+        0,
+      );
+    }
     throw new ErrorApi('SIN_CONEXION', 'No hay conexión con el servidor.', 0);
+  } finally {
+    clearTimeout(reloj);
   }
 
   if (res.status === 401 && reintentar) {

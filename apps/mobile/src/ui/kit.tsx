@@ -9,7 +9,6 @@ import {
   type TextInputProps,
 } from 'react-native';
 
-import { Disclaimer } from './disclaimer';
 import { hapticaSeleccion } from './haptica';
 import { useColores } from './tema';
 
@@ -22,13 +21,19 @@ import { useColores } from './tema';
  * de tema.
  */
 
+/**
+ * El pie con el descargo salió de acá.
+ *
+ * Estaba en TODAS las pantallas y comía una franja permanente sin decir nada
+ * nuevo después de la primera vez. El descargo médico-legal sigue donde
+ * corresponde: la pantalla de aceptación obligatoria al entrar, con su versión
+ * registrada por médico.
+ */
 export function Pantalla({
   children,
-  conDisclaimer = true,
   scroll = true,
 }: {
   children: ReactNode;
-  conDisclaimer?: boolean;
   scroll?: boolean;
 }) {
   const contenido = scroll ? (
@@ -45,7 +50,6 @@ export function Pantalla({
   return (
     <View className="flex-1 bg-paper">
       {contenido}
-      {conDisclaimer ? <Disclaimer /> : null}
     </View>
   );
 }
