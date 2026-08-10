@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { Modal, Platform, Pressable, Text, View } from 'react-native';
 
 import { hapticaSeleccion } from './haptica';
-import { coloresChrome, useTema } from './tema';
+import { coloresChrome, useColores, useTema } from './tema';
 
 /**
  * Hoja inferior.
@@ -40,6 +40,7 @@ export function HojaInferior({
 }) {
   const ref = useRef<BottomSheetModal>(null);
   const { oscuro } = useTema();
+  const col = useColores();
   const c = coloresChrome(oscuro);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export function HojaInferior({
       enableDynamicSizing
       backdropComponent={fondo}
       onDismiss={onCerrar}
-      backgroundStyle={{ backgroundColor: oscuro ? '#14211C' : '#FFFFFF' }}
+      backgroundStyle={{ backgroundColor: col.surface }}
       handleIndicatorStyle={{ backgroundColor: c.tabInactivo }}
     >
       {/* `BottomSheetView` y no un `View` común: es el que reporta el alto del
@@ -102,6 +103,8 @@ export function OpcionHoja({
   onPress: () => void;
   destructiva?: boolean;
 }) {
+  const col = useColores();
+
   return (
     <Pressable
       onPress={() => {
@@ -113,7 +116,7 @@ export function OpcionHoja({
     >
       <Text
         className="text-body font-medio"
-        style={destructiva ? { color: '#991B1B' } : undefined}
+        style={destructiva ? { color: col.peligro } : undefined}
       >
         {titulo}
       </Text>

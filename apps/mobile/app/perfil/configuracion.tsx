@@ -5,11 +5,14 @@ import { Switch, Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import { AvisoNeutro, Card, Chip, Eyebrow, Pantalla } from '@/ui/kit';
 import { useTema, type Tema } from '@/ui/tema';
+import { useColores } from '@/ui/tema';
 
 const ETIQUETA: Record<Tema, string> = { CLARO: 'Claro', OSCURO: 'Oscuro', SISTEMA: 'Sistema' };
 
 /** Configuración (6.4 tema / 6.5 notificaciones). Se guarda en el servidor. */
 export default function Configuracion() {
+  const col = useColores();
+
   const { tema, cambiar, configuracion } = useTema();
   const qc = useQueryClient();
   const [umbral, setUmbral] = useState<number | null>(null);
@@ -38,7 +41,7 @@ export default function Configuracion() {
         <Switch
           value={push}
           onValueChange={(v) => guardar({ notificacionesPush: v })}
-          trackColor={{ true: '#1F5E4A', false: '#DDE5E0' }}
+          trackColor={{ true: col.primary, false: col.line }}
           accessibilityLabel="Notificaciones push"
         />
       </Card>

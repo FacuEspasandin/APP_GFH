@@ -24,8 +24,12 @@
     --primary: 31 94 74;
     --primary-hover: 24 74 59;
     --primary-light: 231 240 234;
+    --tenue: 140 163 154;
     --accent: 13 112 104;
     --accent-light: 225 241 238;
+    /* Error y acciones destructivas de la INTERFAZ. No es el rojo de gravedad
+       clinica: ese vive en shared-types y significa otra cosa. */
+    --peligro: 153 27 27;
   }
 
   .dark:root {
@@ -42,7 +46,10 @@
     --primary: 92 176 146;
     --primary-hover: 122 197 168;
     --primary-light: 27 51 43;
+    --tenue: 107 127 118;
     --accent: 82 183 172;
     --accent-light: 22 48 46;
+    /* Mismo motivo que el primary: el rojo oscuro sobre fondo oscuro no se lee. */
+    --peligro: 248 113 113;
   }
 }

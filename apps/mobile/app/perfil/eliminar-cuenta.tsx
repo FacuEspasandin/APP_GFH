@@ -5,6 +5,7 @@ import { Alert, Text } from 'react-native';
 
 import { api, cerrarSesionLocal } from '@/api/cliente';
 import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 /**
  * Eliminar cuenta (6.14).
@@ -15,6 +16,8 @@ import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
  * por defecto.
  */
 export default function EliminarCuenta() {
+  const col = useColores();
+
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +55,7 @@ export default function EliminarCuenta() {
       />
 
       {error ? (
-        <Text className="font-sans mb-3 text-meta" style={{ color: '#991B1B' }}>
+        <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>
           {error}
         </Text>
       ) : null}

@@ -16,6 +16,7 @@ import { z } from 'zod';
 
 import { iniciarSesion } from '@/api/cliente';
 import { Disclaimer } from '@/ui/disclaimer';
+import { useColores } from '@/ui/tema';
 
 const esquema = z.object({
   identificador: z.string().min(3, 'Ingresá tu email.'),
@@ -25,6 +26,8 @@ const esquema = z.object({
 type Campos = z.infer<typeof esquema>;
 
 export default function Login() {
+  const col = useColores();
+
   const router = useRouter();
   const [errorServidor, setErrorServidor] = useState<string | null>(null);
 
@@ -82,7 +85,7 @@ export default function Login() {
 
         {errorServidor ? (
           <View className="mt-2 rounded-chip border border-line bg-surface p-3">
-            <Text className="font-sans text-meta" style={{ color: '#991B1B' }}>
+            <Text className="font-sans text-meta" style={{ color: col.peligro }}>
               {errorServidor}
             </Text>
           </View>
@@ -133,6 +136,8 @@ function Campo({
   secreto?: boolean;
   teclado?: 'email-address';
 }) {
+  const col = useColores();
+
   return (
     <View className="mb-4">
       <Text className="mb-1.5 text-eyebrow font-medio uppercase text-ink-suave">{etiqueta}</Text>
@@ -145,7 +150,7 @@ function Campo({
             onChangeText={onChange}
             onBlur={onBlur}
             placeholder={placeholder}
-            placeholderTextColor="#8CA39A"
+            placeholderTextColor={col.tenue}
             secureTextEntry={secreto}
             keyboardType={teclado}
             autoCapitalize="none"
@@ -156,7 +161,7 @@ function Campo({
         )}
       />
       {error ? (
-        <Text className="font-sans mt-1 text-meta" style={{ color: '#991B1B' }}>
+        <Text className="font-sans mt-1 text-meta" style={{ color: col.peligro }}>
           {error}
         </Text>
       ) : null}

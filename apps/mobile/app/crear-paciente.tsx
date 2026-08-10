@@ -8,9 +8,12 @@ import type { Inicio } from '@/api/tipos';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { validarFecha } from '@/ui/fecha';
 import { AvisoNeutro, Boton, CampoTexto, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 /** Crear paciente (2.5). El Clcr se calcula solo si hay peso y creatinina. */
 export default function CrearPaciente() {
+  const col = useColores();
+
   const router = useRouter();
   const qc = useQueryClient();
   const { data: inicio } = useQuery({ queryKey: ['inicio'], queryFn: () => api.get<Inicio>('/inicio') });
@@ -121,7 +124,7 @@ export default function CrearPaciente() {
       )}
 
       {error ? (
-        <Text className="font-sans mb-3 text-meta" style={{ color: '#991B1B' }}>
+        <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>
           {error}
         </Text>
       ) : null}

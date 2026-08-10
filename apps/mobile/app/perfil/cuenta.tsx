@@ -5,6 +5,7 @@ import { Text } from 'react-native';
 
 import { api } from '@/api/cliente';
 import { Boton, CampoTexto, Cargando, Pantalla } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 interface Perfil {
   email: string;
@@ -17,6 +18,8 @@ interface Perfil {
 /** Editar cuenta (6.2). El nombre de usuario no se cambia: es identificador de
  *  login y cambiarlo rompería sesiones y referencias. */
 export default function Cuenta() {
+  const col = useColores();
+
   const router = useRouter();
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({ queryKey: ['perfil'], queryFn: () => api.get<Perfil>('/auth/yo') });
@@ -66,7 +69,7 @@ export default function Cuenta() {
       </Text>
 
       {error ? (
-        <Text className="font-sans mb-3 text-meta" style={{ color: '#991B1B' }}>
+        <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>
           {error}
         </Text>
       ) : null}

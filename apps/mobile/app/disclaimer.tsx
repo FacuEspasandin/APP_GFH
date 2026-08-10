@@ -5,6 +5,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import { Icono } from '@/ui/iconos';
 import { Boton } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 const VERSION_DISCLAIMER = '1.0';
 
@@ -16,6 +17,8 @@ const VERSION_DISCLAIMER = '1.0';
  * poder volver a pedirlo, y hay que poder probar qué aceptó cada médico.
  */
 export default function DisclaimerPrimerIngreso() {
+  const col = useColores();
+
   const router = useRouter();
   const [aceptado, setAceptado] = useState(false);
   const [enviando, setEnviando] = useState(false);
@@ -59,8 +62,8 @@ export default function DisclaimerPrimerIngreso() {
         <View
           className="mt-0.5 h-5 w-5 items-center justify-center rounded-[5px] border-2"
           style={{
-            borderColor: aceptado ? '#1F5E4A' : '#8CA39A',
-            backgroundColor: aceptado ? '#1F5E4A' : 'transparent',
+            borderColor: aceptado ? col.primary : col.tenue,
+            backgroundColor: aceptado ? col.primary : 'transparent',
           }}
         >
           {aceptado ? <Icono nombre="check" tamano={14} color="#FFFFFF" /> : null}

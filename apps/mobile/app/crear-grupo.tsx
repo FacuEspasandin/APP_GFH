@@ -5,9 +5,12 @@ import { Text } from 'react-native';
 
 import { api } from '@/api/cliente';
 import { Boton, CampoTexto, Pantalla } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 /** Crear grupo (2.4). Un grupo es organización libre: no tiene semántica clínica. */
 export default function CrearGrupo() {
+  const col = useColores();
+
   const router = useRouter();
   const qc = useQueryClient();
   const [nombre, setNombre] = useState('');
@@ -37,7 +40,7 @@ export default function CrearGrupo() {
         placeholder="Consultorio, Sala 3, Seguimiento…"
       />
       {error ? (
-        <Text className="font-sans mb-3 text-meta" style={{ color: '#991B1B' }}>
+        <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>
           {error}
         </Text>
       ) : null}

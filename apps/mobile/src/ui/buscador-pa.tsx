@@ -5,6 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import { Icono } from './iconos';
 import { CampoTexto, Eyebrow } from './kit';
+import { useColores } from './tema';
 
 export interface PaSugerido {
   id: string;
@@ -31,6 +32,8 @@ export function BuscadorPrincipioActivo({
   onQuitar: (id: string) => void;
   unico?: boolean;
 }) {
+  const col = useColores();
+
   const [consulta, setConsulta] = useState('');
 
   const { data } = useQuery({
@@ -91,7 +94,7 @@ export function BuscadorPrincipioActivo({
                 className="flex-row items-center gap-2 rounded-full border border-primary bg-primary-light px-3 py-1.5"
               >
                 <Text className="text-meta font-medio text-primary">{pa.nombre}</Text>
-                <Icono nombre="cerrar" tamano={13} color="#1F5E4A" />
+                <Icono nombre="cerrar" tamano={13} color={col.primary} />
               </Pressable>
             ))}
           </View>

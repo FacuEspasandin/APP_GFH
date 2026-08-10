@@ -7,6 +7,7 @@ import { api } from '@/api/cliente';
 import { Icono } from '@/ui/iconos';
 import { hapticaExito } from '@/ui/haptica';
 import { AvisoNeutro, Boton, CampoTexto, Card, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 const VIAS = ['ORAL', 'IV', 'SC', 'IM', 'TOPICA', 'INHALATORIA', 'SUBLINGUAL', 'RECTAL'] as const;
 const VERSION_DISCLAIMER = '1.0';
@@ -29,6 +30,8 @@ const VERSION_DISCLAIMER = '1.0';
  * puntos de la regla 7.
  */
 export default function AceptarAlternativa() {
+  const col = useColores();
+
   const {
     id: pacienteId,
     paOrigenId,
@@ -127,8 +130,8 @@ export default function AceptarAlternativa() {
         <View
           className="mt-0.5 h-5 w-5 items-center justify-center rounded-[5px] border-2"
           style={{
-            borderColor: confirmado ? '#1F5E4A' : '#8CA39A',
-            backgroundColor: confirmado ? '#1F5E4A' : 'transparent',
+            borderColor: confirmado ? col.primary : col.tenue,
+            backgroundColor: confirmado ? col.primary : 'transparent',
           }}
         >
           {confirmado ? <Icono nombre="check" tamano={14} color="#FFFFFF" /> : null}
@@ -140,7 +143,7 @@ export default function AceptarAlternativa() {
       </Pressable>
 
       {error ? (
-        <Text className="font-sans mt-3 text-meta" style={{ color: '#991B1B' }}>
+        <Text className="font-sans mt-3 text-meta" style={{ color: col.peligro }}>
           {error}
         </Text>
       ) : null}

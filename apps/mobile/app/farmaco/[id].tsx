@@ -6,6 +6,7 @@ import { Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import { AvisoNeutro, Cargando, Card, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { colorEspina } from '@gfh/shared-types';
+import { useColores } from '@/ui/tema';
 
 interface Ficha {
   id: string;
@@ -30,6 +31,8 @@ interface Ficha {
 
 /** Ficha de fármaco (5.4-5.9), con los 3 tabs del documento funcional §6.4. */
 export default function FichaFarmaco() {
+  const col = useColores();
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const [tab, setTab] = useState<'info' | 'tecnica' | 'similares'>('info');
 
@@ -65,7 +68,7 @@ export default function FichaFarmaco() {
 
       {/* Segmented control: el activo va en `surface`, no en color de marca —
           si no, compite con el header que ya es verde. */}
-      <View className="mb-4 flex-row rounded-chip bg-paper p-1" style={{ borderWidth: 1, borderColor: '#DDE5E0' }}>
+      <View className="mb-4 flex-row rounded-chip bg-paper p-1" style={{ borderWidth: 1, borderColor: col.line }}>
         {(['info', 'tecnica', 'similares'] as const).map((t) => (
           <View key={t} className="flex-1">
             <Chip
@@ -171,10 +174,12 @@ export default function FichaFarmaco() {
 }
 
 function Restriccion({ titulo, tiene }: { titulo: string; tiene: boolean }) {
+  const col = useColores();
+
   return (
     <View
       className="min-w-[46%] flex-1 rounded-card border border-line bg-surface px-3 py-2.5"
-      style={{ borderLeftWidth: 4, borderLeftColor: tiene ? '#F59E0B' : '#8CA39A' }}
+      style={{ borderLeftWidth: 4, borderLeftColor: tiene ? '#F59E0B' : col.tenue }}
     >
       <Text className="text-meta font-medio text-ink">{titulo}</Text>
       <Text className="font-sans text-eyebrow uppercase tracking-wider text-ink-suave">

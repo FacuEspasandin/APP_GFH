@@ -7,6 +7,7 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import { Boton, CampoTexto, Card, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
+import { useColores } from '@/ui/tema';
 
 interface ProductoResumen {
   id: string;
@@ -34,6 +35,8 @@ const POR_PAGINA = 40;
  * la virtualización, que es justamente lo que se busca acá.
  */
 export default function Buscador() {
+  const col = useColores();
+
   const router = useRouter();
   const [consulta, setConsulta] = useState('');
   const buscando = consulta.trim().length >= 2;
@@ -109,7 +112,7 @@ export default function Buscador() {
           ListFooterComponent={
             catalogo.isFetchingNextPage ? (
               <View className="py-4">
-                <ActivityIndicator color="#1F5E4A" />
+                <ActivityIndicator color={col.primary} />
               </View>
             ) : !buscando && catalogo.hasNextPage ? (
               // El botón queda aunque `onEndReached` esté puesto: en web no

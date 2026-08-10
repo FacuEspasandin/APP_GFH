@@ -5,6 +5,7 @@ import { Alert, Pressable, Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import { AvisoNeutro, Boton, Cargando, Card, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
+import { useColores } from '@/ui/tema';
 
 interface Datos {
   condiciones: Array<{ id: string; codigo: string; nombre: string; observaciones: string | null }>;
@@ -20,6 +21,8 @@ interface Datos {
 
 /** Condiciones y alergias activas (3.4.4), con la opción de quitarlas. */
 export default function CondicionesYAlergias() {
+  const col = useColores();
+
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
@@ -88,7 +91,7 @@ export default function CondicionesYAlergias() {
                 accessibilityLabel={`Quitar ${c.nombre}`}
                 className="px-2 py-1"
               >
-                <Text className="text-meta font-medio" style={{ color: '#991B1B' }}>
+                <Text className="text-meta font-medio" style={{ color: col.peligro }}>
                   Quitar
                 </Text>
               </Pressable>
@@ -137,7 +140,7 @@ export default function CondicionesYAlergias() {
                 accessibilityLabel={`Quitar ${a.nombre}`}
                 className="px-3.5 py-3"
               >
-                <Text className="text-meta font-medio" style={{ color: '#991B1B' }}>
+                <Text className="text-meta font-medio" style={{ color: col.peligro }}>
                   Quitar
                 </Text>
               </Pressable>

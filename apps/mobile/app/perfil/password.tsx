@@ -4,9 +4,12 @@ import { Text } from 'react-native';
 
 import { api, cerrarSesionLocal } from '@/api/cliente';
 import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 /** Cambiar contraseña (6.3). Cambia la clave y cierra todas las sesiones. */
 export default function CambiarPassword() {
+  const col = useColores();
+
   const router = useRouter();
   const [actual, setActual] = useState('');
   const [nueva, setNueva] = useState('');
@@ -38,7 +41,7 @@ export default function CambiarPassword() {
       <CampoTexto etiqueta="Repetir la nueva" value={confirmar} onChangeText={setConfirmar} secureTextEntry />
 
       {error ? (
-        <Text className="font-sans mb-3 text-meta" style={{ color: '#991B1B' }}>
+        <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>
           {error}
         </Text>
       ) : null}

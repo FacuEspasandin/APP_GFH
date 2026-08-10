@@ -22,6 +22,7 @@ module.exports = {
       colors: {
         ink: token('ink'),
         'ink-suave': token('ink-suave'),
+        tenue: token('tenue'),
         paper: token('paper'),
         line: token('line'),
         surface: token('surface'),
@@ -30,6 +31,7 @@ module.exports = {
         'primary-light': token('primary-light'),
         accent: token('accent'),
         'accent-light': token('accent-light'),
+        peligro: token('peligro'),
       },
       /**
        * IBM Plex, según §2 de los design tokens.

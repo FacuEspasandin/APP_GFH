@@ -5,6 +5,7 @@ import { Pressable, Text, TextInput, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
 import { AvisoNeutro, Boton, Card, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 interface Linea {
   textoOriginal: string;
@@ -28,6 +29,8 @@ interface Linea {
  * negociable 2, y no depende de cómo se haya obtenido el texto.
  */
 export default function CargaPorLista() {
+  const col = useColores();
+
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
@@ -104,7 +107,7 @@ export default function CargaPorLista() {
         multiline
         numberOfLines={6}
         placeholder={'Eliquis 5 mg cada 12 h\nIbupirac 600 mg cada 8 h'}
-        placeholderTextColor="#8CA39A"
+        placeholderTextColor={col.tenue}
         accessibilityLabel="Listado de medicación"
         className="mb-3 min-h-[120px] rounded-chip border border-line bg-surface px-3.5 py-3 text-body text-ink"
         style={{ textAlignVertical: 'top' }}

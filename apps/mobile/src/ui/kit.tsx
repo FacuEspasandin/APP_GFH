@@ -11,6 +11,7 @@ import {
 
 import { Disclaimer } from './disclaimer';
 import { hapticaSeleccion } from './haptica';
+import { useColores } from './tema';
 
 /**
  * Primitivos de UI. Todo el sistema visual sale de acá para que no haya
@@ -77,6 +78,7 @@ export function FilaAccion({
   destructiva?: boolean;
   derecha?: ReactNode;
 }) {
+  const col = useColores();
   return (
     <Pressable
       onPress={onPress}
@@ -87,7 +89,7 @@ export function FilaAccion({
       <View className="flex-1">
         <Text
           className="text-body font-medio"
-          style={{ color: destructiva ? '#991B1B' : '#122A23' }}
+          style={{ color: destructiva ? col.peligro : col.ink }}
         >
           {titulo}
         </Text>
@@ -111,11 +113,13 @@ export function Boton({
   cargando?: boolean;
   deshabilitado?: boolean;
 }) {
+  const col = useColores();
+
   const fondo =
     variante === 'primario' ? 'bg-primary' : variante === 'destructivo' ? 'bg-surface' : 'bg-surface';
   const borde = variante === 'primario' ? '' : 'border border-line';
   const colorTexto =
-    variante === 'primario' ? '#FFFFFF' : variante === 'destructivo' ? '#991B1B' : '#122A23';
+    variante === 'primario' ? '#FFFFFF' : variante === 'destructivo' ? col.peligro : col.ink;
 
   return (
     <Pressable
@@ -126,7 +130,7 @@ export function Boton({
       style={{ opacity: cargando || deshabilitado ? 0.55 : 1 }}
     >
       {cargando ? (
-        <ActivityIndicator color={variante === 'primario' ? '#FFFFFF' : '#1F5E4A'} />
+        <ActivityIndicator color={variante === 'primario' ? '#FFFFFF' : col.primary} />
       ) : (
         <Text className="text-body font-fuerte" style={{ color: colorTexto }}>
           {children}
@@ -138,6 +142,7 @@ export function Boton({
 
 export const CampoTexto = forwardRef<TextInput, TextInputProps & { etiqueta?: string; error?: string }>(
   function CampoTexto({ etiqueta, error, ...props }, ref) {
+    const col = useColores();
     return (
       <View className="mb-3.5">
         {etiqueta ? (
@@ -147,13 +152,13 @@ export const CampoTexto = forwardRef<TextInput, TextInputProps & { etiqueta?: st
         ) : null}
         <TextInput
           ref={ref}
-          placeholderTextColor="#8CA39A"
+          placeholderTextColor={col.tenue}
           accessibilityLabel={etiqueta}
           className="h-12 rounded-chip border border-line bg-surface px-3.5 text-body text-ink"
           {...props}
         />
         {error ? (
-          <Text className="font-sans mt-1 text-meta" style={{ color: '#991B1B' }}>
+          <Text className="font-sans mt-1 text-meta" style={{ color: col.peligro }}>
             {error}
           </Text>
         ) : null}
@@ -171,6 +176,8 @@ export function Chip({
   activo?: boolean;
   onPress?: () => void;
 }) {
+  const col = useColores();
+
   return (
     <Pressable
       onPress={
@@ -186,13 +193,13 @@ export function Chip({
       accessibilityState={{ selected: activo }}
       className="rounded-full border px-3 py-1.5"
       style={{
-        backgroundColor: activo ? '#E7F0EA' : '#FFFFFF',
-        borderColor: activo ? '#1F5E4A' : '#DDE5E0',
+        backgroundColor: activo ? col.primaryLight : col.surface,
+        borderColor: activo ? col.primary : col.line,
       }}
     >
       <Text
         className="text-meta font-medio"
-        style={{ color: activo ? '#1F5E4A' : '#5C6B64' }}
+        style={{ color: activo ? col.primary : col.inkSuave }}
       >
         {texto}
       </Text>
@@ -201,9 +208,11 @@ export function Chip({
 }
 
 export function Cargando() {
+  const col = useColores();
+
   return (
     <View className="flex-1 items-center justify-center bg-paper py-16">
-      <ActivityIndicator color="#1F5E4A" />
+      <ActivityIndicator color={col.primary} />
     </View>
   );
 }
@@ -236,10 +245,12 @@ export function Estado({
 
 /** Aviso neutro. Ni tranquiliza ni alarma: se usa cuando falta un dato. */
 export function AvisoNeutro({ children }: { children: ReactNode }) {
+  const col = useColores();
+
   return (
     <View
       className="mb-2 rounded-card border border-line bg-surface px-3.5 py-3"
-      style={{ borderLeftWidth: 4, borderLeftColor: '#8CA39A' }}
+      style={{ borderLeftWidth: 4, borderLeftColor: col.tenue }}
     >
       <Text className="font-sans text-meta leading-5 text-ink">{children}</Text>
     </View>

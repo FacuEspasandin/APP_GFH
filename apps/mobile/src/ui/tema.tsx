@@ -3,6 +3,7 @@ import { useColorScheme } from 'nativewind';
 import { createContext, useContext, useEffect, type ReactNode } from 'react';
 
 import { api, haySesionSincrona } from '@/api/cliente';
+import { paleta, type Paleta } from './tokens';
 
 export type Tema = 'CLARO' | 'OSCURO' | 'SISTEMA';
 
@@ -53,6 +54,23 @@ export function ProveedorTema({ children }: { children: ReactNode }) {
     setColorScheme(tema === 'CLARO' ? 'light' : tema === 'OSCURO' ? 'dark' : 'system');
   }, [tema, setColorScheme]);
 
+  /**
+   * En web hay que poner la clase `dark` en la raíz del documento a mano.
+   *
+   * NativeWind resuelve `colorScheme` igual en las dos plataformas, pero los
+   * colores del tema salen de variables CSS declaradas en `.dark:root` y esa
+   * clase nadie la aplica del lado web. El resultado era una pantalla partida:
+   * lo que se pinta por `style` seguía al tema oscuro y los fondos, que vienen
+   * de las variables, se quedaban en claro — texto claro sobre tarjeta blanca.
+   *
+   * En nativo no existe `document` y el efecto no hace nada.
+   */
+  useEffect(() => {
+    const raiz = globalThis.document?.documentElement;
+    if (!raiz) return;
+    raiz.classList.toggle('dark', colorScheme === 'dark');
+  }, [colorScheme]);
+
   const cambiar = (nuevo: Tema) => {
     // Optimista: el cambio de tema tiene que sentirse instantáneo. Si el PATCH
     // falla, el refetch lo revierte.
@@ -74,13 +92,27 @@ export function ProveedorTema({ children }: { children: ReactNode }) {
 
 export const useTema = () => useContext(Ctx);
 
+/**
+ * La paleta del tema activo, para lo que se pinta por `style` y no por clase.
+ *
+ * Usarlo en vez de escribir el hex resuelve dos cosas de una: cambiar la marca
+ * pasa a ser un archivo, y el color acompaña al tema — antes un `#1F5E4A` fijo
+ * se quedaba en el verde claro sobre fondo oscuro y perdía contraste.
+ */
+export function useColores(): Paleta {
+  return paleta(useTema().oscuro);
+}
+
 /** Colores de chrome (header, tab bar) que no salen de clases de Tailwind
  *  porque los consume React Navigation por `style`. */
 export function coloresChrome(oscuro: boolean) {
+  const p = paleta(oscuro);
   return {
-    fondoHeader: oscuro ? '#14211C' : '#1F5E4A',
+    // En oscuro el header usa `surface` y no `primary`: el verde aclarado que
+    // necesita el texto no funciona como fondo de una barra entera.
+    fondoHeader: oscuro ? p.surface : p.primary,
     textoHeader: '#FFFFFF',
-    fondoPantalla: oscuro ? '#0C1613' : '#F3F6F3',
+    fondoPantalla: p.paper,
     tabInactivo: oscuro ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.62)',
   };
 }

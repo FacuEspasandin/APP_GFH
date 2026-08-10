@@ -14,6 +14,7 @@ import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { BadgeConteo, Espina } from '@/ui/severidad';
 import { COLOR_SEVERIDAD, type RangoGravedad } from '@gfh/shared-types';
+import { useColores } from '@/ui/tema';
 
 const NOMBRE_CATEGORIA: Record<CategoriaHallazgo, string> = {
   INTERACCION: 'Interacciones',
@@ -34,6 +35,8 @@ const NOMBRE_CATEGORIA: Record<CategoriaHallazgo, string> = {
  * responde "¿cuánto hay y de qué tipo?"; el detalle se pide.
  */
 export default function CockpitPaciente() {
+  const col = useColores();
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -109,9 +112,9 @@ export default function CockpitPaciente() {
                   key={c}
                   className="rounded-full px-2.5 py-1"
                   style={{
-                    backgroundColor: esSintetica(c) ? 'transparent' : '#E7F0EA',
+                    backgroundColor: esSintetica(c) ? 'transparent' : col.primaryLight,
                     borderWidth: esSintetica(c) ? 1 : 0,
-                    borderColor: '#C9DCD0',
+                    borderColor: col.line,
                   }}
                 >
                   {/* Las sintéticas van delineadas y no rellenas: el motor las
@@ -257,6 +260,8 @@ function Dato({
   sufijo?: string;
   color?: string;
 }) {
+  const col = useColores();
+
   return (
     <View>
       <Text className="font-sans text-eyebrow uppercase tracking-wider text-ink-suave">{etiqueta}</Text>
@@ -264,7 +269,7 @@ function Dato({
           columna no se corre cuando el Clcr pasa de 9 a 10. */}
       <Text
         className="text-fila font-mono-fuerte"
-        style={{ color: color ?? '#122A23', fontVariant: ['tabular-nums'] }}
+        style={{ color: color ?? col.ink, fontVariant: ['tabular-nums'] }}
       >
         {valor}
         {sufijo ? <Text className="font-sans text-meta text-ink-suave"> {sufijo}</Text> : null}

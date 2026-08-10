@@ -4,9 +4,12 @@ import { Text, View } from 'react-native';
 
 import { api, iniciarSesion } from '@/api/cliente';
 import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 /** Registro (1.4). Nombre de usuario único + email + contraseña. */
 export default function Registro() {
+  const col = useColores();
+
   const router = useRouter();
   const [c, setC] = useState({
     nombre: '',
@@ -79,7 +82,7 @@ export default function Registro() {
       />
 
       {error ? (
-        <Text className="font-sans mb-3 text-meta" style={{ color: '#991B1B' }}>
+        <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>
           {error}
         </Text>
       ) : null}

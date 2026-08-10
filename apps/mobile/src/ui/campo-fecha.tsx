@@ -12,6 +12,7 @@ import {
   MESES,
   validarFecha,
 } from './fecha';
+import { useColores } from './tema';
 
 /**
  * Campo de fecha con máscara dd/mm/aaaa y calendario.
@@ -35,6 +36,8 @@ export function CampoFecha({
   onChange: (texto: string) => void;
   errorExterno?: string;
 }) {
+  const col = useColores();
+
   const [abierto, setAbierto] = useState(false);
   const [tocado, setTocado] = useState(false);
 
@@ -55,12 +58,12 @@ export function CampoFecha({
           onChangeText={(t) => onChange(aplicarMascara(t, valor))}
           onBlur={() => setTocado(true)}
           placeholder="dd/mm/aaaa"
-          placeholderTextColor="#8CA39A"
+          placeholderTextColor={col.tenue}
           keyboardType="number-pad"
           maxLength={LARGO_FECHA}
           accessibilityLabel={etiqueta}
           className="h-12 flex-1 rounded-chip border bg-surface px-3.5 text-body text-ink"
-          style={{ borderColor: error ? '#EF4444' : '#DDE5E0' }}
+          style={{ borderColor: error ? '#EF4444' : col.line }}
         />
         <Pressable
           onPress={() => setAbierto(true)}
@@ -68,12 +71,12 @@ export function CampoFecha({
           accessibilityLabel="Elegir del calendario"
           className="h-12 w-12 items-center justify-center rounded-chip border border-line bg-surface"
         >
-          <Icono nombre="carpeta" tamano={20} color="#1F5E4A" />
+          <Icono nombre="carpeta" tamano={20} color={col.primary} />
         </Pressable>
       </View>
 
       {error ? (
-        <Text className="font-sans mt-1 text-meta" style={{ color: '#991B1B' }}>
+        <Text className="font-sans mt-1 text-meta" style={{ color: col.peligro }}>
           {error}
         </Text>
       ) : validacion.valida ? (
@@ -119,6 +122,8 @@ function Calendario({
   onElegir: (f: Date) => void;
   onCerrar: () => void;
 }) {
+  const col = useColores();
+
   const hoy = new Date();
   const base = inicial ?? hoy;
 
@@ -147,11 +152,11 @@ function Calendario({
               <Text className="text-fila font-fuerte capitalize text-ink">
                 {vista === 'anio' ? 'Elegí el año' : vista === 'mes' ? String(anio) : `${MESES[mes - 1]} ${anio}`}
               </Text>
-              {vista !== 'anio' ? <Icono nombre="chevronArriba" tamano={16} color="#5C6B64" /> : null}
+              {vista !== 'anio' ? <Icono nombre="chevronArriba" tamano={16} color={col.inkSuave} /> : null}
             </Pressable>
 
             <Pressable onPress={onCerrar} accessibilityRole="button" accessibilityLabel="Cerrar">
-              <Icono nombre="cerrar" tamano={18} color="#5C6B64" />
+              <Icono nombre="cerrar" tamano={18} color={col.inkSuave} />
             </Pressable>
           </View>
 
@@ -167,11 +172,11 @@ function Calendario({
                     }}
                     accessibilityRole="button"
                     className="w-1/4 items-center rounded-chip py-2.5"
-                    style={{ backgroundColor: a === anio ? '#E7F0EA' : 'transparent' }}
+                    style={{ backgroundColor: a === anio ? col.primaryLight : 'transparent' }}
                   >
                     <Text
                       className="font-sans text-body"
-                      style={{ color: a === anio ? '#1F5E4A' : '#122A23', fontFamily: a === anio ? 'IBMPlexSans_700Bold' : 'IBMPlexSans_400Regular' }}
+                      style={{ color: a === anio ? col.primary : col.ink, fontFamily: a === anio ? 'IBMPlexSans_700Bold' : 'IBMPlexSans_400Regular' }}
                     >
                       {a}
                     </Text>
@@ -192,11 +197,11 @@ function Calendario({
                   }}
                   accessibilityRole="button"
                   className="w-1/3 items-center rounded-chip py-3"
-                  style={{ backgroundColor: i + 1 === mes ? '#E7F0EA' : 'transparent' }}
+                  style={{ backgroundColor: i + 1 === mes ? col.primaryLight : 'transparent' }}
                 >
                   <Text
                     className="font-sans text-body capitalize"
-                    style={{ color: i + 1 === mes ? '#1F5E4A' : '#122A23' }}
+                    style={{ color: i + 1 === mes ? col.primary : col.ink }}
                   >
                     {nombre.slice(0, 3)}
                   </Text>
@@ -227,6 +232,8 @@ function GrillaDias({
   hoy: Date;
   onElegir: (f: Date) => void;
 }) {
+  const col = useColores();
+
   const total = diasDelMes(mes, anio);
   const huecos = diaSemanaLunes(new Date(Date.UTC(anio, mes - 1, 1)));
 
@@ -272,12 +279,12 @@ function GrillaDias({
             >
               <View
                 className="h-9 w-9 items-center justify-center rounded-full"
-                style={{ backgroundColor: activa ? '#1F5E4A' : 'transparent' }}
+                style={{ backgroundColor: activa ? col.primary : 'transparent' }}
               >
                 <Text
                   className="font-sans text-body"
                   style={{
-                    color: activa ? '#FFFFFF' : futura ? '#C3D0C9' : '#122A23',
+                    color: activa ? '#FFFFFF' : futura ? col.tenue : col.ink,
                     fontFamily: activa ? 'IBMPlexSans_700Bold' : 'IBMPlexSans_400Regular',
                   }}
                 >

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { AvisoNeutro, Boton, Pantalla } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 /**
  * Paywall (1.7). Plan único, mensual o anual, sin prueba gratuita.
@@ -87,13 +88,15 @@ function OpcionPlan({
   activo: boolean;
   onPress: () => void;
 }) {
+  const col = useColores();
+
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="radio"
       accessibilityState={{ selected: activo }}
       className="mb-2.5 flex-row items-center rounded-card border bg-surface px-3.5 py-3.5"
-      style={{ borderColor: activo ? '#1F5E4A' : '#DDE5E0', borderWidth: activo ? 2 : 1 }}
+      style={{ borderColor: activo ? col.primary : col.line, borderWidth: activo ? 2 : 1 }}
     >
       <View className="flex-1">
         <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
