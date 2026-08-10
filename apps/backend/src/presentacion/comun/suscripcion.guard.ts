@@ -16,10 +16,11 @@ import type { RequestConMedico } from './medico-actual';
  *
  * Va DESPUÉS del guard de JWT: primero se sabe quién es, después si pagó.
  *
- * Apagado por defecto y encendido con `EXIGIR_SUSCRIPCION=1`. No es una puerta
- * trasera: sin RevenueCat integrado nadie tiene fila de suscripción, así que
- * encenderlo hoy dejaría afuera hasta al usuario de demostración. Antes de
- * producción tiene que estar en 1 — el acceso es 100% de pago desde el día uno.
+ * Apagado por defecto y encendido con `EXIGIR_SUSCRIPCION=1`. Desde el modelo
+ * freemium encenderlo ya no deja a nadie afuera: sin suscripción se cae al plan
+ * gratis, que da acceso completo sobre un paciente. Antes era distinto —el
+ * acceso era 100% de pago y prenderlo sin RevenueCat bloqueaba hasta la cuenta
+ * de demostración.
  *
  * Devuelve un código propio (`SUSCRIPCION_VENCIDA`) para que la app sepa
  * mandar a la pantalla de bloqueo en vez de tratarlo como un error genérico.

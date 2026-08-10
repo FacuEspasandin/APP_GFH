@@ -36,11 +36,14 @@ const CANDIDATOS_CHROME = [
 
 const METRO = process.env.METRO_URL ?? 'http://localhost:8081';
 const API = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3333';
-const EMAIL = 'demo@gfh.app';
-const PASSWORD = 'DemoGFH2026!';
+// La cuenta se puede cambiar para comparar planes:
+//   GFH_EMAIL=gratis@gfh.app GFH_PASSWORD=GratisGFH2026! GFH_SALIDA=gratis pnpm capturas
+const EMAIL = process.env.GFH_EMAIL ?? 'demo@gfh.app';
+const PASSWORD = process.env.GFH_PASSWORD ?? 'DemoGFH2026!';
 
 const oscuro = process.argv.includes('oscuro');
-const SALIDA = path.resolve(__dirname, '..', '.capturas', oscuro ? 'oscuro' : 'claro');
+const carpeta = process.env.GFH_SALIDA ?? (oscuro ? 'oscuro' : 'claro');
+const SALIDA = path.resolve(__dirname, '..', '.capturas', carpeta);
 
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -132,7 +135,17 @@ async function tocar(page, texto) {
   await esperar(4000);
   await capturar(page, '01-inicio');
 
-  await tocar(page, 'Rodríguez, Ana María');
+  // El primero de la lista, sea quien sea: el paciente depende de la cuenta.
+  const abrio = await page.evaluate(() => {
+    const a = [...document.querySelectorAll('a')].find((x) =>
+      (x.getAttribute('href') ?? '').startsWith('/paciente/'),
+    );
+    if (!a) return false;
+    a.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    return true;
+  });
+  if (!abrio) console.log('  (esta cuenta no tiene pacientes)');
+  await esperar(2500);
   await capturar(page, '02-cockpit');
 
   await tocar(page, 'Interacciones');

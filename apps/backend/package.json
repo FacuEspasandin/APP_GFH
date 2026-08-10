@@ -18,7 +18,8 @@
     "test": "vitest run",
     "test:api": "vitest run --config vitest.api.config.ts",
     "start:prod": "tsx src/main.ts",
-    "deploy:migrar": "prisma migrate deploy"
+    "deploy:migrar": "prisma migrate deploy",
+    "dev:cuentas": "tsx prisma/dev-cuentas.ts"
   },
   "dependencies": {
     "@gfh/shared-types": "workspace:*",
