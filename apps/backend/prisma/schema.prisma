@@ -1,0 +1,965 @@
+// ============================================================================
+// GFH Movil — schema de la base propia del cockpit clinico.
+//
+// Fuente: modelo-datos-cockpit-movil.md (estructura) + 11-motor-clinico-para-
+// app-movil.md (semantica y casos borde). Donde este schema se APARTA de esos
+// documentos hay un comentario `DECISION:` explicando por que.
+//
+// Dos mitades que no se mezclan:
+//   §1 CATALOGO CLINICO — compartido, solo lectura desde la app, SIN medicoId.
+//   §2 CUENTA / §3 DATOS DEL MEDICO — con dueno, `medicoId` obligatorio en
+//      TODAS las tablas, aunque sea redundante por la cadena de relaciones.
+//      Es deliberado: hace que el aislamiento sea una condicion del `where` y
+//      no la memoria de quien escribe el endpoint (motor §2, modelo §6).
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+// --- Cuenta y negocio -------------------------------------------------------
+
+enum RolMedico {
+  GUEST
+  USER
+  PREMIUM
+  ADMIN // sin pantallas en v1 — el enum queda, el backoffice no existe
+  SUPERADMIN // idem
+}
+
+enum EstadoMedico {
+  ACTIVO
+  SUSPENDIDO
+  ELIMINADO
+}
+
+enum StoreSuscripcion {
+  APP_STORE
+  PLAY_STORE
+}
+
+enum EstadoSuscripcion {
+  ACTIVA
+  GRACIA
+  VENCIDA
+  CANCELADA
+}
+
+enum AccionAuditoria {
+  LOGIN
+  LOGOUT
+  PASSWORD_CHANGE
+  SUBSCRIPTION_CREATED
+  SUBSCRIPTION_CANCELLED
+  TREATMENT_LOADED_VIA_PHOTO
+  ALTERNATIVA_ACEPTADA
+  ADMIN_ACTION
+  ERROR
+}
+
+enum TemaUI {
+  CLARO
+  OSCURO
+  SISTEMA
+}
+
+// --- Clinicos: paciente -----------------------------------------------------
+
+enum Sexo {
+  M
+  F // unico valor que aplica el factor 0.85 de Cockcroft-Gault (motor §4.1)
+  OTRO // factor 1.0 — la formula solo contempla dos categorias; documentado, no inventado
+}
+
+enum ClcrOrigen {
+  CALCULADO_COCKCROFT
+  INGRESADO_MANUAL
+}
+
+enum ChildPughClase {
+  A
+  B
+  C
+}
+
+enum OrigenCalculo {
+  CALCULADO
+  INGRESADO_MANUAL
+}
+
+enum Ascitis {
+  AUSENTE
+  LEVE
+  MODERADA_SEVERA
+}
+
+enum Encefalopatia {
+  AUSENTE
+  GRADO_1_2
+  GRADO_3_4
+}
+
+enum EstadoPrescripcion {
+  ACTIVO
+  SUSPENDIDO
+  FINALIZADO
+}
+
+// --- Clinicos: catalogo -----------------------------------------------------
+
+enum MetodoAjuste {
+  D // ajuste por dosis
+  I // ajuste por intervalo
+  D_E_I // por dosis y por intervalo
+  NO // no requiere ajuste
+  NOTA_AL_PIE
+}
+
+/// Valores tal cual vienen de la transcripcion SEN. NO normalizar ni colapsar:
+/// el mapeo a la escala unificada 0-3 vive en @gfh/shared-types (severidad.ts),
+/// no en la forma de la tabla.
+enum TipoRangoAjuste {
+  SIN_AJUSTE
+  REDUCIR_DOSIS
+  AUMENTAR_INTERVALO
+  REDUCIR_DOSIS_Y_INTERVALO
+  EVITAR
+  CONTRAINDICADO
+  PRECAUCION
+  CONDICIONAL
+  VACIO
+  NOTA_AL_PIE
+}
+
+/// Los 8 primeros son EXACTAMENTE los valores que trae el JSON de SEN, con su
+/// grafia (`SC` e `IV`, no "SUBCUTANEA"/"INTRAVENOSA"). Verificado sobre las
+/// 643 entradas: NO_ESPECIFICADA 598, SC 18, IV 18, TOPICA 3, INHALATORIA 2,
+/// ORAL 2, OTRA 1, INTRAOCULAR 1.
+///
+/// El resto existe solo para que el medico pueda elegir la via al prescribir
+/// (`Prescripcion.via`); nunca va a aparecer en una tabla de ajuste importada.
+///
+/// El importador debe FALLAR ante un valor desconocido, nunca caer a
+/// NO_ESPECIFICADA por default: eso perderia informacion en silencio.
+enum ViaAdministracion {
+  // vocabulario de la fuente
+  NO_ESPECIFICADA
+  ORAL
+  IV
+  SC
+  TOPICA
+  INHALATORIA
+  INTRAOCULAR
+  OTRA
+
+  // solo para prescribir
+  IM
+  SUBLINGUAL
+  RECTAL
+  VAGINAL
+  NASAL
+  TRANSDERMICA
+  OFTALMICA
+  OTICA
+}
+
+enum SeveridadAlerta {
+  INFO
+  PRECAUCION
+  EVITAR
+  CONTRAINDICADO
+}
+
+enum SeveridadInteraccion {
+  INFORMATIVA
+  ALTA
+  CONTRAINDICADA
+}
+
+enum NivelCruce {
+  ALTO
+  MODERADO
+  BAJO
+}
+
+enum TipoAlergia {
+  FARMACOLOGICA
+  GENERAL
+}
+
+enum SeveridadAlergia {
+  LEVE
+  MODERADA
+  GRAVE // unica que bloquea, y solo con coincidencia EXACTA (motor §7.3)
+}
+
+/// motor §10.2 — todo el contenido clinico nace PENDIENTE (borrador).
+/// Solo RECHAZADO apaga contenido, y aun asi el ajuste renal/hepatico NUNCA se
+/// apaga: se sigue devolviendo marcado como no validado. Dejar al medico sin
+/// guia de dosis es peor que darle una guia observada.
+enum EstadoValidacion {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+}
+
+// ============================================================================
+// §1 — CATALOGO CLINICO
+// Compartido entre todos los medicos. Sin medicoId. Se carga por seed.
+// ============================================================================
+
+model PrincipioActivo {
+  id               String  @id @default(uuid())
+  nombre           String  @unique
+  /// DECISION (no esta en el modelo de datos, sale de motor §5.2 y §10.2):
+  /// clave normalizada — trim + lowercase + NFD sin diacriticos. Las reglas de
+  /// interaccion referencian farmacos POR NOMBRE; una grafia distinta hace que
+  /// la regla no matchee nunca y la interaccion desaparezca en silencio.
+  /// El @unique ademas hace que el seed FALLE en vez de deduplicar callado
+  /// (el JSON trae 643 entradas y en GFH quedaron 634 filas sin explicacion).
+  nombreNormalizado String @unique
+  grupoTerapeutico String?
+  viaDefault       ViaAdministracion @default(NO_ESPECIFICADA)
+
+  tieneAjusteRenal    Boolean @default(false)
+  tieneAjusteHepatico Boolean @default(false)
+
+  /// ej. "B01AF02". La jerarquia de "Similares" sale de cortar el string por
+  /// prefijo (B / B01 / B01AF / B01AF02) — sin tabla de jerarquia (modelo §1.1b).
+  /// ABIERTO: de donde se completa este campo (modelo §7.4).
+  codigoATC String?
+
+  /// Plural: hay un ajuste POR VIA, no uno por farmaco. Ver AjusteRenalFarmaco.
+  ajustesRenales    AjusteRenalFarmaco[]
+  ajustesHepaticos  AjusteHepaticoFarmaco[]
+
+  productos          ProductoComercialPrincipioActivo[]
+  alertasCondicion   AlertaCondicionFarmaco[]
+  gruposAlergenicos  PrincipioActivoGrupoAlergenico[]
+  alternativasComoOrigen      AlternativaTerapeutica[] @relation("AlternativaOrigen")
+  alternativasComoAlternativa AlternativaTerapeutica[] @relation("AlternativaDestino")
+  alergias                    Alergia[]
+  interaccionesComoA          InteraccionDetectada[]   @relation("InteraccionPaA")
+  interaccionesComoB          InteraccionDetectada[]   @relation("InteraccionPaB")
+  alternativasAceptadasOrigen AlternativaAceptada[]    @relation("AceptadaOrigen")
+  alternativasAceptadasDestino AlternativaAceptada[]   @relation("AceptadaDestino")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([codigoATC])
+  @@index([grupoTerapeutico])
+  @@map("principio_activo")
+}
+
+/// Lo que el medico ve, busca y prescribe: marca + laboratorio + dosis + forma
+/// (regla no negociable 10). El motor clinico nunca opera sobre esta tabla —
+/// resuelve a PrincipioActivo via la N:M de abajo antes de verificar nada.
+model ProductoComercial {
+  id                String  @id @default(uuid())
+  nombreComercial   String
+  nombreNormalizado String
+  laboratorio       String?
+  formaFarmaceutica String?
+  dosisTexto        String?
+
+  /// Clave para pedir la monografia en vivo al proveedor externo (modelo §4).
+  /// El proveedor indexa por producto registrado, no por principio activo.
+  /// NUNCA se expone en la UI de donde viene (regla no negociable 9).
+  codigoApiExterna String? @unique
+
+  /// Entrada generica: un producto sintetico, uno por principio activo, con el
+  /// nombre del PA en vez de una marca.
+  ///
+  /// Existe porque el catalogo de productos registrados todavia no esta, y sin
+  /// el la app no podia prescribir nada: todo el flujo entra por producto
+  /// comercial. Con esto los 631 principios activos son buscables y
+  /// prescriptibles hoy, y el motor corre igual — resuelve a PA de todos modos.
+  ///
+  /// Al importar el catalogo real conviven: el medico encuentra la marca si
+  /// existe y el generico si no. Este flag es lo que permite distinguirlos en
+  /// la UI y, si algun dia se quiere, ocultarlos.
+  esGenerico Boolean @default(false)
+
+  principiosActivos ProductoComercialPrincipioActivo[]
+  prescripciones    Prescripcion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /// OJO: en Postgres los NULL son distintos entre si dentro de un unique, y
+  /// tres de las cuatro columnas son opcionales. Mientras el catalogo real no
+  /// garantice laboratorio/dosis/forma, esta clave NO impide dos filas iguales
+  /// con esos campos en null. Si Farmanuario no los trae siempre, hay que
+  /// pasarlos a NOT NULL con string vacio o agregar codigoApiExterna a la clave.
+  @@unique([nombreNormalizado, laboratorio, dosisTexto, formaFarmaceutica], name: "producto_unico")
+  @@index([nombreNormalizado])
+  @@map("producto_comercial")
+}
+
+model ProductoComercialPrincipioActivo {
+  productoComercialId String
+  principioActivoId   String
+
+  productoComercial ProductoComercial @relation(fields: [productoComercialId], references: [id], onDelete: Cascade)
+  principioActivo   PrincipioActivo   @relation(fields: [principioActivoId], references: [id], onDelete: Restrict)
+
+  @@id([productoComercialId, principioActivoId])
+  @@index([principioActivoId])
+  @@map("producto_comercial_principio_activo")
+}
+
+// --- §1.2 Ajuste renal ------------------------------------------------------
+
+/// DECISION: NO es 1:1 con PrincipioActivo — la clave es (principio activo,
+/// via). El modelo de datos proponia 1:1, y asi lo tiene GFH hoy, pero eso
+/// pierde datos: la tabla SEN trae Itraconazol y Voriconazol con pauta ORAL y
+/// pauta IV distintas, y Nitroglicerina con TOPICA e IV. Con 1:1 sobrevive una
+/// sola — en GFH quedo la IV en los tres casos, o sea que el sistema le muestra
+/// dosis intravenosa a quien prescribe capsulas. Para los azoles la via oral es
+/// justamente la de uso ambulatorio, que es el escenario de esta app.
+///
+/// Consecuencia para el motor: al resolver el ajuste de una prescripcion hay
+/// que elegir la fila por `Prescripcion.via`, con NO_ESPECIFICADA como
+/// fallback. Si no hay fila para esa via ni una NO_ESPECIFICADA, es "sin
+/// datos" — neutro, no "sin problema".
+model AjusteRenalFarmaco {
+  id                String            @id @default(uuid())
+  principioActivoId String
+  dosisFrNormal     String
+  metodoAjuste      MetodoAjuste
+  viaAdministracion ViaAdministracion @default(NO_ESPECIFICADA)
+  suplementoHd      String? // opcional: las tablas SEN 1-14 traen HFVVC, las posteriores no
+  observaciones     String?
+
+  /// Marca `_REVISAR_` de la transcripcion: typo o ambiguedad de la FUENTE.
+  /// NO es lo mismo que estadoValidacion (revision farmaceutica). Van los dos.
+  requiereRevision Boolean @default(false)
+  tablaOrigenNum   Int? // 1-26, trazabilidad a la tabla SEN original
+
+  /// DECISION: campo agregado (no esta en modelo-datos, lo exige regla no
+  /// negociable 8 + motor §10.2). Ojo: aun en RECHAZADO este contenido se
+  /// sigue devolviendo, marcado — el ajuste renal nunca se apaga.
+  estadoValidacion EstadoValidacion @default(PENDIENTE)
+
+  principioActivo PrincipioActivo    @relation(fields: [principioActivoId], references: [id], onDelete: Cascade)
+  rangos          RangoClcrFarmaco[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([principioActivoId, viaAdministracion], name: "ajuste_renal_por_via")
+  @@index([principioActivoId])
+  @@map("ajuste_renal_farmaco")
+}
+
+/// 3 o 4 filas por farmaco — las tablas SEN NO son uniformes, no normalizar a
+/// un numero fijo (motor §11.1).
+///
+/// El intervalo es `(min, max]`: el valor del borde pertenece al rango INFERIOR
+/// (motor §4.3). Y si el Clcr supera el techo de la tabla — 100 en los 643
+/// farmacos — se aplica el rango de mayor `clcrMax` buscado POR VALOR, no por
+/// posicion (motor §4.4). Ambas cosas son logica de dominio, no del schema:
+/// van con test de borde antes de exponerse por API.
+model RangoClcrFarmaco {
+  id                   String  @id @default(uuid())
+  ajusteRenalFarmacoId String
+  orden                Int // 0 = rango de mayor Clcr; preserva el orden de la fuente
+  clcrMin              Int? // null = sin limite inferior
+  clcrMax              Int? // null = sin limite superior
+  rangoTexto           String // etiqueta literal de la fuente, ej. "50-30 ml/min"
+  textoRecomendacion   String?
+  tipo                 TipoRangoAjuste
+
+  ajusteRenalFarmaco AjusteRenalFarmaco @relation(fields: [ajusteRenalFarmacoId], references: [id], onDelete: Cascade)
+
+  @@unique([ajusteRenalFarmacoId, orden])
+  @@index([ajusteRenalFarmacoId])
+  @@map("rango_clcr_farmaco")
+}
+
+// --- §1.3 Ajuste hepatico ---------------------------------------------------
+// Mismo patron que el renal, a pedido explicito. ABIERTO (modelo §7.1): la
+// clasificacion clinica todavia no esta confirmada — Child-Pugh es lo propuesto
+// por ser el criterio de las tablas publicadas, igual que Cockcroft-Gault lo es
+// para renal. Sin fuente de datos cargada, estas tablas quedan vacias y la UI
+// muestra NEUTRO (regla no negociable 5), nunca "sin problema".
+
+/// Clave (principio activo, via), igual que el renal — modelo §0.3 pide el
+/// mismo patron, y no tiene sentido que el hepatico repita el error que el
+/// renal acaba de dejar atras.
+model AjusteHepaticoFarmaco {
+  id                 String            @id @default(uuid())
+  principioActivoId  String
+  viaAdministracion  ViaAdministracion @default(NO_ESPECIFICADA)
+  dosisFuncionNormal String
+  metodoAjuste       MetodoAjuste
+  observaciones      String?
+  requiereRevision   Boolean           @default(false)
+  fuenteOrigen       String? // trazabilidad, equivalente a tablaOrigenNum en renal
+
+  estadoValidacion EstadoValidacion @default(PENDIENTE)
+
+  principioActivo PrincipioActivo         @relation(fields: [principioActivoId], references: [id], onDelete: Cascade)
+  rangos          RangoChildPughFarmaco[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([principioActivoId, viaAdministracion], name: "ajuste_hepatico_por_via")
+  @@index([principioActivoId])
+  @@map("ajuste_hepatico_farmaco")
+}
+
+model RangoChildPughFarmaco {
+  id                      String         @id @default(uuid())
+  ajusteHepaticoFarmacoId String
+  clase                   ChildPughClase
+  textoRecomendacion      String?
+  tipo                    TipoRangoAjuste
+
+  ajusteHepaticoFarmaco AjusteHepaticoFarmaco @relation(fields: [ajusteHepaticoFarmacoId], references: [id], onDelete: Cascade)
+
+  @@unique([ajusteHepaticoFarmacoId, clase])
+  @@index([ajusteHepaticoFarmacoId])
+  @@map("rango_child_pugh_farmaco")
+}
+
+// --- §1.4 Condiciones clinicas ----------------------------------------------
+
+model CondicionClinica {
+  id          String  @id @default(uuid())
+  /// Codigos reservados para condiciones SINTETICAS — derivadas en cada
+  /// evaluacion, nunca filas de CondicionPaciente (motor §6.2, modelo §1.4):
+  ///   ADULTO_MAYOR  → edad >= ConfiguracionUsuario.umbralAdultoMayor
+  ///   LACTANCIA     → Paciente.estaLactando
+  ///   EMBARAZO      → Paciente.semanaGestacion != null
+  codigo      String  @unique
+  nombre      String
+  descripcion String?
+
+  alertas   AlertaCondicionFarmaco[]
+  pacientes CondicionPaciente[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("condicion_clinica")
+}
+
+/// Sin @@unique en (principioActivoId, condicionClinicaId): un mismo par puede
+/// tener VARIAS filas diferenciadas por ventana de gestacion — un AINE se evita
+/// antes de la semana 20 y pasa a contraindicado desde ahi (motor §6.3).
+///
+/// Regla que no se toca al implementar: paciente SIN semana registrada ⇒ la
+/// alerta SE MANTIENE. Nunca se oculta una alerta por falta de datos.
+model AlertaCondicionFarmaco {
+  id                 String          @id @default(uuid())
+  principioActivoId  String
+  condicionClinicaId String
+  severidad          SeveridadAlerta
+  texto              String
+  fuente             String?
+  semanaMin          Int? // null = desde el inicio de la gestacion
+  semanaMax          Int? // null = hasta el final
+
+  estadoValidacion EstadoValidacion @default(PENDIENTE)
+
+  principioActivo  PrincipioActivo  @relation(fields: [principioActivoId], references: [id], onDelete: Cascade)
+  condicionClinica CondicionClinica @relation(fields: [condicionClinicaId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([principioActivoId, condicionClinicaId])
+  @@index([condicionClinicaId])
+  @@map("alerta_condicion_farmaco")
+}
+
+// --- §1.5 Alergias — grupos alergenicos -------------------------------------
+
+model GrupoAlergenico {
+  id     String @id @default(uuid())
+  codigo String @unique
+  nombre String
+
+  /// Cuanto cruzan entre si los MIEMBROS DE ESTE GRUPO. El cruce hacia los
+  /// grupos hermanos (mismo padre) usa el nivelCruce DEL PADRE, que es menor
+  /// (motor §7.2).
+  nivelCruce NivelCruce
+
+  grupoPadreId String?
+  /// Para mapear alergias en texto libre ("sulfas", "sulfamidas"). Se compara
+  /// normalizado y se exige >= 3 caracteres. Sin match, la alergia se registra
+  /// igual — simplemente no cruza. Nunca se inventa una familia (motor §7.4).
+  sinonimos    String[] @default([])
+
+  grupoPadre GrupoAlergenico?  @relation("JerarquiaGrupoAlergenico", fields: [grupoPadreId], references: [id], onDelete: SetNull)
+  subgrupos  GrupoAlergenico[] @relation("JerarquiaGrupoAlergenico")
+
+  principiosActivos PrincipioActivoGrupoAlergenico[]
+  alergias          Alergia[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([grupoPadreId])
+  @@map("grupo_alergenico")
+}
+
+model PrincipioActivoGrupoAlergenico {
+  principioActivoId String
+  grupoAlergenicoId String
+
+  principioActivo PrincipioActivo @relation(fields: [principioActivoId], references: [id], onDelete: Cascade)
+  grupoAlergenico GrupoAlergenico @relation(fields: [grupoAlergenicoId], references: [id], onDelete: Cascade)
+
+  @@id([principioActivoId, grupoAlergenicoId])
+  @@index([grupoAlergenicoId])
+  @@map("principio_activo_grupo_alergenico")
+}
+
+// --- §1.6 Alternativas terapeuticas -----------------------------------------
+
+model AlternativaTerapeutica {
+  id                         String           @id @default(uuid())
+  paOrigenId                 String
+  paAlternativaId            String
+  razon                      String
+  evidencia                  String?
+  severidadOriginalAplicable SeveridadAlerta?
+
+  estadoValidacion EstadoValidacion @default(PENDIENTE)
+
+  paOrigen      PrincipioActivo @relation("AlternativaOrigen", fields: [paOrigenId], references: [id], onDelete: Cascade)
+  paAlternativa PrincipioActivo @relation("AlternativaDestino", fields: [paAlternativaId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([paOrigenId, paAlternativaId])
+  @@index([paOrigenId])
+  @@map("alternativa_terapeutica")
+}
+
+// --- §1.7 Interacciones: NO hay tabla de pares ------------------------------
+//
+// El catalogo de interacciones vive en CODIGO, como listas por clase
+// terapeutica expandidas a producto cartesiano, cargadas en memoria al boot
+// (motor §5.1-5.2). Buscar una tabla `interaccion_farmaco_farmaco` no lleva a
+// ningun lado, y portarla a tabla seria repetir el error que GFH ya evito.
+//
+// Dos tests obligatorios sobre ese modulo, antes de exponerlo por API:
+//   1. INVARIANTE DE SEVERIDAD — para todo par cubierto por mas de una regla,
+//      la severidad que gana es la MAS GRAVE de las que lo cubren. 14 de ~600
+//      pares dependen del orden de declaracion; un comentario que diga "las
+//      contraindicadas van primero" no impide nada.
+//   2. GRAFIA — todo nombre citado en una regla existe en el catalogo de
+//      PrincipioActivo (comparado normalizado). Un typo no rompe nada: borra
+//      la interaccion en silencio.
+
+/// Correccion farmaceutica sobre un par del catalogo de codigo (motor §5.3).
+/// El panel de curacion esta fuera de alcance en v1, pero la tabla se crea
+/// igual: todo el contenido clinico es BORRADOR y va a necesitar override.
+///
+/// DELIBERADAMENTE sin FK a PrincipioActivo — el catalogo de codigo puede
+/// nombrar pares que todavia no existen en el catalogo de PA, y la curacion no
+/// debe depender de que ese match exista.
+model InteraccionCurada {
+  id                String                @id @default(uuid())
+  /// parClave = [normalizar(a), normalizar(b)].sort().join('|') — motor §5.2
+  parClave          String                @unique
+  rechazado         Boolean               @default(false)
+  severidadOverride SeveridadInteraccion?
+  textoOverride     String?
+  nota              String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("interaccion_curada")
+}
+
+// ============================================================================
+// §2 — CUENTA, SEGURIDAD Y NEGOCIO
+// ============================================================================
+
+model Medico {
+  id            String @id @default(uuid())
+  email         String @unique
+  nombreUsuario String @unique // el login acepta email O nombreUsuario, indistinto
+  passwordHash  String // Argon2id. Nunca SHA, nunca MD5, nunca texto plano.
+  nombre        String
+  apellido      String
+
+  rol    RolMedico    @default(USER)
+  estado EstadoMedico @default(ACTIVO)
+
+  /// DECISION: campos agregados (no estan en modelo-datos). La regla no
+  /// negociable 7 exige un modal de disclaimer con checkbox obligatorio en el
+  /// primer ingreso (pantalla 1.8); sin persistir version + fecha no hay forma
+  /// de re-pedirlo cuando el texto cambie, ni de probar que se acepto.
+  disclaimerVersion    String?
+  disclaimerAceptadoAt DateTime?
+
+  sesiones             Sesion[]
+  suscripcion          Suscripcion?
+  configuracion        ConfiguracionUsuario?
+  auditoria            AuditLog[]
+  grupos               Grupo[]
+  pacientes            Paciente[]
+  prescripciones       Prescripcion[]
+  condicionesPaciente  CondicionPaciente[]
+  alergias             Alergia[]
+  interaccionesDetectadas InteraccionDetectada[]
+  alternativasAceptadas   AlternativaAceptada[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("medico")
+}
+
+/// Rotacion: cada refresh emite una Sesion NUEVA y marca `revocadaAt` en la
+/// anterior. Reuso de un refresh ya revocado = senal de robo de token → se
+/// revocan TODAS las sesiones del medico (modelo §2.2).
+///
+/// NOTA para quien implemente Perfil > "Sesiones activas": esta tabla mezcla
+/// dispositivo y token, asi que crece una fila por cada refresh. La lista de
+/// sesiones activas es `revocadaAt IS NULL` (una por dispositivo, correcta),
+/// pero hace falta una purga programada de las revocadas o la tabla no para de
+/// crecer. `dispositivoInfo` hay que copiarlo en cada rotacion.
+model Sesion {
+  id               String    @id @default(uuid())
+  medicoId         String
+  refreshTokenHash String    @unique // nunca el token en claro
+  dispositivoInfo  String? // modelo + OS, para poder revocar desde Perfil
+  creadaAt         DateTime  @default(now())
+  expiraAt         DateTime
+  revocadaAt       DateTime?
+  ultimoUsoAt      DateTime?
+
+  medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  @@index([medicoId, revocadaAt])
+  @@index([expiraAt])
+  @@map("sesion")
+}
+
+/// Se escribe SOLO desde el webhook de RevenueCat (regla no negociable 6).
+/// Ningun endpoint que llame la app puede tocar esta tabla — mismo criterio que
+/// el motor clinico: no confiar en lo que manda el cliente.
+model Suscripcion {
+  id               String            @id @default(uuid())
+  medicoId         String            @unique
+  entitlementId    String // ej. "premium"
+  productId        String
+  store            StoreSuscripcion
+  estado           EstadoSuscripcion
+  periodoActualFin DateTime
+  actualizadaAt    DateTime          @updatedAt
+
+  /// Idempotencia del webhook: RevenueCat reintenta, y un RENEWAL aplicado dos
+  /// veces no debe mover el periodo. Se guarda el ultimo evento procesado.
+  ultimoEventoId   String?
+  ultimoEventoTipo String?
+
+  medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([estado])
+  @@map("suscripcion")
+}
+
+model AuditLog {
+  id       String          @id @default(uuid())
+  medicoId String
+  accion   AccionAuditoria
+  /// NUNCA informacion clinica sensible. Para la carga por foto se guarda el
+  /// pacienteId y nada mas: hay que poder auditar que ese paciente tuvo una
+  /// carga asistida sin retener la imagen ni el texto crudo (modelo §3.4).
+  detalle   String?
+  createdAt DateTime        @default(now())
+
+  medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  @@index([medicoId, createdAt])
+  @@index([accion, createdAt])
+  @@map("audit_log")
+}
+
+model ConfiguracionUsuario {
+  medicoId           String  @id
+  tema               TemaUI  @default(SISTEMA)
+  notificacionesPush Boolean @default(true)
+
+  /// 65 es el corte de la literatura (Beers / STOPP-START), pero en una
+  /// consulta de geriatria todos los pacientes lo superan y la alerta se
+  /// vuelve ruido. Por eso es configurable (motor §6.2).
+  umbralAdultoMayor Int @default(65)
+
+  medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("configuracion_usuario")
+}
+
+// ============================================================================
+// §3 — DATOS DEL MEDICO
+// `medicoId` en TODAS. Redundante a proposito (motor §2, modelo §6).
+// ============================================================================
+
+model Grupo {
+  id       String @id @default(uuid())
+  medicoId String
+  nombre   String
+
+  medico    Medico     @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  /// Un paciente pertenece a un solo grupo o a ninguno. Al borrar el grupo los
+  /// pacientes quedan sin grupo — no se borran en cascada.
+  pacientes Paciente[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([medicoId, nombre])
+  @@index([medicoId])
+  @@map("grupo")
+}
+
+/// Aca vive el ContextoDeVerificacion completo del motor (motor §2). No hay
+/// entidad "internacion" ni "episodio": el Clcr y el estado hepatico son datos
+/// del paciente, con fecha de medicion.
+model Paciente {
+  id       String  @id @default(uuid())
+  medicoId String
+  grupoId  String?
+
+  nombre         String
+  apellido       String
+  documento      String?
+  fechaNacimiento DateTime // deriva edad → condicion sintetica ADULTO_MAYOR
+  sexo           Sexo
+  alturaCm       Int?
+
+  // --- renal ---------------------------------------------------------------
+  pesoKg          Decimal? @db.Decimal(5, 2)
+  creatininaMgDl  Decimal? @db.Decimal(4, 2)
+  clcrMlMin       Decimal? @db.Decimal(5, 1) // motor §4.1: se redondea a 1 decimal
+  clcrOrigen      ClcrOrigen?
+  /// DECISION: campo agregado. El motor §2 lo pide explicitamente ("el Clcr
+  /// pasa a ser un dato del paciente con fecha de medicion") y no esta en el
+  /// modelo de datos. Una creatinina de hace ocho meses no es el mismo dato.
+  clcrMedidoAt    DateTime?
+
+  // --- hepatico ------------------------------------------------------------
+  // Mismo patron dual que renal: los 5 valores para calcular, o la clase directa.
+  // ABIERTO (modelo §7.1): si la fuente real no usa Child-Pugh, estos 5 campos
+  // cambian. El resto del schema no.
+  bilirrubinaMgDl Decimal?        @db.Decimal(5, 2)
+  albuminaGDl     Decimal?        @db.Decimal(4, 2)
+  inr             Decimal?        @db.Decimal(4, 2)
+  ascitis         Ascitis?
+  encefalopatia   Encefalopatia?
+  childPughClase  ChildPughClase?
+  childPughOrigen OrigenCalculo?
+  childPughMedidoAt DateTime?
+
+  // --- embarazo y lactancia -------------------------------------------------
+  semanaGestacion Int? // null CON embarazo activo ⇒ la alerta se MANTIENE (motor §6.3)
+  estaLactando    Boolean? // condicion sintetica LACTANCIA, no fila en CondicionPaciente
+
+  medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  grupo  Grupo? @relation(fields: [grupoId], references: [id], onDelete: SetNull)
+
+  prescripciones          Prescripcion[]
+  condiciones             CondicionPaciente[]
+  alergias                Alergia[]
+  interaccionesDetectadas InteraccionDetectada[]
+  alternativasAceptadas   AlternativaAceptada[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([medicoId, apellido, nombre])
+  @@index([medicoId, grupoId])
+  @@map("paciente")
+}
+
+/// El medico prescribe un PRODUCTO COMERCIAL. El motor resuelve a principio(s)
+/// activo(s) via ProductoComercialPrincipioActivo al momento de evaluar, asi
+/// que una sola fila de Augmentine dispara verificaciones para amoxicilina y
+/// para acido clavulanico (regla no negociable 10).
+///
+/// Farmaco libre: se guarda pero NO participa de ninguna verificacion, salvo la
+/// alerta generica de Clcr < 60 (motor §4.5). No se puede cruzar lo que no
+/// tiene identidad.
+model Prescripcion {
+  id                  String  @id @default(uuid())
+  medicoId            String
+  pacienteId          String
+  productoComercialId String?
+  esFarmacoLibre      Boolean @default(false)
+  nombreLibre         String?
+
+  dosis      String
+  frecuencia String
+  via        ViaAdministracion
+  indicacion String?
+  estado     EstadoPrescripcion @default(ACTIVO)
+
+  medico            Medico             @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  paciente          Paciente           @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  productoComercial ProductoComercial? @relation(fields: [productoComercialId], references: [id], onDelete: Restrict)
+
+  interaccionesComoA InteraccionDetectada[] @relation("InteraccionPrescripcionA")
+  interaccionesComoB InteraccionDetectada[] @relation("InteraccionPrescripcionB")
+  alternativasAceptadas AlternativaAceptada[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([medicoId, pacienteId, estado])
+  @@index([productoComercialId])
+  @@map("prescripcion")
+}
+
+model CondicionPaciente {
+  id                 String    @id @default(uuid())
+  medicoId           String
+  pacienteId         String
+  condicionClinicaId String
+  fechaDiagnostico   DateTime?
+  observaciones      String?
+  activo             Boolean   @default(true)
+
+  medico           Medico           @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  paciente         Paciente         @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  condicionClinica CondicionClinica @relation(fields: [condicionClinicaId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([pacienteId, condicionClinicaId])
+  @@index([medicoId, pacienteId, activo])
+  @@map("condicion_paciente")
+}
+
+model Alergia {
+  id         String           @id @default(uuid())
+  medicoId   String
+  pacienteId String
+  tipo       TipoAlergia
+  severidad  SeveridadAlergia
+
+  principioActivoId String? // FARMACOLOGICA: el PA exacto
+  grupoAlergenicoId String? // resuelto desde texto libre en las GENERAL
+  descripcion       String? // GENERAL: el alergeno tal cual lo escribio el medico
+  activo            Boolean @default(true)
+
+  medico          Medico           @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  paciente        Paciente         @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  principioActivo PrincipioActivo? @relation(fields: [principioActivoId], references: [id], onDelete: SetNull)
+  grupoAlergenico GrupoAlergenico? @relation(fields: [grupoAlergenicoId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([medicoId, pacienteId, activo])
+  @@map("alergia")
+}
+
+/// Instancia detectada sobre un paciente real. Las herramientas standalone NO
+/// escriben aca (modelo §5): son puro calculo sin estado.
+///
+/// DECISION — la clave unica se aparta del modelo de datos, que propone
+/// (prescripcionAId, prescripcionBId). Ese unique se rompe desde que se
+/// prescribe por producto comercial: un par de prescripciones puede generar mas
+/// de una interaccion si alguno de los productos es combinado. Augmentine + X
+/// puede interactuar por amoxicilina Y por acido clavulanico, con severidades
+/// distintas; con el unique de a dos, la segunda se pierde EN SILENCIO — que es
+/// exactamente el error #7 de motor §12 ("filtrar de mas no da error, da menos
+/// resultados"). Se agregan los dos principios activos a la clave.
+///
+/// Orden estable del par: ordenar por id de prescripcion, y el PA de cada lado
+/// es el de su propia prescripcion. Asi (A,B) y (B,A) no pueden coexistir.
+///
+/// Re-detectar es idempotente: si nada cambio no se escribe; si cambio
+/// severidad/texto/fuente se actualiza; `vista` NUNCA se toca — re-detectar no
+/// des-revisa lo que el medico ya miro (motor §5.4).
+model InteraccionDetectada {
+  id         String @id @default(uuid())
+  medicoId   String
+  pacienteId String
+
+  prescripcionAId   String
+  prescripcionBId   String
+  principioActivoAId String
+  principioActivoBId String
+
+  severidad SeveridadInteraccion
+  texto     String
+  fuente    String?
+  vista     Boolean              @default(false)
+  vistaAt   DateTime?
+
+  medico          Medico          @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  paciente        Paciente        @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  prescripcionA   Prescripcion    @relation("InteraccionPrescripcionA", fields: [prescripcionAId], references: [id], onDelete: Cascade)
+  prescripcionB   Prescripcion    @relation("InteraccionPrescripcionB", fields: [prescripcionBId], references: [id], onDelete: Cascade)
+  principioActivoA PrincipioActivo @relation("InteraccionPaA", fields: [principioActivoAId], references: [id], onDelete: Cascade)
+  principioActivoB PrincipioActivo @relation("InteraccionPaB", fields: [principioActivoBId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([prescripcionAId, prescripcionBId, principioActivoAId, principioActivoBId], name: "interaccion_par_unico")
+  @@index([medicoId, pacienteId])
+  @@index([pacienteId, vista])
+  @@map("interaccion_detectada")
+}
+
+/// DECISION: tabla agregada (no esta en modelo-datos). La exige motor §8.6 —
+/// "cuando el medico acepta una alternativa se persiste quien, cuando, que
+/// reemplazo a que y la version del disclaimer que acepto" — y el sistema
+/// visual §5 la muestra en la UI como el distintivo "✓ Documentada".
+/// Es una decision clinica documentada, no un evento de log.
+model AlternativaAceptada {
+  id         String @id @default(uuid())
+  medicoId   String
+  pacienteId String
+
+  /// La prescripcion reemplazada. Null cuando la alternativa se ofrecio al
+  /// BLOQUEAR una prescripcion que nunca llego a existir (motor §8.1, tercer
+  /// punto de entrada: alergia grave exacta impide prescribir).
+  prescripcionOrigenId String?
+  paOrigenId           String
+  paAlternativaId      String
+
+  disclaimerVersion String
+  aceptadoAt        DateTime @default(now())
+  nota              String?
+
+  medico             Medico          @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  paciente           Paciente        @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  prescripcionOrigen Prescripcion?   @relation(fields: [prescripcionOrigenId], references: [id], onDelete: SetNull)
+  paOrigen           PrincipioActivo @relation("AceptadaOrigen", fields: [paOrigenId], references: [id], onDelete: Restrict)
+  paAlternativa      PrincipioActivo @relation("AceptadaDestino", fields: [paAlternativaId], references: [id], onDelete: Restrict)
+
+  @@index([medicoId, pacienteId])
+  @@index([pacienteId, paOrigenId])
+  @@map("alternativa_aceptada")
+}

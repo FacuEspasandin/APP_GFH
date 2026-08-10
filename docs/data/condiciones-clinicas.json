@@ -1,0 +1,137 @@
+[
+  {
+    "codigo": "ULCERA",
+    "nombre": "Úlcera péptica / HDA",
+    "descripcion": "Enfermedad ulcerosa o hemorragia digestiva alta"
+  },
+  {
+    "codigo": "GLAUCOMA",
+    "nombre": "Glaucoma de ángulo cerrado",
+    "descripcion": null
+  },
+  {
+    "codigo": "HBP",
+    "nombre": "Hiperplasia prostática benigna",
+    "descripcion": "Riesgo de retención urinaria"
+  },
+  {
+    "codigo": "EPILEPSIA",
+    "nombre": "Epilepsia",
+    "descripcion": "Riesgo de descenso del umbral convulsivo"
+  },
+  {
+    "codigo": "GOTA",
+    "nombre": "Gota / hiperuricemia",
+    "descripcion": null
+  },
+  {
+    "codigo": "QT_LARGO",
+    "nombre": "QT prolongado",
+    "descripcion": "Síndrome de QT largo o riesgo de prolongación"
+  },
+  {
+    "codigo": "HIPERPOTASEMIA",
+    "nombre": "Hiperpotasemia",
+    "descripcion": "Potasio sérico elevado"
+  },
+  {
+    "codigo": "HIPONATREMIA",
+    "nombre": "Hiponatremia",
+    "descripcion": "Sodio sérico bajo"
+  },
+  {
+    "codigo": "OSTEOPOROSIS",
+    "nombre": "Osteoporosis",
+    "descripcion": null
+  },
+  {
+    "codigo": "MIASTENIA",
+    "nombre": "Miastenia gravis",
+    "descripcion": "Riesgo de bloqueo neuromuscular"
+  },
+  {
+    "codigo": "DEFICIT_G6PD",
+    "nombre": "Déficit de G6PD",
+    "descripcion": "Riesgo de hemólisis con ciertos fármacos"
+  },
+  {
+    "codigo": "HTA",
+    "nombre": "Hipertensión arterial",
+    "descripcion": "Presión arterial elevada de forma sostenida"
+  },
+  {
+    "codigo": "DM1",
+    "nombre": "Diabetes mellitus tipo 1",
+    "descripcion": "Insulinodependiente"
+  },
+  {
+    "codigo": "DM2",
+    "nombre": "Diabetes mellitus tipo 2",
+    "descripcion": "No insulinodependiente"
+  },
+  {
+    "codigo": "ERC",
+    "nombre": "Enfermedad renal crónica",
+    "descripcion": "Daño renal de >3 meses"
+  },
+  {
+    "codigo": "EPOC",
+    "nombre": "Enfermedad pulmonar obstructiva crónica",
+    "descripcion": null
+  },
+  {
+    "codigo": "ASMA",
+    "nombre": "Asma bronquial",
+    "descripcion": null
+  },
+  {
+    "codigo": "ICC",
+    "nombre": "Insuficiencia cardíaca congestiva",
+    "descripcion": null
+  },
+  {
+    "codigo": "FA",
+    "nombre": "Fibrilación auricular",
+    "descripcion": null
+  },
+  {
+    "codigo": "HIPOTIROIDISMO",
+    "nombre": "Hipotiroidismo",
+    "descripcion": null
+  },
+  {
+    "codigo": "EMBARAZO",
+    "nombre": "Embarazo",
+    "descripcion": "Marcar también semana_gestacion en internación"
+  },
+  {
+    "codigo": "LACTANCIA",
+    "nombre": "Lactancia",
+    "descripcion": "Marcar también en_lactancia en internación"
+  },
+  {
+    "codigo": "CIRROSIS",
+    "nombre": "Cirrosis / insuficiencia hepática",
+    "descripcion": "Deterioro de la función hepática"
+  },
+  {
+    "codigo": "DEPRESION",
+    "nombre": "Depresión",
+    "descripcion": null
+  },
+  {
+    "codigo": "PARKINSON",
+    "nombre": "Enfermedad de Parkinson",
+    "descripcion": "Riesgo con bloqueantes dopaminérgicos"
+  },
+  {
+    "codigo": "OBESIDAD",
+    "nombre": "Obesidad",
+    "descripcion": null
+  },
+  {
+    "codigo": "ADULTO_MAYOR",
+    "nombre": "Adulto mayor",
+    "descripcion": "Derivada automáticamente de la edad. Habilita los criterios de medicación potencialmente inapropiada (Beers / STOPP-START)."
+  }
+]

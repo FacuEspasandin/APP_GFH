@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "GFH",
+    "slug": "gfh-movil",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "scheme": "gfh",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#1F5E4A",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "app.gfh.movil"
+    },
+    "android": {
+      "package": "app.gfh.movil",
+      "adaptiveIcon": { "backgroundColor": "#1F5E4A" }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": ["expo-router", "expo-secure-store"],
+    "experiments": { "typedRoutes": false }
+  }
+}

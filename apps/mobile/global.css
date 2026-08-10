@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Tokens de tema como variables CSS.
+ *
+ * Cambiar de tema es cambiar estas variables: ningún componente se toca. Es el
+ * mismo mecanismo que usa GFH web.
+ *
+ * Los colores de SEVERIDAD no están acá a propósito. Viven en
+ * `@gfh/shared-types` y se aplican por `style`, porque el significado no cambia
+ * con la preferencia del usuario: el rojo es el mismo rojo en claro y en
+ * oscuro. Si se aclarara "para que combine", dejaría de ser el rojo que el
+ * médico aprendió a temer.
+ */
+@layer base {
+  :root {
+    --ink: 18 42 35;
+    --ink-suave: 92 107 100;
+    --paper: 243 246 243;
+    --line: 221 229 224;
+    --surface: 255 255 255;
+    --primary: 31 94 74;
+    --primary-hover: 24 74 59;
+    --primary-light: 231 240 234;
+    --accent: 13 112 104;
+    --accent-light: 225 241 238;
+  }
+
+  .dark:root {
+    /* El papel oscuro es verde muy oscuro, no negro puro: el negro vibra
+       ópticamente bajo texto claro y cansa en una guardia larga. */
+    --ink: 226 236 231;
+    --ink-suave: 147 165 157;
+    --paper: 12 22 19;
+    --line: 43 60 53;
+    --surface: 20 33 28;
+    /* La marca se ACLARA en oscuro: #1F5E4A sobre fondo oscuro no llega al
+       contraste mínimo AA. Un tema oscuro fiel al color de marca es un tema
+       oscuro ilegible. */
+    --primary: 92 176 146;
+    --primary-hover: 122 197 168;
+    --primary-light: 27 51 43;
+    --accent: 82 183 172;
+    --accent-light: 22 48 46;
+  }
+}

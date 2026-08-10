@@ -1,0 +1,248 @@
+import Svg, { Circle, Path, Polyline, Rect } from 'react-native-svg';
+
+/**
+ * Los 24 íconos de línea del sistema (design-tokens §5).
+ *
+ * Tres reglas del documento que no son estéticas:
+ *
+ *  · `stroke="currentColor"` — acá se traduce a la prop `color`. Es lo que
+ *    permite que el mismo ícono se vea blanco sobre el header verde y verde
+ *    sobre fondo blanco sin mantener dos versiones.
+ *  · `viewBox="0 0 24 24"` siempre, tamaño de render entre 15 y 21 px.
+ *  · El grosor sube cuando el ícono es chico, para que no se vea débil: 2.2 a
+ *    los 15 px, 1.6 a los 21. Se calcula solo desde `tamano`.
+ *
+ * Y una que sí es de significado: **nunca emoji, nunca texto Unicode haciendo
+ * de ícono**. Un emoji cambia de forma según el sistema operativo y en una
+ * pantalla clínica eso es ruido.
+ */
+
+export type NombreIcono =
+  | 'atras'
+  | 'chevron'
+  | 'chevronArriba'
+  | 'mas'
+  | 'editar'
+  | 'compartir'
+  | 'menu'
+  | 'estrella'
+  | 'cerrar'
+  | 'check'
+  | 'casa'
+  | 'herramientas'
+  | 'buscar'
+  | 'usuario'
+  | 'interacciones'
+  | 'alerta'
+  | 'capsula'
+  | 'info'
+  | 'sinConexion'
+  | 'reloj'
+  | 'pulso'
+  | 'prohibido'
+  | 'carpeta'
+  | 'camara';
+
+interface Props {
+  nombre: NombreIcono;
+  /** Entre 15 (chevrons) y 21 (tab bar, FAB). */
+  tamano?: number;
+  color?: string;
+}
+
+/** Más grueso cuanto más chico, para que la línea no se vea débil. */
+function grosor(tamano: number): number {
+  if (tamano <= 16) return 2.2;
+  if (tamano <= 19) return 1.9;
+  return 1.6;
+}
+
+export function Icono({ nombre, tamano = 20, color = 'currentColor' }: Props) {
+  const comun: Comun = {
+    stroke: color,
+    strokeWidth: grosor(tamano),
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    fill: 'none',
+  };
+
+  return (
+    <Svg width={tamano} height={tamano} viewBox="0 0 24 24">
+      {trazos(nombre, comun)}
+    </Svg>
+  );
+}
+
+type Comun = {
+  stroke: string;
+  strokeWidth: number;
+  strokeLinecap: 'round';
+  strokeLinejoin: 'round';
+  fill: 'none';
+};
+
+function trazos(nombre: NombreIcono, c: Comun) {
+  switch (nombre) {
+    case 'atras':
+      return (
+        <>
+          <Path d="M19 12H5" {...c} />
+          <Polyline points="12 19 5 12 12 5" {...c} />
+        </>
+      );
+    case 'chevron':
+      return <Polyline points="9 18 15 12 9 6" {...c} />;
+    case 'chevronArriba':
+      return <Polyline points="18 15 12 9 6 15" {...c} />;
+    case 'mas':
+      return (
+        <>
+          <Path d="M12 5v14" {...c} />
+          <Path d="M5 12h14" {...c} />
+        </>
+      );
+    case 'editar':
+      return (
+        <>
+          <Path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" {...c} />
+          <Path d="M15 5l4 4" {...c} />
+        </>
+      );
+    case 'compartir':
+      return (
+        <>
+          <Path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" {...c} />
+          <Polyline points="16 6 12 2 8 6" {...c} />
+          <Path d="M12 2v14" {...c} />
+        </>
+      );
+    case 'menu':
+      return (
+        <>
+          <Circle cx="12" cy="5" r="1" {...c} />
+          <Circle cx="12" cy="12" r="1" {...c} />
+          <Circle cx="12" cy="19" r="1" {...c} />
+        </>
+      );
+    case 'estrella':
+      return (
+        <Path
+          d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9Z"
+          {...c}
+        />
+      );
+    case 'cerrar':
+      return (
+        <>
+          <Path d="M18 6L6 18" {...c} />
+          <Path d="M6 6l12 12" {...c} />
+        </>
+      );
+    case 'check':
+      return <Polyline points="20 6 9 17 4 12" {...c} />;
+    case 'casa':
+      return (
+        <>
+          <Path d="M3 10.5L12 3l9 7.5" {...c} />
+          <Path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5" {...c} />
+        </>
+      );
+    case 'herramientas':
+      // Grid 2×2.
+      return (
+        <>
+          <Rect x="3" y="3" width="7.5" height="7.5" rx="1.5" {...c} />
+          <Rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5" {...c} />
+          <Rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5" {...c} />
+          <Rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5" {...c} />
+        </>
+      );
+    case 'buscar':
+      return (
+        <>
+          <Circle cx="11" cy="11" r="7" {...c} />
+          <Path d="M20 20l-3.6-3.6" {...c} />
+        </>
+      );
+    case 'usuario':
+      return (
+        <>
+          <Circle cx="12" cy="8" r="4" {...c} />
+          <Path d="M4.5 20.5c1.2-4 4-6 7.5-6s6.3 2 7.5 6" {...c} />
+        </>
+      );
+    case 'interacciones':
+      // Flechas cruzadas.
+      return (
+        <>
+          <Path d="M4 8h11" {...c} />
+          <Polyline points="12 5 15 8 12 11" {...c} />
+          <Path d="M20 16H9" {...c} />
+          <Polyline points="12 13 9 16 12 19" {...c} />
+        </>
+      );
+    case 'alerta':
+      return (
+        <>
+          <Path d="M12 3.5L22 20H2Z" {...c} />
+          <Path d="M12 9.5v4.5" {...c} />
+          <Path d="M12 17.2v.1" {...c} />
+        </>
+      );
+    case 'capsula':
+      return (
+        <>
+          <Path d="M8.5 3.5h7a5 5 0 0 1 0 10h-7a5 5 0 0 1 0-10Z" {...c} />
+          <Path d="M12 3.5v10" {...c} />
+        </>
+      );
+    case 'info':
+      return (
+        <>
+          <Circle cx="12" cy="12" r="9" {...c} />
+          <Path d="M12 11v5" {...c} />
+          <Path d="M12 8v.1" {...c} />
+        </>
+      );
+    case 'sinConexion':
+      return (
+        <>
+          <Path d="M3 8.5c1.6-1.2 3.4-2 5.3-2.4" {...c} />
+          <Path d="M15.5 6.7c1.9.5 3.7 1.4 5.5 2.8" {...c} />
+          <Path d="M7 13c1-.8 2.1-1.3 3.2-1.6" {...c} />
+          <Path d="M12 18.5v.1" {...c} />
+          <Path d="M3 3l18 18" {...c} />
+        </>
+      );
+    case 'reloj':
+      return (
+        <>
+          <Circle cx="12" cy="12" r="9" {...c} />
+          <Polyline points="12 7 12 12 15.5 14" {...c} />
+        </>
+      );
+    case 'pulso':
+      return <Polyline points="2 12 7 12 10 4 14 20 17 12 22 12" {...c} />;
+    case 'prohibido':
+      return (
+        <>
+          <Circle cx="12" cy="12" r="9" {...c} />
+          <Path d="M5.6 5.6l12.8 12.8" {...c} />
+        </>
+      );
+    case 'carpeta':
+      return (
+        <Path
+          d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"
+          {...c}
+        />
+      );
+    case 'camara':
+      return (
+        <>
+          <Path d="M3 8.5a2 2 0 0 1 2-2h2.5L9 4.5h6L16.5 6.5H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" {...c} />
+          <Circle cx="12" cy="13" r="3.5" {...c} />
+        </>
+      );
+  }
+}

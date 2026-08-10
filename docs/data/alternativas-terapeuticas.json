@@ -1,0 +1,1899 @@
+[
+  {
+    "paOrigenNombre": "Ibuprofeno",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Diclofenaco",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Simvastatina",
+    "paAlternativaNombre": "Rosuvastatina",
+    "razon": "Metabolismo independiente de CYP3A4: menor riesgo de interacción con inhibidores potentes.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Propranolol",
+    "paAlternativaNombre": "Metoprolol",
+    "razon": "Cardioselectivo, con menor efecto broncoconstrictor a dosis habituales.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Glibenclamida",
+    "paAlternativaNombre": "Gliclazida",
+    "razon": "Sulfonilurea con menor riesgo de hipoglucemia prolongada; preferible en ancianos y deterioro renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Ibuprofeno",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Naproxeno",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Diclofenaco",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Ketoprofeno",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Piroxicam",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Celecoxib",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Morfina",
+    "paAlternativaNombre": "Fentanilo",
+    "razon": "Sin metabolitos activos de eliminación renal: más seguro en insuficiencia renal que los opioides con metabolitos acumulables (p. ej. M6G de morfina, normeperidina de meperidina).",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Enalapril",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Enalapril",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Enalapril",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Lisinopril",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ramipril",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Losartan",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Valsartan",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Candesartan",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Propranolol",
+    "paAlternativaNombre": "Bisoprolol",
+    "razon": "Betabloqueante cardioselectivo: menor riesgo de broncoespasmo que el no selectivo en asma/EPOC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Propranolol",
+    "paAlternativaNombre": "Atenolol",
+    "razon": "Cardioselectivo de eliminación renal; menor broncoespasmo, ajustar dosis en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Nadolol",
+    "paAlternativaNombre": "Bisoprolol",
+    "razon": "Betabloqueante cardioselectivo: menor riesgo de broncoespasmo que el no selectivo en asma/EPOC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Carvedilol",
+    "paAlternativaNombre": "Bisoprolol",
+    "razon": "Betabloqueante cardioselectivo: menor riesgo de broncoespasmo que el no selectivo en asma/EPOC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Simvastatina",
+    "paAlternativaNombre": "Pravastatina",
+    "razon": "No se metaboliza por CYP3A4: evita la interacción con inhibidores potentes (p. ej. macrólidos, azoles) y reduce el riesgo de miopatía/rabdomiólisis.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Lovastatina",
+    "paAlternativaNombre": "Pravastatina",
+    "razon": "No se metaboliza por CYP3A4: evita la interacción con inhibidores potentes (p. ej. macrólidos, azoles) y reduce el riesgo de miopatía/rabdomiólisis.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Atorvastatina",
+    "paAlternativaNombre": "Pravastatina",
+    "razon": "No se metaboliza por CYP3A4: evita la interacción con inhibidores potentes (p. ej. macrólidos, azoles) y reduce el riesgo de miopatía/rabdomiólisis.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Metformina",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 de eliminación principalmente biliar: no requiere ajuste por función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Metformina",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable sin riesgo de acidosis láctica cuando el filtrado glomerular es bajo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Glibenclamida",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable, evitando la hipoglucemia prolongada de la sulfonilurea.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Clorpropamida",
+    "paAlternativaNombre": "Gliclazida",
+    "razon": "Sulfonilurea con menor riesgo de hipoglucemia prolongada; preferible en ancianos y deterioro renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Diazepam",
+    "paAlternativaNombre": "Lorazepam",
+    "razon": "Vida media más corta y sin metabolitos activos acumulables: menor sedación residual en ancianos, hepatopatía y lactancia.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Claritromicina",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido con inhibición mínima de CYP3A4: reduce interacciones y el riesgo de prolongación del QT.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Eritromicina",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido con inhibición mínima de CYP3A4: reduce interacciones y el riesgo de prolongación del QT.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Naproxeno",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Indometacina",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Indometacina",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Ketoprofeno",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Dexketoprofeno",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Dexketoprofeno",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Flurbiprofeno",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Flurbiprofeno",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Piroxicam",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Sulindaco",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Sulindaco",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Clonixino Lisina",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Clonixino Lisina",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Celecoxib",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Etoricoxib",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Etoricoxib",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Parecoxib",
+    "paAlternativaNombre": "Paracetamol",
+    "razon": "Analgésico/antipirético sin nefrotoxicidad, retención hidrosalina ni efecto antiagregante; seguro cuando el AINE está desaconsejado por función renal, insuficiencia cardíaca, HTA o embarazo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Parecoxib",
+    "paAlternativaNombre": "Tramadol",
+    "razon": "Opioide débil para dolor moderado-intenso sin el riesgo renal/GI del AINE. Ajustar dosis en ERC y vigilar interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Morfina",
+    "paAlternativaNombre": "Buprenorfina",
+    "razon": "Perfil farmacocinético favorable en ERC, sin acumulación significativa de metabolitos activos.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Codeína",
+    "paAlternativaNombre": "Fentanilo",
+    "razon": "Sin metabolitos activos de eliminación renal: más seguro en insuficiencia renal que los opioides con metabolitos acumulables (p. ej. M6G de morfina, normeperidina de meperidina).",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Codeína",
+    "paAlternativaNombre": "Buprenorfina",
+    "razon": "Perfil farmacocinético favorable en ERC, sin acumulación significativa de metabolitos activos.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Oxicodona",
+    "paAlternativaNombre": "Fentanilo",
+    "razon": "Sin metabolitos activos de eliminación renal: más seguro en insuficiencia renal que los opioides con metabolitos acumulables (p. ej. M6G de morfina, normeperidina de meperidina).",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Oxicodona",
+    "paAlternativaNombre": "Buprenorfina",
+    "razon": "Perfil farmacocinético favorable en ERC, sin acumulación significativa de metabolitos activos.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Meperidina",
+    "paAlternativaNombre": "Fentanilo",
+    "razon": "Sin metabolitos activos de eliminación renal: más seguro en insuficiencia renal que los opioides con metabolitos acumulables (p. ej. M6G de morfina, normeperidina de meperidina).",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Meperidina",
+    "paAlternativaNombre": "Buprenorfina",
+    "razon": "Perfil farmacocinético favorable en ERC, sin acumulación significativa de metabolitos activos.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Tramadol",
+    "paAlternativaNombre": "Fentanilo",
+    "razon": "Sin metabolitos activos de eliminación renal: más seguro en insuficiencia renal que los opioides con metabolitos acumulables (p. ej. M6G de morfina, normeperidina de meperidina).",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Tramadol",
+    "paAlternativaNombre": "Buprenorfina",
+    "razon": "Perfil farmacocinético favorable en ERC, sin acumulación significativa de metabolitos activos.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Tapentadol",
+    "paAlternativaNombre": "Fentanilo",
+    "razon": "Sin metabolitos activos de eliminación renal: más seguro en insuficiencia renal que los opioides con metabolitos acumulables (p. ej. M6G de morfina, normeperidina de meperidina).",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Tapentadol",
+    "paAlternativaNombre": "Buprenorfina",
+    "razon": "Perfil farmacocinético favorable en ERC, sin acumulación significativa de metabolitos activos.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Captopril",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Captopril",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Repaglinida",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable independiente de la función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Captopril",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Lisinopril",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Lisinopril",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ramipril",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ramipril",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Benazepril",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Benazepril",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Benazepril",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Fosinopril",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Fosinopril",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Fosinopril",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Perindopril",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Perindopril",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Perindopril",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Quinapril",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Quinapril",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Quinapril",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Trandolapril",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Trandolapril",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Trandolapril",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Losartan",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Losartan",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Valsartan",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Valsartan",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Candesartan",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Candesartan",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Telmisartan",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Telmisartan",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Telmisartan",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Irbesartan",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Irbesartan",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Irbesartan",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Olmesartan",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Olmesartan",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Olmesartan",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Eprosartan",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Eprosartan",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Eprosartan",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Repaglinida",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 sin ajuste por función renal; alternativa cuando el FG limita a glinidas/SGLT-2.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Sacubitril/Valsartan",
+    "paAlternativaNombre": "Metildopa",
+    "razon": "Antihipertensivo de otra clase con amplia experiencia y seguridad en embarazo; útil además ante angioedema/alergia al IECA-ARAII, donde no se reintroduce la misma clase.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Sacubitril/Valsartan",
+    "paAlternativaNombre": "Labetalol",
+    "razon": "Alfa-beta bloqueante seguro en embarazo y alternativa de clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Sacubitril/Valsartan",
+    "paAlternativaNombre": "Nifedipino",
+    "razon": "Antagonista del calcio con uso aceptado en HTA del embarazo; clase distinta al bloqueo del SRAA.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Nadolol",
+    "paAlternativaNombre": "Metoprolol",
+    "razon": "Cardioselectivo, con menor efecto broncoconstrictor a dosis habituales.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Nadolol",
+    "paAlternativaNombre": "Atenolol",
+    "razon": "Cardioselectivo de eliminación renal; menor broncoespasmo, ajustar dosis en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Carvedilol",
+    "paAlternativaNombre": "Metoprolol",
+    "razon": "Cardioselectivo, con menor efecto broncoconstrictor a dosis habituales.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Carvedilol",
+    "paAlternativaNombre": "Atenolol",
+    "razon": "Cardioselectivo de eliminación renal; menor broncoespasmo, ajustar dosis en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Labetalol",
+    "paAlternativaNombre": "Bisoprolol",
+    "razon": "Betabloqueante cardioselectivo: menor riesgo de broncoespasmo que el no selectivo en asma/EPOC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Labetalol",
+    "paAlternativaNombre": "Metoprolol",
+    "razon": "Cardioselectivo, con menor efecto broncoconstrictor a dosis habituales.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Labetalol",
+    "paAlternativaNombre": "Atenolol",
+    "razon": "Cardioselectivo de eliminación renal; menor broncoespasmo, ajustar dosis en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Celiprolol",
+    "paAlternativaNombre": "Bisoprolol",
+    "razon": "Betabloqueante cardioselectivo: menor riesgo de broncoespasmo que el no selectivo en asma/EPOC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Celiprolol",
+    "paAlternativaNombre": "Metoprolol",
+    "razon": "Cardioselectivo, con menor efecto broncoconstrictor a dosis habituales.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Celiprolol",
+    "paAlternativaNombre": "Atenolol",
+    "razon": "Cardioselectivo de eliminación renal; menor broncoespasmo, ajustar dosis en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Verapamilo",
+    "paAlternativaNombre": "Amlodipino",
+    "razon": "Dihidropiridina sin efecto inotrópico/cronotrópico negativo: preferible cuando verapamilo/diltiazem están desaconsejados por insuficiencia cardíaca o bradicardia.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Diltiazem",
+    "paAlternativaNombre": "Amlodipino",
+    "razon": "Dihidropiridina sin efecto inotrópico/cronotrópico negativo: preferible cuando verapamilo/diltiazem están desaconsejados por insuficiencia cardíaca o bradicardia.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Simvastatina",
+    "paAlternativaNombre": "Ezetimiba",
+    "razon": "Hipolipemiante de otra clase (inhibe absorción de colesterol); opción ante intolerancia o miopatía por estatinas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Lovastatina",
+    "paAlternativaNombre": "Rosuvastatina",
+    "razon": "Metabolismo independiente de CYP3A4: menor riesgo de interacción con inhibidores potentes.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Lovastatina",
+    "paAlternativaNombre": "Ezetimiba",
+    "razon": "Hipolipemiante de otra clase (inhibe absorción de colesterol); opción ante intolerancia o miopatía por estatinas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Atorvastatina",
+    "paAlternativaNombre": "Rosuvastatina",
+    "razon": "Metabolismo independiente de CYP3A4: menor riesgo de interacción con inhibidores potentes.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Atorvastatina",
+    "paAlternativaNombre": "Ezetimiba",
+    "razon": "Hipolipemiante de otra clase (inhibe absorción de colesterol); opción ante intolerancia o miopatía por estatinas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Fluvastatina",
+    "paAlternativaNombre": "Pravastatina",
+    "razon": "No se metaboliza por CYP3A4: evita la interacción con inhibidores potentes (p. ej. macrólidos, azoles) y reduce el riesgo de miopatía/rabdomiólisis.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Fluvastatina",
+    "paAlternativaNombre": "Rosuvastatina",
+    "razon": "Metabolismo independiente de CYP3A4: menor riesgo de interacción con inhibidores potentes.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Fluvastatina",
+    "paAlternativaNombre": "Ezetimiba",
+    "razon": "Hipolipemiante de otra clase (inhibe absorción de colesterol); opción ante intolerancia o miopatía por estatinas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Glibenclamida",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 con bajo riesgo de hipoglucemia y sin ajuste renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Glimepirida",
+    "paAlternativaNombre": "Gliclazida",
+    "razon": "Sulfonilurea con menor riesgo de hipoglucemia prolongada; preferible en ancianos y deterioro renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Glimepirida",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 con bajo riesgo de hipoglucemia y sin ajuste renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Glimepirida",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable, evitando la hipoglucemia prolongada de la sulfonilurea.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Glipizida",
+    "paAlternativaNombre": "Gliclazida",
+    "razon": "Sulfonilurea con menor riesgo de hipoglucemia prolongada; preferible en ancianos y deterioro renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Glipizida",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 con bajo riesgo de hipoglucemia y sin ajuste renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Glipizida",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable, evitando la hipoglucemia prolongada de la sulfonilurea.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Clorpropamida",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 con bajo riesgo de hipoglucemia y sin ajuste renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Clorpropamida",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable, evitando la hipoglucemia prolongada de la sulfonilurea.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Gliburida",
+    "paAlternativaNombre": "Gliclazida",
+    "razon": "Sulfonilurea con menor riesgo de hipoglucemia prolongada; preferible en ancianos y deterioro renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Gliburida",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 con bajo riesgo de hipoglucemia y sin ajuste renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Gliburida",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable, evitando la hipoglucemia prolongada de la sulfonilurea.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Tolbutamida",
+    "paAlternativaNombre": "Gliclazida",
+    "razon": "Sulfonilurea con menor riesgo de hipoglucemia prolongada; preferible en ancianos y deterioro renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Tolbutamida",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 con bajo riesgo de hipoglucemia y sin ajuste renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Tolbutamida",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable, evitando la hipoglucemia prolongada de la sulfonilurea.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Acetohexamida",
+    "paAlternativaNombre": "Gliclazida",
+    "razon": "Sulfonilurea con menor riesgo de hipoglucemia prolongada; preferible en ancianos y deterioro renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Acetohexamida",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 con bajo riesgo de hipoglucemia y sin ajuste renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Acetohexamida",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable, evitando la hipoglucemia prolongada de la sulfonilurea.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Nateglinida",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 sin ajuste por función renal; alternativa cuando el FG limita a glinidas/SGLT-2.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Nateglinida",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable independiente de la función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Canagliflozina",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 sin ajuste por función renal; alternativa cuando el FG limita a glinidas/SGLT-2.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Canagliflozina",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable independiente de la función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Dapagliflozina",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 sin ajuste por función renal; alternativa cuando el FG limita a glinidas/SGLT-2.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Dapagliflozina",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable independiente de la función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Empagliflozina",
+    "paAlternativaNombre": "Linagliptina",
+    "razon": "Inhibidor de DPP-4 sin ajuste por función renal; alternativa cuando el FG limita a glinidas/SGLT-2.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Empagliflozina",
+    "paAlternativaNombre": "Insulina",
+    "razon": "Control glucémico titulable independiente de la función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Clorazepato dipotásico",
+    "paAlternativaNombre": "Lorazepam",
+    "razon": "Vida media más corta y sin metabolitos activos acumulables: menor sedación residual en ancianos, hepatopatía y lactancia.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Ketazolam",
+    "paAlternativaNombre": "Lorazepam",
+    "razon": "Vida media más corta y sin metabolitos activos acumulables: menor sedación residual en ancianos, hepatopatía y lactancia.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Clonazepam",
+    "paAlternativaNombre": "Lorazepam",
+    "razon": "Vida media más corta y sin metabolitos activos acumulables: menor sedación residual en ancianos, hepatopatía y lactancia.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Citalopram",
+    "paAlternativaNombre": "Sertralina",
+    "razon": "ISRS con menor prolongación del QT dosis-dependiente; alternativa cuando citalopram/escitalopram están desaconsejados por QT.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Escitalopram",
+    "paAlternativaNombre": "Sertralina",
+    "razon": "ISRS con menor prolongación del QT dosis-dependiente; alternativa cuando citalopram/escitalopram están desaconsejados por QT.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Carbamazepina",
+    "paAlternativaNombre": "Levetiracetam",
+    "razon": "No induce el citocromo P450 (menos interacciones) y tiene mejor perfil en embarazo que los inductores clásicos. Ajustar dosis por función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Carbamazepina",
+    "paAlternativaNombre": "Lamotrigina",
+    "razon": "Sin inducción enzimática relevante y con perfil aceptable en embarazo; titulación lenta para evitar exantema.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Fenitoina",
+    "paAlternativaNombre": "Levetiracetam",
+    "razon": "No induce el citocromo P450 (menos interacciones) y tiene mejor perfil en embarazo que los inductores clásicos. Ajustar dosis por función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Fenitoina",
+    "paAlternativaNombre": "Lamotrigina",
+    "razon": "Sin inducción enzimática relevante y con perfil aceptable en embarazo; titulación lenta para evitar exantema.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Fenobarbital",
+    "paAlternativaNombre": "Levetiracetam",
+    "razon": "No induce el citocromo P450 (menos interacciones) y tiene mejor perfil en embarazo que los inductores clásicos. Ajustar dosis por función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Fenobarbital",
+    "paAlternativaNombre": "Lamotrigina",
+    "razon": "Sin inducción enzimática relevante y con perfil aceptable en embarazo; titulación lenta para evitar exantema.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Primidona",
+    "paAlternativaNombre": "Levetiracetam",
+    "razon": "No induce el citocromo P450 (menos interacciones) y tiene mejor perfil en embarazo que los inductores clásicos. Ajustar dosis por función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Primidona",
+    "paAlternativaNombre": "Lamotrigina",
+    "razon": "Sin inducción enzimática relevante y con perfil aceptable en embarazo; titulación lenta para evitar exantema.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Eslicarbazepina",
+    "paAlternativaNombre": "Levetiracetam",
+    "razon": "No induce el citocromo P450 (menos interacciones) y tiene mejor perfil en embarazo que los inductores clásicos. Ajustar dosis por función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Eslicarbazepina",
+    "paAlternativaNombre": "Lamotrigina",
+    "razon": "Sin inducción enzimática relevante y con perfil aceptable en embarazo; titulación lenta para evitar exantema.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Dexametasona",
+    "paAlternativaNombre": "Prednisolona",
+    "razon": "Para efecto materno: la placenta la inactiva en gran parte, con menor exposición fetal que dexametasona/betametasona (que se reservan para efecto fetal, p. ej. maduración pulmonar).",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Dexametasona",
+    "paAlternativaNombre": "Metilprednisolona",
+    "razon": "Corticoide no fluorado con escaso pasaje placentario; alternativa para tratamiento materno.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Betametasona",
+    "paAlternativaNombre": "Prednisolona",
+    "razon": "Para efecto materno: la placenta la inactiva en gran parte, con menor exposición fetal que dexametasona/betametasona (que se reservan para efecto fetal, p. ej. maduración pulmonar).",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Betametasona",
+    "paAlternativaNombre": "Metilprednisolona",
+    "razon": "Corticoide no fluorado con escaso pasaje placentario; alternativa para tratamiento materno.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Metimazol",
+    "paAlternativaNombre": "Propiltiouracilo",
+    "razon": "Preferido en el primer trimestre del embarazo por menor riesgo de embriopatía que el metimazol.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Propiltiouracilo",
+    "paAlternativaNombre": "Metimazol",
+    "razon": "Preferido tras el primer trimestre por menor hepatotoxicidad que el propiltiouracilo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Omeprazol",
+    "paAlternativaNombre": "Pantoprazol",
+    "razon": "IBP con menor inhibición de CYP2C19: reduce interacciones (p. ej. con clopidogrel) manteniendo el efecto antisecretor.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Omeprazol",
+    "paAlternativaNombre": "Famotidina",
+    "razon": "Antagonista H2 de otra clase: alternativa ante alergia/intolerancia a IBP. Ajustar dosis en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Esomeprazol",
+    "paAlternativaNombre": "Pantoprazol",
+    "razon": "IBP con menor inhibición de CYP2C19: reduce interacciones (p. ej. con clopidogrel) manteniendo el efecto antisecretor.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Esomeprazol",
+    "paAlternativaNombre": "Famotidina",
+    "razon": "Antagonista H2 de otra clase: alternativa ante alergia/intolerancia a IBP. Ajustar dosis en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Lansoprazol",
+    "paAlternativaNombre": "Pantoprazol",
+    "razon": "IBP con menor inhibición de CYP2C19: reduce interacciones (p. ej. con clopidogrel) manteniendo el efecto antisecretor.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Lansoprazol",
+    "paAlternativaNombre": "Famotidina",
+    "razon": "Antagonista H2 de otra clase: alternativa ante alergia/intolerancia a IBP. Ajustar dosis en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Rabeprazol",
+    "paAlternativaNombre": "Pantoprazol",
+    "razon": "IBP con menor inhibición de CYP2C19: reduce interacciones (p. ej. con clopidogrel) manteniendo el efecto antisecretor.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Rabeprazol",
+    "paAlternativaNombre": "Famotidina",
+    "razon": "Antagonista H2 de otra clase: alternativa ante alergia/intolerancia a IBP. Ajustar dosis en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Metoclopramida",
+    "paAlternativaNombre": "Domperidona",
+    "razon": "Atraviesa poco la barrera hematoencefálica: menor riesgo extrapiramidal. Vigilar QT.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Metoclopramida",
+    "paAlternativaNombre": "Ondansetrón",
+    "razon": "Antiemético de otra clase (antagonista 5-HT3) sin efectos extrapiramidales; vigilar QT.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Dabigatrán",
+    "paAlternativaNombre": "Apixabán",
+    "razon": "Menor proporción de eliminación renal entre los DOAC: preferible cuando la función renal limita a dabigatrán/rivaroxabán/edoxabán. Igualmente verificar FG mínimo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Ticarcilina/Clavulánico",
+    "paAlternativaNombre": "Cefepima",
+    "razon": "Cefalosporina antipseudomónica de amplio espectro; reacción cruzada baja con penicilinas. Ajustar según cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Rivaroxabán",
+    "paAlternativaNombre": "Apixabán",
+    "razon": "Menor proporción de eliminación renal entre los DOAC: preferible cuando la función renal limita a dabigatrán/rivaroxabán/edoxabán. Igualmente verificar FG mínimo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Edoxabán",
+    "paAlternativaNombre": "Apixabán",
+    "razon": "Menor proporción de eliminación renal entre los DOAC: preferible cuando la función renal limita a dabigatrán/rivaroxabán/edoxabán. Igualmente verificar FG mínimo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Fluconazol",
+    "paAlternativaNombre": "Micafungina",
+    "razon": "Equinocandina con mínimas interacciones farmacológicas (no inhibe CYP3A4) y buen perfil hepático/QT; alternativa en candidiasis invasora. Verificar espectro frente al hongo aislado.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Fluconazol",
+    "paAlternativaNombre": "Caspofungina",
+    "razon": "Equinocandina con escasas interacciones; alternativa al azol según especie y foco. Ajustar en insuficiencia hepática.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Itraconazol",
+    "paAlternativaNombre": "Micafungina",
+    "razon": "Equinocandina con mínimas interacciones farmacológicas (no inhibe CYP3A4) y buen perfil hepático/QT; alternativa en candidiasis invasora. Verificar espectro frente al hongo aislado.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Itraconazol",
+    "paAlternativaNombre": "Caspofungina",
+    "razon": "Equinocandina con escasas interacciones; alternativa al azol según especie y foco. Ajustar en insuficiencia hepática.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Voriconazol",
+    "paAlternativaNombre": "Micafungina",
+    "razon": "Equinocandina con mínimas interacciones farmacológicas (no inhibe CYP3A4) y buen perfil hepático/QT; alternativa en candidiasis invasora. Verificar espectro frente al hongo aislado.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Voriconazol",
+    "paAlternativaNombre": "Caspofungina",
+    "razon": "Equinocandina con escasas interacciones; alternativa al azol según especie y foco. Ajustar en insuficiencia hepática.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Posaconazol",
+    "paAlternativaNombre": "Micafungina",
+    "razon": "Equinocandina con mínimas interacciones farmacológicas (no inhibe CYP3A4) y buen perfil hepático/QT; alternativa en candidiasis invasora. Verificar espectro frente al hongo aislado.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Posaconazol",
+    "paAlternativaNombre": "Caspofungina",
+    "razon": "Equinocandina con escasas interacciones; alternativa al azol según especie y foco. Ajustar en insuficiencia hepática.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Isavuconazol",
+    "paAlternativaNombre": "Micafungina",
+    "razon": "Equinocandina con mínimas interacciones farmacológicas (no inhibe CYP3A4) y buen perfil hepático/QT; alternativa en candidiasis invasora. Verificar espectro frente al hongo aislado.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Isavuconazol",
+    "paAlternativaNombre": "Caspofungina",
+    "razon": "Equinocandina con escasas interacciones; alternativa al azol según especie y foco. Ajustar en insuficiencia hepática.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Amoxicilina",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido SIN reacción cruzada con penicilinas: alternativa de elección ante alergia a betalactámicos en infecciones respiratorias/comunitarias. Ajustar según foco y cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Amoxicilina",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos: cubre gram+ y anaerobios. Alternativa en alergia a penicilina; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Amoxicilina",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona respiratoria sin reacción cruzada con betalactámicos. Reservar y ajustar según foco/cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Amoxicilina/Clavulánico",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido SIN reacción cruzada con penicilinas: alternativa de elección ante alergia a betalactámicos en infecciones respiratorias/comunitarias. Ajustar según foco y cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Amoxicilina/Clavulánico",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos: cubre gram+ y anaerobios. Alternativa en alergia a penicilina; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Amoxicilina/Clavulánico",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona respiratoria sin reacción cruzada con betalactámicos. Reservar y ajustar según foco/cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ampicilina",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido SIN reacción cruzada con penicilinas: alternativa de elección ante alergia a betalactámicos en infecciones respiratorias/comunitarias. Ajustar según foco y cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ampicilina",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos: cubre gram+ y anaerobios. Alternativa en alergia a penicilina; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ampicilina",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona respiratoria sin reacción cruzada con betalactámicos. Reservar y ajustar según foco/cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Penicilina G",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido SIN reacción cruzada con penicilinas: alternativa de elección ante alergia a betalactámicos en infecciones respiratorias/comunitarias. Ajustar según foco y cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Penicilina G",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos: cubre gram+ y anaerobios. Alternativa en alergia a penicilina; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Penicilina G",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona respiratoria sin reacción cruzada con betalactámicos. Reservar y ajustar según foco/cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Piperacilina",
+    "paAlternativaNombre": "Meropenem",
+    "razon": "Carbapenem de amplio espectro antipseudomónico; baja reacción cruzada con penicilinas. Reservar y guiar por antibiograma.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Piperacilina",
+    "paAlternativaNombre": "Cefepima",
+    "razon": "Cefalosporina antipseudomónica de amplio espectro; reacción cruzada baja con penicilinas. Ajustar según cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Piperacilina",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona con cobertura antipseudomónica, sin reacción cruzada con betalactámicos. Guiar por antibiograma; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Piperacilina / Tazobactam",
+    "paAlternativaNombre": "Meropenem",
+    "razon": "Carbapenem de amplio espectro antipseudomónico; baja reacción cruzada con penicilinas. Reservar y guiar por antibiograma.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Piperacilina / Tazobactam",
+    "paAlternativaNombre": "Cefepima",
+    "razon": "Cefalosporina antipseudomónica de amplio espectro; reacción cruzada baja con penicilinas. Ajustar según cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Piperacilina / Tazobactam",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona con cobertura antipseudomónica, sin reacción cruzada con betalactámicos. Guiar por antibiograma; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ticarcilina",
+    "paAlternativaNombre": "Meropenem",
+    "razon": "Carbapenem de amplio espectro antipseudomónico; baja reacción cruzada con penicilinas. Reservar y guiar por antibiograma.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ticarcilina",
+    "paAlternativaNombre": "Cefepima",
+    "razon": "Cefalosporina antipseudomónica de amplio espectro; reacción cruzada baja con penicilinas. Ajustar según cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ticarcilina",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona con cobertura antipseudomónica, sin reacción cruzada con betalactámicos. Guiar por antibiograma; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ticarcilina/Clavulánico",
+    "paAlternativaNombre": "Meropenem",
+    "razon": "Carbapenem de amplio espectro antipseudomónico; baja reacción cruzada con penicilinas. Reservar y guiar por antibiograma.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ticarcilina/Clavulánico",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona con cobertura antipseudomónica, sin reacción cruzada con betalactámicos. Guiar por antibiograma; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Cefazolina",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos para cobertura gram+/anaerobios. Alternativa en alergia; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Cefazolina",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona de amplio espectro sin reacción cruzada con betalactámicos; útil para gram-negativos/respiratorio. Guiar por cultivo; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Cefuroxima",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos para cobertura gram+/anaerobios. Alternativa en alergia; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Cefuroxima",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona de amplio espectro sin reacción cruzada con betalactámicos; útil para gram-negativos/respiratorio. Guiar por cultivo; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Cefixima",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos para cobertura gram+/anaerobios. Alternativa en alergia; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Cefixima",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona de amplio espectro sin reacción cruzada con betalactámicos; útil para gram-negativos/respiratorio. Guiar por cultivo; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Cefotaxima",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos para cobertura gram+/anaerobios. Alternativa en alergia; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Cefotaxima",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona de amplio espectro sin reacción cruzada con betalactámicos; útil para gram-negativos/respiratorio. Guiar por cultivo; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ceftriaxona",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos para cobertura gram+/anaerobios. Alternativa en alergia; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ceftriaxona",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona de amplio espectro sin reacción cruzada con betalactámicos; útil para gram-negativos/respiratorio. Guiar por cultivo; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Cefoxitina",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida sin reacción cruzada con betalactámicos para cobertura gram+/anaerobios. Alternativa en alergia; verificar foco y sensibilidad.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Cefoxitina",
+    "paAlternativaNombre": "Levofloxacino",
+    "razon": "Fluorquinolona de amplio espectro sin reacción cruzada con betalactámicos; útil para gram-negativos/respiratorio. Guiar por cultivo; ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Ceftazidima",
+    "paAlternativaNombre": "Meropenem",
+    "razon": "Carbapenem antipseudomónico de reserva. Guiar estrictamente por antibiograma y política de uso de antimicrobianos.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ceftazidima",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona con actividad antipseudomónica; alternativa sin reacción cruzada con betalactámicos. Ajustar por cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ceftazidima - Avibactam",
+    "paAlternativaNombre": "Meropenem",
+    "razon": "Carbapenem antipseudomónico de reserva. Guiar estrictamente por antibiograma y política de uso de antimicrobianos.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ceftazidima - Avibactam",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona con actividad antipseudomónica; alternativa sin reacción cruzada con betalactámicos. Ajustar por cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ceftolozano - Tazobactam",
+    "paAlternativaNombre": "Meropenem",
+    "razon": "Carbapenem antipseudomónico de reserva. Guiar estrictamente por antibiograma y política de uso de antimicrobianos.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ceftolozano - Tazobactam",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona con actividad antipseudomónica; alternativa sin reacción cruzada con betalactámicos. Ajustar por cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Claritromicina",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida alternativa para gram+/anaerobios cuando el macrólido está desaconsejado por interacciones o QT. Verificar foco.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Eritromicina",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida alternativa para gram+/anaerobios cuando el macrólido está desaconsejado por interacciones o QT. Verificar foco.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Roxitromicina",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido con inhibición mínima de CYP3A4: reduce interacciones y el riesgo de prolongación del QT.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Roxitromicina",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Lincosamida alternativa para gram+/anaerobios cuando el macrólido está desaconsejado por interacciones o QT. Verificar foco.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ciprofloxacino",
+    "paAlternativaNombre": "Nitrofurantoina",
+    "razon": "Alternativa para ITU baja no complicada con escasas interacciones. Contraindicada si ClCr < 30 ml/min; verificar función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Ciprofloxacino",
+    "paAlternativaNombre": "Trimetoprim",
+    "razon": "Alternativa para ITU según sensibilidad local; vigilar potasio y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Norfloxacino",
+    "paAlternativaNombre": "Nitrofurantoina",
+    "razon": "Alternativa para ITU baja no complicada con escasas interacciones. Contraindicada si ClCr < 30 ml/min; verificar función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Norfloxacino",
+    "paAlternativaNombre": "Trimetoprim",
+    "razon": "Alternativa para ITU según sensibilidad local; vigilar potasio y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Ofloxacino",
+    "paAlternativaNombre": "Nitrofurantoina",
+    "razon": "Alternativa para ITU baja no complicada con escasas interacciones. Contraindicada si ClCr < 30 ml/min; verificar función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Ofloxacino",
+    "paAlternativaNombre": "Trimetoprim",
+    "razon": "Alternativa para ITU según sensibilidad local; vigilar potasio y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Levofloxacino",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido para infección respiratoria comunitaria, con menos efectos sobre tendones/QT/SNC que la quinolona. Ajustar según foco/cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Levofloxacino",
+    "paAlternativaNombre": "Amoxicilina/Clavulánico",
+    "razon": "Betalactámico de amplio espectro para infección respiratoria; alternativa a la quinolona si no hay alergia a penicilina. Guiar por cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Moxifloxacino",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido para infección respiratoria comunitaria, con menos efectos sobre tendones/QT/SNC que la quinolona. Ajustar según foco/cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Moxifloxacino",
+    "paAlternativaNombre": "Amoxicilina/Clavulánico",
+    "razon": "Betalactámico de amplio espectro para infección respiratoria; alternativa a la quinolona si no hay alergia a penicilina. Guiar por cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Delafloxacino",
+    "paAlternativaNombre": "Azitromicina",
+    "razon": "Macrólido para infección respiratoria comunitaria, con menos efectos sobre tendones/QT/SNC que la quinolona. Ajustar según foco/cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Delafloxacino",
+    "paAlternativaNombre": "Amoxicilina/Clavulánico",
+    "razon": "Betalactámico de amplio espectro para infección respiratoria; alternativa a la quinolona si no hay alergia a penicilina. Guiar por cultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Gentamicina",
+    "paAlternativaNombre": "Ceftazidima",
+    "razon": "Cefalosporina antipseudomónica para gram-negativos, sin la nefro/ototoxicidad del aminoglucósido. Guiar por antibiograma.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Gentamicina",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona para gram-negativos evitando la nefro/ototoxicidad del aminoglucósido. Ajustar por cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Tobramicina",
+    "paAlternativaNombre": "Ceftazidima",
+    "razon": "Cefalosporina antipseudomónica para gram-negativos, sin la nefro/ototoxicidad del aminoglucósido. Guiar por antibiograma.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Tobramicina",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona para gram-negativos evitando la nefro/ototoxicidad del aminoglucósido. Ajustar por cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Amikacina",
+    "paAlternativaNombre": "Ceftazidima",
+    "razon": "Cefalosporina antipseudomónica para gram-negativos, sin la nefro/ototoxicidad del aminoglucósido. Guiar por antibiograma.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Amikacina",
+    "paAlternativaNombre": "Ciprofloxacino",
+    "razon": "Fluorquinolona para gram-negativos evitando la nefro/ototoxicidad del aminoglucósido. Ajustar por cultivo y función renal.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Vancomicina",
+    "paAlternativaNombre": "Linezolid",
+    "razon": "Oxazolidinona con excelente cobertura gram+ (incl. SARM) sin nefrotoxicidad. Vigilar mielosupresión e interacciones serotoninérgicas.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Vancomicina",
+    "paAlternativaNombre": "Daptomicina",
+    "razon": "Lipopéptido para gram+ (bacteriemia/piel) sin nefrotoxicidad de la vancomicina. No usar en neumonía (lo inactiva el surfactante).",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Vancomicina",
+    "paAlternativaNombre": "Teicoplanina",
+    "razon": "Glucopéptido con menor nefrotoxicidad que la vancomicina; alternativa para gram+. Ajustar en ERC.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Nitrofurantoina",
+    "paAlternativaNombre": "Trimetoprim",
+    "razon": "Alternativa para ITU baja cuando el FG contraindica la nitrofurantoína; ajustar según sensibilidad local.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "CONTRAINDICADO"
+  },
+  {
+    "paOrigenNombre": "Nitrofurantoina",
+    "paAlternativaNombre": "Amoxicilina/Clavulánico",
+    "razon": "Betalactámico alternativo para ITU si no hay alergia a penicilina. Guiar por urocultivo.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Metronidazol",
+    "paAlternativaNombre": "Clindamicina",
+    "razon": "Cobertura de anaerobios alternativa al metronidazol según foco (no eficaz frente a C. difficile). Verificar indicación.",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  },
+  {
+    "paOrigenNombre": "Meperidina",
+    "paAlternativaNombre": "Morfina",
+    "razon": "Evita la acumulación de normeperidina (neurotóxica/convulsivante), agravada en insuficiencia renal; usar la mínima dosis eficaz.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "EVITAR"
+  },
+  {
+    "paOrigenNombre": "Linezolid",
+    "paAlternativaNombre": "Daptomicina",
+    "razon": "Gram+ alternativa cuando linezolid está desaconsejado (mielosupresión prolongada o interacción serotoninérgica). No usar en neumonía.",
+    "evidencia": null,
+    "severidadOriginalAplicable": "PRECAUCION"
+  },
+  {
+    "paOrigenNombre": "Clindamicina",
+    "paAlternativaNombre": "Metronidazol",
+    "razon": "Alternativa anaerobicida según foco cuando la clindamicina no es adecuada (p. ej. riesgo de C. difficile).",
+    "evidencia": null,
+    "severidadOriginalAplicable": null
+  }
+]

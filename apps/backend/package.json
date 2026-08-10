@@ -1,0 +1,49 @@
+{
+  "name": "@gfh/backend",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "prisma:generate": "prisma generate",
+    "prisma:validate": "prisma validate",
+    "prisma:format": "prisma format",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "dev:datos": "tsx prisma/dev-datos.ts",
+    "db:genericos": "tsx prisma/importar-genericos.ts",
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:api": "vitest run --config vitest.api.config.ts",
+    "start:prod": "tsx src/main.ts",
+    "deploy:migrar": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@gfh/shared-types": "workspace:*",
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/platform-fastify": "^11.0.0",
+    "@nestjs/throttler": "^6.4.0",
+    "@prisma/client": "^6.3.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "fastify": "^5.2.1",
+    "hash-wasm": "^4.12.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "tsx": "^4.19.2"
+  },
+  "devDependencies": {
+    "@gfh/tsconfig": "workspace:*",
+    "@nestjs/testing": "^11.0.0",
+    "@types/node": "^22.13.1",
+    "dotenv": "^16.4.7",
+    "prisma": "^6.3.1",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  }
+}

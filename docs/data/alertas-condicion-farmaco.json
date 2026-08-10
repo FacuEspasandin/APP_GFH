@@ -1,0 +1,4565 @@
+[
+  {
+    "principioActivoNombre": "Propranolol",
+    "condicionCodigo": "ASMA",
+    "severidad": "EVITAR",
+    "texto": "Betabloqueante no selectivo en asma: riesgo de broncoespasmo. Si es imprescindible, preferir cardioselectivo a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metformina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Metformina en ERC: contraindicada si Clcr < 30 mL/min por riesgo de acidosis láctica; reducir dosis con Clcr 30-45 mL/min.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Enalapril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Losartan",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Valsartan",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Cumarínico en el 1er trimestre: teratógeno (síndrome warfarínico fetal). Contraindicado; cambiar a heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 12
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Diazepam",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en lactancia: pasa a la leche; riesgo de sedación e hipotonía del lactante. Preferir vida media corta y dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Alprazolam",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en cirrosis: riesgo de encefalopatía hepática. Preferir lorazepam (sin metabolismo hepático extenso) a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amikacina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Aminoglucósido en ERC: nefrotóxico y ototóxico. Ajustar dosis por Clcr, monitorizar niveles y función renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Estreptomicina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Aminoglucósido en ERC: nefrotóxico y ototóxico. Ajustar dosis por Clcr, monitorizar niveles y función renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gentamicina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Aminoglucósido en ERC: nefrotóxico y ototóxico. Ajustar dosis por Clcr, monitorizar niveles y función renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tobramicina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Aminoglucósido en ERC: nefrotóxico y ototóxico. Ajustar dosis por Clcr, monitorizar niveles y función renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nitrofurantoina",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "Nitrofurantoína en ERC: ineficaz y con riesgo de toxicidad si Clcr < 30-45 mL/min.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Eplerenona",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético ahorrador de potasio en ERC: mayor riesgo de hiperpotasemia. Controlar potasio y función renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amilorida",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético ahorrador de potasio en ERC: mayor riesgo de hiperpotasemia. Controlar potasio y función renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Triamterene",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético ahorrador de potasio en ERC: mayor riesgo de hiperpotasemia. Controlar potasio y función renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Canagliflozina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "iSGLT2 en ERC: eficacia glucémica reducida con FG bajo; verificar umbral de FG según indicación.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dapagliflozina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "iSGLT2 en ERC: eficacia glucémica reducida con FG bajo; verificar umbral de FG según indicación.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Empagliflozina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "iSGLT2 en ERC: eficacia glucémica reducida con FG bajo; verificar umbral de FG según indicación.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Benazepril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Captopril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fosinopril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lisinopril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Perindopril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Quinapril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Trandolapril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Candesartan",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Irbesartan",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Olmesartan",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Telmisartan",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sacubitril/Valsartan",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atorvastatina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Estatina en embarazo: contraindicada; el colesterol es necesario para el desarrollo fetal. Suspender.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluvastatina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Estatina en embarazo: contraindicada; el colesterol es necesario para el desarrollo fetal. Suspender.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lovastatina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Estatina en embarazo: contraindicada; el colesterol es necesario para el desarrollo fetal. Suspender.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Pravastatina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Estatina en embarazo: contraindicada; el colesterol es necesario para el desarrollo fetal. Suspender.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Acenocumarol",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Cumarínico en el 1er trimestre: teratógeno (síndrome warfarínico fetal). Contraindicado; cambiar a heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 12
+  },
+  {
+    "principioActivoNombre": "Apixabán",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "DOAC en embarazo: sin seguridad establecida y atraviesan la placenta. Cambiar a heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dabigatrán",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "DOAC en embarazo: sin seguridad establecida y atraviesan la placenta. Cambiar a heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Edoxabán",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "DOAC en embarazo: sin seguridad establecida y atraviesan la placenta. Cambiar a heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rivaroxabán",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "DOAC en embarazo: sin seguridad establecida y atraviesan la placenta. Cambiar a heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Doxiciclina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Tetraciclina en el 1er trimestre: evitar; existen alternativas más seguras.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 14
+  },
+  {
+    "principioActivoNombre": "Tetraciclina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Tetraciclina en el 1er trimestre: evitar; existen alternativas más seguras.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 14
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Fluorquinolona en embarazo: evitar por posible toxicidad sobre el cartílago en desarrollo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Delafloxacino",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Fluorquinolona en embarazo: evitar por posible toxicidad sobre el cartílago en desarrollo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Fluorquinolona en embarazo: evitar por posible toxicidad sobre el cartílago en desarrollo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Moxifloxacino",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Fluorquinolona en embarazo: evitar por posible toxicidad sobre el cartílago en desarrollo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Norfloxacino",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Fluorquinolona en embarazo: evitar por posible toxicidad sobre el cartílago en desarrollo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ofloxacino",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Fluorquinolona en embarazo: evitar por posible toxicidad sobre el cartílago en desarrollo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amikacina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Aminoglucósido en embarazo: riesgo de ototoxicidad fetal. Evitar salvo necesidad vital.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Estreptomicina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Aminoglucósido en embarazo: riesgo de ototoxicidad fetal. Evitar salvo necesidad vital.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gentamicina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Aminoglucósido en embarazo: riesgo de ototoxicidad fetal. Evitar salvo necesidad vital.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tobramicina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Aminoglucósido en embarazo: riesgo de ototoxicidad fetal. Evitar salvo necesidad vital.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fenitoina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Antiepiléptico clásico en embarazo: potencial teratógeno. No suspender sin neurología; preferir alternativas de menor riesgo (levetiracetam, lamotrigina).",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fenobarbital",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Antiepiléptico clásico en embarazo: potencial teratógeno. No suspender sin neurología; preferir alternativas de menor riesgo (levetiracetam, lamotrigina).",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Simvastatina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Estatina en embarazo: contraindicada; el colesterol es necesario para el desarrollo fetal. Suspender.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Misoprostol",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Misoprostol en embarazo: abortivo y teratógeno (síndrome de Möbius). Contraindicado salvo indicación obstétrica específica.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metotrexato",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Metotrexato en embarazo: abortivo y teratógeno. Contraindicado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Litio en el 1er trimestre: riesgo de anomalía de Ebstein. Valorar riesgo/beneficio con psiquiatría.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 12
+  },
+  {
+    "principioActivoNombre": "Alprazolam",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en lactancia: pasa a la leche; riesgo de sedación e hipotonía del lactante. Preferir vida media corta y dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonazepam",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en lactancia: pasa a la leche; riesgo de sedación e hipotonía del lactante. Preferir vida media corta y dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clorazepato dipotásico",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en lactancia: pasa a la leche; riesgo de sedación e hipotonía del lactante. Preferir vida media corta y dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketazolam",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en lactancia: pasa a la leche; riesgo de sedación e hipotonía del lactante. Preferir vida media corta y dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lormetazepam",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en lactancia: pasa a la leche; riesgo de sedación e hipotonía del lactante. Preferir vida media corta y dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Midazolam",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en lactancia: pasa a la leche; riesgo de sedación e hipotonía del lactante. Preferir vida media corta y dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "EVITAR",
+    "texto": "Litio en lactancia: se excreta en leche con riesgo de toxicidad en el lactante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "EVITAR",
+    "texto": "Amiodarona en lactancia: alto contenido de yodo y vida media larga; riesgo de disfunción tiroidea del lactante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Verapamilo",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "Calcioantagonista no dihidropiridínico en IC con FEVI reducida: efecto inotrópico negativo, riesgo de descompensación.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diltiazem",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "Calcioantagonista no dihidropiridínico en IC con FEVI reducida: efecto inotrópico negativo, riesgo de descompensación.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Pioglitazona",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "Glitazona en insuficiencia cardíaca: retención de líquidos que agrava la IC.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Disopiramida",
+    "condicionCodigo": "ICC",
+    "severidad": "EVITAR",
+    "texto": "Disopiramida en IC: marcado efecto inotrópico negativo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Budesonida",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en HTA: retención hidrosalina que eleva la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Deflazacort",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en HTA: retención hidrosalina que eleva la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexametasona",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en HTA: retención hidrosalina que eleva la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Hidrocortisona",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en HTA: retención hidrosalina que eleva la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisolona",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en HTA: retención hidrosalina que eleva la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisona",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en HTA: retención hidrosalina que eleva la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Triamcinolona",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en HTA: retención hidrosalina que eleva la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nadolol",
+    "condicionCodigo": "ASMA",
+    "severidad": "EVITAR",
+    "texto": "Betabloqueante no selectivo en asma: riesgo de broncoespasmo. Si es imprescindible, preferir cardioselectivo a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Carvedilol",
+    "condicionCodigo": "ASMA",
+    "severidad": "EVITAR",
+    "texto": "Betabloqueante no selectivo en asma: riesgo de broncoespasmo. Si es imprescindible, preferir cardioselectivo a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Labetalol",
+    "condicionCodigo": "ASMA",
+    "severidad": "EVITAR",
+    "texto": "Betabloqueante no selectivo en asma: riesgo de broncoespasmo. Si es imprescindible, preferir cardioselectivo a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atenolol",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante cardioselectivo en asma: la cardioselectividad se pierde a dosis altas; usar la mínima eficaz.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Bisoprolol",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante cardioselectivo en asma: la cardioselectividad se pierde a dosis altas; usar la mínima eficaz.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metoprolol",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante cardioselectivo en asma: la cardioselectividad se pierde a dosis altas; usar la mínima eficaz.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celiprolol",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante cardioselectivo en asma: la cardioselectividad se pierde a dosis altas; usar la mínima eficaz.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Labetalol",
+    "condicionCodigo": "EPOC",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante no selectivo en EPOC: riesgo de broncoespasmo; preferir cardioselectivo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Betametasona",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar el tratamiento hipoglucemiante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Budesonida",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar el tratamiento hipoglucemiante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Deflazacort",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar el tratamiento hipoglucemiante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Hidrocortisona",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar el tratamiento hipoglucemiante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metilprednisolona",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar el tratamiento hipoglucemiante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisolona",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar el tratamiento hipoglucemiante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisona",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar el tratamiento hipoglucemiante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Triamcinolona",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar el tratamiento hipoglucemiante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Betametasona",
+    "condicionCodigo": "DM1",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar la insulina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Budesonida",
+    "condicionCodigo": "DM1",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar la insulina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Deflazacort",
+    "condicionCodigo": "DM1",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar la insulina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexametasona",
+    "condicionCodigo": "DM1",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar la insulina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Hidrocortisona",
+    "condicionCodigo": "DM1",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar la insulina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metilprednisolona",
+    "condicionCodigo": "DM1",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar la insulina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisolona",
+    "condicionCodigo": "DM1",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar la insulina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisona",
+    "condicionCodigo": "DM1",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar la insulina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Triamcinolona",
+    "condicionCodigo": "DM1",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar la insulina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Propranolol",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante no selectivo en diabetes: puede enmascarar síntomas de hipoglucemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nadolol",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante no selectivo en diabetes: puede enmascarar síntomas de hipoglucemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nadolol",
+    "condicionCodigo": "EPOC",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante no selectivo en EPOC: riesgo de broncoespasmo; preferir cardioselectivo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "HIPOTIROIDISMO",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco con efecto antitiroideo en hipotiroidismo: puede agravar el déficit. Controlar función tiroidea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atorvastatina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluvastatina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lovastatina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Pravastatina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rosuvastatina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Simvastatina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Itraconazol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Voriconazol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Posaconazol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Isavuconazol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metotrexato",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Leflunomida",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Isoniacida",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Pirazinamida",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rifampicina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metimazol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Propiltiouracilo",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nitrofurantoina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diazepam",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en cirrosis: riesgo de encefalopatía hepática. Preferir lorazepam (sin metabolismo hepático extenso) a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketazolam",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en cirrosis: riesgo de encefalopatía hepática. Preferir lorazepam (sin metabolismo hepático extenso) a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lorazepam",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en cirrosis: riesgo de encefalopatía hepática. Preferir lorazepam (sin metabolismo hepático extenso) a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lormetazepam",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en cirrosis: riesgo de encefalopatía hepática. Preferir lorazepam (sin metabolismo hepático extenso) a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Midazolam",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en cirrosis: riesgo de encefalopatía hepática. Preferir lorazepam (sin metabolismo hepático extenso) a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Paracetamol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Paracetamol en hepatopatía: limitar la dosis diaria (habitualmente ≤ 2-3 g/día) y evitar el uso crónico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Betametasona",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide en enfermedad ulcerosa: aumenta el riesgo de sangrado, sobre todo asociado a AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Budesonida",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide en enfermedad ulcerosa: aumenta el riesgo de sangrado, sobre todo asociado a AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Deflazacort",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide en enfermedad ulcerosa: aumenta el riesgo de sangrado, sobre todo asociado a AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexametasona",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide en enfermedad ulcerosa: aumenta el riesgo de sangrado, sobre todo asociado a AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Hidrocortisona",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide en enfermedad ulcerosa: aumenta el riesgo de sangrado, sobre todo asociado a AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metilprednisolona",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide en enfermedad ulcerosa: aumenta el riesgo de sangrado, sobre todo asociado a AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisolona",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide en enfermedad ulcerosa: aumenta el riesgo de sangrado, sobre todo asociado a AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisona",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide en enfermedad ulcerosa: aumenta el riesgo de sangrado, sobre todo asociado a AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Triamcinolona",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide en enfermedad ulcerosa: aumenta el riesgo de sangrado, sobre todo asociado a AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Anticoagulante en úlcera/HDA: mayor riesgo de hemorragia digestiva. Valorar gastroprotección.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Acenocumarol",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Anticoagulante en úlcera/HDA: mayor riesgo de hemorragia digestiva. Valorar gastroprotección.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Apixabán",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Anticoagulante en úlcera/HDA: mayor riesgo de hemorragia digestiva. Valorar gastroprotección.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dabigatrán",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Anticoagulante en úlcera/HDA: mayor riesgo de hemorragia digestiva. Valorar gastroprotección.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Edoxabán",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Anticoagulante en úlcera/HDA: mayor riesgo de hemorragia digestiva. Valorar gastroprotección.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nortriptilina",
+    "condicionCodigo": "GLAUCOMA",
+    "severidad": "EVITAR",
+    "texto": "Fármaco anticolinérgico en glaucoma de ángulo cerrado: puede precipitar un ataque agudo. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clorpromazina",
+    "condicionCodigo": "GLAUCOMA",
+    "severidad": "EVITAR",
+    "texto": "Fármaco anticolinérgico en glaucoma de ángulo cerrado: puede precipitar un ataque agudo. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Solifenacina",
+    "condicionCodigo": "GLAUCOMA",
+    "severidad": "EVITAR",
+    "texto": "Fármaco anticolinérgico en glaucoma de ángulo cerrado: puede precipitar un ataque agudo. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amitriptilina",
+    "condicionCodigo": "HBP",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco anticolinérgico en hiperplasia prostática: riesgo de retención urinaria aguda.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clomipramina",
+    "condicionCodigo": "HBP",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco anticolinérgico en hiperplasia prostática: riesgo de retención urinaria aguda.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nortriptilina",
+    "condicionCodigo": "HBP",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco anticolinérgico en hiperplasia prostática: riesgo de retención urinaria aguda.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clorpromazina",
+    "condicionCodigo": "HBP",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco anticolinérgico en hiperplasia prostática: riesgo de retención urinaria aguda.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clozapina",
+    "condicionCodigo": "HBP",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco anticolinérgico en hiperplasia prostática: riesgo de retención urinaria aguda.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Solifenacina",
+    "condicionCodigo": "HBP",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco anticolinérgico en hiperplasia prostática: riesgo de retención urinaria aguda.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tramadol",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tapentadol",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clozapina",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Delafloxacino",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Moxifloxacino",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ofloxacino",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Furosemida",
+    "condicionCodigo": "GOTA",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético en gota: eleva el ácido úrico y puede desencadenar crisis gotosas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Torasemida",
+    "condicionCodigo": "GOTA",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético en gota: eleva el ácido úrico y puede desencadenar crisis gotosas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Bumetanida",
+    "condicionCodigo": "GOTA",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético en gota: eleva el ácido úrico y puede desencadenar crisis gotosas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tiazidas",
+    "condicionCodigo": "GOTA",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético en gota: eleva el ácido úrico y puede desencadenar crisis gotosas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clortalidona",
+    "condicionCodigo": "GOTA",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético en gota: eleva el ácido úrico y puede desencadenar crisis gotosas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indapamida",
+    "condicionCodigo": "GOTA",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético en gota: eleva el ácido úrico y puede desencadenar crisis gotosas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metolazona",
+    "condicionCodigo": "GOTA",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético en gota: eleva el ácido úrico y puede desencadenar crisis gotosas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Pirazinamida",
+    "condicionCodigo": "GOTA",
+    "severidad": "PRECAUCION",
+    "texto": "Pirazinamida en gota: inhibe la excreción de ácido úrico y eleva la uricemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Roxitromicina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Delafloxacino",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atenolol",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante en miastenia gravis: puede agravar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amitriptilina",
+    "condicionCodigo": "GLAUCOMA",
+    "severidad": "EVITAR",
+    "texto": "Fármaco anticolinérgico en glaucoma de ángulo cerrado: puede precipitar un ataque agudo. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Moxifloxacino",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Norfloxacino",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ofloxacino",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluconazol",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Itraconazol",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Voriconazol",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sacubitril/Valsartan",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Espirolactona",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "Diurético ahorrador de potasio en hiperpotasemia: agrava la elevación del potasio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Eplerenona",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "Diurético ahorrador de potasio en hiperpotasemia: agrava la elevación del potasio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ondansetrón",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Haloperidol",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clorpromazina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Quetiapina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ziprasidona",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Citalopram",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Disopiramida",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Hidroquinidina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Hidroxicloroquina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Quinina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Domperidona",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Benazepril",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Captopril",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Enalapril",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fosinopril",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lisinopril",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Perindopril",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ramipril",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Trandolapril",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Candesartan",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Eprosartan",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Irbesartan",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Losartan",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Olmesartan",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Telmisartan",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Valsartan",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amilorida",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "Diurético ahorrador de potasio en hiperpotasemia: agrava la elevación del potasio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Triamterene",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "Diurético ahorrador de potasio en hiperpotasemia: agrava la elevación del potasio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulfametoxazol",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "PRECAUCION",
+    "texto": "Trimetoprim en hiperpotasemia: bloquea canales de sodio renales y eleva el potasio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tiazidas",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "EVITAR",
+    "texto": "Tiazida en hiponatremia: causa frecuente de hiponatremia; evitar hasta corregir.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Isavuconazol",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metolazona",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "EVITAR",
+    "texto": "Tiazida en hiponatremia: causa frecuente de hiponatremia; evitar hasta corregir.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Citalopram",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "PRECAUCION",
+    "texto": "ISRS en hiponatremia: puede inducir SIADH y empeorar el sodio, sobre todo en ancianos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "PRECAUCION",
+    "texto": "ISRS en hiponatremia: puede inducir SIADH y empeorar el sodio, sobre todo en ancianos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluoxetina",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "PRECAUCION",
+    "texto": "ISRS en hiponatremia: puede inducir SIADH y empeorar el sodio, sobre todo en ancianos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Paroxetina",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "PRECAUCION",
+    "texto": "ISRS en hiponatremia: puede inducir SIADH y empeorar el sodio, sobre todo en ancianos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sertralina",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "PRECAUCION",
+    "texto": "ISRS en hiponatremia: puede inducir SIADH y empeorar el sodio, sobre todo en ancianos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Carbamazepina",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "PRECAUCION",
+    "texto": "Carbamazepina/eslicarbazepina en hiponatremia: efecto tipo SIADH que reduce el sodio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Eslicarbazepina",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "PRECAUCION",
+    "texto": "Carbamazepina/eslicarbazepina en hiponatremia: efecto tipo SIADH que reduce el sodio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Budesonida",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en osteoporosis: acelera la pérdida ósea. Usar la mínima dosis y valorar protección ósea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Deflazacort",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en osteoporosis: acelera la pérdida ósea. Usar la mínima dosis y valorar protección ósea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Hidrocortisona",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en osteoporosis: acelera la pérdida ósea. Usar la mínima dosis y valorar protección ósea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metilprednisolona",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en osteoporosis: acelera la pérdida ósea. Usar la mínima dosis y valorar protección ósea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisolona",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en osteoporosis: acelera la pérdida ósea. Usar la mínima dosis y valorar protección ósea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisona",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en osteoporosis: acelera la pérdida ósea. Usar la mínima dosis y valorar protección ósea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Triamcinolona",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en osteoporosis: acelera la pérdida ósea. Usar la mínima dosis y valorar protección ósea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Omeprazol",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "IBP prolongado en osteoporosis: se asocia a mayor riesgo de fractura con el uso crónico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Esomeprazol",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "IBP prolongado en osteoporosis: se asocia a mayor riesgo de fractura con el uso crónico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lansoprazol",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "IBP prolongado en osteoporosis: se asocia a mayor riesgo de fractura con el uso crónico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Pantoprazol",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "IBP prolongado en osteoporosis: se asocia a mayor riesgo de fractura con el uso crónico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rabeprazol",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "IBP prolongado en osteoporosis: se asocia a mayor riesgo de fractura con el uso crónico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amikacina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "EVITAR",
+    "texto": "Aminoglucósido en miastenia gravis: bloqueo neuromuscular que agrava la debilidad. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Estreptomicina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "EVITAR",
+    "texto": "Aminoglucósido en miastenia gravis: bloqueo neuromuscular que agrava la debilidad. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gentamicina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "EVITAR",
+    "texto": "Aminoglucósido en miastenia gravis: bloqueo neuromuscular que agrava la debilidad. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tobramicina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "EVITAR",
+    "texto": "Aminoglucósido en miastenia gravis: bloqueo neuromuscular que agrava la debilidad. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Delafloxacino",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Moxifloxacino",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Norfloxacino",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Macrólido en miastenia gravis: puede empeorar la transmisión neuromuscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Macrólido en miastenia gravis: puede empeorar la transmisión neuromuscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Eritromicina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Macrólido en miastenia gravis: puede empeorar la transmisión neuromuscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Roxitromicina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Macrólido en miastenia gravis: puede empeorar la transmisión neuromuscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indapamida",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "EVITAR",
+    "texto": "Tiazida en hiponatremia: causa frecuente de hiponatremia; evitar hasta corregir.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celiprolol",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante en miastenia gravis: puede agravar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Labetalol",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante en miastenia gravis: puede agravar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metoprolol",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante en miastenia gravis: puede agravar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nadolol",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante en miastenia gravis: puede agravar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Propranolol",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante en miastenia gravis: puede agravar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulfametoxazol",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "EVITAR",
+    "texto": "Fármaco oxidante en déficit de G6PD: riesgo de hemólisis aguda. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Trimetoprim",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "EVITAR",
+    "texto": "Fármaco oxidante en déficit de G6PD: riesgo de hemólisis aguda. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nitrofurantoina",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "EVITAR",
+    "texto": "Fármaco oxidante en déficit de G6PD: riesgo de hemólisis aguda. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Delafloxacino",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Moxifloxacino",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Norfloxacino",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ofloxacino",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Betametasona",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en depresión: puede provocar alteraciones del ánimo y síntomas psiquiátricos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Budesonida",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en depresión: puede provocar alteraciones del ánimo y síntomas psiquiátricos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Deflazacort",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en depresión: puede provocar alteraciones del ánimo y síntomas psiquiátricos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexametasona",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en depresión: puede provocar alteraciones del ánimo y síntomas psiquiátricos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Hidrocortisona",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en depresión: puede provocar alteraciones del ánimo y síntomas psiquiátricos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metilprednisolona",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en depresión: puede provocar alteraciones del ánimo y síntomas psiquiátricos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisolona",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en depresión: puede provocar alteraciones del ánimo y síntomas psiquiátricos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Prednisona",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en depresión: puede provocar alteraciones del ánimo y síntomas psiquiátricos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Haloperidol",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clorpromazina",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amisulprida",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Paliperidona",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Aripiprazol",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Asenapina",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Cariprazina",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lurasidona",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ziprasidona",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Olanzapina",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Antipsicótico bloqueante dopaminérgico en Parkinson: agrava el parkinsonismo. Si es imprescindible, preferir quetiapina o clozapina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Carvedilol",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante en miastenia gravis: puede agravar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clozapina",
+    "condicionCodigo": "OBESIDAD",
+    "severidad": "PRECAUCION",
+    "texto": "Antipsicótico con alto riesgo de aumento de peso y alteración metabólica en paciente con obesidad.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Quetiapina",
+    "condicionCodigo": "OBESIDAD",
+    "severidad": "PRECAUCION",
+    "texto": "Antipsicótico con alto riesgo de aumento de peso y alteración metabólica en paciente con obesidad.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Espirolactona",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Diurético ahorrador de potasio en ERC: mayor riesgo de hiperpotasemia. Controlar potasio y función renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Eprosartan",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rosuvastatina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Estatina en embarazo: contraindicada; el colesterol es necesario para el desarrollo fetal. Suspender.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Cumarínico después del 1er trimestre: riesgo de hemorragia fetal y neonatal. Preferir heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 13,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Acenocumarol",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Cumarínico después del 1er trimestre: riesgo de hemorragia fetal y neonatal. Preferir heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 13,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 19
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Doxiciclina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Tetraciclina desde el 2º trimestre: contraindicada por tinción dental permanente y depósito en hueso fetal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 15,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tetraciclina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Tetraciclina desde el 2º trimestre: contraindicada por tinción dental permanente y depósito en hueso fetal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 15,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Carbamazepina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Antiepiléptico clásico en embarazo: potencial teratógeno. No suspender sin neurología; preferir alternativas de menor riesgo (levetiracetam, lamotrigina).",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Primidona",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Antiepiléptico clásico en embarazo: potencial teratógeno. No suspender sin neurología; preferir alternativas de menor riesgo (levetiracetam, lamotrigina).",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Propiltiouracilo",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Propiltiouracilo después del 1er trimestre: riesgo de hepatotoxicidad materna. Pasada la semana 12 suele preferirse metimazol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 13,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Litio después del 1er trimestre: controlar litemia (cambia el volumen de distribución) y vigilar toxicidad neonatal cerca del parto.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 13,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lorazepam",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en lactancia: pasa a la leche; riesgo de sedación e hipotonía del lactante. Preferir vida media corta y dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Olanzapina",
+    "condicionCodigo": "OBESIDAD",
+    "severidad": "PRECAUCION",
+    "texto": "Antipsicótico con alto riesgo de aumento de peso y alteración metabólica en paciente con obesidad.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ramipril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 20,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metimazol",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Metimazol en el 1er trimestre: riesgo de embriopatía (aplasia cutis, atresia). Preferir propiltiouracilo en ese período.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 12
+  },
+  {
+    "principioActivoNombre": "Betametasona",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en HTA: retención hidrosalina que eleva la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metilprednisolona",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en HTA: retención hidrosalina que eleva la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Propranolol",
+    "condicionCodigo": "EPOC",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante no selectivo en EPOC: riesgo de broncoespasmo; preferir cardioselectivo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Carvedilol",
+    "condicionCodigo": "EPOC",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante no selectivo en EPOC: riesgo de broncoespasmo; preferir cardioselectivo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "FA",
+    "severidad": "PRECAUCION",
+    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexametasona",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en diabetes: hiperglucemia; reforzar controles y ajustar el tratamiento hipoglucemiante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Carvedilol",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante no selectivo en diabetes: puede enmascarar síntomas de hipoglucemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Labetalol",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante no selectivo en diabetes: puede enmascarar síntomas de hipoglucemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "HIPOTIROIDISMO",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco con efecto antitiroideo en hipotiroidismo: puede agravar el déficit. Controlar función tiroidea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluconazol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonazepam",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en cirrosis: riesgo de encefalopatía hepática. Preferir lorazepam (sin metabolismo hepático extenso) a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clorazepato dipotásico",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Benzodiacepina en cirrosis: riesgo de encefalopatía hepática. Preferir lorazepam (sin metabolismo hepático extenso) a dosis baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "ULCERA",
+    "severidad": "EVITAR",
+    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rivaroxabán",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Anticoagulante en úlcera/HDA: mayor riesgo de hemorragia digestiva. Valorar gastroprotección.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clomipramina",
+    "condicionCodigo": "GLAUCOMA",
+    "severidad": "EVITAR",
+    "texto": "Fármaco anticolinérgico en glaucoma de ángulo cerrado: puede precipitar un ataque agudo. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clozapina",
+    "condicionCodigo": "GLAUCOMA",
+    "severidad": "EVITAR",
+    "texto": "Fármaco anticolinérgico en glaucoma de ángulo cerrado: puede precipitar un ataque agudo. Evitar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Norfloxacino",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Eritromicina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Posaconazol",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "EVITAR",
+    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Trimetoprim",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "PRECAUCION",
+    "texto": "Trimetoprim en hiperpotasemia: bloquea canales de sodio renales y eleva el potasio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clortalidona",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "EVITAR",
+    "texto": "Tiazida en hiponatremia: causa frecuente de hiponatremia; evitar hasta corregir.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Betametasona",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en osteoporosis: acelera la pérdida ósea. Usar la mínima dosis y valorar protección ósea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ofloxacino",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Bisoprolol",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Betabloqueante en miastenia gravis: puede agravar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Triamcinolona",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en depresión: puede provocar alteraciones del ánimo y síntomas psiquiátricos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metoclopramida",
+    "condicionCodigo": "PARKINSON",
+    "severidad": "EVITAR",
+    "texto": "Metoclopramida en Parkinson: bloquea dopamina y empeora los síntomas. Preferir domperidona.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Quinapril",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "EVITAR",
+    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexametasona",
+    "condicionCodigo": "OSTEOPOROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Corticoide sistémico en osteoporosis: acelera la pérdida ósea. Usar la mínima dosis y valorar protección ósea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Hidroxicloroquina",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Hidroxicloroquina en déficit de G6PD: riesgo de hemólisis; valorar según severidad del déficit.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Alprazolam",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: las benzodiacepinas en el adulto mayor aumentan el riesgo de caídas, fractura de cadera y deterioro cognitivo. Si es imprescindible, usar la dosis más baja y por el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonazepam",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: las benzodiacepinas en el adulto mayor aumentan el riesgo de caídas, fractura de cadera y deterioro cognitivo. Si es imprescindible, usar la dosis más baja y por el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clorazepato dipotásico",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: las benzodiacepinas en el adulto mayor aumentan el riesgo de caídas, fractura de cadera y deterioro cognitivo. Si es imprescindible, usar la dosis más baja y por el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diazepam",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: las benzodiacepinas en el adulto mayor aumentan el riesgo de caídas, fractura de cadera y deterioro cognitivo. Si es imprescindible, usar la dosis más baja y por el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketazolam",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: las benzodiacepinas en el adulto mayor aumentan el riesgo de caídas, fractura de cadera y deterioro cognitivo. Si es imprescindible, usar la dosis más baja y por el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lorazepam",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: las benzodiacepinas en el adulto mayor aumentan el riesgo de caídas, fractura de cadera y deterioro cognitivo. Si es imprescindible, usar la dosis más baja y por el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lormetazepam",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: las benzodiacepinas en el adulto mayor aumentan el riesgo de caídas, fractura de cadera y deterioro cognitivo. Si es imprescindible, usar la dosis más baja y por el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Midazolam",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: las benzodiacepinas en el adulto mayor aumentan el riesgo de caídas, fractura de cadera y deterioro cognitivo. Si es imprescindible, usar la dosis más baja y por el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amitriptilina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: carga anticolinérgica elevada en el adulto mayor (confusión, retención urinaria, constipación, boca seca, visión borrosa). Preferir una alternativa con menor efecto anticolinérgico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clomipramina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: carga anticolinérgica elevada en el adulto mayor (confusión, retención urinaria, constipación, boca seca, visión borrosa). Preferir una alternativa con menor efecto anticolinérgico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nortriptilina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: carga anticolinérgica elevada en el adulto mayor (confusión, retención urinaria, constipación, boca seca, visión borrosa). Preferir una alternativa con menor efecto anticolinérgico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clorpromazina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: carga anticolinérgica elevada en el adulto mayor (confusión, retención urinaria, constipación, boca seca, visión borrosa). Preferir una alternativa con menor efecto anticolinérgico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clozapina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: carga anticolinérgica elevada en el adulto mayor (confusión, retención urinaria, constipación, boca seca, visión borrosa). Preferir una alternativa con menor efecto anticolinérgico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Solifenacina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: carga anticolinérgica elevada en el adulto mayor (confusión, retención urinaria, constipación, boca seca, visión borrosa). Preferir una alternativa con menor efecto anticolinérgico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Glibenclamida",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: sulfonilurea de acción prolongada en el adulto mayor, con riesgo alto de hipoglucemia grave y sostenida. Preferir gliclazida o glimepirida.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Clorpropamida",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: sulfonilurea de acción prolongada en el adulto mayor, con riesgo alto de hipoglucemia grave y sostenida. Preferir gliclazida o glimepirida.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gliburida",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: sulfonilurea de acción prolongada en el adulto mayor, con riesgo alto de hipoglucemia grave y sostenida. Preferir gliclazida o glimepirida.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amisulprida",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Aripiprazol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Asenapina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Cariprazina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Haloperidol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lurasidona",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Olanzapina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Paliperidona",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Quetiapina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ziprasidona",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los antipsicóticos en el adulto mayor con demencia aumentan la mortalidad y el riesgo de ACV. Reservarlos para síntomas graves que no respondan a medidas no farmacológicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Digoxina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers: en el adulto mayor no superar 0,125 mg/día de digoxina. El descenso de la función renal con la edad estrecha el margen terapéutico.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers: amiodarona no es de primera línea para fibrilación auricular en el adulto mayor por su toxicidad tiroidea, pulmonar y hepática, salvo insuficiencia cardíaca o hipertrofia ventricular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nitrofurantoina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: evitar nitrofurantoína en el adulto mayor con Clcr < 30 mL/min (eficacia baja y riesgo de toxicidad pulmonar y hepática con el uso prolongado).",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metoclopramida",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers: riesgo de efectos extrapiramidales y discinesia tardía en el adulto mayor. Limitar a tratamientos cortos (menos de 12 semanas).",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Domperidona",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers: riesgo de efectos extrapiramidales y discinesia tardía en el adulto mayor. Limitar a tratamientos cortos (menos de 12 semanas).",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Omeprazol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers/STOPP: el IBP más allá de 8 semanas en el adulto mayor, sin indicación sostenida, se asocia a infección por C. difficile, fractura y déficit de B12. Revisar si sigue haciendo falta.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Esomeprazol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers/STOPP: el IBP más allá de 8 semanas en el adulto mayor, sin indicación sostenida, se asocia a infección por C. difficile, fractura y déficit de B12. Revisar si sigue haciendo falta.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Lansoprazol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers/STOPP: el IBP más allá de 8 semanas en el adulto mayor, sin indicación sostenida, se asocia a infección por C. difficile, fractura y déficit de B12. Revisar si sigue haciendo falta.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Pantoprazol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers/STOPP: el IBP más allá de 8 semanas en el adulto mayor, sin indicación sostenida, se asocia a infección por C. difficile, fractura y déficit de B12. Revisar si sigue haciendo falta.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rabeprazol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers/STOPP: el IBP más allá de 8 semanas en el adulto mayor, sin indicación sostenida, se asocia a infección por C. difficile, fractura y déficit de B12. Revisar si sigue haciendo falta.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Zolpidem",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "EVITAR",
+    "texto": "Beers: los hipnóticos Z en el adulto mayor tienen los mismos riesgos que las benzodiacepinas (caídas, fractura, confusión) con beneficio pequeño sobre el sueño.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Espirolactona",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers: antagonista de aldosterona en el adulto mayor, sobre todo con IECA/ARA-II o Clcr < 30: controlar el potasio de cerca por riesgo de hiperpotasemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Eplerenona",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Beers: antagonista de aldosterona en el adulto mayor, sobre todo con IECA/ARA-II o Clcr < 30: controlar el potasio de cerca por riesgo de hiperpotasemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tramadol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "STOPP: opioide con riesgo de hiponatremia, confusión y descenso del umbral convulsivo en el adulto mayor. Empezar por la dosis más baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tapentadol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "STOPP: opioide con riesgo de hiponatremia, confusión y descenso del umbral convulsivo en el adulto mayor. Empezar por la dosis más baja.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Propranolol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "STOPP: betabloqueante no selectivo en el adulto mayor: mayor riesgo de bradicardia sintomática y de enmascarar hipoglucemias.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Nadolol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "STOPP: betabloqueante no selectivo en el adulto mayor: mayor riesgo de bradicardia sintomática y de enmascarar hipoglucemias.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Carvedilol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "STOPP: betabloqueante no selectivo en el adulto mayor: mayor riesgo de bradicardia sintomática y de enmascarar hipoglucemias.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Labetalol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "STOPP: betabloqueante no selectivo en el adulto mayor: mayor riesgo de bradicardia sintomática y de enmascarar hipoglucemias.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  }
+]

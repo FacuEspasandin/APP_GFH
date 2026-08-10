@@ -1,0 +1,11 @@
+PA unificado por normalización: "Bosentan" absorbe "Bosentán"
+PA unificado por normalización: "Peginterferón beta-1A" absorbe "Peginterferón beta-1a"
+PA unificado por normalización: "Zolmitriptan" absorbe "Zolmitriptán"
+Ajuste renal descartado (ya existe bosentan|NO_ESPECIFICADA): "Bosentán" tabla 25 — dosis "62,5 - 125 mg/12h". Resolver contra la fuente SEN.
+Ajuste renal descartado (ya existe dextrometorfano|NO_ESPECIFICADA): "Dextrometorfano" tabla 25 — dosis "15 - 120 mg/dia". Resolver contra la fuente SEN.
+Ajuste renal descartado (ya existe dimetilfumarato|NO_ESPECIFICADA): "Dimetilfumarato" tabla 25 — dosis "30 - 720 mg/24h". Resolver contra la fuente SEN.
+Ajuste renal descartado (ya existe ivacaftor|NO_ESPECIFICADA): "Ivacaftor" tabla 25 — dosis "150 mg/12h". Resolver contra la fuente SEN.
+Ajuste renal descartado (ya existe peginterferon beta-1a|NO_ESPECIFICADA): "Peginterferón beta-1a" tabla 26 — dosis "125 mg/15 días". Resolver contra la fuente SEN.
+Ajuste renal descartado (ya existe pirfenidona|NO_ESPECIFICADA): "Pirfenidona" tabla 26 — dosis "2403 mg/día". Resolver contra la fuente SEN.
+Ajuste renal descartado (ya existe sulfasalazina|NO_ESPECIFICADA): "Sulfasalazina" tabla 24 — dosis "1 - 2 g/24h (2 - 3 tomas)". Resolver contra la fuente SEN.
+Ajuste renal descartado (ya existe zolmitriptan|NO_ESPECIFICADA): "Zolmitriptán" tabla 11 — dosis "2,5 - 10 mg/24h". Resolver contra la fuente SEN.

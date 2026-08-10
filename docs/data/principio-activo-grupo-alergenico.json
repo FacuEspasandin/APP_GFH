@@ -1,0 +1,230 @@
+[
+  {
+    "principioActivoNombre": "Amoxicilina",
+    "grupoCodigo": "PENICILINAS"
+  },
+  {
+    "principioActivoNombre": "Amoxicilina/Clavulánico",
+    "grupoCodigo": "PENICILINAS"
+  },
+  {
+    "principioActivoNombre": "Ampicilina",
+    "grupoCodigo": "PENICILINAS"
+  },
+  {
+    "principioActivoNombre": "Penicilina G",
+    "grupoCodigo": "PENICILINAS"
+  },
+  {
+    "principioActivoNombre": "Piperacilina",
+    "grupoCodigo": "PENICILINAS"
+  },
+  {
+    "principioActivoNombre": "Piperacilina / Tazobactam",
+    "grupoCodigo": "PENICILINAS"
+  },
+  {
+    "principioActivoNombre": "Ticarcilina",
+    "grupoCodigo": "PENICILINAS"
+  },
+  {
+    "principioActivoNombre": "Ticarcilina/Clavulánico",
+    "grupoCodigo": "PENICILINAS"
+  },
+  {
+    "principioActivoNombre": "Cefazolina",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Cefepima",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Cefixima",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Cefotaxima",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Cefoxitina",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Ceftazidima",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Ceftazidima - Avibactam",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Ceftolozano - Tazobactam",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Ceftriaxona",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Cefuroxima",
+    "grupoCodigo": "CEFALOSPORINAS"
+  },
+  {
+    "principioActivoNombre": "Ertapenem",
+    "grupoCodigo": "CARBAPENEMS"
+  },
+  {
+    "principioActivoNombre": "Imipenem",
+    "grupoCodigo": "CARBAPENEMS"
+  },
+  {
+    "principioActivoNombre": "Meropenem",
+    "grupoCodigo": "CARBAPENEMS"
+  },
+  {
+    "principioActivoNombre": "Sulfametoxazol",
+    "grupoCodigo": "SULFAS"
+  },
+  {
+    "principioActivoNombre": "Sulfasalazina",
+    "grupoCodigo": "SULFAS"
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Indometacina",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Ketoprofeno",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Dexketoprofeno",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Flurbiprofeno",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Piroxicam",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Sulindaco",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Clonixino Lisina",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Celecoxib",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Etoricoxib",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Parecoxib",
+    "grupoCodigo": "AINES"
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "grupoCodigo": "QUINOLONAS"
+  },
+  {
+    "principioActivoNombre": "Delafloxacino",
+    "grupoCodigo": "QUINOLONAS"
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "grupoCodigo": "QUINOLONAS"
+  },
+  {
+    "principioActivoNombre": "Moxifloxacino",
+    "grupoCodigo": "QUINOLONAS"
+  },
+  {
+    "principioActivoNombre": "Norfloxacino",
+    "grupoCodigo": "QUINOLONAS"
+  },
+  {
+    "principioActivoNombre": "Ofloxacino",
+    "grupoCodigo": "QUINOLONAS"
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "grupoCodigo": "MACROLIDOS"
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "grupoCodigo": "MACROLIDOS"
+  },
+  {
+    "principioActivoNombre": "Eritromicina",
+    "grupoCodigo": "MACROLIDOS"
+  },
+  {
+    "principioActivoNombre": "Roxitromicina",
+    "grupoCodigo": "MACROLIDOS"
+  },
+  {
+    "principioActivoNombre": "Doxiciclina",
+    "grupoCodigo": "TETRACICLINAS"
+  },
+  {
+    "principioActivoNombre": "Tetraciclina",
+    "grupoCodigo": "TETRACICLINAS"
+  },
+  {
+    "principioActivoNombre": "Amikacina",
+    "grupoCodigo": "AMINOGLUCOSIDOS"
+  },
+  {
+    "principioActivoNombre": "Estreptomicina",
+    "grupoCodigo": "AMINOGLUCOSIDOS"
+  },
+  {
+    "principioActivoNombre": "Gentamicina",
+    "grupoCodigo": "AMINOGLUCOSIDOS"
+  },
+  {
+    "principioActivoNombre": "Tobramicina",
+    "grupoCodigo": "AMINOGLUCOSIDOS"
+  },
+  {
+    "principioActivoNombre": "Carbamazepina",
+    "grupoCodigo": "ANTIEPILEPTICOS_AROMATICOS"
+  },
+  {
+    "principioActivoNombre": "Fenitoina",
+    "grupoCodigo": "ANTIEPILEPTICOS_AROMATICOS"
+  },
+  {
+    "principioActivoNombre": "Fenobarbital",
+    "grupoCodigo": "ANTIEPILEPTICOS_AROMATICOS"
+  },
+  {
+    "principioActivoNombre": "Primidona",
+    "grupoCodigo": "ANTIEPILEPTICOS_AROMATICOS"
+  },
+  {
+    "principioActivoNombre": "Eslicarbazepina",
+    "grupoCodigo": "ANTIEPILEPTICOS_AROMATICOS"
+  }
+]

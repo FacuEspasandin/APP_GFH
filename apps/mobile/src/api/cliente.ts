@@ -1,0 +1,222 @@
+import { Platform } from 'react-native';
+
+import { borrar, CLAVE_ACCESS, CLAVE_REFRESH, guardar, leer } from './almacen';
+
+/**
+ * Cliente HTTP.
+ *
+ * Toda comunicación con la API pasa por acá — ningún componente hace `fetch`
+ * directo (Opciones_stack.md, "Arquitectura Mobile").
+ *
+ * Lo que resuelve y no es obvio: cuando el access token vence, reintenta UNA
+ * vez usando el refresh, y si varias pantallas piden a la vez comparten el
+ * mismo refresh en vuelo. Sin eso, cinco requests simultáneos dispararían cinco
+ * rotaciones y cuatro de ellas serían "reuso de token revocado" → el backend
+ * cerraría todas las sesiones del médico por sospecha de robo.
+ */
+
+const BASE = resolverBase();
+
+function resolverBase(): string {
+  const deEntorno = process.env.EXPO_PUBLIC_API_URL;
+  if (deEntorno) return deEntorno.replace(/\/$/, '');
+  // En emulador Android, `localhost` es el propio emulador.
+  if (Platform.OS === 'android') return 'http://10.0.2.2:3333';
+  return 'http://127.0.0.1:3333';
+}
+
+export class ErrorApi extends Error {
+  constructor(
+    readonly codigo: string,
+    mensaje: string,
+    readonly status: number,
+  ) {
+    super(mensaje);
+    this.name = 'ErrorApi';
+  }
+
+  /** El teléfono no llegó al servidor. Es accionable por el usuario —revisar
+   *  wifi— a diferencia de un error del backend, que no lo es. */
+  get esSinConexion(): boolean {
+    return this.codigo === 'SIN_CONEXION';
+  }
+
+  get esSuscripcionVencida(): boolean {
+    return this.codigo === 'SUSCRIPCION_VENCIDA';
+  }
+}
+
+/**
+ * Qué hacer cuando el backend dice que la suscripción venció.
+ *
+ * Lo resuelve quien tenga el router a mano, no el cliente HTTP: importar
+ * expo-router acá acoplaría la capa de red a la de navegación. El layout raíz
+ * registra el manejador al montar.
+ */
+let alVencerSuscripcion: (() => void) | null = null;
+export function registrarManejadorSuscripcionVencida(fn: () => void): void {
+  alVencerSuscripcion = fn;
+}
+
+interface RespuestaSobre<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: { code: string; message: string };
+}
+
+let refrescoEnVuelo: Promise<boolean> | null = null;
+
+async function refrescar(): Promise<boolean> {
+  if (refrescoEnVuelo) return refrescoEnVuelo;
+
+  refrescoEnVuelo = (async () => {
+    const refreshToken = await leer(CLAVE_REFRESH);
+    if (!refreshToken) return false;
+
+    const res = await fetch(`${BASE}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+    if (!res.ok) {
+      await cerrarSesionLocal();
+      return false;
+    }
+
+    const cuerpo = (await res.json()) as RespuestaSobre<{
+      accessToken: string;
+      refreshToken: string;
+    }>;
+    if (!cuerpo.data) return false;
+
+    await guardar(CLAVE_ACCESS, cuerpo.data.accessToken);
+    await guardar(CLAVE_REFRESH, cuerpo.data.refreshToken);
+    return true;
+  })().finally(() => {
+    refrescoEnVuelo = null;
+  });
+
+  return refrescoEnVuelo;
+}
+
+async function pedir<T>(
+  ruta: string,
+  opciones: RequestInit = {},
+  reintentar = true,
+): Promise<T> {
+  const accessToken = await leer(CLAVE_ACCESS);
+
+  let res: Response;
+  try {
+    res = await fetch(`${BASE}${ruta}`, {
+      ...opciones,
+      headers: {
+        // `content-type: application/json` SÓLO cuando hay cuerpo. Fastify
+        // rechaza con 400 un request que declara JSON y viene vacío
+        // ("Body cannot be empty when content-type is set to
+        // 'application/json'"), así que mandarlo siempre rompía todos los
+        // DELETE: borrar un paciente, quitar una alergia, cerrar una sesión.
+        ...(opciones.body !== undefined ? { 'content-type': 'application/json' } : {}),
+        ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
+        ...(opciones.headers ?? {}),
+      },
+    });
+  } catch {
+    // `fetch` sólo tira cuando no llegó a hablar con el servidor: sin red, DNS
+    // caído o servidor apagado. Se distingue del error del backend porque el
+    // usuario puede hacer algo al respecto.
+    throw new ErrorApi('SIN_CONEXION', 'No hay conexión con el servidor.', 0);
+  }
+
+  if (res.status === 401 && reintentar) {
+    const ok = await refrescar();
+    if (ok) return pedir<T>(ruta, opciones, false);
+  }
+
+  if (res.status === 204) return undefined as T;
+
+  const cuerpo = (await res.json().catch(() => null)) as RespuestaSobre<T> | null;
+
+  if (!res.ok || !cuerpo?.success) {
+    const codigo = cuerpo?.error?.code ?? 'ERROR';
+
+    // La suscripción vencida no es un error de la pantalla: bloquea toda la
+    // app, así que se maneja una vez y en un solo lugar.
+    if (res.status === 403 && codigo === 'SUSCRIPCION_VENCIDA') {
+      alVencerSuscripcion?.();
+    }
+
+    throw new ErrorApi(
+      codigo,
+      cuerpo?.error?.message ?? 'No se pudo completar la operación.',
+      res.status,
+    );
+  }
+
+  return cuerpo.data as T;
+}
+
+export const api = {
+  get: <T>(ruta: string) => pedir<T>(ruta),
+  post: <T>(ruta: string, cuerpo?: unknown) =>
+    pedir<T>(ruta, { method: 'POST', body: cuerpo ? JSON.stringify(cuerpo) : undefined }),
+  patch: <T>(ruta: string, cuerpo: unknown) =>
+    pedir<T>(ruta, { method: 'PATCH', body: JSON.stringify(cuerpo) }),
+  delete: <T>(ruta: string) => pedir<T>(ruta, { method: 'DELETE' }),
+};
+
+// --- sesión -----------------------------------------------------------------
+
+export async function iniciarSesion(identificador: string, password: string): Promise<void> {
+  const res = await fetch(`${BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      identificador,
+      password,
+      dispositivoInfo: `${Platform.OS} · GFH ${Platform.Version ?? ''}`.trim(),
+    }),
+  });
+
+  const cuerpo = (await res.json().catch(() => null)) as RespuestaSobre<{
+    accessToken: string;
+    refreshToken: string;
+  }> | null;
+
+  if (!res.ok || !cuerpo?.data) {
+    throw new ErrorApi(
+      cuerpo?.error?.code ?? 'ERROR',
+      cuerpo?.error?.message ?? 'No se pudo iniciar sesión.',
+      res.status,
+    );
+  }
+
+  await guardar(CLAVE_ACCESS, cuerpo.data.accessToken);
+  await guardar(CLAVE_REFRESH, cuerpo.data.refreshToken);
+  hayTokenEnMemoria = true;
+}
+
+export async function cerrarSesionLocal(): Promise<void> {
+  await borrar(CLAVE_ACCESS);
+  await borrar(CLAVE_REFRESH);
+  hayTokenEnMemoria = false;
+}
+
+export async function haySesion(): Promise<boolean> {
+  const token = await leer(CLAVE_ACCESS);
+  hayTokenEnMemoria = token !== null;
+  return hayTokenEnMemoria;
+}
+
+/**
+ * Versión sincrónica, para decidir si una query puede correr. `leer` es async
+ * en device (SecureStore) y los hooks de React no pueden esperar, así que se
+ * cachea el resultado de la última consulta.
+ */
+let hayTokenEnMemoria = false;
+export function haySesionSincrona(): boolean {
+  return hayTokenEnMemoria;
+}
+
+export { BASE as URL_API };

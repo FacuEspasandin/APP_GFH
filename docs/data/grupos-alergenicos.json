@@ -1,0 +1,161 @@
+[
+  {
+    "codigo": "BETALACTAMICOS",
+    "nombre": "Betalactámicos",
+    "nivelCruce": "BAJO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "betalactamicos",
+      "betalactámicos",
+      "beta-lactamicos"
+    ]
+  },
+  {
+    "codigo": "SULFAS",
+    "nombre": "Sulfonamidas (sulfas)",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "sulfa",
+      "sulfas",
+      "sulfamidas",
+      "sulfonamidas",
+      "bactrim",
+      "tmp-smx"
+    ]
+  },
+  {
+    "codigo": "AINES",
+    "nombre": "AINEs",
+    "nivelCruce": "MODERADO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "aine",
+      "aines",
+      "antiinflamatorios",
+      "aspirina",
+      "ibuprofeno",
+      "diclofenac"
+    ]
+  },
+  {
+    "codigo": "QUINOLONAS",
+    "nombre": "Fluorquinolonas",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "quinolona",
+      "quinolonas",
+      "fluorquinolonas",
+      "ciprofloxacina",
+      "ciprofloxacino"
+    ]
+  },
+  {
+    "codigo": "MACROLIDOS",
+    "nombre": "Macrólidos",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "macrolido",
+      "macrolidos",
+      "macrólidos",
+      "eritromicina",
+      "azitromicina"
+    ]
+  },
+  {
+    "codigo": "TETRACICLINAS",
+    "nombre": "Tetraciclinas",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "tetraciclina",
+      "tetraciclinas",
+      "doxiciclina"
+    ]
+  },
+  {
+    "codigo": "AMINOGLUCOSIDOS",
+    "nombre": "Aminoglucósidos",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "aminoglucosido",
+      "aminoglucosidos",
+      "gentamicina",
+      "amikacina"
+    ]
+  },
+  {
+    "codigo": "ANTIEPILEPTICOS_AROMATICOS",
+    "nombre": "Antiepilépticos aromáticos",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "carbamazepina",
+      "fenitoina",
+      "fenitoína",
+      "anticonvulsivantes"
+    ]
+  },
+  {
+    "codigo": "LATEX",
+    "nombre": "Látex",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "latex",
+      "látex",
+      "goma"
+    ]
+  },
+  {
+    "codigo": "CONTRASTE_YODADO",
+    "nombre": "Contraste yodado",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": null,
+    "sinonimos": [
+      "yodo",
+      "iodo",
+      "contraste",
+      "contraste yodado"
+    ]
+  },
+  {
+    "codigo": "PENICILINAS",
+    "nombre": "Penicilinas",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": "BETALACTAMICOS",
+    "sinonimos": [
+      "penicilina",
+      "penicilinas",
+      "amoxicilina",
+      "ampicilina"
+    ]
+  },
+  {
+    "codigo": "CEFALOSPORINAS",
+    "nombre": "Cefalosporinas",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": "BETALACTAMICOS",
+    "sinonimos": [
+      "cefalosporina",
+      "cefalosporinas",
+      "cefalexina",
+      "ceftriaxona"
+    ]
+  },
+  {
+    "codigo": "CARBAPENEMS",
+    "nombre": "Carbapenems",
+    "nivelCruce": "ALTO",
+    "grupoPadreCodigo": "BETALACTAMICOS",
+    "sinonimos": [
+      "carbapenem",
+      "carbapenems",
+      "meropenem",
+      "imipenem"
+    ]
+  }
+]

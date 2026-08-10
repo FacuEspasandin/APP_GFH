@@ -1,0 +1,44 @@
+# Blueprint de Render para el backend de GFH Móvil.
+#
+# Con este archivo en la raíz, Render lee la configuración del servicio en vez
+# de que haya que cargarla a mano en el panel.
+#
+# La base NO se declara acá: ya vive en Supabase. Render sólo corre la API.
+
+services:
+  - type: web
+    name: gfh-backend
+    runtime: docker
+    # Desde la raíz del monorepo: el backend importa `@gfh/shared-types` por
+    # workspace y ese paquete publica TypeScript crudo, así que construir sólo
+    # `apps/backend` deja la importación colgada.
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: oregon
+    plan: free
+
+    # Render lo llama para saber si el servicio está vivo. `/salud` consulta la
+    # base, así que un despliegue con la base mal configurada falla acá en vez
+    # de quedar "sano" y romper recién en la primera pantalla.
+    healthCheckPath: /salud
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # Se cargan a mano en el panel de Render, NO acá: este archivo se
+      # commitea. `sync: false` es lo que le dice a Render que las pida.
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+
+      - key: JWT_ACCESS_TTL
+        value: 15m
+
+      # Vacío a propósito: sólo afecta al navegador. La app nativa no manda
+      # cabecera Origin, así que no necesita estar acá para funcionar.
+      - key: CORS_ORIGENES
+        sync: false

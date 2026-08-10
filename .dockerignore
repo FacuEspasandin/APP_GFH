@@ -1,0 +1,13 @@
+node_modules
+**/node_modules
+**/.expo
+**/dist
+apps/mobile
+docs
+*.md
+!README.md
+.git
+.env
+**/.env
+**/.env.*
+!**/.env.example

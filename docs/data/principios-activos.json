@@ -1,0 +1,3806 @@
+[
+  {
+    "nombre": "Abacavir/Lamivudina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Abemaciclib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Abiraterona",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Abrocitinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Acarbosa",
+    "grupoTerapeutico": "Inhibidores de a-glucosidasa",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Acenocumarol",
+    "grupoTerapeutico": "Anticoagulantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Acetohexamida",
+    "grupoTerapeutico": "Otros antidiabéticos orales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Aciclovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Adalimumab",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Adefovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Afatinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Agomelatina",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Albiglutida",
+    "grupoTerapeutico": "Agonistas GLP-1",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Alectinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Algeldrato",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Alirocumab",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Almagato",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Alogliptina",
+    "grupoTerapeutico": "Inhibidores de DPP-4",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Alopurinol",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Alprazolam",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Alprostadil",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amantadina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ambrisentán",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ambroxol",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amfotericina B lipídica",
+    "grupoTerapeutico": "Antifúngicos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amikacina",
+    "grupoTerapeutico": "Aminoglucósidos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amilorida",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amiodarona",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amisulprida",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amitriptilina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amlodipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amoxicilina",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Amoxicilina/Clavulánico",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ampicilina",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Anastrozol",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Anifrolumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Apalutamida",
+    "grupoTerapeutico": "Otros (Endocrinos)",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Apixabán",
+    "grupoTerapeutico": "Anticoagulantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Aripiprazol",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Arsénico, trióxido",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Asciminib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Asenapina",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Atalureno",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Atazanavir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Atenolol",
+    "grupoTerapeutico": "Betabloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Atezolizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Atorvastatina",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Atosibán",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Avelumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Axitinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Azacitidina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Azatioprina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Azitromicina",
+    "grupoTerapeutico": "Macrólidos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Aztreonam",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Baricitinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Barnidipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bedaquilina",
+    "grupoTerapeutico": "Tuberculostáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Benazepril",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bendamustina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Benralizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bertuzumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Betametasona",
+    "grupoTerapeutico": "Corticoides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bevacizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bexaroteno",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bezafibrato",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bezlotoxumab",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bicalutamida",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bictegravir/emtricitabina/tenofovir alafenamida",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bilastina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Binimetinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bisoprolol",
+    "grupoTerapeutico": "Betabloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bleomicina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bortezomib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bosentan",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bosentán",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Brentuximab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Brivaracetam",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Brodalumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Budesonida",
+    "grupoTerapeutico": "Corticoides",
+    "viaDefault": "INHALATORIA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Bumetanida",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Buprenorfina",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "TOPICA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Buspirona",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Busulfan",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cabazitaxel",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cabotegravir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cabozantinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Canagliflozina",
+    "grupoTerapeutico": "Inhibidores de SGLT-2",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Canakinumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Candesartan",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cangrelor",
+    "grupoTerapeutico": "Antiagregantes",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Capecitabina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Captopril",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Carbamazepina",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Carboplatino",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cariprazina",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Carmustina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Carvedilol",
+    "grupoTerapeutico": "Betabloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Caspofungina",
+    "grupoTerapeutico": "Antifúngicos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cefazolina",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cefepima",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cefixima",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cefotaxima",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cefoxitina",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ceftazidima",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ceftazidima - Avibactam",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ceftolozano - Tazobactam",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ceftriaxona",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cefuroxima",
+    "grupoTerapeutico": "Cefalosporinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Celecoxib",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Celiprolol",
+    "grupoTerapeutico": "Betabloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cenobamato",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ceritinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Certolizumab",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cetirizina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ciclofosfamida",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ciclosporina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cidofovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ciprofloxacino",
+    "grupoTerapeutico": "Fluorquinolona",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cisplatino",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Citalopram",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Citarabina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Citicolina",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Citisina",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Citisiniclina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cladribina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Claritromicina",
+    "grupoTerapeutico": "Macrólidos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clindamicina",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clodronato",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clomipramina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clonazepam",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clonidina",
+    "grupoTerapeutico": "Antiadrenérgicos centrales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clonixino Lisina",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clorambucil",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cloranfenicol",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clorazepato dipotásico",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clorpromazina",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clorpropamida",
+    "grupoTerapeutico": "Otros antidiabéticos orales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clortalidona",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Clozapina",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cobicistat",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Cobimetinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Codeína",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Colchicina",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Colestipol",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Colestiramina",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Colistina",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Condroitina sulfato",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dabigatrán",
+    "grupoTerapeutico": "Anticoagulantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dabrafenib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Daclatasvir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dalbavancina",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Danaparoide de sodio",
+    "grupoTerapeutico": "Anticoagulantes",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dapagliflozina",
+    "grupoTerapeutico": "Inhibidores de SGLT-2",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Daptomicina",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Daratumumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Darunavir/cobicistat/emtricitabina/tenofovir alafenamida",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dasabuvir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dasatinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Daunorubicina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Deferasirox",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Deferoxamina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Deflazacort",
+    "grupoTerapeutico": "Corticoides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Delafloxacino",
+    "grupoTerapeutico": "Fluorquinolona",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Delamanid",
+    "grupoTerapeutico": "Tuberculostáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Desloratadina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Desvenlafaxina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Deucravacitinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dexametasona",
+    "grupoTerapeutico": "Corticoides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dexketoprofeno",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dextrometorfano",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Diazepam",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Diazoxido",
+    "grupoTerapeutico": "Vasodilatadores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Diclofenaco",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Didanosina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Digoxina",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Diltiazem",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dimetilfumarato",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dinitrato de Isosorbida",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Diosmina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Disopiramida",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dobutamina",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dolutegravir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Domperidona",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Donezepilo",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dopamina",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dostarlimab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Doxazosina",
+    "grupoTerapeutico": "Alfa 1 Bloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Doxiciclina",
+    "grupoTerapeutico": "Tetraciclinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Doxorubicina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Droperidol",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dulaglutida",
+    "grupoTerapeutico": "Agonistas GLP-1",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Duloxetina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Dupilumab",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Durvalumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Eculizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Edoxabán",
+    "grupoTerapeutico": "Anticoagulantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Efgartimod",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Elbasvir/Grazoprevir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Eliglustat",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Elotuzumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Elvitegravir/Cobicistat/emtricitabina/tenofovir alafenamida",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Empagliflozina",
+    "grupoTerapeutico": "Inhibidores de SGLT-2",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Emtricitabina/Tenofovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Emtricitabina/tenofovir alafenamida/rilpivirina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Enalapril",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Encorafenib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Enzalutamida",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Epcoritamab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Epirubicina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Eplerenona",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Eprosartan",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Eravaciclina",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Erenumab",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Eribulina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Eritromicina",
+    "grupoTerapeutico": "Macrólidos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Erlotinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ertapenem",
+    "grupoTerapeutico": "Carbapenem",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Escitalopram",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Eslicarbazepina",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Esomeprazol",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Espirolactona",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Estreptomicina",
+    "grupoTerapeutico": "Aminoglucósidos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Etambutol",
+    "grupoTerapeutico": "Tuberculostáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Etanercept",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Etionamida",
+    "grupoTerapeutico": "Tuberculostáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Etoposido",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Etoricoxib",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Etosuximida",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Evinacumab",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Evolocumab",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Exemestano",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Exenatida",
+    "grupoTerapeutico": "Agonistas GLP-1",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ezetimiba",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Famciclovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Famotidina",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fedratinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Felodipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fenfluramina",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fenitoina",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fenobarbital",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fentanilo",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fesoterodina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Finasterida",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fingolimod",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Flecainida",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Flucitosina",
+    "grupoTerapeutico": "Antifúngicos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fluconazol",
+    "grupoTerapeutico": "Antifúngicos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fludarabina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fluorouracilo",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fluoxetina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Flurbiprofeno",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Flutamida",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fluvastatina",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Foscarnet",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fosinopril",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fostemsavir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fulvestrant",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Fumarato de diroximel",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Furosemida",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Futibatinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Gabapentina",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Gadoteridol",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Galcanezumab",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ganciclovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Gemfibrozilo",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Gentamicina",
+    "grupoTerapeutico": "Aminoglucósidos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Glecaprevir/Pibrentasvir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Glibenclamida",
+    "grupoTerapeutico": "Sulfonilureas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Gliburida",
+    "grupoTerapeutico": "Otros antidiabéticos orales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Gliclazida",
+    "grupoTerapeutico": "Sulfonilureas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Glimepirida",
+    "grupoTerapeutico": "Sulfonilureas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Glipizida",
+    "grupoTerapeutico": "Sulfonilureas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Glofitamab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Glucarpidasa",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Gomaguar",
+    "grupoTerapeutico": "Otros antidiabéticos orales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Guanfacina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Guselkumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Haloperidol",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Hidralazina",
+    "grupoTerapeutico": "Vasodilatadores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Hidrocortisona",
+    "grupoTerapeutico": "Corticoides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Hidroquinidina",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Hidroxicarbamida",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Hidroxicloroquina",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Hidroxiurea",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ibrutinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ibuprofeno",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Icatibanto",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Icosapento de etilo",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Idarubicina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Idarucizumab",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Idelalisib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ifosfamida",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Imatinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Imipenem",
+    "grupoTerapeutico": "Carbapenem",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Indapamida",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Indinavir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Indometacina",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Insulina",
+    "grupoTerapeutico": "Otros antidiabéticos orales",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Interferón beta 1b",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ipilimumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Irbesartan",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Irinotecan",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Isavuconazol",
+    "grupoTerapeutico": "Antifúngicos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Isoniacida",
+    "grupoTerapeutico": "Tuberculostáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Isotretinoína",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Itraconazol",
+    "grupoTerapeutico": "Antifúngicos",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ivabradina",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ivacaftor",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ivacaftor/Tezacaftor/Elexacaftor",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ivermectina",
+    "grupoTerapeutico": "Antiparasitarios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ixekizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ketazolam",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ketoprofeno",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Labetalol",
+    "grupoTerapeutico": "Betabloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lacidipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lacosamida",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lamivudina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lamotrigina",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lanreotida",
+    "grupoTerapeutico": "Otros (Endocrinos)",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lansoprazol",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lapatinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lasmiditán succinato",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lecarnidipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ledipasvir/Sofosbuvir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Leflunomida",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lenalidomida",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lenvatinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lesinurad",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Letermovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Letrozol",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Levetiracetam",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Levofloxacino",
+    "grupoTerapeutico": "Fluorquinolona",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Levosimendán",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Linagliptina",
+    "grupoTerapeutico": "Inhibidores de DPP-4",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Linezolid",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lipegfilgrastim",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Liraglutida",
+    "grupoTerapeutico": "Agonistas GLP-1",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lisinopril",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Litio, Carbonato",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lixisenatida",
+    "grupoTerapeutico": "Agonistas GLP-1",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lomitapida",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Loncastuximab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lopinavir/Ritonavir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lorazepam",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lormetazepam",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Losartan",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lovastatina",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Lurasidona",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Macitentán",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Manidipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Maralixibat",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mavacamten",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Meclozina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Melatonina",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Melfalan",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Memantina",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Meperidina",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "OTRA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mepolizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mercaptamina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mercaptopurina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Meropenem",
+    "grupoTerapeutico": "Carbapenem",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metamizol",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metformina",
+    "grupoTerapeutico": "Biguanidas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metildopa",
+    "grupoTerapeutico": "Antiadrenérgicos centrales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metilfenidato",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metilprednisolona",
+    "grupoTerapeutico": "Corticoides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metimazol",
+    "grupoTerapeutico": "Drogas Antitiroideas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metoclopramida",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metolazona",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metoprolol",
+    "grupoTerapeutico": "Betabloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metotrexato",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metoxaleno",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Metronidazol",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mianserina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Micafungina",
+    "grupoTerapeutico": "Antifúngicos",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Midazolam",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Midostaurina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Migalastat",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Miglitol",
+    "grupoTerapeutico": "Inhibidores de a-glucosidasa",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Miglustat",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Milrinona",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Minoxidil",
+    "grupoTerapeutico": "Vasodilatadores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mirikizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mirtazapina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Misoprostol",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mitomicina C",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mitoxantrona",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Mononitrato de Isosorbida",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Morfina",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Moxifloxacino",
+    "grupoTerapeutico": "Fluorquinolona",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Moxonidina",
+    "grupoTerapeutico": "Antiadrenérgicos centrales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "N-Acetilcisteína",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nadolol",
+    "grupoTerapeutico": "Betabloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Naloxegol",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Naloxona",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Naltrexona",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Naproxeno",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nateglinida",
+    "grupoTerapeutico": "Glinidas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nelfinavir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nevirapina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nicardipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nifedipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nilotinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nintedanib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Niraparib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nirmatrelvir/Ritonavir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nisoldipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nitrendipino",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nitrofurantoina",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nitroglicerina",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nitroprusiato",
+    "grupoTerapeutico": "Vasodilatadores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nivolumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nizatidina",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Norfloxacino",
+    "grupoTerapeutico": "Fluorquinolona",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nortriptilina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Nusinersen",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Obinutuzumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ocrelizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Odevixibat",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ofatumumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ofloxacino",
+    "grupoTerapeutico": "Fluorquinolona",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Olanzapina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Olaparib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Olmesartan",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ombitasvir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Omeprazol",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ondansetrón",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Opicapona",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Oritavanzina",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Orlistat",
+    "grupoTerapeutico": "Otros (Endocrinos)",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Oseltamivir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Osilodrostat",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Osimertinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Oxaliplatino",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Oxicodona",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Paclitaxel",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Palbociclib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Paliperidona",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Panobinostat",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pantoprazol",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Paracetamol",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Parecoxib",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Paritaprevir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Paroxetina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pasireotida",
+    "grupoTerapeutico": "Otros (Endocrinos)",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pazopanib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pegaspargasa",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Peginterferón beta-1A",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Peginterferón beta-1a",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pembrolizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pemetrexed",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pemigatinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Penicilamina",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Penicilina G",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pentamidina",
+    "grupoTerapeutico": "Antiparasitarios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pentoxifilina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Perampanel",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Perindopril",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pertuzumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pioglitazona",
+    "grupoTerapeutico": "Glitazonas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Piperacilina",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Piperacilina / Tazobactam",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pirazinamida",
+    "grupoTerapeutico": "Tuberculostáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pirfenidona",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pirimetamina",
+    "grupoTerapeutico": "Antiparasitarios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Piroxicam",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pirtobrutinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Plerixafor",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pomalidomida",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ponesimod",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Posaconazol",
+    "grupoTerapeutico": "Antifúngicos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pravastatina",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Prazosina",
+    "grupoTerapeutico": "Alfa 1 Bloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Prednisolona",
+    "grupoTerapeutico": "Corticoides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Prednisona",
+    "grupoTerapeutico": "Corticoides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Pregabalina",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Primidona",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Probenecid",
+    "grupoTerapeutico": "Antirreumáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Propafenona",
+    "grupoTerapeutico": "Cardiovasculares",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Propiltiouracilo",
+    "grupoTerapeutico": "Drogas Antitiroideas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Propranolol",
+    "grupoTerapeutico": "Betabloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Quetiapina",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Quinapril",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Quinina",
+    "grupoTerapeutico": "Antiparasitarios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rabeprazol",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ramipril",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ramucirumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ranibizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "INTRAOCULAR",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ranitidina",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rasagilina",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ravulizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Regorafenib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Relugolix",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Repaglinida",
+    "grupoTerapeutico": "Glinidas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ribavirina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ribociclib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rifabutina",
+    "grupoTerapeutico": "Tuberculostáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rifampicina",
+    "grupoTerapeutico": "Tuberculostáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rifapentina",
+    "grupoTerapeutico": "Tuberculostáticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rilpivirina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Riluzol",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rimantadina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rimegepant",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Riociguat",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ripretinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Risankizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Risdiplam",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Risedronato",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ritlecitinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rivaroxabán",
+    "grupoTerapeutico": "Anticoagulantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rivastigmina",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "TOPICA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rizatriptan",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Roltegravir/Rilpivirina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rosuvastatina",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Roxitromicina",
+    "grupoTerapeutico": "Macrólidos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Rucaparib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sacituzumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sacubitril/Valsartan",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Safinamida",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sarilumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Satralizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Saxagliptina",
+    "grupoTerapeutico": "Inhibidores de DPP-4",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sebelipasa alfa",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Secukinumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Selexipag",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Selpercatinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Selumetinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Semaglutida",
+    "grupoTerapeutico": "Agonistas GLP-1",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sertralina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sildenafilo",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Silodosina",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Simeprevir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Simvastatina",
+    "grupoTerapeutico": "Hipolipemiantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Siponimod",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sitagliptina",
+    "grupoTerapeutico": "Inhibidores de DPP-4",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sofosbuvir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sofosbuvir/Velpatasvir/Voxilaprevir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Solifenacina",
+    "grupoTerapeutico": "Antiadrenérgicos centrales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Solriamfetol",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Somapacitán",
+    "grupoTerapeutico": "Otros (Endocrinos)",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sonidegib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sorafenib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sotrovimab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Stavudina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sugammadex",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sulfametoxazol",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sulfasalazina",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sulindaco",
+    "grupoTerapeutico": "Antiinflamatorios",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sulodexida",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Sunitinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tadalafilo",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tafamidis",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tafasitamab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Talquetamab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tamoxifeno",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tamsulosina",
+    "grupoTerapeutico": "Alfa 1 Bloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tapentadol",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tedizolid",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Teicoplanina",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Telmisartan",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Teniposide",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tenofovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tenofovir Alafenamida",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tenofovir disoproxilo Macleods 245 mg",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Terazosina",
+    "grupoTerapeutico": "Alfa 1 Bloqueantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Teriflunomida",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tetraciclina",
+    "grupoTerapeutico": "Tetraciclinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tezacaftor",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tezepelumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tiazidas",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ticarcilina",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ticarcilina/Clavulánico",
+    "grupoTerapeutico": "Penicilinas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tigeciclina",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tildrakizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "SC",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tioguanina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tiotepa",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tivozanib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tobramicina",
+    "grupoTerapeutico": "Aminoglucósidos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tocilizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tofacitinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tolbutamida",
+    "grupoTerapeutico": "Otros antidiabéticos orales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tolvaptan",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Topotecan",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Torasemida",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Trabectedina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tralokinumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tramadol",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Trametinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Trandolapril",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tranilcipromina",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Trastuzumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tremelimumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Treosulfano",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Treprostinilo",
+    "grupoTerapeutico": "Antiagregantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Triamcinolona",
+    "grupoTerapeutico": "Corticoides",
+    "viaDefault": "INHALATORIA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Triamterene",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Trifluridina-Tipiracilo",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Trimetoprim",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Tucatinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ublituximab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ulipristal",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Upadacitinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Urapidil",
+    "grupoTerapeutico": "Otros antiadrenérgicos periféricos",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ustekinumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Valaciclovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Valganciclovir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Valsartan",
+    "grupoTerapeutico": "Inhibidores de la ECA y ARA II",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vancomicina",
+    "grupoTerapeutico": "Miscelánea antibacterianos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vandetanib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vardenafilo",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vedolizumab",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Velpatasvir",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vemurafenib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Venetoclax",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Venlafaxina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Verapamilo",
+    "grupoTerapeutico": "Calcio antagonistas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vericiguat",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vildagliptina",
+    "grupoTerapeutico": "Inhibidores de DPP-4",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vinblastina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vincristina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vinorelbina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Voclosporina",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Voriconazol",
+    "grupoTerapeutico": "Antifúngicos",
+    "viaDefault": "IV",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Vortioxetina",
+    "grupoTerapeutico": "Psicoanalépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Warfarina",
+    "grupoTerapeutico": "Anticoagulantes",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Zalcitabina",
+    "grupoTerapeutico": "Antivirales",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Zanubrutinib",
+    "grupoTerapeutico": "Antineoplásicos e Inmunomoduladores",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ziprasidona",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Zolmitriptan",
+    "grupoTerapeutico": "Analgésicos y Opioides",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Zolmitriptán",
+    "grupoTerapeutico": "Otros Psicofármacos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Zolpidem",
+    "grupoTerapeutico": "Psicolépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Zonisamida",
+    "grupoTerapeutico": "Antiepilépticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ácido Acetohidroxámico",
+    "grupoTerapeutico": "Misceláneas",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  },
+  {
+    "nombre": "Ácido obeticólico",
+    "grupoTerapeutico": "Digestivo",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true
+  }
+]

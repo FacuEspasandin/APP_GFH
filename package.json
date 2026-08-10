@@ -1,0 +1,26 @@
+{
+  "name": "gfh-movil",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Cockpit clinico GFH Movil - monorepo",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "backend": "pnpm --filter @gfh/backend",
+    "mobile": "pnpm --filter @gfh/mobile",
+    "db:generate": "pnpm --filter @gfh/backend prisma:generate",
+    "db:migrate": "pnpm --filter @gfh/backend prisma:migrate",
+    "db:seed": "pnpm --filter @gfh/backend prisma:seed",
+    "db:studio": "pnpm --filter @gfh/backend prisma:studio",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "test:api": "pnpm --filter @gfh/backend test:api",
+    "test:todo": "pnpm -r test && pnpm --filter @gfh/backend test:api"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

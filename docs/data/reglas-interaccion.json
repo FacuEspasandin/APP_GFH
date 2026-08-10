@@ -1,0 +1,970 @@
+{
+  "_lea_esto": [
+    "El ORDEN de `reglas` es significativo: al expandir, la PRIMERA regla que",
+    "cubre un par gana y las siguientes se descartan. Por eso las CONTRAINDICADA",
+    "están declaradas primero. Reordenar cambia severidades sin ningún error.",
+    "Los `paresExtra` se aplican DESPUÉS de todas las reglas, con la misma regla",
+    "de \"el primero gana\".",
+    "Los nombres de fármaco son la grafía exacta del catálogo SEN y se usan como",
+    "clave de matcheo: un typo no rompe nada, simplemente borra esos pares."
+  ],
+  "fuente": "apps/api/src/modules/interaccion/proveedor/seed-interacciones.provider.ts",
+  "listas": {
+    "AINES": [
+      "Ibuprofeno",
+      "Naproxeno",
+      "Diclofenaco",
+      "Indometacina",
+      "Ketoprofeno",
+      "Dexketoprofeno",
+      "Flurbiprofeno",
+      "Piroxicam",
+      "Sulindaco",
+      "Clonixino Lisina",
+      "Celecoxib",
+      "Etoricoxib",
+      "Parecoxib"
+    ],
+    "CUMARINICOS": [
+      "Warfarina",
+      "Acenocumarol"
+    ],
+    "DOAC": [
+      "Apixabán",
+      "Dabigatrán",
+      "Edoxabán",
+      "Rivaroxabán"
+    ],
+    "MACROLIDOS": [
+      "Azitromicina",
+      "Claritromicina",
+      "Eritromicina",
+      "Roxitromicina"
+    ],
+    "MACROLIDOS_INH": [
+      "Claritromicina",
+      "Eritromicina",
+      "Fluconazol",
+      "Itraconazol",
+      "Voriconazol",
+      "Posaconazol",
+      "Isavuconazol"
+    ],
+    "QUINOLONAS": [
+      "Ciprofloxacino",
+      "Delafloxacino",
+      "Levofloxacino",
+      "Moxifloxacino",
+      "Norfloxacino",
+      "Ofloxacino"
+    ],
+    "TETRACICLINAS": [
+      "Doxiciclina",
+      "Tetraciclina"
+    ],
+    "ESTATINAS_3A4_ALTO": [
+      "Simvastatina",
+      "Lovastatina"
+    ],
+    "ESTATINAS_3A4": [
+      "Simvastatina",
+      "Lovastatina",
+      "Atorvastatina"
+    ],
+    "ESTATINAS_TODAS": [
+      "Atorvastatina",
+      "Fluvastatina",
+      "Lovastatina",
+      "Pravastatina",
+      "Rosuvastatina",
+      "Simvastatina"
+    ],
+    "IECA": [
+      "Benazepril",
+      "Captopril",
+      "Enalapril",
+      "Fosinopril",
+      "Lisinopril",
+      "Perindopril",
+      "Quinapril",
+      "Ramipril",
+      "Trandolapril"
+    ],
+    "ARA": [
+      "Candesartan",
+      "Eprosartan",
+      "Irbesartan",
+      "Losartan",
+      "Olmesartan",
+      "Telmisartan",
+      "Valsartan",
+      "Sacubitril/Valsartan"
+    ],
+    "IECA_ARA": [
+      "Benazepril",
+      "Captopril",
+      "Enalapril",
+      "Fosinopril",
+      "Lisinopril",
+      "Perindopril",
+      "Quinapril",
+      "Ramipril",
+      "Trandolapril",
+      "Candesartan",
+      "Eprosartan",
+      "Irbesartan",
+      "Losartan",
+      "Olmesartan",
+      "Telmisartan",
+      "Valsartan",
+      "Sacubitril/Valsartan"
+    ],
+    "AHORRADORES_K": [
+      "Espirolactona",
+      "Eplerenona",
+      "Amilorida",
+      "Triamterene"
+    ],
+    "TIAZIDAS": [
+      "Tiazidas",
+      "Clortalidona",
+      "Indapamida",
+      "Metolazona"
+    ],
+    "ISRS": [
+      "Citalopram",
+      "Escitalopram",
+      "Fluoxetina",
+      "Paroxetina",
+      "Sertralina"
+    ],
+    "IRSN": [
+      "Desvenlafaxina",
+      "Duloxetina",
+      "Venlafaxina"
+    ],
+    "TCA": [
+      "Amitriptilina",
+      "Clomipramina",
+      "Nortriptilina"
+    ],
+    "TRIPTANES": [
+      "Rizatriptan",
+      "Zolmitriptan",
+      "Zolmitriptán"
+    ],
+    "OPIOIDES_SEROTONERGICOS": [
+      "Tramadol",
+      "Tapentadol"
+    ],
+    "SULFONILUREAS": [
+      "Glibenclamida",
+      "Gliclazida",
+      "Glimepirida",
+      "Glipizida",
+      "Clorpropamida",
+      "Gliburida",
+      "Tolbutamida",
+      "Acetohexamida"
+    ],
+    "DIGOXINA_INHIBIDORES": [
+      "Amiodarona",
+      "Verapamilo",
+      "Claritromicina",
+      "Eritromicina",
+      "Espirolactona",
+      "Itraconazol",
+      "Quinina",
+      "Propafenona"
+    ],
+    "ANTIACIDOS_CATIONES": [
+      "Algeldrato",
+      "Almagato"
+    ]
+  },
+  "reglas": [
+    {
+      "orden": 0,
+      "a": [
+        "ESTATINAS_3A4_ALTO"
+      ],
+      "b": [
+        "Claritromicina",
+        "Eritromicina"
+      ],
+      "aResuelta": [
+        "Simvastatina",
+        "Lovastatina"
+      ],
+      "bResuelta": [
+        "Claritromicina",
+        "Eritromicina"
+      ],
+      "severidad": "CONTRAINDICADA",
+      "texto": "El macrólido inhibe CYP3A4 y multiplica la exposición a la estatina, con riesgo de rabdomiólisis. Suspender la estatina durante el antibiótico o elegir azitromicina / pravastatina."
+    },
+    {
+      "orden": 1,
+      "a": [
+        "ESTATINAS_3A4_ALTO"
+      ],
+      "b": [
+        "Fluconazol",
+        "Itraconazol",
+        "Voriconazol",
+        "Posaconazol",
+        "Isavuconazol"
+      ],
+      "aResuelta": [
+        "Simvastatina",
+        "Lovastatina"
+      ],
+      "bResuelta": [
+        "Fluconazol",
+        "Itraconazol",
+        "Voriconazol",
+        "Posaconazol",
+        "Isavuconazol"
+      ],
+      "severidad": "CONTRAINDICADA",
+      "texto": "El azol inhibe CYP3A4 y eleva mucho la concentración de la estatina, con riesgo de rabdomiólisis. Suspender la estatina o usar pravastatina/rosuvastatina."
+    },
+    {
+      "orden": 2,
+      "a": [
+        "Metotrexato"
+      ],
+      "b": [
+        "Trimetoprim",
+        "Sulfametoxazol"
+      ],
+      "aResuelta": [
+        "Metotrexato"
+      ],
+      "bResuelta": [
+        "Trimetoprim",
+        "Sulfametoxazol"
+      ],
+      "severidad": "CONTRAINDICADA",
+      "texto": "Efecto antifolato aditivo con riesgo de mielosupresión grave. Evitar la combinación; si fuera inevitable, vigilar hemograma estrechamente."
+    },
+    {
+      "orden": 3,
+      "a": [
+        "Linezolid"
+      ],
+      "b": [
+        "ISRS",
+        "IRSN",
+        "TCA",
+        "OPIOIDES_SEROTONERGICOS",
+        "TRIPTANES"
+      ],
+      "aResuelta": [
+        "Linezolid"
+      ],
+      "bResuelta": [
+        "Citalopram",
+        "Escitalopram",
+        "Fluoxetina",
+        "Paroxetina",
+        "Sertralina",
+        "Desvenlafaxina",
+        "Duloxetina",
+        "Venlafaxina",
+        "Amitriptilina",
+        "Clomipramina",
+        "Nortriptilina",
+        "Tramadol",
+        "Tapentadol",
+        "Rizatriptan",
+        "Zolmitriptan",
+        "Zolmitriptán"
+      ],
+      "severidad": "CONTRAINDICADA",
+      "texto": "El linezolid es IMAO: combinado con serotoninérgicos puede precipitar un síndrome serotoninérgico grave. Evitar; respetar período de lavado."
+    },
+    {
+      "orden": 4,
+      "a": [
+        "ESTATINAS_3A4"
+      ],
+      "b": [
+        "Claritromicina",
+        "Eritromicina"
+      ],
+      "aResuelta": [
+        "Simvastatina",
+        "Lovastatina",
+        "Atorvastatina"
+      ],
+      "bResuelta": [
+        "Claritromicina",
+        "Eritromicina"
+      ],
+      "severidad": "ALTA",
+      "texto": "Inhibición de CYP3A4 que aumenta la exposición a la estatina y el riesgo de miopatía. Reducir dosis o pausar la estatina mientras dure el macrólido."
+    },
+    {
+      "orden": 5,
+      "a": [
+        "Atorvastatina"
+      ],
+      "b": [
+        "Fluconazol",
+        "Itraconazol",
+        "Voriconazol",
+        "Posaconazol",
+        "Isavuconazol"
+      ],
+      "aResuelta": [
+        "Atorvastatina"
+      ],
+      "bResuelta": [
+        "Fluconazol",
+        "Itraconazol",
+        "Voriconazol",
+        "Posaconazol",
+        "Isavuconazol"
+      ],
+      "severidad": "ALTA",
+      "texto": "El azol inhibe CYP3A4 y aumenta el riesgo de miopatía por atorvastatina. Reducir dosis o pausar."
+    },
+    {
+      "orden": 6,
+      "a": [
+        "ESTATINAS_3A4"
+      ],
+      "b": [
+        "Verapamilo",
+        "Diltiazem",
+        "Amiodarona"
+      ],
+      "aResuelta": [
+        "Simvastatina",
+        "Lovastatina",
+        "Atorvastatina"
+      ],
+      "bResuelta": [
+        "Verapamilo",
+        "Diltiazem",
+        "Amiodarona"
+      ],
+      "severidad": "ALTA",
+      "texto": "Inhibición de CYP3A4 que eleva la concentración de la estatina y el riesgo de miopatía. Considerar dosis menor o estatina no dependiente de CYP3A4."
+    },
+    {
+      "orden": 7,
+      "a": [
+        "ESTATINAS_TODAS"
+      ],
+      "b": [
+        "Gemfibrozilo"
+      ],
+      "aResuelta": [
+        "Atorvastatina",
+        "Fluvastatina",
+        "Lovastatina",
+        "Pravastatina",
+        "Rosuvastatina",
+        "Simvastatina"
+      ],
+      "bResuelta": [
+        "Gemfibrozilo"
+      ],
+      "severidad": "ALTA",
+      "texto": "El gemfibrozilo aumenta el riesgo de miopatía/rabdomiólisis con estatinas. Preferir fenofibrato o separar el tratamiento."
+    },
+    {
+      "orden": 8,
+      "a": [
+        "CUMARINICOS"
+      ],
+      "b": [
+        "AINES"
+      ],
+      "aResuelta": [
+        "Warfarina",
+        "Acenocumarol"
+      ],
+      "bResuelta": [
+        "Ibuprofeno",
+        "Naproxeno",
+        "Diclofenaco",
+        "Indometacina",
+        "Ketoprofeno",
+        "Dexketoprofeno",
+        "Flurbiprofeno",
+        "Piroxicam",
+        "Sulindaco",
+        "Clonixino Lisina",
+        "Celecoxib",
+        "Etoricoxib",
+        "Parecoxib"
+      ],
+      "severidad": "ALTA",
+      "texto": "Uso conjunto con riesgo de sangrado: el AINE daña la mucosa gástrica e inhibe la agregación plaquetaria. Vigilar INR y signos de hemorragia; preferir paracetamol."
+    },
+    {
+      "orden": 9,
+      "a": [
+        "CUMARINICOS"
+      ],
+      "b": [
+        "MACROLIDOS"
+      ],
+      "aResuelta": [
+        "Warfarina",
+        "Acenocumarol"
+      ],
+      "bResuelta": [
+        "Azitromicina",
+        "Claritromicina",
+        "Eritromicina",
+        "Roxitromicina"
+      ],
+      "severidad": "ALTA",
+      "texto": "El macrólido potencia el efecto anticoagulante y eleva el INR. Controlar INR de cerca al iniciar y suspender el antibiótico."
+    },
+    {
+      "orden": 10,
+      "a": [
+        "CUMARINICOS"
+      ],
+      "b": [
+        "Fluconazol",
+        "Itraconazol",
+        "Voriconazol",
+        "Posaconazol",
+        "Isavuconazol"
+      ],
+      "aResuelta": [
+        "Warfarina",
+        "Acenocumarol"
+      ],
+      "bResuelta": [
+        "Fluconazol",
+        "Itraconazol",
+        "Voriconazol",
+        "Posaconazol",
+        "Isavuconazol"
+      ],
+      "severidad": "ALTA",
+      "texto": "El azol inhibe el metabolismo del anticoagulante y eleva el INR, con riesgo de sangrado. Controlar INR."
+    },
+    {
+      "orden": 11,
+      "a": [
+        "CUMARINICOS"
+      ],
+      "b": [
+        "Sulfametoxazol",
+        "Trimetoprim",
+        "Metronidazol"
+      ],
+      "aResuelta": [
+        "Warfarina",
+        "Acenocumarol"
+      ],
+      "bResuelta": [
+        "Sulfametoxazol",
+        "Trimetoprim",
+        "Metronidazol"
+      ],
+      "severidad": "ALTA",
+      "texto": "Potenciación del efecto anticoagulante con elevación del INR y riesgo hemorrágico. Vigilar INR."
+    },
+    {
+      "orden": 12,
+      "a": [
+        "CUMARINICOS"
+      ],
+      "b": [
+        "QUINOLONAS"
+      ],
+      "aResuelta": [
+        "Warfarina",
+        "Acenocumarol"
+      ],
+      "bResuelta": [
+        "Ciprofloxacino",
+        "Delafloxacino",
+        "Levofloxacino",
+        "Moxifloxacino",
+        "Norfloxacino",
+        "Ofloxacino"
+      ],
+      "severidad": "ALTA",
+      "texto": "La fluorquinolona puede potenciar el efecto anticoagulante y elevar el INR. Controlar INR."
+    },
+    {
+      "orden": 13,
+      "a": [
+        "CUMARINICOS"
+      ],
+      "b": [
+        "Amiodarona"
+      ],
+      "aResuelta": [
+        "Warfarina",
+        "Acenocumarol"
+      ],
+      "bResuelta": [
+        "Amiodarona"
+      ],
+      "severidad": "ALTA",
+      "texto": "La amiodarona inhibe el metabolismo del anticoagulante y eleva el INR durante semanas. Reducir dosis del anticoagulante y controlar INR."
+    },
+    {
+      "orden": 14,
+      "a": [
+        "IECA"
+      ],
+      "b": [
+        "ARA"
+      ],
+      "aResuelta": [
+        "Benazepril",
+        "Captopril",
+        "Enalapril",
+        "Fosinopril",
+        "Lisinopril",
+        "Perindopril",
+        "Quinapril",
+        "Ramipril",
+        "Trandolapril"
+      ],
+      "bResuelta": [
+        "Candesartan",
+        "Eprosartan",
+        "Irbesartan",
+        "Losartan",
+        "Olmesartan",
+        "Telmisartan",
+        "Valsartan",
+        "Sacubitril/Valsartan"
+      ],
+      "severidad": "ALTA",
+      "texto": "Doble bloqueo del sistema renina-angiotensina: mayor riesgo de hiperpotasemia, hipotensión y deterioro renal sin beneficio claro. Evitar la asociación."
+    },
+    {
+      "orden": 15,
+      "a": [
+        "IECA_ARA"
+      ],
+      "b": [
+        "AHORRADORES_K"
+      ],
+      "aResuelta": [
+        "Benazepril",
+        "Captopril",
+        "Enalapril",
+        "Fosinopril",
+        "Lisinopril",
+        "Perindopril",
+        "Quinapril",
+        "Ramipril",
+        "Trandolapril",
+        "Candesartan",
+        "Eprosartan",
+        "Irbesartan",
+        "Losartan",
+        "Olmesartan",
+        "Telmisartan",
+        "Valsartan",
+        "Sacubitril/Valsartan"
+      ],
+      "bResuelta": [
+        "Espirolactona",
+        "Eplerenona",
+        "Amilorida",
+        "Triamterene"
+      ],
+      "severidad": "ALTA",
+      "texto": "Riesgo de hiperpotasemia por efecto aditivo sobre el potasio, sobre todo con función renal reducida. Monitorizar potasio y creatinina."
+    },
+    {
+      "orden": 16,
+      "a": [
+        "IECA_ARA"
+      ],
+      "b": [
+        "AINES"
+      ],
+      "aResuelta": [
+        "Benazepril",
+        "Captopril",
+        "Enalapril",
+        "Fosinopril",
+        "Lisinopril",
+        "Perindopril",
+        "Quinapril",
+        "Ramipril",
+        "Trandolapril",
+        "Candesartan",
+        "Eprosartan",
+        "Irbesartan",
+        "Losartan",
+        "Olmesartan",
+        "Telmisartan",
+        "Valsartan",
+        "Sacubitril/Valsartan"
+      ],
+      "bResuelta": [
+        "Ibuprofeno",
+        "Naproxeno",
+        "Diclofenaco",
+        "Indometacina",
+        "Ketoprofeno",
+        "Dexketoprofeno",
+        "Flurbiprofeno",
+        "Piroxicam",
+        "Sulindaco",
+        "Clonixino Lisina",
+        "Celecoxib",
+        "Etoricoxib",
+        "Parecoxib"
+      ],
+      "severidad": "ALTA",
+      "texto": "El AINE reduce el filtrado glomerular y, junto al bloqueo del SRAA, aumenta el riesgo de deterioro renal e hiperpotasemia (mayor aún si hay diurético)."
+    },
+    {
+      "orden": 17,
+      "a": [
+        "AHORRADORES_K"
+      ],
+      "b": [
+        "Trimetoprim",
+        "Sulfametoxazol"
+      ],
+      "aResuelta": [
+        "Espirolactona",
+        "Eplerenona",
+        "Amilorida",
+        "Triamterene"
+      ],
+      "bResuelta": [
+        "Trimetoprim",
+        "Sulfametoxazol"
+      ],
+      "severidad": "ALTA",
+      "texto": "Riesgo aditivo de hiperpotasemia. Controlar el potasio sérico, especialmente con insuficiencia renal."
+    },
+    {
+      "orden": 18,
+      "a": [
+        "Digoxina"
+      ],
+      "b": [
+        "DIGOXINA_INHIBIDORES"
+      ],
+      "aResuelta": [
+        "Digoxina"
+      ],
+      "bResuelta": [
+        "Amiodarona",
+        "Verapamilo",
+        "Claritromicina",
+        "Eritromicina",
+        "Espirolactona",
+        "Itraconazol",
+        "Quinina",
+        "Propafenona"
+      ],
+      "severidad": "ALTA",
+      "texto": "Aumento de los niveles de digoxina con riesgo de toxicidad digitálica. Reducir la dosis de digoxina y controlar digoxinemia y potasio."
+    },
+    {
+      "orden": 19,
+      "a": [
+        "Litio, Carbonato"
+      ],
+      "b": [
+        "AINES",
+        "TIAZIDAS",
+        "IECA"
+      ],
+      "aResuelta": [
+        "Litio, Carbonato"
+      ],
+      "bResuelta": [
+        "Ibuprofeno",
+        "Naproxeno",
+        "Diclofenaco",
+        "Indometacina",
+        "Ketoprofeno",
+        "Dexketoprofeno",
+        "Flurbiprofeno",
+        "Piroxicam",
+        "Sulindaco",
+        "Clonixino Lisina",
+        "Celecoxib",
+        "Etoricoxib",
+        "Parecoxib",
+        "Tiazidas",
+        "Clortalidona",
+        "Indapamida",
+        "Metolazona",
+        "Benazepril",
+        "Captopril",
+        "Enalapril",
+        "Fosinopril",
+        "Lisinopril",
+        "Perindopril",
+        "Quinapril",
+        "Ramipril",
+        "Trandolapril"
+      ],
+      "severidad": "ALTA",
+      "texto": "Reducción de la eliminación renal de litio con riesgo de toxicidad. Controlar litemia y función renal; ajustar dosis."
+    },
+    {
+      "orden": 20,
+      "a": [
+        "Metotrexato"
+      ],
+      "b": [
+        "AINES",
+        "Probenecid"
+      ],
+      "aResuelta": [
+        "Metotrexato"
+      ],
+      "bResuelta": [
+        "Ibuprofeno",
+        "Naproxeno",
+        "Diclofenaco",
+        "Indometacina",
+        "Ketoprofeno",
+        "Dexketoprofeno",
+        "Flurbiprofeno",
+        "Piroxicam",
+        "Sulindaco",
+        "Clonixino Lisina",
+        "Celecoxib",
+        "Etoricoxib",
+        "Parecoxib",
+        "Probenecid"
+      ],
+      "severidad": "ALTA",
+      "texto": "Disminución de la eliminación renal de metotrexato con riesgo de toxicidad (mielosupresión, mucositis). Vigilar hemograma y función renal."
+    },
+    {
+      "orden": 21,
+      "a": [
+        "OPIOIDES_SEROTONERGICOS"
+      ],
+      "b": [
+        "ISRS",
+        "IRSN",
+        "TCA"
+      ],
+      "aResuelta": [
+        "Tramadol",
+        "Tapentadol"
+      ],
+      "bResuelta": [
+        "Citalopram",
+        "Escitalopram",
+        "Fluoxetina",
+        "Paroxetina",
+        "Sertralina",
+        "Desvenlafaxina",
+        "Duloxetina",
+        "Venlafaxina",
+        "Amitriptilina",
+        "Clomipramina",
+        "Nortriptilina"
+      ],
+      "severidad": "ALTA",
+      "texto": "Aumento de la actividad serotoninérgica con riesgo de síndrome serotoninérgico y descenso del umbral convulsivo. Vigilar agitación, hipertermia y mioclonías."
+    },
+    {
+      "orden": 22,
+      "a": [
+        "TRIPTANES"
+      ],
+      "b": [
+        "ISRS",
+        "IRSN"
+      ],
+      "aResuelta": [
+        "Rizatriptan",
+        "Zolmitriptan",
+        "Zolmitriptán"
+      ],
+      "bResuelta": [
+        "Citalopram",
+        "Escitalopram",
+        "Fluoxetina",
+        "Paroxetina",
+        "Sertralina",
+        "Desvenlafaxina",
+        "Duloxetina",
+        "Venlafaxina"
+      ],
+      "severidad": "ALTA",
+      "texto": "Combinación serotoninérgica con riesgo de síndrome serotoninérgico. Vigilar síntomas; usar con precaución."
+    },
+    {
+      "orden": 23,
+      "a": [
+        "Colchicina"
+      ],
+      "b": [
+        "Claritromicina",
+        "Eritromicina",
+        "Verapamilo",
+        "Diltiazem",
+        "Fluconazol",
+        "Itraconazol",
+        "Voriconazol",
+        "Posaconazol",
+        "Isavuconazol"
+      ],
+      "aResuelta": [
+        "Colchicina"
+      ],
+      "bResuelta": [
+        "Claritromicina",
+        "Eritromicina",
+        "Verapamilo",
+        "Diltiazem",
+        "Fluconazol",
+        "Itraconazol",
+        "Voriconazol",
+        "Posaconazol",
+        "Isavuconazol"
+      ],
+      "severidad": "ALTA",
+      "texto": "Inhibición de CYP3A4/P-gp que eleva la colchicina, con riesgo de toxicidad grave (mielosupresión, miopatía). Reducir dosis o evitar, sobre todo en ERC."
+    },
+    {
+      "orden": 24,
+      "a": [
+        "SULFONILUREAS"
+      ],
+      "b": [
+        "Sulfametoxazol",
+        "Fluconazol"
+      ],
+      "aResuelta": [
+        "Glibenclamida",
+        "Gliclazida",
+        "Glimepirida",
+        "Glipizida",
+        "Clorpropamida",
+        "Gliburida",
+        "Tolbutamida",
+        "Acetohexamida"
+      ],
+      "bResuelta": [
+        "Sulfametoxazol",
+        "Fluconazol"
+      ],
+      "severidad": "ALTA",
+      "texto": "Potenciación del efecto hipoglucemiante de la sulfonilurea. Reforzar controles de glucemia."
+    },
+    {
+      "orden": 25,
+      "a": [
+        "Rifampicina"
+      ],
+      "b": [
+        "CUMARINICOS",
+        "DOAC",
+        "ESTATINAS_3A4",
+        "Verapamilo",
+        "Diltiazem"
+      ],
+      "aResuelta": [
+        "Rifampicina"
+      ],
+      "bResuelta": [
+        "Warfarina",
+        "Acenocumarol",
+        "Apixabán",
+        "Dabigatrán",
+        "Edoxabán",
+        "Rivaroxabán",
+        "Simvastatina",
+        "Lovastatina",
+        "Atorvastatina",
+        "Verapamilo",
+        "Diltiazem"
+      ],
+      "severidad": "ALTA",
+      "texto": "La rifampicina es un inductor enzimático potente: reduce la concentración y la eficacia del otro fármaco. Ajustar dosis o elegir alternativa."
+    },
+    {
+      "orden": 26,
+      "a": [
+        "Amiodarona"
+      ],
+      "b": [
+        "MACROLIDOS",
+        "QUINOLONAS",
+        "Ondansetrón",
+        "Haloperidol",
+        "Citalopram",
+        "Escitalopram"
+      ],
+      "aResuelta": [
+        "Amiodarona"
+      ],
+      "bResuelta": [
+        "Azitromicina",
+        "Claritromicina",
+        "Eritromicina",
+        "Roxitromicina",
+        "Ciprofloxacino",
+        "Delafloxacino",
+        "Levofloxacino",
+        "Moxifloxacino",
+        "Norfloxacino",
+        "Ofloxacino",
+        "Ondansetrón",
+        "Haloperidol",
+        "Citalopram",
+        "Escitalopram"
+      ],
+      "severidad": "ALTA",
+      "texto": "Efecto aditivo de prolongación del QT con riesgo de torsades de pointes. Vigilar ECG y electrolitos; evitar si es posible."
+    },
+    {
+      "orden": 27,
+      "a": [
+        "QUINOLONAS",
+        "TETRACICLINAS"
+      ],
+      "b": [
+        "ANTIACIDOS_CATIONES"
+      ],
+      "aResuelta": [
+        "Ciprofloxacino",
+        "Delafloxacino",
+        "Levofloxacino",
+        "Moxifloxacino",
+        "Norfloxacino",
+        "Ofloxacino",
+        "Doxiciclina",
+        "Tetraciclina"
+      ],
+      "bResuelta": [
+        "Algeldrato",
+        "Almagato"
+      ],
+      "severidad": "INFORMATIVA",
+      "texto": "Los cationes del antiácido quelan al antibiótico y reducen su absorción. Separar las tomas al menos 2-4 horas."
+    }
+  ],
+  "paresExtra": [
+    {
+      "orden": 28,
+      "a": "Tramadol",
+      "b": "Linezolid",
+      "severidad": "CONTRAINDICADA",
+      "texto": "El linezolid (IMAO) con tramadol aumenta el riesgo de síndrome serotoninérgico y de convulsiones. Evitar."
+    }
+  ]
+}

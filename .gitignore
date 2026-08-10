@@ -1,0 +1,34 @@
+node_modules/
+dist/
+build/
+coverage/
+.turbo/
+
+# entorno — nunca commitear secretos (Opciones_stack.md, "Variables de entorno")
+.env
+.env.local
+.env.*.local
+
+# Prisma
+apps/backend/prisma/*.db
+apps/backend/prisma/*.db-journal
+
+# Expo / React Native
+.expo/
+apps/mobile/android/
+apps/mobile/ios/
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+
+# datos semilla reales — se traen del repo de GFH, no viven en git de este repo
+# (descomentar si el JSON de SEN no debe versionarse acá)
+# docs/data/*.json
+
+# SO / editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
