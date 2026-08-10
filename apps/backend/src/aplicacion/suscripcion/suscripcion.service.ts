@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
+import { PLAN_GRATIS } from './plan';
 
 /**
  * Tipos de evento de RevenueCat que movemos. Los que no están en esta lista se
@@ -137,6 +138,36 @@ export class SuscripcionService {
   /** ¿Puede usar la app? Lo consulta el guard. */
   async tieneAcceso(medicoId: string): Promise<boolean> {
     const s = await this.estado(medicoId);
-    return s.vigente;
+    if (s.vigente) return true;
+
+    // Sin suscripción no se bloquea de entrada: el plan gratis incluye seguir
+    // un paciente, y sobre ése el cockpit funciona completo. Es lo que hace
+    // que la app se pueda evaluar antes de pagar.
+    return this.dentroDelPlanGratis(medicoId);
+  }
+
+  /**
+   * ¿Está dentro de lo que el plan gratis permite?
+   *
+   * Se mide por pacientes existentes y no por una marca en la cuenta: así el
+   * límite vale igual para quien nunca pagó y para quien dejó de pagar, sin
+   * necesitar un estado más que mantener sincronizado.
+   */
+  async dentroDelPlanGratis(medicoId: string): Promise<boolean> {
+    const pacientes = await this.prisma.paciente.count({ where: { medicoId } });
+    return pacientes <= PLAN_GRATIS.pacientes;
+  }
+
+  /** Lo que la app necesita para pintar el paywall y los contadores. */
+  async plan(medicoId: string) {
+    const s = await this.estado(medicoId);
+    const pacientes = await this.prisma.paciente.count({ where: { medicoId } });
+
+    return {
+      vigente: s.vigente,
+      pacientes,
+      limitePacientes: s.vigente ? null : PLAN_GRATIS.pacientes,
+      puedeCrearPaciente: s.vigente || pacientes < PLAN_GRATIS.pacientes,
+    };
   }
 }

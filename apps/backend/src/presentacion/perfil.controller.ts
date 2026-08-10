@@ -74,6 +74,12 @@ export class PerfilController {
     return this.perfil.actualizarDatos(medicoId, dto);
   }
 
+  /** Lo que la app necesita para decidir si muestra el paywall. */
+  @Get('plan')
+  plan(@MedicoActual() medicoId: string) {
+    return this.suscripcion.plan(medicoId);
+  }
+
   @Get('suscripcion')
   estadoSuscripcion(@MedicoActual() medicoId: string) {
     return this.suscripcion.estado(medicoId);

@@ -170,6 +170,33 @@ export async function crearMedico(
   };
 }
 
+/**
+ * Le da suscripción vigente a un médico de prueba.
+ *
+ * Hace falta desde el freemium: el plan gratis alcanza para UN paciente, así
+ * que cualquier test que necesite dos choca contra el límite. Se escribe
+ * directo en la base a propósito — el único camino de escritura real es el
+ * webhook de RevenueCat (regla no negociable 6) y no hay endpoint que la app
+ * pueda llamar para esto.
+ */
+export async function darSuscripcion(prisma: PrismaClient, medicoId: string): Promise<void> {
+  const dentroDeUnAnio = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+  await prisma.suscripcion.upsert({
+    where: { medicoId },
+    update: { estado: 'ACTIVA', periodoActualFin: dentroDeUnAnio },
+    create: {
+      medicoId,
+      entitlementId: 'premium',
+      productId: 'prueba.mensual',
+      store: 'APP_STORE',
+      estado: 'ACTIVA',
+      periodoActualFin: dentroDeUnAnio,
+      ultimoEventoId: `prueba-${medicoId}`,
+      ultimoEventoTipo: 'INITIAL_PURCHASE',
+    },
+  });
+}
+
 /** Borrado real, no marcado como ELIMINADO: los tests no dejan basura. */
 export async function borrarMedicos(prisma: PrismaClient, ids: string[]): Promise<void> {
   if (ids.length === 0) return;

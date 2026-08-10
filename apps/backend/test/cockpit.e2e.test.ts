@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import {
   borrarMedicos,
+  darSuscripcion,
   buscarPrincipioActivo,
   buscarProducto,
   cliente,
@@ -31,6 +32,9 @@ describe('cockpit', () => {
     api = cliente(ctx.app);
     medico = await crearMedico(api);
     medicos.push(medico.id);
+    // Médico con suscripción: estas suites cargan más de un paciente y el
+    // plan gratis alcanza para uno. Lo que prueban es el motor, no el cobro.
+    await darSuscripcion(ctx.prisma, medico.id);
 
     paciente = await crearPaciente(api, medico.token);
 

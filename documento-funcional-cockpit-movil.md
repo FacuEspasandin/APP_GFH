@@ -46,8 +46,13 @@ fármaco en general (Buscador).
 
 ## 3. Modelo de negocio
 
-- **Acceso:** 100% de pago desde el día uno. Sin trial, sin freemium.
-- **Planes:** uno solo, con opción mensual (USD 4.99) o anual (USD 44.99).
+- **Acceso:** freemium. La versión gratis incluye las herramientas standalone,
+  el buscador y **un paciente** con su cockpit completo; el segundo paciente
+  requiere suscripción. Detalle y fundamento en §6.0.
+- **Planes:** uno solo, con opción mensual (USD 6.99) o anual (USD 69.99, dos
+  meses gratis). De referencia: Mediately cobra USD 15 mensual / 149 anual por
+  su plan PRO, así que estamos a menos de la mitad — decisión consciente por
+  madurez del catálogo y por el mercado uruguayo, no por posicionamiento.
 - **Suscripción:** gestionada por RevenueCat sobre StoreKit (iOS) y Google
   Play Billing (Android). El backend nunca confía en lo que reporta la app;
   la verdad de la suscripción llega solo por webhook (ver el modelo de
@@ -159,10 +164,22 @@ App
 Splash con logo → **Bienvenida** (logo centrado, botones "Iniciar sesión" /
 "Registrarme", link a términos y privacidad) → Login (acepta usuario o
 email) / Registro (nombre, apellido, **nombre de usuario único**, email,
-contraseña + confirmar) → Paywall (plan único, mensual USD 4.99 o anual
-USD 44.99, sin trial) → Disclaimer médico-legal (checkbox obligatorio,
-texto exacto en §7) → Inicio. Suscripción vencida bloquea el acceso
-completo (sin modo de solo lectura — ver punto abierto en §9).
+contraseña + confirmar) → Paywall (ver modelo freemium más abajo) → Disclaimer médico-legal (checkbox obligatorio,
+texto exacto en §7) → Inicio. **Modelo freemium.** La frontera es el PACIENTE, no la cantidad de fármacos
+que se pueden cruzar: ese último es el terreno de los vademécums gratuitos
+—Mediately y similares— donde competimos en desventaja de catálogo.
+
+- **Gratis:** las tres herramientas standalone completas y sin límite, el
+  buscador del catálogo, y **un paciente** con su cockpit entero. Un paciente
+  y no cero: si el médico nunca ve las cinco verificaciones cruzadas, nos
+  evalúa como un buscador de fármacos peor que el que ya usa.
+- **Pago:** pacientes ilimitados, carga por foto y vigilancia retroactiva.
+  USD 6.99 mensual o USD 69.99 anual (equivale a dos meses gratis).
+
+El límite se aplica al CREAR el segundo paciente, con código propio
+`LIMITE_PLAN_GRATIS` — distinto de `SUSCRIPCION_VENCIDA`, porque la app abre
+el paywall y no la pantalla de bloqueo. **Nunca se corta al leer:** quien ya
+cargó pacientes no pierde acceso a datos clínicos suyos por facturación.
 
 ### 6.1 Inicio
 

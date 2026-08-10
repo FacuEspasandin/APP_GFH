@@ -1,9 +1,11 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { normalizar } from '@gfh/shared-types';
 
 import { calcularClcr, edadEnAnios } from '../../dominio/clinico/clcr';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import type { ActualizarPacienteDto, CrearPacienteDto } from '../../presentacion/dto/paciente.dto';
+import { CODIGO_LIMITE_PLAN_GRATIS, PLAN_GRATIS } from '../suscripcion/plan';
+import { SuscripcionService } from '../suscripcion/suscripcion.service';
 
 /**
  * CRUD de pacientes y grupos.
@@ -14,7 +16,10 @@ import type { ActualizarPacienteDto, CrearPacienteDto } from '../../presentacion
  */
 @Injectable()
 export class PacientesService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(SuscripcionService) private readonly suscripcion: SuscripcionService,
+  ) {}
 
   /**
    * Inicio: grupos con sus pacientes, más los pacientes sin grupo. Una sola
@@ -79,8 +84,32 @@ export class PacientesService {
   async crear(medicoId: string, dto: CrearPacienteDto) {
     if (dto.grupoId) await this.exigirGrupoPropio(medicoId, dto.grupoId);
 
+    await this.exigirCupoDePlan(medicoId);
+
     return this.prisma.paciente.create({
       data: { medicoId, ...this.aDatos(dto) },
+    });
+  }
+
+  /**
+   * El plan gratis alcanza para seguir un paciente. El segundo es lo que se
+   * paga.
+   *
+   * Se corta al CREAR y no al leer: quien ya cargó pacientes no pierde acceso a
+   * datos clínicos suyos por un tema de facturación. Perder de vista la
+   * medicación de un paciente en medio de una consulta es peor que cualquier
+   * fuga de ingresos.
+   */
+  private async exigirCupoDePlan(medicoId: string): Promise<void> {
+    const plan = await this.suscripcion.plan(medicoId);
+    if (plan.puedeCrearPaciente) return;
+
+    throw new ForbiddenException({
+      codigo: CODIGO_LIMITE_PLAN_GRATIS,
+      mensaje:
+        PLAN_GRATIS.pacientes === 1
+          ? 'El plan gratis incluye un paciente. Suscribite para seguir a todos los tuyos.'
+          : `El plan gratis incluye ${PLAN_GRATIS.pacientes} pacientes. Suscribite para seguir a todos los tuyos.`,
     });
   }
 
