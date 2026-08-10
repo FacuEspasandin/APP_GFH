@@ -55,7 +55,7 @@ describe('plan gratis', () => {
     // Es lo que hace que la app se pueda evaluar antes de pagar: si el gratis
     // no llegara al cockpit, nos comparan con un buscador de fármacos.
     const inicio = await api.get('/inicio', medico.token);
-    const pacienteId = inicio.cuerpo!.data.sinGrupo[0].id;
+    const pacienteId = inicio.cuerpo!.data.pacientes[0].id;
 
     const r = await api.get(`/pacientes/${pacienteId}/cockpit`, medico.token);
     expect(r.status).toBe(200);
@@ -104,7 +104,7 @@ describe('plan gratis', () => {
 
   it('borrar el paciente devuelve el cupo', async () => {
     const inicio = await api.get('/inicio', medico.token);
-    const pacienteId = inicio.cuerpo!.data.sinGrupo[0].id;
+    const pacienteId = inicio.cuerpo!.data.pacientes[0].id;
 
     await api.delete(`/pacientes/${pacienteId}`, medico.token);
 

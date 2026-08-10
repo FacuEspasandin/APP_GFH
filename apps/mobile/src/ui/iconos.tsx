@@ -41,7 +41,12 @@ export type NombreIcono =
   | 'pulso'
   | 'prohibido'
   | 'carpeta'
-  | 'camara';
+  | 'camara'
+  | 'pacientes'
+  | 'grupos'
+  | 'barras'
+  | 'gota'
+  | 'higado';
 
 interface Props {
   nombre: NombreIcono;
@@ -140,6 +145,43 @@ function trazos(nombre: NombreIcono, c: Comun) {
       );
     case 'check':
       return <Polyline points="20 6 9 17 4 12" {...c} />;
+    case 'pacientes':
+      // Dos personas: la lista es de gente, no de fichas.
+      return (
+        <>
+          <Path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" {...c} />
+          <Circle cx="9" cy="7" r="3.2" {...c} />
+          <Path d="M22 20v-2a4 4 0 0 0-3-3.8" {...c} />
+          <Path d="M16.5 4.2a4 4 0 0 1 0 5.6" {...c} />
+        </>
+      );
+    case 'grupos':
+      // Capas apiladas: un grupo contiene, no es una cosa.
+      return (
+        <>
+          <Rect x="3" y="4" width="18" height="5" rx="2" {...c} />
+          <Rect x="3" y="12" width="18" height="5" rx="2" {...c} />
+          <Path d="M6 20h12" {...c} />
+        </>
+      );
+    case 'barras':
+      // Las tres barras del botón central.
+      return (
+        <>
+          <Path d="M4 7h16" {...c} />
+          <Path d="M4 12h16" {...c} />
+          <Path d="M4 17h16" {...c} />
+        </>
+      );
+    case 'gota':
+      return <Path d="M12 3c3.5 3.2 5.5 6 5.5 9a5.5 5.5 0 0 1-11 0c0-3 2-5.8 5.5-9Z" {...c} />;
+    case 'higado':
+      return (
+        <>
+          <Path d="M4 6h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4Z" {...c} />
+          <Path d="M9 6V4" {...c} />
+        </>
+      );
     case 'casa':
       return (
         <>

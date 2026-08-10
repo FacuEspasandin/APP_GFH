@@ -7,11 +7,32 @@ export interface FilaPaciente {
   edadAnios: number;
   clcrMlMin: number | null;
   clcrOrigen: string | null;
+  grupoId: string | null;
+  grupoNombre: string | null;
+  conteoHallazgos: number;
+  /** El peor rango que lo toca (0 = grave). `null` cuando no hay hallazgos —
+   *  distinto de 3, que es informativo. */
+  peorRango: number | null;
+}
+
+export interface ResumenGrupo {
+  id: string | null;
+  nombre: string;
+  pacientes: number;
+  /** Cada paciente cuenta UNA vez, en el rango más grave que lo toca.
+   *  Los nombres siguen la escala del sistema: 0 contraindicado, 1 grave,
+   *  2 atención, 3 informativo. */
+  contraindicados: number;
+  graves: number;
+  atencion: number;
+  informativos: number;
+  sinHallazgos: number;
 }
 
 export interface Inicio {
-  grupos: Array<{ id: string; nombre: string; pacientes: FilaPaciente[] }>;
-  sinGrupo: FilaPaciente[];
+  /** Lista plana, ya ordenada por prioridad desde el backend. */
+  pacientes: FilaPaciente[];
+  grupos: ResumenGrupo[];
   /** true cuando el resultado viene filtrado por el buscador. */
   buscando: boolean;
 }

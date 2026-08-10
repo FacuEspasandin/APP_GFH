@@ -162,8 +162,9 @@ async function tocar(page, texto) {
   await capturar(page, '05-hallazgos-farmaco');
 
   for (const [ruta, nombre] of [
-    ['/buscador', '06-buscador'],
-    ['/herramientas', '07-herramientas'],
+    ['/grupos', '06-grupos'],
+    ['/buscador', '07-buscador'],
+
     ['/perfil', '08-perfil'],
     ['/paywall', '09-paywall'],
   ]) {

@@ -4,6 +4,8 @@ import { normalizar } from '@gfh/shared-types';
 import { calcularClcr, edadEnAnios } from '../../dominio/clinico/clcr';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import type { ActualizarPacienteDto, CrearPacienteDto } from '../../presentacion/dto/paciente.dto';
+import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
+import { resumenDeMedico, type ResumenDeMedico } from './resumen-pacientes';
 import { CODIGO_LIMITE_PLAN_GRATIS, PLAN_GRATIS } from '../suscripcion/plan';
 import { SuscripcionService } from '../suscripcion/suscripcion.service';
 
@@ -19,6 +21,8 @@ export class PacientesService {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(SuscripcionService) private readonly suscripcion: SuscripcionService,
+    @Inject(CatalogoInteraccionesService)
+    private readonly catalogo: CatalogoInteraccionesService,
   ) {}
 
   /**
@@ -39,46 +43,27 @@ export class PacientesService {
    * a una columna `busquedaNormalizada` con índice, como `nombreNormalizado`
    * en el catálogo.
    */
-  async inicio(medicoId: string, consulta?: string) {
+  async inicio(medicoId: string, consulta?: string): Promise<ResumenDeMedico & { buscando: boolean }> {
     const texto = consulta?.trim() ?? '';
     const buscando = texto.length >= 2;
     const buscado = normalizar(texto);
 
-    const coincide = (p: { nombre: string; apellido: string; documento?: string | null }) =>
-      !buscando ||
-      normalizar(`${p.nombre} ${p.apellido} ${p.documento ?? ''}`).includes(buscado);
+    // El motor corre sobre todos los pacientes: la lista se ordena por
+    // gravedad y cada fila muestra cuántos hallazgos tiene. Son 9 consultas
+    // fijas contra la base, no 9 por paciente — ver `cargar-contextos.ts`.
+    const resumen = await resumenDeMedico(this.prisma, this.catalogo.obtener(), medicoId);
 
-    const [grupos, sinGrupo] = await Promise.all([
-      this.prisma.grupo.findMany({
-        where: { medicoId },
-        orderBy: { nombre: 'asc' },
-        include: {
-          pacientes: {
-            orderBy: [{ apellido: 'asc' }, { nombre: 'asc' }],
-            select: this.camposDeFila,
-          },
-        },
-      }),
-      this.prisma.paciente.findMany({
-        where: { medicoId, grupoId: null },
-        orderBy: [{ apellido: 'asc' }, { nombre: 'asc' }],
-        select: this.camposDeFila,
-      }),
-    ]);
+    if (!buscando) return { ...resumen, buscando };
 
-    const hoy = new Date();
-    return {
-      // Buscando, un grupo sin coincidencias no aporta: se oculta.
-      grupos: grupos
-        .map((g) => ({
-          id: g.id,
-          nombre: g.nombre,
-          pacientes: g.pacientes.filter(coincide).map((p) => this.aFila(p, hoy)),
-        }))
-        .filter((g) => !buscando || g.pacientes.length > 0),
-      sinGrupo: sinGrupo.filter(coincide).map((p) => this.aFila(p, hoy)),
-      buscando,
-    };
+    // El filtro va en memoria y no en el `where` por la misma razón de siempre:
+    // el médico escribe "rodri" y el paciente es "Rodríguez".
+    const pacientes = resumen.pacientes.filter((p) =>
+      normalizar(`${p.nombre} ${p.apellido}`).includes(buscado),
+    );
+
+    // Buscando, los grupos no se recalculan: lo que se busca son pacientes, y
+    // un resumen por grupo filtrado diría algo que nadie pidió.
+    return { pacientes, grupos: resumen.grupos, buscando };
   }
 
   async crear(medicoId: string, dto: CrearPacienteDto) {

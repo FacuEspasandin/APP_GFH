@@ -65,10 +65,8 @@ describe('aislamiento por medicoId', () => {
 
   it('B no ve los pacientes de A', async () => {
     const inicio = await api.get('/inicio', B.token);
-    const total =
-      inicio.cuerpo!.data.grupos.flatMap((g: { pacientes: unknown[] }) => g.pacientes).length +
-      inicio.cuerpo!.data.sinGrupo.length;
-    expect(total).toBe(0);
+    // La lista es plana desde que el listado se ordena por gravedad.
+    expect(inicio.cuerpo!.data.pacientes).toHaveLength(0);
   });
 
   it.each([

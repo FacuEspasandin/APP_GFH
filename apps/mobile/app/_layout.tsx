@@ -100,6 +100,7 @@ function Navegacion() {
         <Stack.Screen name="crear-paciente" options={{ title: 'Nuevo paciente' }} />
         <Stack.Screen name="crear-grupo" options={{ title: 'Nuevo grupo' }} />
         <Stack.Screen name="grupo/[id]" options={{ title: 'Grupo' }} />
+        <Stack.Screen name="grupo/[id]/editar" options={{ title: 'Editar grupo' }} />
 
         <Stack.Screen name="paciente/[id]" options={{ title: 'Paciente' }} />
         <Stack.Screen name="paciente/[id]/editar" options={{ title: 'Editar paciente' }} />
