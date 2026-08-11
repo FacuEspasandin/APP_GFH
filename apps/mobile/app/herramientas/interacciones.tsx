@@ -1,103 +1,195 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
-import { AvisoNeutro, Boton, Card, Estado, Eyebrow, Pantalla } from '@/ui/kit';
-import { COLOR_SEVERIDAD, RANGO_POR_SEVERIDAD_INTERACCION } from '@gfh/shared-types';
+import {
+  AvisoDescartable,
+  Consulta,
+  ConsultaPlegada,
+  FilaResultado,
+  GrupoGravedad,
+  Veredicto,
+} from '@/ui/herramienta';
+import { Estado } from '@/ui/kit';
+import {
+  peorRango,
+  RANGO_POR_SEVERIDAD_INTERACCION,
+  type RangoGravedad,
+  type SeveridadInteraccion,
+} from '@gfh/shared-types';
 
 interface Resultado {
   farmacos: string[];
   totalPares: number;
   conInteraccion: number;
-  pares: Array<{ a: string; b: string; severidad: 'INFORMATIVA' | 'ALTA' | 'CONTRAINDICADA'; texto: string }>;
+  pares: Array<{ a: string; b: string; severidad: SeveridadInteraccion; texto: string }>;
 }
 
 /** Herramienta 1 (4.2 / 4.3): N fármacos, todos los pares. */
 export default function HerramientaInteracciones() {
   const [seleccion, setSeleccion] = useState<PaSugerido[]>([]);
+  const [editando, setEditando] = useState(true);
 
   const calcular = useMutation({
     mutationFn: () =>
       api.post<Resultado>('/herramientas/interacciones', {
         principioActivoIds: seleccion.map((s) => s.id),
       }),
+    onSuccess: () => setEditando(false),
   });
 
-  return (
-    <Pantalla>
-      <BuscadorPrincipioActivo
-        seleccionados={seleccion}
-        onAgregar={(pa) => setSeleccion((s) => (s.some((x) => x.id === pa.id) ? s : [...s, pa]))}
-        onQuitar={(id) => setSeleccion((s) => s.filter((x) => x.id !== id))}
-      />
+  // n·(n−1)/2: se cruzan todos contra todos, así que el botón puede decir
+  // cuántos pares va a mirar antes de mirarlos.
+  const pares = (seleccion.length * (seleccion.length - 1)) / 2;
 
-      <View className="mt-2">
-        <Boton
-          onPress={() => calcular.mutate()}
-          cargando={calcular.isPending}
-          deshabilitado={seleccion.length < 2}
-        >
-          {seleccion.length < 2 ? 'Agregá al menos 2 fármacos' : 'Analizar interacciones'}
-        </Boton>
-      </View>
-
-      {calcular.data ? (
-        <View className="mt-5">
-          <Eyebrow>
-            {calcular.data.conInteraccion} de {calcular.data.totalPares} pares con interacción
-            conocida
-          </Eyebrow>
-
-          {calcular.data.pares.length === 0 ? (
-            // "Sin interacciones conocidas" no es lo mismo que "es seguro": el
-            // catálogo cubre lo que cubre.
-            <AvisoNeutro>
-              Sin interacciones conocidas entre estos fármacos. No descarta otras.
-            </AvisoNeutro>
-          ) : (
-            calcular.data.pares.map((par, i) => {
-              const rango = RANGO_POR_SEVERIDAD_INTERACCION[par.severidad];
-              const color =
-                rango <= 1 ? COLOR_SEVERIDAD.grave : rango === 2 ? COLOR_SEVERIDAD.media : COLOR_SEVERIDAD.neutro;
-              return (
-                <View key={i} className="mb-2 flex-row items-stretch overflow-hidden rounded-card border border-line bg-surface">
-                  <View style={{ width: 4, backgroundColor: color }} />
-                  <View className="flex-1 px-3.5 py-3">
-                    <View className="flex-row items-center justify-between gap-2">
-                      <Text className="flex-1 text-body font-medio text-ink">
-                        {par.a} + {par.b}
-                      </Text>
-                      <View className="rounded-full px-2 py-0.5" style={{ backgroundColor: `${color}22` }}>
-                        <Text className="text-eyebrow font-fuerte uppercase" style={{ color }}>
-                          {par.severidad}
-                        </Text>
-                      </View>
-                    </View>
-                    <Text className="font-sans mt-1.5 text-meta leading-5 text-ink-suave">{par.texto}</Text>
-                  </View>
-                </View>
-              );
-            })
-          )}
-        </View>
-      ) : null}
-
-      {calcular.isError ? (
-        <Estado titulo="No se pudo calcular" detalle={String(calcular.error)} />
-      ) : null}
-
-      {!calcular.data && seleccion.length === 0 ? (
-        <View className="mt-4">
-          <Estado
-            titulo="Buscá fármacos para empezar"
-            detalle="Agregá dos o más y te mostramos todos los pares con interacción conocida y su severidad."
+  if (editando || !calcular.data) {
+    return (
+      <Consulta
+        accion={seleccion.length < 2 ? 'Agregá al menos 2 fármacos' : `Analizar ${pares} pares`}
+        onAccion={() => calcular.mutate()}
+        cargando={calcular.isPending}
+        deshabilitado={seleccion.length < 2}
+      >
+        <BloqueFormulario titulo="Fármacos a cruzar" exigencia="Obligatorio">
+          <BuscadorPrincipioActivo
+            seleccionados={seleccion}
+            onAgregar={(pa) => setSeleccion((s) => (s.some((x) => x.id === pa.id) ? s : [...s, pa]))}
+            onQuitar={(id) => setSeleccion((s) => s.filter((x) => x.id !== id))}
           />
-        </View>
-      ) : null}
-    </Pantalla>
+        </BloqueFormulario>
+
+        <AvisoDescartable
+          extra={
+            seleccion.length >= 2
+              ? `Se cruzan todos contra todos: con ${seleccion.length} fármacos son ${pares} pares.`
+              : 'Se cruzan todos contra todos.'
+          }
+        />
+
+        {calcular.isError ? (
+          <Estado
+            titulo="No se pudo calcular"
+            detalle={String((calcular.error as Error)?.message ?? '')}
+          />
+        ) : null}
+      </Consulta>
+    );
+  }
+
+  return (
+    <ResultadoInteracciones
+      datos={calcular.data}
+      onCambiar={() => setEditando(true)}
+      cuantos={seleccion.length}
+    />
   );
 }
 
-export { Pressable };
+function ResultadoInteracciones({
+  datos,
+  onCambiar,
+  cuantos,
+}: {
+  datos: Resultado;
+  onCambiar: () => void;
+  cuantos: number;
+}) {
+  const conRango = datos.pares.map((p) => ({
+    ...p,
+    rango: RANGO_POR_SEVERIDAD_INTERACCION[p.severidad],
+  }));
+
+  const peor = peorRango(conRango.map((p) => p.rango));
+
+  // Los grupos salen del peor al más leve, no del orden en que vinieron.
+  const grupos = ([0, 1, 2, 3] as RangoGravedad[])
+    .map((rango) => ({ rango, filas: conRango.filter((p) => p.rango === rango) }))
+    .filter((g) => g.filas.length > 0);
+
+  const sinInteraccion = datos.totalPares - datos.conInteraccion;
+
+  return (
+    <View className="flex-1 bg-paper">
+      <ConsultaPlegada
+        titulo={datos.farmacos.join(' · ')}
+        detalle={`${cuantos} fármacos · ${datos.totalPares} pares`}
+        onCambiar={onCambiar}
+      />
+
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
+        <Veredicto
+          rango={peor}
+          titulo={titularInteracciones(peor, grupos)}
+          detalle={
+            datos.conInteraccion === 0
+              ? `Ninguno de los ${datos.totalPares} pares tiene interacción conocida en el catálogo.`
+              : `De ${datos.totalPares} pares, ${datos.conInteraccion} ${
+                  datos.conInteraccion === 1 ? 'tiene' : 'tienen'
+                } interacción conocida.`
+          }
+        />
+
+        {grupos.map((g) => (
+          <View key={g.rango}>
+            <GrupoGravedad rango={g.rango} cuantos={g.filas.length} />
+            {g.filas.map((p, i) => (
+              <FilaResultado
+                key={`${p.a}-${p.b}-${i}`}
+                rango={g.rango}
+                titulo={
+                  <Text className="text-body font-medio text-ink">
+                    {p.a}
+                    <Text className="font-sans text-tenue"> + </Text>
+                    {p.b}
+                  </Text>
+                }
+                detalle={p.texto}
+              />
+            ))}
+          </View>
+        ))}
+
+        {/* "Sin interacción conocida" no es "es seguro": el catálogo cubre lo
+            que cubre, y decir lo contrario sería inferir seguridad (regla 5). */}
+        {sinInteraccion > 0 ? (
+          <AvisoDescartable
+            extra={`${sinInteraccion} ${
+              sinInteraccion === 1 ? 'par no tiene' : 'pares no tienen'
+            } interacción conocida en el catálogo, que no es lo mismo que decir que sean seguros.`}
+          />
+        ) : (
+          <AvisoDescartable />
+        )}
+      </ScrollView>
+    </View>
+  );
+}
+
+/**
+ * El titular: la peor gravedad y cuántas hay de ésa.
+ *
+ * Los adjetivos van aparte de `RANGO_ETIQUETA` porque ahí son masculinos
+ * —"Contraindicado", pensado para un hallazgo— y acá concuerdan con
+ * "interacción". Traducirlos a mano es preferible a que diga "1 interacción
+ * contraindicado".
+ */
+const ADJETIVO: Record<RangoGravedad, [string, string]> = {
+  0: ['contraindicada', 'contraindicadas'],
+  1: ['grave', 'graves'],
+  2: ['de atención', 'de atención'],
+  3: ['informativa', 'informativas'],
+};
+
+function titularInteracciones(
+  peor: RangoGravedad | null,
+  grupos: Array<{ rango: RangoGravedad; filas: unknown[] }>,
+): string {
+  if (peor === null) return 'Sin interacciones conocidas';
+
+  const n = grupos.find((g) => g.rango === peor)?.filas.length ?? 0;
+  const [singular, plural] = ADJETIVO[peor];
+  return n === 1 ? `1 interacción ${singular}` : `${n} interacciones ${plural}`;
+}

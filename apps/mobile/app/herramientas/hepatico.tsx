@@ -1,4 +1,7 @@
-import { AvisoNeutro, Estado, Pantalla } from '@/ui/kit';
+import { Text } from 'react-native';
+
+import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { Estado, Pantalla } from '@/ui/kit';
 
 /**
  * Herramienta 4 (4.8 / 4.9): ajuste hepático.
@@ -16,11 +19,29 @@ export default function HerramientaHepatico() {
     <Pantalla>
       <Estado
         titulo="Todavía no disponible"
-        detalle="El ajuste hepático no tiene tabla de datos cargada. Cuando exista, va a funcionar igual que el renal: Child-Pugh directo, o los cinco valores para calcularlo."
+        detalle="El ajuste hepático no tiene tabla de datos cargada."
       />
-      <AvisoNeutro>
-        No mostramos un resultado vacío: sin dato, el sistema dice que no sabe.
-      </AvisoNeutro>
+
+      <BloqueFormulario titulo="Qué falta">
+        <Text className="font-sans text-meta leading-5 text-ink-suave">
+          Una fuente de dosis por grado de función hepática, y la clasificación con la que medirlo —
+          Child-Pugh es la propuesta, sin confirmar todavía.
+        </Text>
+      </BloqueFormulario>
+
+      <BloqueFormulario titulo="Cómo va a funcionar">
+        <Text className="font-sans text-meta leading-5 text-ink-suave">
+          Igual que el ajuste renal: el grado directo, o los valores para calcularlo, contra los
+          fármacos que cargues.
+        </Text>
+      </BloqueFormulario>
+
+      <BloqueFormulario titulo="Por qué no hay un formulario">
+        <Text className="font-sans text-meta leading-5 text-ink-suave">
+          Un formulario que siempre devuelve vacío se lee como «no hay problema». Sin dato, el
+          sistema dice que no sabe.
+        </Text>
+      </BloqueFormulario>
     </Pantalla>
   );
 }
