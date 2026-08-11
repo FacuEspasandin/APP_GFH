@@ -15,6 +15,7 @@ import {
 import { z } from 'zod';
 
 import { api, iniciarSesion } from '@/api/cliente';
+import { BotonVolverFlotante } from '@/ui/boton-volver';
 import { Disclaimer } from '@/ui/disclaimer';
 import { useColores } from '@/ui/tema';
 
@@ -67,6 +68,10 @@ export default function Login() {
       className="flex-1 bg-paper"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      {/* Login no tiene header —el logo centrado es la pantalla entera—, así
+          que la salida se dibuja flotando encima. */}
+      <BotonVolverFlotante />
+
       <ScrollView contentContainerClassName="flex-grow justify-center px-6 py-10">
         <View className="mb-10 items-center">
           <View className="h-16 w-16 items-center justify-center rounded-card bg-primary">

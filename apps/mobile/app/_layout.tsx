@@ -12,6 +12,7 @@ import {
   registrarManejadorLimitePlan,
   registrarManejadorSuscripcionVencida,
 } from '@/api/cliente';
+import { BotonVolverHeader } from '@/ui/boton-volver';
 import { useFuentes } from '@/ui/fuentes';
 import { MenuInferior } from '@/ui/menu-inferior';
 import { activarPantallaCompletaWeb } from '@/ui/pantalla-completa-web';
@@ -89,7 +90,14 @@ function Navegacion() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="bienvenida" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="registro" options={{ title: 'Crear cuenta' }} />
+        {/* `headerLeft` explícito y no la flecha nativa: a Registro se puede
+            llegar sin nada atrás —desde un enlace, o tras cerrar sesión— y en
+            ese caso el Stack no dibuja ninguna, dejando la pantalla sin
+            salida. Éste siempre vuelve a Bienvenida. */}
+        <Stack.Screen
+          name="registro"
+          options={{ title: 'Crear cuenta', headerLeft: () => <BotonVolverHeader /> }}
+        />
         <Stack.Screen name="recuperar" options={{ title: 'Recuperar contraseña' }} />
         <Stack.Screen name="paywall" options={{ title: 'Suscripción' }} />
         <Stack.Screen name="disclaimer" options={{ headerShown: false }} />
