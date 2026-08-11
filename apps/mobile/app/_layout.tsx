@@ -119,6 +119,7 @@ function Navegacion() {
         <Stack.Screen name="paciente/[id]/datos-renales" options={{ title: 'Función renal' }} />
         <Stack.Screen name="paciente/[id]/datos-hepaticos" options={{ title: 'Función hepática' }} />
         <Stack.Screen name="paciente/[id]/embarazo-lactancia" options={{ title: 'Embarazo y lactancia' }} />
+        <Stack.Screen name="paciente/[id]/historial" options={{ title: 'Historial' }} />
         <Stack.Screen name="paciente/[id]/alternativas" options={{ title: "Alternativas" }} />
         <Stack.Screen name="paciente/[id]/aceptar-alternativa" options={{ title: "Reemplazar fármaco" }} />
         <Stack.Screen name="paciente/[id]/cargar-tratamiento" options={{ title: 'Cargar tratamiento' }} />

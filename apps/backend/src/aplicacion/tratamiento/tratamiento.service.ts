@@ -2,6 +2,8 @@ import { ConflictException, Inject, Injectable, NotFoundException } from '@nestj
 
 import { evaluarAlergias, mapearTextoLibreAGrupo } from '../../dominio/clinico/alergias';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
+import { EventosService } from '../historial/eventos.service';
+import { conUnidad, diferencias, nombreFarmaco, pauta } from '../historial/redaccion';
 import type {
   ActualizarPrescripcionDto,
   AgregarAlergiaDto,
@@ -18,7 +20,10 @@ import { calcularClcr, edadEnAnios } from '@gfh/shared-types';
  */
 @Injectable()
 export class TratamientoService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(EventosService) private readonly eventos: EventosService,
+  ) {}
 
   /**
    * Alta de prescripción con el flujo de alergia de motor §7.5:
@@ -58,7 +63,7 @@ export class TratamientoService {
       }
     }
 
-    return this.prisma.prescripcion.create({
+    const creada = await this.prisma.prescripcion.create({
       data: {
         medicoId,
         pacienteId,
@@ -71,15 +76,40 @@ export class TratamientoService {
         indicacion: dto.indicacion ?? null,
         estado: 'ACTIVO',
       },
+      include: { productoComercial: { select: { nombreComercial: true } } },
     });
+
+    await this.eventos.registrar({
+      medicoId,
+      pacienteId,
+      tipo: 'FARMACO_AGREGADO',
+      titulo: nombreFarmaco({ ...creada, producto: creada.productoComercial }) + ' agregado',
+      detalle: pauta(creada),
+    });
+
+    return creada;
   }
 
+  /**
+   * Editar deja rastro, y el rastro distingue tres cosas que el médico lee
+   * distinto: suspender, reactivar y cambiar la pauta. Un único «prescripción
+   * editada» las mezclaría, y suspender un anticoagulante no es lo mismo que
+   * corregirle una coma a la dosis.
+   */
   async actualizarPrescripcion(
     medicoId: string,
     prescripcionId: string,
     dto: ActualizarPrescripcionDto,
   ) {
-    const { count } = await this.prisma.prescripcion.updateMany({
+    // Se lee antes de escribir: después del update el valor viejo ya no está en
+    // ningún lado, y el valor viejo es la mitad de lo que el historial cuenta.
+    const previa = await this.prisma.prescripcion.findFirst({
+      where: { id: prescripcionId, medicoId },
+      include: { productoComercial: { select: { nombreComercial: true } } },
+    });
+    if (!previa) throw new NotFoundException('Prescripción no encontrada.');
+
+    await this.prisma.prescripcion.updateMany({
       where: { id: prescripcionId, medicoId },
       data: {
         ...(dto.dosis !== undefined ? { dosis: dto.dosis } : {}),
@@ -89,22 +119,106 @@ export class TratamientoService {
         ...(dto.estado !== undefined ? { estado: dto.estado as 'ACTIVO' } : {}),
       },
     });
-    if (count === 0) throw new NotFoundException('Prescripción no encontrada.');
+
+    await this.registrarCambioDePrescripcion(previa, dto);
+
     return this.prisma.prescripcion.findFirstOrThrow({ where: { id: prescripcionId, medicoId } });
   }
 
+  private async registrarCambioDePrescripcion(
+    previa: {
+      medicoId: string;
+      pacienteId: string;
+      esFarmacoLibre: boolean;
+      nombreLibre: string | null;
+      productoComercial: { nombreComercial: string } | null;
+      dosis: string;
+      frecuencia: string;
+      via: string;
+      indicacion: string | null;
+      estado: string;
+    },
+    dto: ActualizarPrescripcionDto,
+  ): Promise<void> {
+    const nombre = nombreFarmaco({ ...previa, producto: previa.productoComercial });
+    const base = { medicoId: previa.medicoId, pacienteId: previa.pacienteId };
+
+    if (dto.estado !== undefined && dto.estado !== previa.estado) {
+      if (dto.estado === 'ACTIVO') {
+        await this.eventos.registrar({
+          ...base,
+          tipo: 'FARMACO_REACTIVADO',
+          titulo: nombre + ' reactivado',
+          detalle: pauta(previa),
+        });
+      } else {
+        const suspendido = dto.estado === 'SUSPENDIDO';
+        await this.eventos.registrar({
+          ...base,
+          tipo: suspendido ? 'FARMACO_SUSPENDIDO' : 'FARMACO_QUITADO',
+          titulo: nombre + (suspendido ? ' suspendido' : ' finalizado'),
+          detalle: 'Estaba en ' + pauta(previa) + '.',
+        });
+      }
+    }
+
+    const cambios = diferencias([
+      { campo: 'Dosis', antes: previa.dosis, despues: dto.dosis },
+      { campo: 'Frecuencia', antes: previa.frecuencia, despues: dto.frecuencia },
+      { campo: 'Vía', antes: previa.via, despues: dto.via },
+      { campo: 'Indicación', antes: previa.indicacion, despues: dto.indicacion },
+    ]);
+
+    // Sin cambios reales no hay evento: abrir la pantalla y guardar sin tocar
+    // nada no es un hecho clínico.
+    if (cambios.length > 0) {
+      await this.eventos.registrar({
+        ...base,
+        tipo: 'FARMACO_EDITADO',
+        titulo: nombre + ' — pauta modificada',
+        cambios,
+      });
+    }
+  }
+
+  /**
+   * El borrado sigue siendo físico: la fila se va. Lo que cambia es que antes
+   * de irse queda escrito qué era y en qué pauta estaba, así el historial no
+   * tiene el agujero de «este paciente tomaba algo y dejó de tomarlo sin que
+   * conste en ningún lado».
+   */
   async eliminarPrescripcion(medicoId: string, prescripcionId: string): Promise<void> {
-    const { count } = await this.prisma.prescripcion.deleteMany({
+    const previa = await this.prisma.prescripcion.findFirst({
       where: { id: prescripcionId, medicoId },
+      include: { productoComercial: { select: { nombreComercial: true } } },
     });
-    if (count === 0) throw new NotFoundException('Prescripción no encontrada.');
+    if (!previa) throw new NotFoundException('Prescripción no encontrada.');
+
+    await this.prisma.prescripcion.deleteMany({ where: { id: prescripcionId, medicoId } });
+
+    await this.eventos.registrar({
+      medicoId,
+      pacienteId: previa.pacienteId,
+      tipo: 'FARMACO_QUITADO',
+      titulo: nombreFarmaco({ ...previa, producto: previa.productoComercial }) + ' quitado',
+      detalle: 'Estaba en ' + pauta(previa) + '.',
+    });
   }
 
   // --- condiciones ----------------------------------------------------------
 
   async agregarCondicion(medicoId: string, pacienteId: string, dto: AgregarCondicionDto) {
     await this.exigirPaciente(medicoId, pacienteId);
-    return this.prisma.condicionPaciente.upsert({
+
+    // El nombre se resuelve ahora y se guarda escrito: si mañana el catálogo
+    // renombra la condición, la línea del historial tiene que seguir diciendo
+    // lo que el médico vio cuando la cargó.
+    const condicion = await this.prisma.condicionClinica.findUnique({
+      where: { id: dto.condicionClinicaId },
+      select: { nombre: true },
+    });
+
+    const guardada = await this.prisma.condicionPaciente.upsert({
       where: { pacienteId_condicionClinicaId: { pacienteId, condicionClinicaId: dto.condicionClinicaId } },
       update: { activo: true, observaciones: dto.observaciones ?? null },
       create: {
@@ -115,6 +229,16 @@ export class TratamientoService {
         activo: true,
       },
     });
+
+    await this.eventos.registrar({
+      medicoId,
+      pacienteId,
+      tipo: 'CONDICION_AGREGADA',
+      titulo: (condicion?.nombre ?? 'Condición') + ' agregada',
+      detalle: dto.observaciones?.trim() || null,
+    });
+
+    return guardada;
   }
 
   async quitarCondicion(medicoId: string, pacienteId: string, condicionId: string): Promise<void> {
@@ -125,6 +249,18 @@ export class TratamientoService {
       data: { activo: false },
     });
     if (count === 0) throw new NotFoundException('Condición no encontrada.');
+
+    const condicion = await this.prisma.condicionClinica.findUnique({
+      where: { id: condicionId },
+      select: { nombre: true },
+    });
+
+    await this.eventos.registrar({
+      medicoId,
+      pacienteId,
+      tipo: 'CONDICION_QUITADA',
+      titulo: (condicion?.nombre ?? 'Condición') + ' quitada',
+    });
   }
 
   // --- alergias -------------------------------------------------------------
@@ -158,7 +294,7 @@ export class TratamientoService {
       grupoAlergenicoId = encontrado?.id ?? null;
     }
 
-    return this.prisma.alergia.create({
+    const creada = await this.prisma.alergia.create({
       data: {
         medicoId,
         pacienteId,
@@ -169,15 +305,47 @@ export class TratamientoService {
         descripcion: dto.descripcion ?? null,
         activo: true,
       },
+      include: { principioActivo: { select: { nombre: true } } },
     });
+
+    await this.eventos.registrar({
+      medicoId,
+      pacienteId,
+      tipo: 'ALERGIA_AGREGADA',
+      titulo: 'Alergia a ' + this.nombreDeAlergia(creada),
+      // La severidad va en el detalle porque es la que decide si bloquea:
+      // sólo la grave con coincidencia exacta impide prescribir (regla 4).
+      detalle: 'Severidad ' + creada.severidad.toLowerCase() + '.',
+    });
+
+    return creada;
   }
 
   async quitarAlergia(medicoId: string, alergiaId: string): Promise<void> {
-    const { count } = await this.prisma.alergia.updateMany({
+    const previa = await this.prisma.alergia.findFirst({
+      where: { id: alergiaId, medicoId },
+      include: { principioActivo: { select: { nombre: true } } },
+    });
+    if (!previa) throw new NotFoundException('Alergia no encontrada.');
+
+    await this.prisma.alergia.updateMany({
       where: { id: alergiaId, medicoId },
       data: { activo: false },
     });
-    if (count === 0) throw new NotFoundException('Alergia no encontrada.');
+
+    await this.eventos.registrar({
+      medicoId,
+      pacienteId: previa.pacienteId,
+      tipo: 'ALERGIA_QUITADA',
+      titulo: 'Alergia a ' + this.nombreDeAlergia(previa) + ' quitada',
+    });
+  }
+
+  private nombreDeAlergia(a: {
+    principioActivo: { nombre: string } | null;
+    descripcion: string | null;
+  }): string {
+    return a.principioActivo?.nombre ?? a.descripcion?.trim() ?? 'sustancia sin especificar';
   }
 
   // --- datos renales --------------------------------------------------------
@@ -219,6 +387,46 @@ export class TratamientoService {
         clcrMedidoAt: clcrMlMin !== null ? new Date() : null,
       },
     });
+
+    // El Clcr entra en la lista de cambios aunque el médico no lo haya
+    // escrito: es el número del que cuelga todo el ajuste renal, y verlo pasar
+    // de 43 a 26.5 explica por qué de golpe aparecieron alertas.
+    const cambios = diferencias([
+      {
+        campo: 'Peso',
+        antes: paciente.pesoKg,
+        despues: dto.pesoKg,
+        formato: (v) => conUnidad(v, 'kg'),
+      },
+      {
+        campo: 'Creatinina',
+        antes: paciente.creatininaMgDl,
+        despues: dto.creatininaMgDl,
+        formato: (v) => conUnidad(v, 'mg/dL'),
+      },
+      {
+        campo: 'Clcr',
+        antes: paciente.clcrMlMin,
+        despues: clcrMlMin,
+        formato: (v) => conUnidad(v, 'mL/min'),
+      },
+    ]);
+
+    if (cambios.length > 0) {
+      await this.eventos.registrar({
+        medicoId,
+        pacienteId,
+        tipo: 'DATOS_RENALES',
+        titulo: 'Función renal actualizada',
+        detalle:
+          clcrOrigen === 'INGRESADO_MANUAL'
+            ? 'Clcr ingresado a mano.'
+            : clcrMlMin === null
+              ? 'Sin datos suficientes para calcular el Clcr.'
+              : 'Clcr calculado por Cockcroft-Gault.',
+        cambios,
+      });
+    }
 
     return { clcrMlMin, clcrOrigen };
   }

@@ -17,6 +17,7 @@ import {
   destacados as hallazgosDestacados,
   detalleCockpit,
   hepaticoSinEvaluar,
+  opcionesDelPaciente,
   peoresPorCategoria,
   titularCockpit,
 } from '@/dominio/cockpit';
@@ -57,7 +58,10 @@ export default function CockpitPaciente() {
 
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const [menuAbierto, setMenuAbierto] = useState(false);
+  // Dos menús, dos verbos. El + crea cosas que no existían; los ··· tocan lo
+  // que ya existe. Antes «Editar datos del paciente» vivía adentro del +,
+  // que es justo lo que no hace.
+  const [menu, setMenu] = useState<'ninguno' | 'agregar' | 'paciente'>('ninguno');
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['cockpit', id],
@@ -96,7 +100,7 @@ export default function CockpitPaciente() {
           title: `${p.apellido}, ${p.nombre}`,
           headerRight: () => (
             <Pressable
-              onPress={() => setMenuAbierto(true)}
+              onPress={() => setMenu('agregar')}
               accessibilityRole="button"
               accessibilityLabel="Agregar"
               className="mr-3 h-8 w-8 items-center justify-center rounded-full"
@@ -121,7 +125,22 @@ export default function CockpitPaciente() {
             de todo lo demás, y la jerarquía la marca la profundidad y no el
             color —el color acá significa gravedad y no se gasta en decorar. */}
         <Superficie elevacion="alta" className="mb-5 p-4">
-          <View className="flex-row items-center">
+          {/* Los ··· van DENTRO de la tarjeta y no en la barra: lo que abren es
+              de este paciente, y estando acá no hace falta rotularlo. Quedan
+              cerca del + del header, así que se distinguen por peso — el + es
+              un círculo relleno sobre el verde, esto es gris sobre el blanco
+              de la tarjeta. */}
+          <Pressable
+            onPress={() => setMenu('paciente')}
+            accessibilityRole="button"
+            accessibilityLabel="Opciones del paciente"
+            hitSlop={10}
+            className="absolute right-2 top-2 h-9 w-9 items-center justify-center rounded-full"
+          >
+            <Icono nombre="mas-opciones" tamano={20} color={col.tenue} />
+          </Pressable>
+
+          <View className="flex-row items-center pr-7">
             {/* El Clcr manda: es el dato que condiciona casi todas las
                 verificaciones, y en el anillo se ubica solo contra la escala. */}
             <AnilloClcr clcrMlMin={p.clcrMlMin} gradoKdigo={p.gradoKdigo} />
@@ -326,23 +345,38 @@ export default function CockpitPaciente() {
         ) : null}
       </Pantalla>
 
-      {/* Menú del + (3.1.5) */}
-      <HojaInferior visible={menuAbierto} onCerrar={() => setMenuAbierto(false)}>
+      {/* El + : sólo lo que crea un registro nuevo (3.1.5) */}
+      <HojaInferior visible={menu === 'agregar'} onCerrar={() => setMenu('ninguno')}>
         {[
-          ['Editar datos del paciente', `/paciente/${id}/editar`],
           ['Agregar fármaco', `/paciente/${id}/agregar-farmaco`],
           ['Agregar condición', `/paciente/${id}/agregar-condicion`],
           ['Agregar alergia', `/paciente/${id}/agregar-alergia`],
-          ['Función renal', `/paciente/${id}/datos-renales`],
-          ['Función hepática', `/paciente/${id}/datos-hepaticos`],
-          ['Embarazo y lactancia', `/paciente/${id}/embarazo-lactancia`],
         ].map(([titulo, ruta]) => (
           <OpcionHoja
             key={ruta}
             titulo={titulo!}
             onPress={() => {
-              setMenuAbierto(false);
+              setMenu('ninguno');
               router.push(ruta as never);
+            }}
+          />
+        ))}
+      </HojaInferior>
+
+      {/* Los ··· : lo que ya existe. Las tres pantallas de datos clínicos van
+          juntas porque se usan juntas, y el historial cierra la lista. */}
+      <HojaInferior visible={menu === 'paciente'} onCerrar={() => setMenu('ninguno')}>
+        {/* Cada opción dice qué hay cargado antes de abrirla: así se ve de un
+            vistazo qué le falta al paciente sin entrar a las cuatro. */}
+        {opcionesDelPaciente(id!, p).map((o) => (
+          <OpcionHoja
+            key={o.ruta}
+            titulo={o.titulo}
+            detalle={o.detalle}
+            icono={o.icono}
+            onPress={() => {
+              setMenu('ninguno');
+              router.push(o.ruta as never);
             }}
           />
         ))}

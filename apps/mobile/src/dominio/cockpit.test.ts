@@ -4,6 +4,7 @@ import {
   destacados,
   detalleCockpit,
   hepaticoSinEvaluar,
+  opcionesDelPaciente,
   peoresPorCategoria,
   titularCockpit,
   type HallazgoResumible,
@@ -122,5 +123,77 @@ describe('ajuste hepático sin evaluar', () => {
   it('con estado hepático cargado, cero significa cero', () => {
     expect(hepaticoSinEvaluar([{ codigo: 'SIN_CLCR' }])).toBe(false);
     expect(hepaticoSinEvaluar([])).toBe(false);
+  });
+});
+
+/**
+ * El menú de los «···».
+ *
+ * Lo que importa acá es el subtítulo: convierte el menú en un resumen de qué
+ * datos tiene cargados el paciente, y equivocarlo es afirmar algo falso sobre
+ * un dato clínico.
+ */
+describe('opciones del paciente', () => {
+  const vacio: Parameters<typeof opcionesDelPaciente>[1] = {
+    clcrMlMin: null,
+    clcrOrigen: null,
+    childPughClase: null,
+    semanaGestacion: null,
+    estaLactando: null,
+  };
+
+  const detalleDe = (titulo: string, p: typeof vacio) =>
+    opcionesDelPaciente('p1', p).find((o) => o.titulo === titulo)?.detalle;
+
+  it('no incluye nada de agregar: eso es del +', () => {
+    const titulos = opcionesDelPaciente('p1', vacio).map((o) => o.titulo);
+    expect(titulos).toEqual([
+      'Editar paciente',
+      'Función renal',
+      'Función hepática',
+      'Embarazo y lactancia',
+      'Ver historial',
+    ]);
+    expect(titulos.some((t) => t.startsWith('Agregar'))).toBe(false);
+  });
+
+  it('dice Sin cargar en vez de dejar en blanco', () => {
+    // En blanco no se distingue de «el servidor no lo mandó».
+    expect(detalleDe('Función renal', vacio)).toBe('Sin cargar');
+    expect(detalleDe('Función hepática', vacio)).toBe('Sin cargar');
+    expect(detalleDe('Embarazo y lactancia', vacio)).toBe('Sin cargar');
+  });
+
+  it('muestra el Clcr sin arrastrar decimales', () => {
+    expect(detalleDe('Función renal', { ...vacio, clcrMlMin: 26.4999 })).toBe('Clcr 26.5 mL/min');
+    expect(detalleDe('Función renal', { ...vacio, clcrMlMin: 60 })).toBe('Clcr 60 mL/min');
+  });
+
+  it('un Clcr de 0 no se lee como sin cargar', () => {
+    // `!clcrMlMin` trataría el 0 como falta de dato. Son cosas distintas.
+    expect(detalleDe('Función renal', { ...vacio, clcrMlMin: 0 })).toBe('Clcr 0 mL/min');
+  });
+
+  it('lactancia en false es un dato, no una falta de dato', () => {
+    expect(detalleDe('Embarazo y lactancia', { ...vacio, estaLactando: false })).toBe(
+      'sin lactancia',
+    );
+    expect(detalleDe('Embarazo y lactancia', { ...vacio, estaLactando: true })).toBe('lactancia');
+  });
+
+  it('junta semana y lactancia cuando están las dos', () => {
+    expect(
+      detalleDe('Embarazo y lactancia', { ...vacio, semanaGestacion: 24, estaLactando: true }),
+    ).toBe('24 semanas · lactancia');
+  });
+
+  it('las rutas cuelgan del paciente', () => {
+    expect(opcionesDelPaciente('abc', vacio).map((o) => o.ruta)).toEqual([
+      '/paciente/abc/editar',
+      '/paciente/abc/datos-renales',
+      '/paciente/abc/datos-hepaticos',
+      '/paciente/abc/embarazo-lactancia',
+      '/paciente/abc/historial',
+    ]);
   });
 });

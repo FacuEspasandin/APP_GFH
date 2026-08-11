@@ -117,3 +117,81 @@ export function destacados<T extends HallazgoResumible>(
 export function hepaticoSinEvaluar(avisos: readonly { codigo: string }[]): boolean {
   return avisos.some((a) => a.codigo === 'SIN_CHILD_PUGH');
 }
+
+/**
+ * Las opciones del menú de los «···»: lo que se le hace a un paciente que ya
+ * existe.
+ *
+ * Está separado del «+», que sólo crea. Función renal, hepática y embarazo
+ * están acá y no allá porque las tres EDITAN campos del paciente — no agregan
+ * nada— igual que «Editar paciente».
+ *
+ * Cada una trae el valor cargado en el subtítulo. Es lo que convierte el menú
+ * en un resumen: se ve qué le falta al paciente sin tener que entrar a las
+ * cuatro pantallas. Cuando no hay dato dice "Sin cargar" y no se deja en
+ * blanco, porque en blanco no se distingue de "no lo trajo el servidor".
+ */
+export function opcionesDelPaciente(
+  pacienteId: string,
+  p: {
+    clcrMlMin: number | null;
+    clcrOrigen: string | null;
+    childPughClase: string | null;
+    semanaGestacion: number | null;
+    estaLactando: boolean | null;
+  },
+): { titulo: string; ruta: string; detalle?: string; icono: NombreIconoMenu }[] {
+  return [
+    {
+      titulo: 'Editar paciente',
+      ruta: `/paciente/${pacienteId}/editar`,
+      icono: 'editar',
+    },
+    {
+      titulo: 'Función renal',
+      ruta: `/paciente/${pacienteId}/datos-renales`,
+      detalle:
+        p.clcrMlMin === null ? 'Sin cargar' : `Clcr ${redondear(p.clcrMlMin)} mL/min`,
+      icono: 'gota',
+    },
+    {
+      titulo: 'Función hepática',
+      ruta: `/paciente/${pacienteId}/datos-hepaticos`,
+      detalle: p.childPughClase === null ? 'Sin cargar' : `Child-Pugh ${p.childPughClase}`,
+      icono: 'higado',
+    },
+    {
+      titulo: 'Embarazo y lactancia',
+      ruta: `/paciente/${pacienteId}/embarazo-lactancia`,
+      detalle: detalleGestacion(p.semanaGestacion, p.estaLactando),
+      icono: 'pulso',
+    },
+    {
+      titulo: 'Ver historial',
+      ruta: `/paciente/${pacienteId}/historial`,
+      detalle: 'Todo lo que se hizo con este paciente',
+      icono: 'reloj',
+    },
+  ];
+}
+
+type NombreIconoMenu = 'editar' | 'gota' | 'higado' | 'pulso' | 'reloj';
+
+function redondear(n: number): string {
+  return String(Number(n.toFixed(1)));
+}
+
+/**
+ * Las dos son independientes y las dos pueden faltar. "Sin cargar" sólo si no
+ * hay ninguna: decirlo con la lactancia puesta sería falso.
+ */
+function detalleGestacion(semana: number | null, lactando: boolean | null): string {
+  const partes: string[] = [];
+  if (semana !== null) partes.push(`${semana} semanas`);
+  // `false` es un dato: se preguntó y la respuesta fue no. Sólo `null` es falta
+  // de dato — el mismo cuidado que en la pantalla de embarazo.
+  if (lactando === true) partes.push('lactancia');
+  else if (lactando === false) partes.push('sin lactancia');
+
+  return partes.length === 0 ? 'Sin cargar' : partes.join(' · ');
+}

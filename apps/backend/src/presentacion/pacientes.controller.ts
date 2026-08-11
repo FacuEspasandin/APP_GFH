@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 
 import { PacientesService } from '../aplicacion/pacientes/pacientes.service';
+import { EventosService } from '../aplicacion/historial/eventos.service';
 import { Cuerpo } from './comun/cuerpo';
 import { JwtGuard, MedicoActual } from './comun/medico-actual';
 import { ActualizarPacienteDto, CrearGrupoDto, CrearPacienteDto } from './dto/paciente.dto';
@@ -20,7 +21,26 @@ import { ActualizarPacienteDto, CrearGrupoDto, CrearPacienteDto } from './dto/pa
 @Controller()
 @UseGuards(JwtGuard)
 export class PacientesController {
-  constructor(@Inject(PacientesService) private readonly pacientes: PacientesService) {}
+  constructor(
+    @Inject(PacientesService) private readonly pacientes: PacientesService,
+    @Inject(EventosService) private readonly eventos: EventosService,
+  ) {}
+
+  /**
+   * El historial del paciente, del hecho más nuevo al más viejo.
+   *
+   * `antesDe` es la fecha del último evento que el cliente ya tiene, no un
+   * número de página: la lista crece por arriba y con `skip` el médico vería
+   * repetido lo que ya leyó si registra algo mientras scrollea.
+   */
+  @Get('pacientes/:id/historial')
+  historial(
+    @MedicoActual() medicoId: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Query('antesDe') antesDe?: string,
+  ) {
+    return this.eventos.listar(medicoId, id, { antesDe });
+  }
 
   /** Pantalla de Inicio: grupos con sus pacientes + los que no tienen grupo. */
   @Get('inicio')

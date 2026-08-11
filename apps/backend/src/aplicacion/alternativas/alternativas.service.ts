@@ -11,6 +11,7 @@ import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import { RepositorioCockpitPrisma } from '../../infraestructura/repositorios/repositorio-cockpit-prisma';
 import { condicionesEfectivas } from '../../dominio/clinico/condiciones';
 import { edadEnAnios } from '@gfh/shared-types';
+import { EventosService } from '../historial/eventos.service';
 
 /**
  * Alternativas terapéuticas anotadas contra ESTE paciente (motor §8).
@@ -28,6 +29,7 @@ export class AlternativasService {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(CatalogoInteraccionesService) private readonly catalogo: CatalogoInteraccionesService,
+    @Inject(EventosService) private readonly eventos: EventosService,
   ) {
     this.repositorio = new RepositorioCockpitPrisma(prisma);
   }
@@ -193,6 +195,40 @@ export class AlternativasService {
           accion: 'ALTERNATIVA_ACEPTADA',
           detalle: `paciente ${pacienteId}${datos.reemplazo ? ' · con reemplazo' : ' · solo documentada'}`,
         },
+      }),
+    );
+
+    // El evento del historial va DENTRO de la transacción, a diferencia del
+    // resto: acá el cambio y su registro son la misma decisión clínica. Si la
+    // medicación cambia y el historial no lo cuenta, el rastro miente.
+    const [origen, alternativa] = await Promise.all([
+      this.prisma.principioActivo.findUnique({
+        where: { id: datos.paOrigenId },
+        select: { nombre: true },
+      }),
+      this.prisma.principioActivo.findUnique({
+        where: { id: datos.paAlternativaId },
+        select: { nombre: true },
+      }),
+    ]);
+
+    const nombreOrigen = origen?.nombre ?? 'el fármaco original';
+    const nombreAlternativa = alternativa?.nombre ?? 'la alternativa';
+
+    operaciones.push(
+      this.eventos.operacion(this.prisma, {
+        medicoId,
+        pacienteId,
+        tipo: 'ALTERNATIVA_ACEPTADA',
+        titulo: datos.reemplazo
+          ? nombreOrigen + ' → ' + nombreAlternativa
+          : 'Alternativa documentada: ' + nombreAlternativa,
+        detalle: datos.reemplazo
+          ? 'Reemplazo aplicado · ' + datos.reemplazo.dosis + ' · ' + datos.reemplazo.frecuencia
+          : 'Se documentó la decisión sin cambiar el tratamiento.',
+        cambios: datos.nota?.trim()
+          ? [{ campo: 'Nota', antes: null, despues: datos.nota.trim() }]
+          : undefined,
       }),
     );
 

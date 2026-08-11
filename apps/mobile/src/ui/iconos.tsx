@@ -22,6 +22,7 @@ export type NombreIcono =
   | 'chevron'
   | 'chevronArriba'
   | 'mas'
+  | 'mas-opciones'
   | 'editar'
   | 'compartir'
   | 'menu'
@@ -114,6 +115,16 @@ function trazos(nombre: NombreIcono, c: Comun) {
         <>
           <Path d="M12 5v14" {...c} />
           <Path d="M5 12h14" {...c} />
+        </>
+      );
+    // Los tres puntos del cockpit. Van RELLENOS y no de contorno: a 20 px
+    // tres circunferencias vacías se leen como manchas.
+    case 'mas-opciones':
+      return (
+        <>
+          <Circle cx="5" cy="12" r="1.9" fill={c.stroke} stroke="none" />
+          <Circle cx="12" cy="12" r="1.9" fill={c.stroke} stroke="none" />
+          <Circle cx="19" cy="12" r="1.9" fill={c.stroke} stroke="none" />
         </>
       );
     case 'editar':

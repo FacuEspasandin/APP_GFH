@@ -13,6 +13,7 @@ import { FotoService } from './aplicacion/foto/foto.service';
 import { HerramientasService } from './aplicacion/herramientas/herramientas.service';
 import { PerfilService } from './aplicacion/perfil/perfil.service';
 import { SuscripcionService } from './aplicacion/suscripcion/suscripcion.service';
+import { EventosService } from './aplicacion/historial/eventos.service';
 import { PacientesService } from './aplicacion/pacientes/pacientes.service';
 import { TratamientoService } from './aplicacion/tratamiento/tratamiento.service';
 import { CatalogoInteraccionesService } from './infraestructura/catalogo/catalogo-interacciones.service';
@@ -64,6 +65,7 @@ import {
     HashService,
     AuthService,
     CockpitService,
+    EventosService,
     PacientesService,
     TratamientoService,
     CatalogoService,

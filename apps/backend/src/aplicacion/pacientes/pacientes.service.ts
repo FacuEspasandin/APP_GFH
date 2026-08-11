@@ -8,6 +8,8 @@ import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/cat
 import { resumenDeMedico, type ResumenDeMedico } from './resumen-pacientes';
 import { CODIGO_LIMITE_PLAN_GRATIS, PLAN_GRATIS } from '../suscripcion/plan';
 import { SuscripcionService } from '../suscripcion/suscripcion.service';
+import { EventosService } from '../historial/eventos.service';
+import { conUnidad, diferencias, fecha } from '../historial/redaccion';
 
 /**
  * CRUD de pacientes y grupos.
@@ -23,6 +25,7 @@ export class PacientesService {
     @Inject(SuscripcionService) private readonly suscripcion: SuscripcionService,
     @Inject(CatalogoInteraccionesService)
     private readonly catalogo: CatalogoInteraccionesService,
+    @Inject(EventosService) private readonly eventos: EventosService,
   ) {}
 
   /**
@@ -71,9 +74,21 @@ export class PacientesService {
 
     await this.exigirCupoDePlan(medicoId);
 
-    return this.prisma.paciente.create({
+    const creado = await this.prisma.paciente.create({
       data: { medicoId, ...this.aDatos(dto) },
     });
+
+    // Primera línea del historial. Sin ella la lista arrancaría en el segundo
+    // hecho y no se sabría desde cuándo el médico sigue a este paciente.
+    await this.eventos.registrar({
+      medicoId,
+      pacienteId: creado.id,
+      tipo: 'PACIENTE_CREADO',
+      titulo: 'Paciente creado',
+      detalle: creado.clcrMlMin === null ? null : 'Clcr inicial ' + conUnidad(creado.clcrMlMin, 'mL/min') + '.',
+    });
+
+    return creado;
   }
 
   /**
@@ -171,7 +186,81 @@ export class PacientesService {
     // updateMany y no update: `update` acepta un where de unique solo, y ahí se
     // perdería el medicoId.
     await this.prisma.paciente.updateMany({ where: { id: pacienteId, medicoId }, data });
-    return this.obtener(medicoId, pacienteId);
+
+    const despues = await this.obtener(medicoId, pacienteId);
+    await this.registrarEdicion(medicoId, pacienteId, actual, dto, despues);
+    return despues;
+  }
+
+  /**
+   * Un PATCH puede tocar tres cosas distintas a la vez, y el médico las lee
+   * distinto: quién es el paciente, sus datos renales y su embarazo. Se
+   * registran por separado en vez de en un único «paciente editado», porque en
+   * el historial «Creatinina 1.1 → 1.8» y «cambió el apellido» no valen igual.
+   */
+  private async registrarEdicion(
+    medicoId: string,
+    pacienteId: string,
+    antes: { nombre: string; apellido: string; documento: string | null; fechaNacimiento: Date; sexo: string; alturaCm: number | null; pesoKg: unknown; creatininaMgDl: unknown; clcrMlMin: unknown; semanaGestacion: number | null; estaLactando: boolean | null },
+    dto: ActualizarPacienteDto,
+    despues: { pesoKg: unknown; creatininaMgDl: unknown; clcrMlMin: unknown; semanaGestacion: number | null; estaLactando: boolean | null },
+  ): Promise<void> {
+    const identidad = diferencias([
+      { campo: 'Nombre', antes: antes.nombre, despues: dto.nombre },
+      { campo: 'Apellido', antes: antes.apellido, despues: dto.apellido },
+      { campo: 'Documento', antes: antes.documento, despues: dto.documento },
+      { campo: 'Fecha de nacimiento', antes: antes.fechaNacimiento, despues: dto.fechaNacimiento === undefined ? undefined : new Date(dto.fechaNacimiento), formato: (v) => fecha(v as Date) },
+      { campo: 'Sexo', antes: antes.sexo, despues: dto.sexo },
+      { campo: 'Altura', antes: antes.alturaCm, despues: dto.alturaCm, formato: (v) => conUnidad(v, 'cm') },
+    ]);
+
+    if (identidad.length > 0) {
+      await this.eventos.registrar({
+        medicoId,
+        pacienteId,
+        tipo: 'PACIENTE_EDITADO',
+        titulo: 'Datos del paciente editados',
+        cambios: identidad,
+      });
+    }
+
+    const renal = diferencias([
+      { campo: 'Peso', antes: antes.pesoKg, despues: dto.pesoKg, formato: (v) => conUnidad(v, 'kg') },
+      { campo: 'Creatinina', antes: antes.creatininaMgDl, despues: dto.creatininaMgDl, formato: (v) => conUnidad(v, 'mg/dL') },
+      // El Clcr se compara contra el valor YA guardado y no contra el DTO: casi
+      // siempre cambia porque lo recalculó el sistema, no porque alguien lo
+      // haya escrito.
+      { campo: 'Clcr', antes: antes.clcrMlMin, despues: despues.clcrMlMin, formato: (v) => conUnidad(v, 'mL/min') },
+    ]);
+
+    if (renal.length > 0) {
+      await this.eventos.registrar({
+        medicoId,
+        pacienteId,
+        tipo: 'DATOS_RENALES',
+        titulo: 'Función renal actualizada',
+        cambios: renal,
+      });
+    }
+
+    const gestacion = diferencias([
+      { campo: 'Semana de gestación', antes: antes.semanaGestacion, despues: dto.semanaGestacion, formato: (v) => v + ' semanas' },
+      { campo: 'Lactancia', antes: antes.estaLactando, despues: dto.estaLactando },
+    ]);
+
+    if (gestacion.length > 0) {
+      await this.eventos.registrar({
+        medicoId,
+        pacienteId,
+        tipo: 'EMBARAZO_LACTANCIA',
+        titulo: 'Embarazo y lactancia actualizados',
+        detalle:
+          despues.semanaGestacion === null
+            ? null
+            : 'Las alertas de embarazo se recalculan con la semana ' + despues.semanaGestacion + '.',
+        cambios: gestacion,
+      });
+    }
   }
 
   async eliminar(medicoId: string, pacienteId: string): Promise<void> {

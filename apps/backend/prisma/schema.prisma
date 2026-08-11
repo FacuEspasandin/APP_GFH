@@ -109,6 +109,27 @@ enum Encefalopatia {
   GRADO_3_4
 }
 
+/// Cada cosa que le pasa a un paciente. El nombre dice QUE paso, no en que
+/// pantalla se hizo: el mismo tipo de evento puede entrar por el cockpit, por
+/// las herramientas o por aceptar una alternativa.
+enum TipoEventoPaciente {
+  PACIENTE_CREADO
+  PACIENTE_EDITADO
+  FARMACO_AGREGADO
+  FARMACO_EDITADO
+  FARMACO_SUSPENDIDO
+  FARMACO_REACTIVADO
+  FARMACO_QUITADO
+  CONDICION_AGREGADA
+  CONDICION_QUITADA
+  ALERGIA_AGREGADA
+  ALERGIA_QUITADA
+  DATOS_RENALES
+  DATOS_HEPATICOS
+  EMBARAZO_LACTANCIA
+  ALTERNATIVA_ACEPTADA
+}
+
 enum EstadoPrescripcion {
   ACTIVO
   SUSPENDIDO
@@ -219,17 +240,17 @@ enum EstadoValidacion {
 // ============================================================================
 
 model PrincipioActivo {
-  id               String  @id @default(uuid())
-  nombre           String  @unique
+  id                String            @id @default(uuid())
+  nombre            String            @unique
   /// DECISION (no esta en el modelo de datos, sale de motor §5.2 y §10.2):
   /// clave normalizada — trim + lowercase + NFD sin diacriticos. Las reglas de
   /// interaccion referencian farmacos POR NOMBRE; una grafia distinta hace que
   /// la regla no matchee nunca y la interaccion desaparezca en silencio.
   /// El @unique ademas hace que el seed FALLE en vez de deduplicar callado
   /// (el JSON trae 643 entradas y en GFH quedaron 634 filas sin explicacion).
-  nombreNormalizado String @unique
-  grupoTerapeutico String?
-  viaDefault       ViaAdministracion @default(NO_ESPECIFICADA)
+  nombreNormalizado String            @unique
+  grupoTerapeutico  String?
+  viaDefault        ViaAdministracion @default(NO_ESPECIFICADA)
 
   tieneAjusteRenal    Boolean @default(false)
   tieneAjusteHepatico Boolean @default(false)
@@ -240,19 +261,19 @@ model PrincipioActivo {
   codigoATC String?
 
   /// Plural: hay un ajuste POR VIA, no uno por farmaco. Ver AjusteRenalFarmaco.
-  ajustesRenales    AjusteRenalFarmaco[]
-  ajustesHepaticos  AjusteHepaticoFarmaco[]
+  ajustesRenales   AjusteRenalFarmaco[]
+  ajustesHepaticos AjusteHepaticoFarmaco[]
 
-  productos          ProductoComercialPrincipioActivo[]
-  alertasCondicion   AlertaCondicionFarmaco[]
-  gruposAlergenicos  PrincipioActivoGrupoAlergenico[]
-  alternativasComoOrigen      AlternativaTerapeutica[] @relation("AlternativaOrigen")
-  alternativasComoAlternativa AlternativaTerapeutica[] @relation("AlternativaDestino")
-  alergias                    Alergia[]
-  interaccionesComoA          InteraccionDetectada[]   @relation("InteraccionPaA")
-  interaccionesComoB          InteraccionDetectada[]   @relation("InteraccionPaB")
-  alternativasAceptadasOrigen AlternativaAceptada[]    @relation("AceptadaOrigen")
-  alternativasAceptadasDestino AlternativaAceptada[]   @relation("AceptadaDestino")
+  productos                    ProductoComercialPrincipioActivo[]
+  alertasCondicion             AlertaCondicionFarmaco[]
+  gruposAlergenicos            PrincipioActivoGrupoAlergenico[]
+  alternativasComoOrigen       AlternativaTerapeutica[]           @relation("AlternativaOrigen")
+  alternativasComoAlternativa  AlternativaTerapeutica[]           @relation("AlternativaDestino")
+  alergias                     Alergia[]
+  interaccionesComoA           InteraccionDetectada[]             @relation("InteraccionPaA")
+  interaccionesComoB           InteraccionDetectada[]             @relation("InteraccionPaB")
+  alternativasAceptadasOrigen  AlternativaAceptada[]              @relation("AceptadaOrigen")
+  alternativasAceptadasDestino AlternativaAceptada[]              @relation("AceptadaDestino")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -372,7 +393,7 @@ model AjusteRenalFarmaco {
 /// posicion (motor §4.4). Ambas cosas son logica de dominio, no del schema:
 /// van con test de borde antes de exponerse por API.
 model RangoClcrFarmaco {
-  id                   String  @id @default(uuid())
+  id                   String          @id @default(uuid())
   ajusteRenalFarmacoId String
   orden                Int // 0 = rango de mayor Clcr; preserva el orden de la fuente
   clcrMin              Int? // null = sin limite inferior
@@ -422,7 +443,7 @@ model AjusteHepaticoFarmaco {
 }
 
 model RangoChildPughFarmaco {
-  id                      String         @id @default(uuid())
+  id                      String          @id @default(uuid())
   ajusteHepaticoFarmacoId String
   clase                   ChildPughClase
   textoRecomendacion      String?
@@ -612,17 +633,18 @@ model Medico {
   disclaimerVersion    String?
   disclaimerAceptadoAt DateTime?
 
-  sesiones             Sesion[]
-  suscripcion          Suscripcion?
-  configuracion        ConfiguracionUsuario?
-  auditoria            AuditLog[]
-  grupos               Grupo[]
-  pacientes            Paciente[]
-  prescripciones       Prescripcion[]
-  condicionesPaciente  CondicionPaciente[]
-  alergias             Alergia[]
+  sesiones                Sesion[]
+  suscripcion             Suscripcion?
+  configuracion           ConfiguracionUsuario?
+  auditoria               AuditLog[]
+  grupos                  Grupo[]
+  pacientes               Paciente[]
+  prescripciones          Prescripcion[]
+  condicionesPaciente     CondicionPaciente[]
+  alergias                Alergia[]
   interaccionesDetectadas InteraccionDetectada[]
   alternativasAceptadas   AlternativaAceptada[]
+  eventos                 EventoPaciente[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -683,9 +705,9 @@ model Suscripcion {
 }
 
 model AuditLog {
-  id       String          @id @default(uuid())
-  medicoId String
-  accion   AccionAuditoria
+  id        String          @id @default(uuid())
+  medicoId  String
+  accion    AccionAuditoria
   /// NUNCA informacion clinica sensible. Para la carga por foto se guarda el
   /// pacienteId y nada mas: hay que poder auditar que ese paciente tuvo una
   /// carga asistida sin retener la imagen ni el texto crudo (modelo §3.4).
@@ -748,34 +770,34 @@ model Paciente {
   medicoId String
   grupoId  String?
 
-  nombre         String
-  apellido       String
-  documento      String?
+  nombre          String
+  apellido        String
+  documento       String?
   fechaNacimiento DateTime // deriva edad → condicion sintetica ADULTO_MAYOR
-  sexo           Sexo
-  alturaCm       Int?
+  sexo            Sexo
+  alturaCm        Int?
 
   // --- renal ---------------------------------------------------------------
-  pesoKg          Decimal? @db.Decimal(5, 2)
-  creatininaMgDl  Decimal? @db.Decimal(4, 2)
-  clcrMlMin       Decimal? @db.Decimal(5, 1) // motor §4.1: se redondea a 1 decimal
-  clcrOrigen      ClcrOrigen?
+  pesoKg         Decimal?    @db.Decimal(5, 2)
+  creatininaMgDl Decimal?    @db.Decimal(4, 2)
+  clcrMlMin      Decimal?    @db.Decimal(5, 1) // motor §4.1: se redondea a 1 decimal
+  clcrOrigen     ClcrOrigen?
   /// DECISION: campo agregado. El motor §2 lo pide explicitamente ("el Clcr
   /// pasa a ser un dato del paciente con fecha de medicion") y no esta en el
   /// modelo de datos. Una creatinina de hace ocho meses no es el mismo dato.
-  clcrMedidoAt    DateTime?
+  clcrMedidoAt   DateTime?
 
   // --- hepatico ------------------------------------------------------------
   // Mismo patron dual que renal: los 5 valores para calcular, o la clase directa.
   // ABIERTO (modelo §7.1): si la fuente real no usa Child-Pugh, estos 5 campos
   // cambian. El resto del schema no.
-  bilirrubinaMgDl Decimal?        @db.Decimal(5, 2)
-  albuminaGDl     Decimal?        @db.Decimal(4, 2)
-  inr             Decimal?        @db.Decimal(4, 2)
-  ascitis         Ascitis?
-  encefalopatia   Encefalopatia?
-  childPughClase  ChildPughClase?
-  childPughOrigen OrigenCalculo?
+  bilirrubinaMgDl   Decimal?        @db.Decimal(5, 2)
+  albuminaGDl       Decimal?        @db.Decimal(4, 2)
+  inr               Decimal?        @db.Decimal(4, 2)
+  ascitis           Ascitis?
+  encefalopatia     Encefalopatia?
+  childPughClase    ChildPughClase?
+  childPughOrigen   OrigenCalculo?
   childPughMedidoAt DateTime?
 
   // --- embarazo y lactancia -------------------------------------------------
@@ -790,6 +812,7 @@ model Paciente {
   alergias                Alergia[]
   interaccionesDetectadas InteraccionDetectada[]
   alternativasAceptadas   AlternativaAceptada[]
+  eventos                 EventoPaciente[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -825,8 +848,8 @@ model Prescripcion {
   paciente          Paciente           @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
   productoComercial ProductoComercial? @relation(fields: [productoComercialId], references: [id], onDelete: Restrict)
 
-  interaccionesComoA InteraccionDetectada[] @relation("InteraccionPrescripcionA")
-  interaccionesComoB InteraccionDetectada[] @relation("InteraccionPrescripcionB")
+  interaccionesComoA    InteraccionDetectada[] @relation("InteraccionPrescripcionA")
+  interaccionesComoB    InteraccionDetectada[] @relation("InteraccionPrescripcionB")
   alternativasAceptadas AlternativaAceptada[]
 
   createdAt DateTime @default(now())
@@ -905,8 +928,8 @@ model InteraccionDetectada {
   medicoId   String
   pacienteId String
 
-  prescripcionAId   String
-  prescripcionBId   String
+  prescripcionAId    String
+  prescripcionBId    String
   principioActivoAId String
   principioActivoBId String
 
@@ -916,10 +939,10 @@ model InteraccionDetectada {
   vista     Boolean              @default(false)
   vistaAt   DateTime?
 
-  medico          Medico          @relation(fields: [medicoId], references: [id], onDelete: Cascade)
-  paciente        Paciente        @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
-  prescripcionA   Prescripcion    @relation("InteraccionPrescripcionA", fields: [prescripcionAId], references: [id], onDelete: Cascade)
-  prescripcionB   Prescripcion    @relation("InteraccionPrescripcionB", fields: [prescripcionBId], references: [id], onDelete: Cascade)
+  medico           Medico          @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  paciente         Paciente        @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  prescripcionA    Prescripcion    @relation("InteraccionPrescripcionA", fields: [prescripcionAId], references: [id], onDelete: Cascade)
+  prescripcionB    Prescripcion    @relation("InteraccionPrescripcionB", fields: [prescripcionBId], references: [id], onDelete: Cascade)
   principioActivoA PrincipioActivo @relation("InteraccionPaA", fields: [principioActivoAId], references: [id], onDelete: Cascade)
   principioActivoB PrincipioActivo @relation("InteraccionPaB", fields: [principioActivoBId], references: [id], onDelete: Cascade)
 
@@ -937,6 +960,42 @@ model InteraccionDetectada {
 /// reemplazo a que y la version del disclaimer que acepto" — y el sistema
 /// visual §5 la muestra en la UI como el distintivo "✓ Documentada".
 /// Es una decision clinica documentada, no un evento de log.
+/// El rastro de todo lo que se hizo con un paciente.
+///
+/// Es de SOLO AGREGAR: nunca se edita ni se borra una fila. Un historial que se
+/// puede reescribir no sirve para lo unico que tiene que servir, que es poder
+/// mirar para atras y saber que paso.
+///
+/// El texto va REDACTADO acá, no armado al leer. Un evento es una afirmacion
+/// sobre el pasado y el pasado no cambia: si mañana se borra la prescripcion o
+/// el producto del catalogo cambia de nombre, la linea del historial tiene que
+/// seguir diciendo lo mismo. Guardar ids y resolverlos al leer daria filas en
+/// blanco justo en los casos que mas importan.
+model EventoPaciente {
+  id         String @id @default(uuid())
+  medicoId   String
+  pacienteId String
+
+  tipo TipoEventoPaciente
+
+  /// La linea principal, ya escrita: "Enalapril agregado".
+  titulo  String
+  /// La de abajo. Null cuando el titulo se basta solo.
+  detalle String?
+  /// Antes/despues para lo que cambia de valor, como
+  /// `[{ campo: "Creatinina", antes: "1.1 mg/dL", despues: "1.8 mg/dL" }]`.
+  /// Va en JSON y no en columnas porque cada tipo cambia cosas distintas.
+  cambios Json?
+
+  createdAt DateTime @default(now())
+
+  medico   Medico   @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  paciente Paciente @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+
+  @@index([medicoId, pacienteId, createdAt])
+  @@map("evento_paciente")
+}
+
 model AlternativaAceptada {
   id         String @id @default(uuid())
   medicoId   String
