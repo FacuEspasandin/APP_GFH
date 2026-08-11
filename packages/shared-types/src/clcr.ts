@@ -1,11 +1,16 @@
+import type { Sexo } from './sexo';
+
 /**
  * Función renal — Cockcroft-Gault. Motor §4.1-4.2.
  *
  * Dominio puro: sin Prisma, sin I/O, sin fechas implícitas. `hoy` se pasa como
  * argumento porque una edad que cambia sola vuelve los tests irreproducibles.
+ *
+ * Vive en el paquete compartido y no en el backend porque la app lo necesita
+ * para mostrar el Clcr mientras el médico escribe peso y creatinina. Dos copias
+ * de esta fórmula serían dos números distintos para el mismo paciente el día
+ * que una se toque y la otra no.
  */
-
-export type Sexo = 'M' | 'F' | 'OTRO';
 
 export interface EntradaCockcroftGault {
   edadAnios: number;

@@ -5,6 +5,8 @@
  * API; al médico nunca se le muestra `1948-04-12`.
  */
 
+import { edadEnAnios } from '@gfh/shared-types';
+
 export const LARGO_FECHA = 10; // dd/mm/aaaa
 const EDAD_MAXIMA = 120;
 
@@ -139,4 +141,18 @@ export function aISO(fecha: Date): string {
 /** Índice del día de la semana con el lunes en 0. */
 export function diaSemanaLunes(fecha: Date): number {
   return (fecha.getUTCDay() + 6) % 7;
+}
+
+/**
+ * La edad que corresponde a un texto de fecha, o `null` si todavía no es una
+ * fecha válida.
+ *
+ * Se apoya en `edadEnAnios` del paquete compartido —la misma cuenta que hace el
+ * backend— en vez de restar años a mano: "cumple mañana" no se puede redondear
+ * para arriba, porque esa edad entra en Cockcroft-Gault.
+ */
+export function edadDeFecha(texto: string, hoy = new Date()): number | null {
+  const v = validarFecha(texto, hoy);
+  if (!v.valida || !v.fecha) return null;
+  return edadEnAnios(v.fecha, hoy);
 }

@@ -39,7 +39,7 @@ import {
   CODIGO_LACTANCIA,
   UMBRAL_ADULTO_MAYOR_DEFAULT,
 } from '../../dominio/clinico/condiciones';
-import { edadEnAnios } from '../../dominio/clinico/clcr';
+import { edadEnAnios } from '@gfh/shared-types';
 import type { Curacion } from '../../dominio/clinico/interacciones';
 import type { AlergiaPaciente, GrupoAlergenico } from '../../dominio/clinico/alergias';
 

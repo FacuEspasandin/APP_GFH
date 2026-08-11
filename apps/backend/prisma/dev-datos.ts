@@ -146,7 +146,7 @@ async function main() {
   });
 
   // Clcr calculado con la fórmula del motor, guardado con su origen.
-  const { calcularClcr, edadEnAnios } = await import('../src/dominio/clinico/clcr');
+  const { calcularClcr, edadEnAnios } = await import('@gfh/shared-types');
   const clcr = calcularClcr({
     edadAnios: edadEnAnios(paciente.fechaNacimiento, new Date()),
     pesoKg: 58,

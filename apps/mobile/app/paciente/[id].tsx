@@ -13,7 +13,7 @@ import { FilaAnimada } from '@/ui/animacion';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { BadgeConteo, Espina } from '@/ui/severidad';
-import { COLOR_SEVERIDAD, type RangoGravedad } from '@gfh/shared-types';
+import { COLOR_SEVERIDAD, nombreSexo, type RangoGravedad, type Sexo } from '@gfh/shared-types';
 import { useColores } from '@/ui/tema';
 
 const NOMBRE_CATEGORIA: Record<CategoriaHallazgo, string> = {
@@ -95,7 +95,10 @@ export default function CockpitPaciente() {
             <AnilloClcr clcrMlMin={p.clcrMlMin} gradoKdigo={p.gradoKdigo} />
             <View className="ml-4 flex-1 gap-y-3">
               <Dato etiqueta="Edad" valor={`${p.edadAnios} años`} />
-              <Dato etiqueta="Sexo" valor={p.sexo === 'F' ? 'Femenino' : 'Masculino'} />
+              {/* `nombreSexo` y no un ternario: el anterior mostraba
+                  "Masculino" también para OTRO, que es un tercer valor real de
+                  la base y usa otro factor en Cockcroft-Gault. */}
+              <Dato etiqueta="Sexo" valor={nombreSexo(p.sexo as Sexo)} />
               <Dato etiqueta="Origen del Clcr" valor={etiquetaOrigen(p.clcrOrigen)} />
             </View>
           </View>

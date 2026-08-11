@@ -16,7 +16,7 @@ import {
   hayAlertasSinAfinarPorSemana,
   CODIGO_EMBARAZO,
 } from './condiciones';
-import { calcularClcr, edadEnAnios } from './clcr';
+import { calcularClcr, edadEnAnios } from '@gfh/shared-types';
 import {
   unificarHallazgos,
   type AjusteParaHallazgo,

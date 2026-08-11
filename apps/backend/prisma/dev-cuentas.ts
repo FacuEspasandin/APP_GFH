@@ -27,7 +27,7 @@ const GRATIS = { email: 'gratis@gfh.app', usuario: 'gratis', password: 'GratisGF
 
 async function main() {
   const { HashService } = await import('../src/aplicacion/auth/hash.service');
-  const { calcularClcr, edadEnAnios } = await import('../src/dominio/clinico/clcr');
+  const { calcularClcr, edadEnAnios } = await import('@gfh/shared-types');
 
   // ---- 1. la cuenta paga -----------------------------------------------
   const dePago = await prisma.medico.findUnique({ where: { nombreUsuario: PAGA.usuario } });

@@ -10,7 +10,7 @@ import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/cat
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import { RepositorioCockpitPrisma } from '../../infraestructura/repositorios/repositorio-cockpit-prisma';
 import { condicionesEfectivas } from '../../dominio/clinico/condiciones';
-import { edadEnAnios } from '../../dominio/clinico/clcr';
+import { edadEnAnios } from '@gfh/shared-types';
 
 /**
  * Alternativas terapéuticas anotadas contra ESTE paciente (motor §8).

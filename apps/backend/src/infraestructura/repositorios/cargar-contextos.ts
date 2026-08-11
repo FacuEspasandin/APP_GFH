@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 
-import { edadEnAnios } from '../../dominio/clinico/clcr';
+import { edadEnAnios } from '@gfh/shared-types';
 import {
   CODIGO_ADULTO_MAYOR,
   CODIGO_EMBARAZO,

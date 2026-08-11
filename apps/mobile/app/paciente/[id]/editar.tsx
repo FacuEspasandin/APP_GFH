@@ -8,6 +8,7 @@ import type { Inicio } from '@/api/tipos';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { aTexto, validarFecha } from '@/ui/fecha';
 import { AvisoNeutro, Boton, CampoTexto, Cargando, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { OPCIONES_SEXO, type Sexo } from '@gfh/shared-types';
 
 interface Paciente {
   id: string;
@@ -34,7 +35,7 @@ export default function EditarPaciente() {
   const { data: inicio } = useQuery({ queryKey: ['inicio'], queryFn: () => api.get<Inicio>('/inicio') });
 
   const [c, setC] = useState({ nombre: '', apellido: '', documento: '', alturaCm: '', fechaNacimiento: '' });
-  const [sexo, setSexo] = useState<'M' | 'F' | 'OTRO'>('F');
+  const [sexo, setSexo] = useState<Sexo>('F');
   const [grupoId, setGrupoId] = useState<string | null>(null);
   const [cargado, setCargado] = useState(false);
 
@@ -105,8 +106,13 @@ export default function EditarPaciente() {
 
       <Eyebrow>Sexo</Eyebrow>
       <View className="mb-4 flex-row gap-2">
-        {(['F', 'M', 'OTRO'] as const).map((s) => (
-          <Chip key={s} texto={s} activo={sexo === s} onPress={() => setSexo(s)} />
+        {OPCIONES_SEXO.map((o) => (
+          <Chip
+            key={o.valor}
+            texto={o.sigla}
+            activo={sexo === o.valor}
+            onPress={() => setSexo(o.valor)}
+          />
         ))}
       </View>
 

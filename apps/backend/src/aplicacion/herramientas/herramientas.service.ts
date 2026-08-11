@@ -4,7 +4,7 @@ import { gradoKdigo, parClave, RANGO_POR_TIPO_AJUSTE } from '@gfh/shared-types';
 
 import { elegirRango } from '../../dominio/clinico/ajuste-renal';
 import { evaluarAlergias, type GrupoAlergenico } from '../../dominio/clinico/alergias';
-import { calcularClcr, DatoClinicoInvalido } from '../../dominio/clinico/clcr';
+import { calcularClcr, DatoClinicoInvalido } from '@gfh/shared-types';
 import { aplicaEnSemana } from '../../dominio/clinico/condiciones';
 import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';

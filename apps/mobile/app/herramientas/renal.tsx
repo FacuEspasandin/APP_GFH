@@ -5,7 +5,7 @@ import { Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
 import { AvisoNeutro, Boton, CampoTexto, Card, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
-import { claveColorPorClcr, COLOR_SEVERIDAD, colorEspina } from '@gfh/shared-types';
+import { claveColorPorClcr, COLOR_SEVERIDAD, colorEspina, OPCIONES_SEXO, type Sexo } from '@gfh/shared-types';
 
 interface Resultado {
   clcrMlMin: number;
@@ -30,7 +30,7 @@ export default function HerramientaRenal() {
   const [modo, setModo] = useState<'directo' | 'calcular'>('directo');
   const [clcr, setClcr] = useState('');
   const [d, setD] = useState({ edadAnios: '', pesoKg: '', creatininaMgDl: '' });
-  const [sexo, setSexo] = useState<'M' | 'F' | 'OTRO'>('F');
+  const [sexo, setSexo] = useState<Sexo>('F');
 
   const num = (v: string) => (v.trim() === '' ? undefined : Number(v.replace(',', '.')));
 
@@ -93,8 +93,13 @@ export default function HerramientaRenal() {
           />
           <Eyebrow>Sexo</Eyebrow>
           <View className="mb-4 flex-row gap-2">
-            {(['F', 'M', 'OTRO'] as const).map((s) => (
-              <Chip key={s} texto={s} activo={sexo === s} onPress={() => setSexo(s)} />
+            {OPCIONES_SEXO.map((o) => (
+              <Chip
+                key={o.valor}
+                texto={o.sigla}
+                activo={sexo === o.valor}
+                onPress={() => setSexo(o.valor)}
+              />
             ))}
           </View>
         </>

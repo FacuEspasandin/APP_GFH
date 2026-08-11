@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 
-import { edadEnAnios } from '../../dominio/clinico/clcr';
+import { edadEnAnios } from '@gfh/shared-types';
 import { evaluarCockpit } from '../../dominio/clinico/evaluar-cockpit';
 import type { CatalogoInteracciones } from '../../dominio/clinico/interacciones';
 import { cargarContextosDeMedico } from '../../infraestructura/repositorios/cargar-contextos';

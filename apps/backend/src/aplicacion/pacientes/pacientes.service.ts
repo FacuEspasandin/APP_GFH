@@ -1,7 +1,7 @@
 import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { normalizar } from '@gfh/shared-types';
 
-import { calcularClcr, edadEnAnios } from '../../dominio/clinico/clcr';
+import { calcularClcr, edadEnAnios } from '@gfh/shared-types';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import type { ActualizarPacienteDto, CrearPacienteDto } from '../../presentacion/dto/paciente.dto';
 import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';

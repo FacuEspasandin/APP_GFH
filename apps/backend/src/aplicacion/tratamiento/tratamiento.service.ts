@@ -9,7 +9,7 @@ import type {
   CrearPrescripcionDto,
   DatosRenalesDto,
 } from '../../presentacion/dto/tratamiento.dto';
-import { calcularClcr, edadEnAnios } from '../../dominio/clinico/clcr';
+import { calcularClcr, edadEnAnios } from '@gfh/shared-types';
 
 /**
  * Escrituras sobre el tratamiento de un paciente.

@@ -1,18 +1,30 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
 import type { Inicio } from '@/api/tipos';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { Skeleton } from '@/ui/estados-sistema';
-import { validarFecha } from '@/ui/fecha';
-import { AvisoNeutro, Boton, CampoTexto, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { edadDeFecha, validarFecha } from '@/ui/fecha';
+import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
+import { ResultadoClcr } from '@/ui/resultado-clcr';
 import { useColores } from '@/ui/tema';
+import { OPCIONES_SEXO, type Sexo } from '@gfh/shared-types';
 
-/** Crear paciente (2.5). El Clcr se calcula solo si hay peso y creatinina. */
+/**
+ * Crear paciente (2.5).
+ *
+ * Tres bloques y no una lista de doce campos: quién es, cómo está su función
+ * renal, y dónde va. Cada uno declara si es obligatorio, así no hay que
+ * descubrirlo tocando el botón.
+ *
+ * El Clcr aparece mientras se escribe. Esos tres números existen para
+ * calcularlo, y antes el resultado sólo se veía después de crear al paciente.
+ */
 export default function CrearPaciente() {
   const col = useColores();
 
@@ -48,7 +60,7 @@ export default function CrearPaciente() {
     pesoKg: '',
     creatininaMgDl: '',
   });
-  const [sexo, setSexo] = useState<'M' | 'F' | 'OTRO'>('F');
+  const [sexo, setSexo] = useState<Sexo>('F');
   const [grupoId, setGrupoId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
@@ -94,6 +106,9 @@ export default function CrearPaciente() {
   };
 
   const grupos = inicio?.grupos ?? [];
+  const edad = edadDeFecha(c.fechaNacimiento);
+  const listo =
+    Boolean(c.nombre.trim()) && Boolean(c.apellido.trim()) && validarFecha(c.fechaNacimiento).valida;
 
   // Mientras no se sabe, no se muestra el formulario: aparecer y desaparecer es
   // peor que tardar un segundo. Si la consulta del plan falla se deja pasar —
@@ -108,71 +123,141 @@ export default function CrearPaciente() {
   }
 
   return (
-    <Pantalla>
-      <CampoTexto etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
-      <CampoTexto etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
-      <CampoTexto etiqueta="Documento (opcional)" value={c.documento} onChangeText={campo('documento')} />
-      <CampoFecha
-        etiqueta="Fecha de nacimiento"
-        valor={c.fechaNacimiento}
-        onChange={campo('fechaNacimiento')}
-      />
+    <KeyboardAvoidingView
+      className="flex-1 bg-paper"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        contentContainerClassName="px-4 pb-4 pt-3"
+        keyboardShouldPersistTaps="handled"
+      >
+        <BloqueFormulario titulo="Datos del paciente" exigencia="Obligatorio">
+          {/* Nombre y apellido comparten fila: son cortos y se completan
+              juntos. Apilados gastaban el doble de alto para nada. */}
+          <View className="flex-row gap-3">
+            <View className="flex-1">
+              <CampoTexto etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
+            </View>
+            <View className="flex-1">
+              <CampoTexto etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
+            </View>
+          </View>
 
-      <Eyebrow>Sexo</Eyebrow>
-      <View className="mb-4 flex-row gap-2">
-        {(['F', 'M', 'OTRO'] as const).map((s) => (
-          <Chip key={s} texto={s} activo={sexo === s} onPress={() => setSexo(s)} />
-        ))}
-      </View>
-      {sexo === 'OTRO' ? (
-        <AvisoNeutro>
-          Cockcroft-Gault contempla dos categorías: «otro» usa el mismo factor que masculino.
-        </AvisoNeutro>
-      ) : null}
+          {/* La edad no se repite en la etiqueta: `CampoFecha` ya la muestra
+              debajo del campo apenas la fecha es válida. */}
+          <CampoFecha
+            etiqueta="Fecha de nacimiento"
+            valor={c.fechaNacimiento}
+            onChange={campo('fechaNacimiento')}
+          />
 
-      <Eyebrow>Datos para la función renal</Eyebrow>
-      <CampoTexto etiqueta="Altura (cm)" value={c.alturaCm} onChangeText={campo('alturaCm')} keyboardType="numeric" />
-      <CampoTexto etiqueta="Peso (kg)" value={c.pesoKg} onChangeText={campo('pesoKg')} keyboardType="numeric" />
-      <CampoTexto
-        etiqueta="Creatinina (mg/dL)"
-        value={c.creatininaMgDl}
-        onChangeText={campo('creatininaMgDl')}
-        keyboardType="numeric"
-      />
-      <AvisoNeutro>
-        Con peso y creatinina se calcula el Clcr. Sin eso, el ajuste renal queda en neutro.
-      </AvisoNeutro>
-
-      {grupos.length > 0 ? (
-        <>
-          <View className="mt-3" />
-          <Eyebrow>Grupo (opcional)</Eyebrow>
-          <View className="mb-4 flex-row flex-wrap gap-2">
-            <Chip texto="Sin grupo" activo={grupoId === null} onPress={() => setGrupoId(null)} />
-            {grupos.map((g) => (
-              <Chip key={g.id} texto={g.nombre} activo={grupoId === g.id} onPress={() => setGrupoId(g.id)} />
+          <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+            Sexo
+          </Text>
+          <View className="mb-4 flex-row gap-2">
+            {/* Las siglas salen de `OPCIONES_SEXO`, no se escriben acá: en
+                pantalla M es mujer y en la base es masculino, y ese cruce se
+                resuelve en un solo lugar del sistema. */}
+            {OPCIONES_SEXO.map((o) => (
+              <Chip
+                key={o.valor}
+                texto={o.sigla}
+                activo={sexo === o.valor}
+                onPress={() => setSexo(o.valor)}
+              />
             ))}
           </View>
-        </>
-      ) : (
-        <Text className="font-sans mb-4 px-1 text-meta text-ink-suave">
-          Todavía no tenés grupos. El paciente va a quedar en «sin grupo».
-        </Text>
-      )}
+          {sexo === 'OTRO' ? (
+            <Text className="font-sans mb-3 px-1 text-eyebrow leading-4 text-ink-suave">
+              Cockcroft-Gault contempla dos categorías: «otro» usa el mismo factor que hombre.
+            </Text>
+          ) : null}
 
-      {error ? (
-        <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>
-          {error}
-        </Text>
-      ) : null}
+          <CampoTexto
+            etiqueta="Documento (opcional)"
+            value={c.documento}
+            onChangeText={campo('documento')}
+          />
+        </BloqueFormulario>
 
-      <Boton
-        onPress={crear}
-        cargando={enviando}
-        deshabilitado={!c.nombre.trim() || !c.apellido.trim() || !validarFecha(c.fechaNacimiento).valida}
-      >
-        Crear paciente
-      </Boton>
-    </Pantalla>
+        <BloqueFormulario titulo="Función renal" exigencia="Recomendado">
+          {/* Los tres en una fila: son números cortos y se leen como un
+              conjunto, que es como se usan — los tres alimentan una fórmula. */}
+          <View className="flex-row gap-2">
+            <View className="flex-1">
+              <CampoTexto
+                etiqueta="Altura"
+                value={c.alturaCm}
+                onChangeText={campo('alturaCm')}
+                keyboardType="numeric"
+                placeholder="cm"
+              />
+            </View>
+            <View className="flex-1">
+              <CampoTexto
+                etiqueta="Peso"
+                value={c.pesoKg}
+                onChangeText={campo('pesoKg')}
+                keyboardType="numeric"
+                placeholder="kg"
+              />
+            </View>
+            <View className="flex-1">
+              <CampoTexto
+                etiqueta="Creatinina"
+                value={c.creatininaMgDl}
+                onChangeText={campo('creatininaMgDl')}
+                keyboardType="numeric"
+                placeholder="mg/dL"
+              />
+            </View>
+          </View>
+
+          <ResultadoClcr
+            edadAnios={edad}
+            pesoKg={numero(c.pesoKg) ?? null}
+            creatininaMgDl={numero(c.creatininaMgDl) ?? null}
+            sexo={sexo}
+          />
+        </BloqueFormulario>
+
+        <BloqueFormulario titulo="Grupo" exigencia="Opcional">
+          {grupos.length > 0 ? (
+            <View className="flex-row flex-wrap gap-2">
+              <Chip texto="Sin grupo" activo={grupoId === null} onPress={() => setGrupoId(null)} />
+              {grupos
+                .filter((g) => g.id !== null)
+                .map((g) => (
+                  <Chip
+                    key={g.id}
+                    texto={g.nombre}
+                    activo={grupoId === g.id}
+                    onPress={() => setGrupoId(g.id)}
+                  />
+                ))}
+            </View>
+          ) : (
+            <Text className="font-sans text-meta text-ink-suave">
+              Todavía no tenés grupos. El paciente va a quedar en «sin grupo».
+            </Text>
+          )}
+        </BloqueFormulario>
+
+        {error ? (
+          <Text className="font-sans mb-1 px-1 text-meta" style={{ color: col.peligro }}>
+            {error}
+          </Text>
+        ) : null}
+      </ScrollView>
+
+      {/* El botón no viaja con el scroll. Con tres bloques abiertos quedaba
+          debajo del pliegue y había que volver al final para crear a alguien
+          cuyos datos ya estaban completos arriba. */}
+      <View className="border-t border-line bg-surface px-4 py-3">
+        <Boton onPress={crear} cargando={enviando} deshabilitado={!listo}>
+          Crear paciente
+        </Boton>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
