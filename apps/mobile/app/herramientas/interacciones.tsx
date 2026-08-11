@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
+import { paresDe, textoParesLimpios, titularInteracciones } from '@/dominio/interacciones';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
 import {
@@ -41,9 +42,7 @@ export default function HerramientaInteracciones() {
     onSuccess: () => setEditando(false),
   });
 
-  // n·(n−1)/2: se cruzan todos contra todos, así que el botón puede decir
-  // cuántos pares va a mirar antes de mirarlos.
-  const pares = (seleccion.length * (seleccion.length - 1)) / 2;
+  const pares = paresDe(seleccion.length);
 
   if (editando || !calcular.data) {
     return (
@@ -122,7 +121,7 @@ function ResultadoInteracciones({
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
         <Veredicto
           rango={peor}
-          titulo={titularInteracciones(peor, grupos)}
+          titulo={titularInteracciones(datos.pares)}
           detalle={
             datos.conInteraccion === 0
               ? `Ninguno de los ${datos.totalPares} pares tiene interacción conocida en el catálogo.`
@@ -168,28 +167,3 @@ function ResultadoInteracciones({
   );
 }
 
-/**
- * El titular: la peor gravedad y cuántas hay de ésa.
- *
- * Los adjetivos van aparte de `RANGO_ETIQUETA` porque ahí son masculinos
- * —"Contraindicado", pensado para un hallazgo— y acá concuerdan con
- * "interacción". Traducirlos a mano es preferible a que diga "1 interacción
- * contraindicado".
- */
-const ADJETIVO: Record<RangoGravedad, [string, string]> = {
-  0: ['contraindicada', 'contraindicadas'],
-  1: ['grave', 'graves'],
-  2: ['de atención', 'de atención'],
-  3: ['informativa', 'informativas'],
-};
-
-function titularInteracciones(
-  peor: RangoGravedad | null,
-  grupos: Array<{ rango: RangoGravedad; filas: unknown[] }>,
-): string {
-  if (peor === null) return 'Sin interacciones conocidas';
-
-  const n = grupos.find((g) => g.rango === peor)?.filas.length ?? 0;
-  const [singular, plural] = ADJETIVO[peor];
-  return n === 1 ? `1 interacción ${singular}` : `${n} interacciones ${plural}`;
-}

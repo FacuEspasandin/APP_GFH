@@ -4,10 +4,16 @@ import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
 import type { Cockpit } from '@/api/tipos';
+import {
+  colorPorSeveridadAlergia,
+  consecuenciaAlergia,
+  crucesPorCondicion,
+  textoCruces,
+} from '@/dominio/condiciones-alergias';
 import { Boton, Cargando, Estado, Eyebrow } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
-import { COLOR_SEVERIDAD, partesClaveAlerta } from '@gfh/shared-types';
+import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
 interface Datos {
   condiciones: Array<{ id: string; codigo: string; nombre: string; observaciones: string | null }>;
@@ -41,7 +47,7 @@ export default function CondicionesYAlergias() {
     enabled: Boolean(pacienteId),
   });
 
-  const cruces = contarCrucesPorCondicion(cockpit);
+  const cruces = crucesPorCondicion(cockpit?.hallazgos ?? []);
   // Con el cockpit cargado, "no está en el mapa" significa cero cruces — que es
   // un dato, no un dato faltante.
   const crucesListos = cockpit !== undefined;
@@ -114,8 +120,8 @@ export default function CondicionesYAlergias() {
                 key={a.id}
                 nombre={a.nombre}
                 meta={a.grupo}
-                color={colorAlergia(a.severidad)}
-                consecuencia={consecuencia(a)}
+                color={colorPorSeveridadAlergia(a.severidad)}
+                consecuencia={consecuenciaAlergia(a)}
                 onQuitar={() =>
                   confirmar('Quitar alergia', `${a.nombre} deja de evaluarse.`, () =>
                     quitarAlergia.mutate(a.id),
@@ -221,66 +227,3 @@ function Fila({
   );
 }
 
-/**
- * Qué pasa al recetar algo relacionado, en vez de la severidad cruda.
- *
- * Antes decía "grave" o "moderada" en minúscula. Lo que el médico necesita no
- * es la etiqueta de la alergia sino su consecuencia — y es exactamente lo que
- * dice la regla 4: sólo la exacta y grave bloquea.
- */
-function consecuencia(a: Datos['alergias'][number]) {
-  if (!a.cruza) {
-    return { texto: 'No cruza con fármacos', fondo: '#EFF2EF', tinta: '#5C6B64' };
-  }
-  if (a.tipo === 'EXACTA' && a.severidad === 'GRAVE') {
-    return { texto: 'Impide prescribir', fondo: '#FEE2E2', tinta: '#991B1B' };
-  }
-  return { texto: 'Pide confirmación', fondo: '#FEF3C7', tinta: '#92400E' };
-}
-
-function colorAlergia(severidad: Datos['alergias'][number]['severidad']): string {
-  if (severidad === 'GRAVE') return COLOR_SEVERIDAD.grave;
-  if (severidad === 'MODERADA') return COLOR_SEVERIDAD.media;
-  return COLOR_SEVERIDAD.neutro;
-}
-
-/**
- * Cuántos fármacos del tratamiento toca cada condición.
- *
- * Sale de los hallazgos que el cockpit ya calculó: la clave de una alerta
- * incluye el id de la condición y el de la prescripción, así que agrupar
- * alcanza. Se cuentan prescripciones distintas y no hallazgos — una condición
- * con dos alertas sobre el mismo fármaco toca un fármaco.
- */
-function contarCrucesPorCondicion(cockpit?: Cockpit): Record<string, number> {
-  if (!cockpit) return {};
-
-  const porCondicion = new Map<string, Set<string>>();
-
-  for (const h of cockpit.hallazgos) {
-    if (h.categoria !== 'CONDICION') continue;
-    const partes = partesClaveAlerta(h.clave);
-    if (!partes || partes.origen !== 'CONDICION') continue;
-
-    const set = porCondicion.get(partes.condicionId) ?? new Set<string>();
-    set.add(partes.prescripcionId);
-    porCondicion.set(partes.condicionId, set);
-  }
-
-  return Object.fromEntries([...porCondicion].map(([id, set]) => [id, set.size]));
-}
-
-/**
- * Sin línea mientras el cockpit no llegó: un "cruza con 0" durante la carga
- * sería falso. Una vez cargado, cero cruces se dice — una condición que no toca
- * nada del tratamiento actual es información útil, no ausencia de información.
- */
-function textoCruces(n: number | undefined, cargado: boolean): string | null {
-  if (!cargado) return null;
-
-  const cuantos = n ?? 0;
-  if (cuantos === 0) return 'No cruza con el tratamiento actual';
-  return cuantos === 1
-    ? 'Cruza con 1 fármaco del tratamiento'
-    : `Cruza con ${cuantos} fármacos del tratamiento`;
-}

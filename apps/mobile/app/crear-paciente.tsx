@@ -5,6 +5,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-na
 
 import { api, ErrorApi } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
+import { decidirEntrada } from '@/dominio/plan-gratis';
 import type { Inicio } from '@/api/tipos';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { CampoFecha } from '@/ui/campo-fecha';
@@ -43,7 +44,8 @@ export default function CrearPaciente() {
    * acordarse.
    */
   const { data: plan, isError: planFallo } = usePlan();
-  const bloqueado = plan !== undefined && !plan.puedeCrearPaciente;
+  const entrada = decidirEntrada(plan, planFallo);
+  const bloqueado = entrada === 'paywall';
 
   useEffect(() => {
     // `replace` y no `push`: el formulario no tiene que quedar debajo del
@@ -114,7 +116,7 @@ export default function CrearPaciente() {
   // peor que tardar un segundo. Si la consulta del plan falla se deja pasar —
   // el límite lo aplica igual el backend, y trabar por un dato de facturación
   // que no llegó sería inventar un muro que quizá no existe.
-  if (bloqueado || (plan === undefined && !planFallo)) {
+  if (entrada !== 'formulario') {
     return (
       <Pantalla>
         <Skeleton filas={4} />

@@ -5,6 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
+import { detalleDeAcceso, rutaNuevoPaciente } from '@/dominio/plan-gratis';
 import type { FilaPaciente, Inicio as DatosInicio } from '@/api/tipos';
 import { FilaAnimada } from '@/ui/animacion';
 import { useValorDemorado } from '@/ui/demora';
@@ -48,8 +49,7 @@ export default function Pacientes() {
   // formulario también se protege solo, pero mandar ahí para que rebote deja
   // ver medio segundo una pantalla que nunca se iba a poder usar.
   const { data: plan } = usePlan();
-  const sinCupo = plan !== undefined && !plan.puedeCrearPaciente;
-  const rutaNuevoPaciente = sinCupo ? '/paywall' : '/crear-paciente';
+  const rutaNueva = rutaNuevoPaciente(plan);
 
   const pacientes = data?.pacientes ?? [];
   const conHallazgos = pacientes.filter((p) => p.peorRango !== null);
@@ -102,7 +102,7 @@ export default function Pacientes() {
               titulo="Todavía no cargaste pacientes"
               detalle="Creá uno para ver interacciones, ajuste renal y alertas."
               accion="Crear paciente"
-              onAccion={() => router.push(rutaNuevoPaciente as never)}
+              onAccion={() => router.push(rutaNueva as never)}
             />
           ) : null}
 
@@ -134,11 +134,11 @@ export default function Pacientes() {
         {[
           {
             titulo: 'Crear paciente',
-            ruta: rutaNuevoPaciente,
+            ruta: rutaNueva,
             icono: 'pacientes' as const,
             // Se dice antes de tocar, no después: el médico elige si quiere
             // entrar al paywall en vez de que se le aparezca encima.
-            detalle: sinCupo ? 'Incluido en la suscripción' : undefined,
+            detalle: detalleDeAcceso(plan),
           },
           { titulo: 'Crear grupo', ruta: '/crear-grupo', icono: 'grupos' as const },
         ].map((o) => (

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
+import { cambiaDeLetra, inicialDe, textoConteo, TOPE_BUSQUEDA } from '@/dominio/catalogo';
 import { useValorDemorado } from '@/ui/demora';
 import { ErrorGenerico, SinConexion, Skeleton } from '@/ui/estados-sistema';
 import { Boton, CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
@@ -25,9 +26,6 @@ interface ProductoResumen {
 }
 
 const POR_PAGINA = 40;
-
-/** Lo que corta el backend al buscar (`CatalogoService.buscarProductos`). */
-const TOPE_BUSQUEDA = 30;
 
 /**
  * Buscador a nivel de PRODUCTO COMERCIAL (regla no negociable 10).
@@ -97,20 +95,6 @@ export default function Buscador() {
   // durante esos 250 ms se lee "Sin resultados" para algo que ni se preguntó.
   const esperandoDemora = consulta.trim().length >= 2 && consultaBuscada !== consulta.trim();
 
-  /**
-   * El tamaño de lo que se está mirando.
-   *
-   * Buscando dice cuántos coincidieron; el backend corta en 30, y cuando el
-   * corte se alcanza hay que decirlo — "30 resultados" a secas haría creer que
-   * no hay más y que la búsqueda no vale la pena afinarla.
-   */
-  function conteoTexto(): string {
-    if (buscando) {
-      if (lista.length === 0) return '';
-      return lista.length >= TOPE_BUSQUEDA ? `primeros ${TOPE_BUSQUEDA}` : `${lista.length}`;
-    }
-    return conteo.data ? `${conteo.data.productos} productos` : '';
-  }
 
   return (
     <Pantalla scroll={false}>
@@ -131,7 +115,7 @@ export default function Buscador() {
 
       <View className="mb-1 flex-row items-center">
         <Eyebrow>{buscando ? 'Resultados' : 'Catálogo'}</Eyebrow>
-        <Text className="font-mono mb-1.5 ml-2 text-eyebrow text-tenue">{conteoTexto()}</Text>
+        <Text className="font-mono mb-1.5 ml-2 text-eyebrow text-tenue">{textoConteo(buscando, lista.length, conteo.data?.productos)}</Text>
         {busqueda.isFetching || esperandoDemora ? (
           <ActivityIndicator size="small" color={col.tenue} className="mb-1.5 ml-2" />
         ) : null}
@@ -197,9 +181,9 @@ export default function Buscador() {
               {/* La letra sólo al recorrer el catálogo completo: en una lista
                   de resultados no hay nada que indexar, y sobre 638 productos
                   alfabéticos saber en qué letra vas es lo único que orienta. */}
-              {!buscando && inicial(p) !== inicial(lista[index - 1]) ? (
+              {!buscando && cambiaDeLetra(p.nombreComercial, lista[index - 1]?.nombreComercial) ? (
                 <Text className="font-mono px-1 pb-1 pt-3 text-eyebrow tracking-wider text-tenue">
-                  {inicial(p)}
+                  {inicialDe(p.nombreComercial)}
                 </Text>
               ) : null}
               <FilaProducto producto={p} onPress={() => router.push(`/farmaco/${p.id}`)} />
@@ -209,12 +193,6 @@ export default function Buscador() {
       )}
     </Pantalla>
   );
-}
-
-/** La letra por la que ordena el backend. `undefined` para el ítem anterior
- *  del primero, que por eso siempre imprime su letra. */
-function inicial(p?: ProductoResumen): string {
-  return p ? p.nombreComercial.charAt(0).toUpperCase() : '';
 }
 
 /**

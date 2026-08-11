@@ -5,6 +5,11 @@ import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-na
 
 import { api } from '@/api/cliente';
 import type { Cockpit } from '@/api/tipos';
+import {
+  calcularSiSePuede,
+  leyendaDelCambio,
+  procedenciaClcr,
+} from '@/dominio/funcion-renal';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Cargando, Boton, CampoTexto, Chip } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
@@ -65,7 +70,7 @@ export default function DatosRenales() {
   const nuevo =
     modo === 'manual'
       ? (num(clcr) ?? null)
-      : calcularSeguro(p.edadAnios, num(pesoKg), num(creatinina), p.sexo as Sexo);
+      : calcularSiSePuede(p.edadAnios, num(pesoKg), num(creatinina), p.sexo as Sexo);
 
   const listo = modo === 'manual' ? num(clcr) !== undefined : nuevo !== null;
 
@@ -157,7 +162,7 @@ function ClcrVigente({ paciente }: { paciente: Cockpit['paciente'] }) {
       </View>
 
       <Text className="font-sans mt-2 text-meta leading-4 text-ink-suave">
-        {procedencia(paciente)}
+        {procedenciaClcr(paciente, comoFecha)}
       </Text>
     </>
   );
@@ -227,49 +232,14 @@ function Delta({
       </Text>
 
       <Text className="font-sans flex-1 text-eyebrow leading-4" style={{ color: col.inkSuave }}>
-        {leyenda(antes, despues, manual)}
+        {leyendaDelCambio(antes, despues, manual)}
       </Text>
     </View>
   );
 }
 
-/** Los cortes son los mismos que usa el resto de la app para colorear el Clcr. */
-function tramo(clcr: number): 'grave' | 'medio' | 'normal' {
-  if (clcr < 30) return 'grave';
-  if (clcr < 60) return 'medio';
-  return 'normal';
-}
 
-function leyenda(antes: number | null, despues: number, manual: boolean): string {
-  const sufijo = manual ? ' Queda marcado como ingresado a mano.' : '';
-
-  if (antes === null) return `Pasa a tener Clcr.${sufijo}`;
-  if (tramo(antes) === tramo(despues)) {
-    return tramo(despues) === 'grave'
-      ? `Sigue bajo 30: el ajuste renal se mantiene.${sufijo}`
-      : `Se mantiene en el mismo tramo de la tabla.${sufijo}`;
-  }
-  return `Cambia de tramo: los ajustes se recalculan.${sufijo}`;
-}
-
-/**
- * `null` cuando todavía no alcanza para calcular.
- *
- * Mientras se tipea "1" camino a "1,4" el valor pasa por estados imposibles, y
- * un error en cada tecla sería ruido: se muestra el resultado recién cuando
- * existe.
- */
-function calcularSeguro(
-  edadAnios: number,
-  pesoKg: number | undefined,
-  creatininaMgDl: number | undefined,
-  sexo: Sexo,
-): number | null {
-  if (pesoKg === undefined || creatininaMgDl === undefined) return null;
-  try {
-    return calcularClcr({ edadAnios, pesoKg, creatininaMgDl, sexo });
-  } catch (e) {
-    if (e instanceof DatoClinicoInvalido) return null;
-    throw e;
-  }
+/** El formato de fecha vive en la pantalla: es presentación, no dominio. */
+function comoFecha(iso: string): string {
+  return new Date(iso).toLocaleDateString('es-UY', { day: 'numeric', month: 'long' });
 }

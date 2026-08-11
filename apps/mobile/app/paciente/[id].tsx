@@ -12,6 +12,13 @@ import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { FilaAnimada } from '@/ui/animacion';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import {
+  destacados as hallazgosDestacados,
+  detalleCockpit,
+  hepaticoSinEvaluar,
+  peoresPorCategoria,
+  titularCockpit,
+} from '@/dominio/cockpit';
 import { Veredicto } from '@/ui/herramienta';
 import { BadgeConteo, Espina } from '@/ui/severidad';
 import {
@@ -76,15 +83,9 @@ export default function CockpitPaciente() {
 
   const peor = peorRango(data.hallazgos.map((h) => h.rango));
 
-  // Los dos peores, y sólo si hay algo que mirar. Ordenar por rango y cortar es
-  // suficiente: dentro de la misma gravedad da igual cuál va primero.
-  const destacados = [...data.hallazgos].sort((a, b) => a.rango - b.rango).slice(0, 2);
+  const destacados = hallazgosDestacados(data.hallazgos);
 
-  // El ajuste hepático no tiene tabla contra la cual evaluar, y el motor lo
-  // dice con este aviso. Mostrar "0" ahí afirmaría que se miró y no había nada
-  // — que es justo lo que la regla 5 prohíbe.
-  const hepaticoNoEvaluable = data.avisos.some((a) => a.codigo === 'SIN_CHILD_PUGH');
-
+  const hepaticoNoEvaluable = hepaticoSinEvaluar(data.avisos);
   const peorPorCategoria = peoresPorCategoria(data.hallazgos);
 
   return (
@@ -110,7 +111,7 @@ export default function CockpitPaciente() {
         {/* ---------- 0. Veredicto ---------- */}
         <Veredicto
           rango={peor}
-          titulo={titularCockpit(peor, data.hallazgos)}
+          titulo={titularCockpit(data.hallazgos)}
           detalle={detalleCockpit(data.hallazgos)}
         />
 
@@ -429,72 +430,3 @@ function FilaTratamiento({
   );
 }
 
-/**
- * El titular: la peor gravedad y cuántos hallazgos hay de ésa.
- *
- * Los adjetivos concuerdan con la categoría de lo peor —"interacción
- * contraindicada", "alerta grave"— porque decir "1 hallazgo contraindicado"
- * es correcto pero no dice de qué.
- */
-function titularCockpit(peor: RangoGravedad | null, hallazgos: Cockpit['hallazgos']): string {
-  if (peor === null) return 'Sin hallazgos';
-
-  const deEsaGravedad = hallazgos.filter((h) => h.rango === peor);
-  const n = deEsaGravedad.length;
-  const categoria = deEsaGravedad[0]!.categoria;
-  const [singular, plural] = SUSTANTIVO[categoria];
-  const adjetivo = ADJETIVO[peor][n === 1 ? 0 : 1];
-
-  return `${n} ${n === 1 ? singular : plural} ${adjetivo}`;
-}
-
-/** Sustantivo por categoría, para que el titular diga de qué se trata. */
-const SUSTANTIVO: Record<CategoriaHallazgo, [string, string]> = {
-  INTERACCION: ['interacción', 'interacciones'],
-  CONDICION: ['alerta', 'alertas'],
-  AJUSTE_RENAL: ['ajuste renal', 'ajustes renales'],
-  AJUSTE_HEPATICO: ['ajuste hepático', 'ajustes hepáticos'],
-};
-
-/** Femenino: concuerda con "interacción" y "alerta", que son las dos
- *  categorías que más aparecen como lo peor. */
-const ADJETIVO: Record<RangoGravedad, [string, string]> = {
-  0: ['contraindicada', 'contraindicadas'],
-  1: ['grave', 'graves'],
-  2: ['de atención', 'de atención'],
-  3: ['informativa', 'informativas'],
-};
-
-/** El desglose completo, para no perder lo que las tarjetas ya no repiten. */
-function detalleCockpit(hallazgos: Cockpit['hallazgos']): string | undefined {
-  if (hallazgos.length === 0) {
-    return 'Ningún fármaco del tratamiento dispara alertas con los datos cargados. No es lo mismo que decir que sea seguro.';
-  }
-
-  const partes = ([0, 1, 2, 3] as RangoGravedad[])
-    .map((r) => ({ r, n: hallazgos.filter((h) => h.rango === r).length }))
-    .filter((x) => x.n > 0)
-    // Rango 2 se lee "de atención": "5 atención" no es español.
-    .map((x) =>
-      x.r === 2
-        ? `${x.n} de atención`
-        : `${x.n} ${RANGO_ETIQUETA[x.r].toLowerCase()}${x.n > 1 ? 's' : ''}`,
-    );
-
-  const total = hallazgos.length;
-  return `${total} ${total === 1 ? 'hallazgo' : 'hallazgos'} en total: ${partes.join(', ')}.`;
-}
-
-/** El peor rango de cada categoría. Ausente = la categoría no tiene ninguno. */
-function peoresPorCategoria(
-  hallazgos: Cockpit['hallazgos'],
-): Partial<Record<CategoriaHallazgo, RangoGravedad>> {
-  const salida: Partial<Record<CategoriaHallazgo, RangoGravedad>> = {};
-
-  for (const h of hallazgos) {
-    const actual = salida[h.categoria];
-    if (actual === undefined || h.rango < actual) salida[h.categoria] = h.rango;
-  }
-
-  return salida;
-}

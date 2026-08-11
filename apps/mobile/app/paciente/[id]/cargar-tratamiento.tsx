@@ -4,6 +4,12 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
+import {
+  elegidasSinPauta,
+  elegirTodas,
+  lineasDelTexto,
+  listasParaCrear,
+} from '@/dominio/carga-tratamiento';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { ConsultaPlegada, Veredicto } from '@/ui/herramienta';
 import { Icono } from '@/ui/iconos';
@@ -76,7 +82,7 @@ export default function CargarTratamiento() {
 
   const confirmar = useMutation({
     mutationFn: async () => {
-      for (const l of (lineas ?? []).filter((x) => x.elegida)) {
+      for (const l of listasParaCrear(lineas ?? [])) {
         await api.post(`/pacientes/${pacienteId}/prescripciones`, {
           productoComercialId: l.productoComercialIdSugerido,
           // Lo que el médico dejó escrito, no un literal. Antes, sin dosis
@@ -154,9 +160,8 @@ export default function CargarTratamiento() {
   const reconocidas = lineas.filter((l) => !l.requiereBusquedaManual);
   const sinMatch = lineas.length - reconocidas.length;
 
-  // Una línea sin pauta no se puede crear: es el dato que el catálogo no trae.
-  const listas = elegidas.filter((l) => l.dosisEditada.trim() && l.frecuenciaEditada.trim());
-  const faltaPauta = elegidas.length - listas.length;
+  const listas = listasParaCrear(lineas);
+  const faltaPauta = elegidasSinPauta(lineas);
 
   return (
     <KeyboardAvoidingView
@@ -186,9 +191,7 @@ export default function CargarTratamiento() {
           </Text>
           <Pressable
             onPress={() =>
-              setLineas((ls) =>
-                (ls ?? []).map((l) => (l.requiereBusquedaManual ? l : { ...l, elegida: true })),
-              )
+              setLineas((ls) => elegirTodas(ls ?? []))
             }
             accessibilityRole="button"
           >

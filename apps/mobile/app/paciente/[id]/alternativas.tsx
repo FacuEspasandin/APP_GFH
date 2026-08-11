@@ -3,6 +3,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
+import {
+  agruparAlternativas,
+  conteoDeAlertas,
+  peorDeAlternativa,
+  problemasDeAlternativa,
+  resumenAlternativas,
+} from '@/dominio/alternativas';
 import { ConsultaPlegada, GrupoGravedad } from '@/ui/herramienta';
 import { Boton, Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -90,14 +97,14 @@ export default function Alternativas() {
     );
   }
 
-  const grupos = agrupar(data.viables);
-  const limpias = data.viables.filter((a) => problemas(a).length === 0).length;
+  const grupos = agruparAlternativas(data.viables);
+  const limpias = data.viables.filter((a) => problemasDeAlternativa(a).length === 0).length;
 
   return (
     <View className="flex-1 bg-paper">
       <ConsultaPlegada
         titulo={`En lugar de ${data.farmacoOrigen}`}
-        detalle={resumen(data.viables.length, limpias)}
+        detalle={resumenAlternativas(data.viables.length, limpias)}
         onCambiar={() => router.back()}
       />
 
@@ -181,8 +188,8 @@ export default function Alternativas() {
 }
 
 function TarjetaAlternativa({ alt, onReemplazar }: { alt: Alternativa; onReemplazar: () => void }) {
-  const lista = problemas(alt);
-  const peor = lista.length === 0 ? null : (Math.min(...lista.map((p) => p.rango)) as RangoGravedad);
+  const lista = problemasDeAlternativa(alt);
+  const peor = peorDeAlternativa(alt);
 
   return (
     <Superficie
@@ -199,9 +206,7 @@ function TarjetaAlternativa({ alt, onReemplazar }: { alt: Alternativa; onReempla
           className="font-medio text-eyebrow uppercase tracking-wider"
           style={{ color: colorEspina(peor) }}
         >
-          {lista.length === 0
-            ? 'Sin alertas'
-            : `${lista.length} ${lista.length === 1 ? 'alerta' : 'alertas'}`}
+          {conteoDeAlertas(alt)}
         </Text>
       </View>
 
@@ -235,49 +240,3 @@ function TarjetaAlternativa({ alt, onReemplazar }: { alt: Alternativa; onReempla
   );
 }
 
-/** Todo lo que una alternativa arrastra, con su gravedad, en una sola lista. */
-function problemas(alt: Alternativa): Array<{ rango: RangoGravedad; texto: string }> {
-  return [
-    ...alt.interaccionesPotenciales.map((i) => ({
-      rango: (i.severidad === 'CONTRAINDICADA'
-        ? 0
-        : i.severidad === 'ALTA'
-          ? 1
-          : 3) as RangoGravedad,
-      texto: `Interactúa con ${i.paNombre} (${i.severidad.toLowerCase()})`,
-    })),
-    ...alt.alertasCondicion.map((a) => ({
-      rango: 2 as RangoGravedad,
-      texto: `Alerta por ${a.condicionNombre} (${a.severidad.toLowerCase()})`,
-    })),
-    ...(alt.alergia
-      ? [
-          {
-            rango: alt.alergia.rango,
-            texto: `Cruce de alergia${alt.alergia.grupoNombre ? ` · ${alt.alergia.grupoNombre}` : ''}`,
-          },
-        ]
-      : []),
-  ];
-}
-
-/** Las limpias primero; después, de lo más grave a lo más leve. */
-function agrupar(
-  viables: readonly Alternativa[],
-): Array<{ rango: RangoGravedad | null; filas: Alternativa[] }> {
-  const peorDe = (a: Alternativa): RangoGravedad | null => {
-    const l = problemas(a);
-    return l.length === 0 ? null : (Math.min(...l.map((p) => p.rango)) as RangoGravedad);
-  };
-
-  const orden: Array<RangoGravedad | null> = [null, 0, 1, 2, 3];
-
-  return orden
-    .map((rango) => ({ rango, filas: viables.filter((a) => peorDe(a) === rango) }))
-    .filter((g) => g.filas.length > 0);
-}
-
-function resumen(total: number, limpias: number): string {
-  const opciones = `${total} ${total === 1 ? 'opción' : 'opciones'}`;
-  return limpias === 0 ? opciones : `${opciones} · ${limpias} sin alertas`;
-}
