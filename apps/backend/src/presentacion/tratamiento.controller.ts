@@ -113,6 +113,12 @@ export class CatalogoController {
     return this.catalogo.listarProductos(Number(desde ?? 0));
   }
 
+  /** Antes que `productos/:id`: si no, `conteo` se parsea como un UUID. */
+  @Get('productos/conteo')
+  conteoProductos() {
+    return this.catalogo.conteoProductos();
+  }
+
   @Get('productos/:id')
   ficha(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.catalogo.fichaProducto(id);

@@ -7,7 +7,9 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { api, ErrorApi } from '@/api/cliente';
 import { useValorDemorado } from '@/ui/demora';
 import { ErrorGenerico, SinConexion, Skeleton } from '@/ui/estados-sistema';
-import { Boton, CampoTexto, Card, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { Boton, CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { MarcadoresAjuste } from '@/ui/marcadores-ajuste';
+import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
 interface ProductoResumen {
@@ -23,6 +25,9 @@ interface ProductoResumen {
 }
 
 const POR_PAGINA = 40;
+
+/** Lo que corta el backend al buscar (`CatalogoService.buscarProductos`). */
+const TOPE_BUSQUEDA = 30;
 
 /**
  * Buscador a nivel de PRODUCTO COMERCIAL (regla no negociable 10).
@@ -71,6 +76,15 @@ export default function Buscador() {
     enabled: !buscando,
   });
 
+  // Cuántos productos hay en total. Va en su propia consulta porque no cambia
+  // entre páginas: pedirlo con cada página sería contar la tabla entera cada
+  // vez que alguien baja el scroll.
+  const conteo = useQuery({
+    queryKey: ['catalogo-conteo'],
+    queryFn: () => api.get<{ productos: number }>('/catalogo/productos/conteo'),
+    staleTime: 60 * 60_000,
+  });
+
   const lista = buscando ? (busqueda.data ?? []) : (catalogo.data?.pages.flat() ?? []);
   const error = buscando ? busqueda.error : catalogo.error;
   const reintentar = () => void (buscando ? busqueda.refetch() : catalogo.refetch());
@@ -82,6 +96,21 @@ export default function Buscador() {
   // El campo ya tiene texto pero la consulta todavía no salió: sin esto,
   // durante esos 250 ms se lee "Sin resultados" para algo que ni se preguntó.
   const esperandoDemora = consulta.trim().length >= 2 && consultaBuscada !== consulta.trim();
+
+  /**
+   * El tamaño de lo que se está mirando.
+   *
+   * Buscando dice cuántos coincidieron; el backend corta en 30, y cuando el
+   * corte se alcanza hay que decirlo — "30 resultados" a secas haría creer que
+   * no hay más y que la búsqueda no vale la pena afinarla.
+   */
+  function conteoTexto(): string {
+    if (buscando) {
+      if (lista.length === 0) return '';
+      return lista.length >= TOPE_BUSQUEDA ? `primeros ${TOPE_BUSQUEDA}` : `${lista.length}`;
+    }
+    return conteo.data ? `${conteo.data.productos} productos` : '';
+  }
 
   return (
     <Pantalla scroll={false}>
@@ -95,14 +124,14 @@ export default function Buscador() {
         etiqueta="Buscar"
       />
 
-      <View className="mb-4 flex-row flex-wrap gap-2">
-        <Chip texto="Interacciones" onPress={() => router.push('/herramientas/interacciones')} />
-        <Chip texto="Ajuste renal" onPress={() => router.push('/herramientas/renal')} />
-        <Chip texto="Condición / alergia" onPress={() => router.push('/herramientas/condicion-alergia')} />
-      </View>
+      {/* Los tres atajos a herramientas salieron de acá: desde que existe el
+          botón central del menú son el segundo camino a lo mismo, y ocupaban
+          una franja fija arriba de la lista en la pantalla donde el espacio
+          vertical es todo. */}
 
-      <View className="flex-row items-center">
+      <View className="mb-1 flex-row items-center">
         <Eyebrow>{buscando ? 'Resultados' : 'Catálogo'}</Eyebrow>
+        <Text className="font-mono mb-1.5 ml-2 text-eyebrow text-tenue">{conteoTexto()}</Text>
         {busqueda.isFetching || esperandoDemora ? (
           <ActivityIndicator size="small" color={col.tenue} className="mb-1.5 ml-2" />
         ) : null}
@@ -163,31 +192,18 @@ export default function Buscador() {
               </View>
             ) : null
           }
-          renderItem={({ item: p }) => (
-            <Pressable
-              onPress={() => router.push(`/farmaco/${p.id}`)}
-              accessibilityRole="button"
-              className="mb-2"
-            >
-              <Card className="px-3.5 py-3">
-                <Text className="text-body font-medio text-ink">
-                  {p.nombreComercial}
-                  {p.dosisTexto ? <Text className="font-sans text-ink-suave"> · {p.dosisTexto}</Text> : null}
+          renderItem={({ item: p, index }) => (
+            <>
+              {/* La letra sólo al recorrer el catálogo completo: en una lista
+                  de resultados no hay nada que indexar, y sobre 638 productos
+                  alfabéticos saber en qué letra vas es lo único que orienta. */}
+              {!buscando && inicial(p) !== inicial(lista[index - 1]) ? (
+                <Text className="font-mono px-1 pb-1 pt-3 text-eyebrow tracking-wider text-tenue">
+                  {inicial(p)}
                 </Text>
-                <Text className="font-sans mt-0.5 text-meta text-ink-suave">
-                  {p.esGenerico ? 'Genérico' : p.principiosActivos.join(' + ')}
-                  {p.laboratorio ? ` · ${p.laboratorio}` : ''}
-                </Text>
-                {p.tieneAjusteRenal || p.tieneAjusteHepatico ? (
-                  <View className="mt-2 flex-row gap-1.5">
-                    {/* Celeste: marca una PROPIEDAD del fármaco, nunca gravedad.
-                        Es el único uso legítimo de este color en el sistema. */}
-                    {p.tieneAjusteRenal ? <ChipPropiedad texto="Ajuste renal" /> : null}
-                    {p.tieneAjusteHepatico ? <ChipPropiedad texto="Ajuste hepático" /> : null}
-                  </View>
-                ) : null}
-              </Card>
-            </Pressable>
+              ) : null}
+              <FilaProducto producto={p} onPress={() => router.push(`/farmaco/${p.id}`)} />
+            </>
           )}
         />
       )}
@@ -195,12 +211,49 @@ export default function Buscador() {
   );
 }
 
-function ChipPropiedad({ texto }: { texto: string }) {
+/** La letra por la que ordena el backend. `undefined` para el ítem anterior
+ *  del primero, que por eso siempre imprime su letra. */
+function inicial(p?: ProductoResumen): string {
+  return p ? p.nombreComercial.charAt(0).toUpperCase() : '';
+}
+
+/**
+ * Una fila del catálogo, de alto fijo.
+ *
+ * La marca en negro y la dosis en gris en el mismo renglón: se busca por
+ * marca, no por miligramos, y separarlas deja que el ojo salte de nombre en
+ * nombre. Los marcadores de ajuste van a la derecha en dos lugares que existen
+ * siempre — ver `MarcadoresAjuste`.
+ */
+function FilaProducto({
+  producto: p,
+  onPress,
+}: {
+  producto: ProductoResumen;
+  onPress: () => void;
+}) {
   return (
-    <View className="rounded-full px-2 py-0.5" style={{ backgroundColor: '#E0F2FE' }}>
-      <Text className="text-eyebrow font-fuerte uppercase tracking-wider" style={{ color: '#075985' }}>
-        {texto}
-      </Text>
-    </View>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${p.nombreComercial}${p.dosisTexto ? `, ${p.dosisTexto}` : ''}`}
+      className="mb-2"
+    >
+      <Superficie elevacion="plana" className="flex-row items-center px-3.5 py-2.5">
+        <View className="flex-1 pr-2">
+          <Text className="text-fila font-medio text-ink" numberOfLines={1}>
+            {p.nombreComercial}
+            {p.dosisTexto ? (
+              <Text className="font-sans text-ink-suave"> · {p.dosisTexto}</Text>
+            ) : null}
+          </Text>
+          <Text className="font-sans mt-0.5 text-meta text-ink-suave" numberOfLines={1}>
+            {p.esGenerico ? 'Genérico' : p.principiosActivos.join(' + ')}
+            {p.laboratorio ? ` · ${p.laboratorio}` : ''}
+          </Text>
+        </View>
+        <MarcadoresAjuste renal={p.tieneAjusteRenal} hepatico={p.tieneAjusteHepatico} />
+      </Superficie>
+    </Pressable>
   );
 }

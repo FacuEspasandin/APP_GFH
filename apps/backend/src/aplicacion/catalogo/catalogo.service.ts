@@ -43,6 +43,17 @@ export class CatalogoService {
     return productos.map((p) => this.aResumen(p));
   }
 
+  /**
+   * Cuántos productos hay en total.
+   *
+   * Va aparte y no dentro de la lista: la lista se pide una vez por página y
+   * el total no cambia entre páginas, así que meterlo en cada respuesta sería
+   * contar la tabla entera cada vez que alguien baja el scroll.
+   */
+  async conteoProductos(): Promise<{ productos: number }> {
+    return { productos: await this.prisma.productoComercial.count() };
+  }
+
   /** Catálogo completo A-Z, paginado. */
   async listarProductos(desplazamiento = 0, limite = 40) {
     const productos = await this.prisma.productoComercial.findMany({
@@ -121,11 +132,18 @@ export class CatalogoService {
       ),
       // Interacciones conocidas del fármaco, generales: acá no hay paciente,
       // así que no hay severidad instanciada contra nadie.
-      interaccionesConocidas: pas.flatMap((pa) =>
-        interaccionesDe(pa.nombre, this.catalogoInteracciones.obtener()).map((i) => ({
-          ...i,
-          principioActivo: pa.nombre,
-        })),
+      //
+      // Deduplicadas: un producto con dos principios activos de la misma
+      // familia —Bactrim es sulfametoxazol + trimetoprima— matchea la misma
+      // regla dos veces y la ficha listaba "Metotrexato · Contraindicado" dos
+      // veces seguidas. Para el médico es UNA interacción del producto.
+      interaccionesConocidas: unicasPorFarmaco(
+        pas.flatMap((pa) =>
+          interaccionesDe(pa.nombre, this.catalogoInteracciones.obtener()).map((i) => ({
+            ...i,
+            principioActivo: pa.nombre,
+          })),
+        ),
       ),
       /** Sin proveedor de monografías integrado. NUNCA se nombra al proveedor
        *  en la UI (regla no negociable 9). */
@@ -250,4 +268,31 @@ export class CatalogoService {
       tieneAjusteHepatico: p.principiosActivos.some((x) => x.principioActivo.tieneAjusteHepatico),
     };
   }
+}
+
+/**
+ * Una entrada por fármaco con el que interactúa, quedándose con la más grave.
+ *
+ * Se compara por nombre y no por regla: dos reglas distintas —una por cada
+ * principio activo del producto— describen el mismo choque para quien lo va a
+ * recetar. Se conserva la peor porque perder la contraindicada y mostrar la
+ * alta sería una rebaja silenciosa de la severidad.
+ */
+const PESO_SEVERIDAD: Record<string, number> = { CONTRAINDICADA: 0, ALTA: 1, INFORMATIVA: 3 };
+
+export function unicasPorFarmaco<T extends { conNombre: string; severidad: string }>(
+  interacciones: readonly T[],
+): T[] {
+  const porNombre = new Map<string, T>();
+
+  for (const i of interacciones) {
+    const clave = i.conNombre.toLowerCase();
+    const previa = porNombre.get(clave);
+    const peor =
+      previa === undefined ||
+      (PESO_SEVERIDAD[i.severidad] ?? 3) < (PESO_SEVERIDAD[previa.severidad] ?? 3);
+    if (peor) porNombre.set(clave, i);
+  }
+
+  return [...porNombre.values()];
 }
