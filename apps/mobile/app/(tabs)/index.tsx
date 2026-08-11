@@ -7,6 +7,7 @@ import { api } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
 import type { FilaPaciente, Inicio as DatosInicio } from '@/api/tipos';
 import { FilaAnimada } from '@/ui/animacion';
+import { useValorDemorado } from '@/ui/demora';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Icono } from '@/ui/iconos';
 import { CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
@@ -30,12 +31,17 @@ export default function Pacientes() {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [consulta, setConsulta] = useState('');
 
+  // Mismo tratamiento que el Buscador: una consulta por pausa de tipeo, no una
+  // por tecla, y la lista anterior sigue a la vista mientras llega la nueva.
+  const consultaBuscada = useValorDemorado(consulta.trim());
+
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['inicio', consulta],
+    queryKey: ['inicio', consultaBuscada],
     queryFn: () =>
       api.get<DatosInicio>(
-        consulta.trim() ? `/inicio?q=${encodeURIComponent(consulta.trim())}` : '/inicio',
+        consultaBuscada ? `/inicio?q=${encodeURIComponent(consultaBuscada)}` : '/inicio',
       ),
+    placeholderData: (anteriores) => anteriores,
   });
 
   // Con el plan gratis lleno, "Nuevo paciente" lleva al paywall directo. El
@@ -87,7 +93,7 @@ export default function Pacientes() {
           {pacientes.length === 0 && data?.buscando ? (
             <Estado
               titulo="Sin coincidencias"
-              detalle={`Ningún paciente coincide con «${consulta.trim()}».`}
+              detalle={`Ningún paciente coincide con «${consultaBuscada}».`}
             />
           ) : null}
 

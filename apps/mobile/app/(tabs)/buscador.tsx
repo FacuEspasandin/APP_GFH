@@ -4,9 +4,10 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import { api, ErrorApi } from '@/api/cliente';
+import { useValorDemorado } from '@/ui/demora';
+import { ErrorGenerico, SinConexion, Skeleton } from '@/ui/estados-sistema';
 import { Boton, CampoTexto, Card, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
-import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { useColores } from '@/ui/tema';
 
 interface ProductoResumen {
@@ -30,21 +31,34 @@ const POR_PAGINA = 40;
  * filas en vez de mantenerlas todas montadas. Con un `ScrollView` la lista se
  * traba a las pocas páginas, y un buscador que se traba se deja de usar.
  *
- * Por eso la lista es el contenedor de scroll y el campo de búsqueda va como
- * cabecera: anidar una lista virtualizada dentro de un `ScrollView` desactiva
- * la virtualización, que es justamente lo que se busca acá.
+ * Por eso la lista es el contenedor de scroll, y nada la envuelve en otro
+ * scroll: anidar una lista virtualizada dentro de un `ScrollView` desactiva la
+ * virtualización, que es justamente lo que se busca acá.
+ *
+ * El campo de búsqueda y los atajos viven FUERA de la lista y nunca se
+ * desmontan. Antes estaban dentro del bloque que se reemplaza al cargar, así
+ * que la primera letra que disparaba una consulta se llevaba puesta la
+ * pantalla entera —campo, teclado y foco— y volvía como una pantalla de carga.
+ * Escribir no puede sacarte de donde estás escribiendo.
  */
 export default function Buscador() {
   const col = useColores();
 
   const router = useRouter();
   const [consulta, setConsulta] = useState('');
-  const buscando = consulta.trim().length >= 2;
+  // Se busca por el valor demorado, pero el campo muestra el inmediato: el
+  // texto tiene que aparecer al ritmo del tipeo aunque la consulta espere.
+  const consultaBuscada = useValorDemorado(consulta.trim());
+  const buscando = consultaBuscada.length >= 2;
 
   const busqueda = useQuery({
-    queryKey: ['catalogo-buscar', consulta],
-    queryFn: () => api.get<ProductoResumen[]>(`/catalogo/productos?q=${encodeURIComponent(consulta.trim())}`),
+    queryKey: ['catalogo-buscar', consultaBuscada],
+    queryFn: () => api.get<ProductoResumen[]>(`/catalogo/productos?q=${encodeURIComponent(consultaBuscada)}`),
     enabled: buscando,
+    // Los resultados anteriores quedan a la vista mientras llegan los nuevos.
+    // Vaciar la lista en cada tecla hace parpadear la pantalla y da la
+    // sensación de que la búsqueda se reinicia sola.
+    placeholderData: (anteriores) => anteriores,
   });
 
   const catalogo = useInfiniteQuery({
@@ -58,9 +72,20 @@ export default function Buscador() {
   });
 
   const lista = buscando ? (busqueda.data ?? []) : (catalogo.data?.pages.flat() ?? []);
+  const error = buscando ? busqueda.error : catalogo.error;
+  const reintentar = () => void (buscando ? busqueda.refetch() : catalogo.refetch());
 
-  const cabecera = (
-    <View>
+  // Sólo cuando no hay NADA que mostrar. Con resultados viejos en pantalla la
+  // espera se indica con el punto al lado del rótulo, sin taparlos.
+  const vacioYCargando =
+    lista.length === 0 && (buscando ? busqueda.isFetching : catalogo.isLoading);
+  // El campo ya tiene texto pero la consulta todavía no salió: sin esto,
+  // durante esos 250 ms se lee "Sin resultados" para algo que ni se preguntó.
+  const esperandoDemora = consulta.trim().length >= 2 && consultaBuscada !== consulta.trim();
+
+  return (
+    <Pantalla scroll={false}>
+      {/* Fijos: sobreviven a cualquier estado de carga o error de la lista. */}
       <CampoTexto
         value={consulta}
         onChangeText={setConsulta}
@@ -76,22 +101,31 @@ export default function Buscador() {
         <Chip texto="Condición / alergia" onPress={() => router.push('/herramientas/condicion-alergia')} />
       </View>
 
-      <Eyebrow>{buscando ? 'Resultados' : 'Catálogo'}</Eyebrow>
-    </View>
-  );
+      <View className="flex-row items-center">
+        <Eyebrow>{buscando ? 'Resultados' : 'Catálogo'}</Eyebrow>
+        {busqueda.isFetching || esperandoDemora ? (
+          <ActivityIndicator size="small" color={col.tenue} className="mb-1.5 ml-2" />
+        ) : null}
+      </View>
 
-  return (
-    <Pantalla scroll={false}>
-      <ResultadoConsulta
-        cargando={buscando ? busqueda.isLoading : catalogo.isLoading}
-        error={buscando ? busqueda.error : catalogo.error}
-        onReintentar={() => void (buscando ? busqueda.refetch() : catalogo.refetch())}
-        filasSkeleton={5}
-      >
+      {error ? (
+        error instanceof ErrorApi && error.esSinConexion ? (
+          <SinConexion onReintentar={reintentar} />
+        ) : (
+          <ErrorGenerico
+            onReintentar={reintentar}
+            detalle={error instanceof Error ? error.message : undefined}
+          />
+        )
+      ) : vacioYCargando || esperandoDemora ? (
+        <Skeleton filas={5} />
+      ) : (
         <FlashList
           data={lista}
           keyExtractor={(p) => p.id}
-          ListHeaderComponent={cabecera}
+          // Tocar un resultado no cierra el teclado antes de registrar el
+          // toque: sin esto el primer tap sólo baja el teclado y hay que
+          // volver a tocar.
           keyboardShouldPersistTaps="handled"
           // Se pagina sola al llegar al final, sin interrumpir la lectura para
           // pedir lo que ya se estaba pidiendo. En web no dispara — ver el pie.
@@ -105,7 +139,7 @@ export default function Buscador() {
             buscando ? (
               <Estado
                 titulo="Sin resultados"
-                detalle={`Ningún producto coincide con «${consulta.trim()}».`}
+                detalle={`Ningún producto coincide con «${consultaBuscada}».`}
               />
             ) : null
           }
@@ -156,7 +190,7 @@ export default function Buscador() {
             </Pressable>
           )}
         />
-      </ResultadoConsulta>
+      )}
     </Pantalla>
   );
 }
