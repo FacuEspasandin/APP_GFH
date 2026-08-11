@@ -15,8 +15,15 @@ async function bootstrap(): Promise<void> {
   configurarApp(app);
 
   // CORS restringido: sin esto queda abierto a cualquier origen.
+  //
+  // Los métodos van explícitos porque el adaptador de Fastify no incluye PATCH
+  // por defecto, y la app usa PATCH para todo lo que edita: paciente, datos
+  // renales, embarazo, prescripción, configuración. El teléfono no hace
+  // preflight así que nunca se notó desde ahí — pero significaba que ninguna
+  // edición se podía verificar desde un navegador.
   app.enableCors({
     origin: process.env.CORS_ORIGENES?.split(',') ?? false,
+    methods: ['GET', 'HEAD', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
 

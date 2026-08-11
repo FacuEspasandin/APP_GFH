@@ -7,6 +7,7 @@ import { api } from '@/api/cliente';
 import type { CategoriaHallazgo, Cockpit, PrescripcionCockpit } from '@/api/tipos';
 import { Icono } from '@/ui/iconos';
 import { AnilloClcr } from '@/ui/anillo-clcr';
+import { etiquetaEmbarazo } from '@/dominio/gestacion';
 import { esSintetica, nombreCondicion } from '@/ui/condiciones';
 import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { FilaAnimada } from '@/ui/animacion';
@@ -154,8 +155,10 @@ export default function CockpitPaciente() {
                   {/* Las sintéticas van delineadas y no rellenas: el motor las
                       derivó, el médico no las cargó. Es una distinción que
                       importa si alguien revisa de dónde salió una alerta. */}
+                  {/* La semana viaja con la condición: es el dato que decide
+                      qué alertas de embarazo se están aplicando. */}
                   <Text className="text-eyebrow font-medio text-primary">
-                    {nombreCondicion(c)}
+                    {c === 'EMBARAZO' ? etiquetaEmbarazo(p.semanaGestacion) : nombreCondicion(c)}
                   </Text>
                 </View>
               ))}
@@ -332,6 +335,7 @@ export default function CockpitPaciente() {
           ['Agregar alergia', `/paciente/${id}/agregar-alergia`],
           ['Función renal', `/paciente/${id}/datos-renales`],
           ['Función hepática', `/paciente/${id}/datos-hepaticos`],
+          ['Embarazo y lactancia', `/paciente/${id}/embarazo-lactancia`],
         ].map(([titulo, ruta]) => (
           <OpcionHoja
             key={ruta}

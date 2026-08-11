@@ -1,7 +1,7 @@
 import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { normalizar } from '@gfh/shared-types';
 
-import { calcularClcr, edadEnAnios } from '@gfh/shared-types';
+import { calcularClcr, edadEnAnios, type Sexo } from '@gfh/shared-types';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import type { ActualizarPacienteDto, CrearPacienteDto } from '../../presentacion/dto/paciente.dto';
 import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
@@ -110,16 +110,67 @@ export class PacientesService {
     return paciente;
   }
 
+  /**
+   * Actualiza SÓLO lo que vino en el cuerpo.
+   *
+   * Antes reusaba el mapeo de creación, que traduce cada campo ausente a
+   * `null`. Como la pantalla de editar manda nombre, apellido, documento,
+   * fecha, sexo, grupo y altura —y nada más—, cambiar un apellido borraba peso,
+   * creatinina, Clcr, semana de gestación y lactancia. Verificado: un paciente
+   * con Clcr 67 quedaba en `null` después de editarle el apellido, y su ajuste
+   * renal pasaba a neutro sin que nada avisara.
+   */
   async actualizar(medicoId: string, pacienteId: string, dto: ActualizarPacienteDto) {
-    await this.obtener(medicoId, pacienteId); // valida pertenencia
+    const actual = await this.obtener(medicoId, pacienteId); // valida pertenencia
     if (dto.grupoId) await this.exigirGrupoPropio(medicoId, dto.grupoId);
+
+    const data: Record<string, unknown> = {};
+    const poner = <K extends keyof ActualizarPacienteDto>(campo: K, valor: unknown) => {
+      if (dto[campo] !== undefined) data[campo as string] = valor;
+    };
+
+    poner('nombre', dto.nombre);
+    poner('apellido', dto.apellido);
+    poner('documento', dto.documento);
+    poner('sexo', dto.sexo);
+    poner('grupoId', dto.grupoId);
+    poner('alturaCm', dto.alturaCm);
+    poner('pesoKg', dto.pesoKg);
+    poner('creatininaMgDl', dto.creatininaMgDl);
+    poner('semanaGestacion', dto.semanaGestacion);
+    poner('estaLactando', dto.estaLactando);
+    if (dto.fechaNacimiento !== undefined) data['fechaNacimiento'] = new Date(dto.fechaNacimiento);
+
+    // El Clcr depende de cuatro datos: peso, creatinina, edad y sexo. Se
+    // recalcula si el cambio toca alguno, con los valores YA fusionados — si no,
+    // editar el sexo dejaría un Clcr calculado con el factor equivocado.
+    const tocaElClcr =
+      dto.clcrMlMin !== undefined ||
+      dto.pesoKg !== undefined ||
+      dto.creatininaMgDl !== undefined ||
+      dto.fechaNacimiento !== undefined ||
+      dto.sexo !== undefined;
+
+    if (tocaElClcr) {
+      const fusionado = {
+        fechaNacimiento:
+          dto.fechaNacimiento !== undefined ? new Date(dto.fechaNacimiento) : actual.fechaNacimiento,
+        sexo: (dto.sexo ?? actual.sexo) as Sexo,
+        pesoKg: dto.pesoKg ?? (actual.pesoKg === null ? undefined : Number(actual.pesoKg)),
+        creatininaMgDl:
+          dto.creatininaMgDl ??
+          (actual.creatininaMgDl === null ? undefined : Number(actual.creatininaMgDl)),
+      };
+
+      const renal = this.resolverClcr({ ...fusionado, clcrMlMin: dto.clcrMlMin });
+      data['clcrMlMin'] = renal.clcrMlMin;
+      data['clcrOrigen'] = renal.clcrOrigen;
+      data['clcrMedidoAt'] = renal.clcrMedidoAt;
+    }
 
     // updateMany y no update: `update` acepta un where de unique solo, y ahí se
     // perdería el medicoId.
-    await this.prisma.paciente.updateMany({
-      where: { id: pacienteId, medicoId },
-      data: this.aDatos(dto),
-    });
+    await this.prisma.paciente.updateMany({ where: { id: pacienteId, medicoId }, data });
     return this.obtener(medicoId, pacienteId);
   }
 
@@ -190,26 +241,52 @@ export class PacientesService {
    * cálculo falla por un dato fuera de rango, se guarda sin Clcr: mostrar
    * neutro es correcto, inventar un número no.
    */
+  private resolverClcr(e: {
+    fechaNacimiento: Date;
+    sexo: Sexo;
+    pesoKg?: number;
+    creatininaMgDl?: number;
+    clcrMlMin?: number;
+  }) {
+    if (e.clcrMlMin !== undefined) {
+      return {
+        clcrMlMin: e.clcrMlMin,
+        clcrOrigen: 'INGRESADO_MANUAL' as const,
+        clcrMedidoAt: new Date(),
+      };
+    }
+
+    if (e.pesoKg === undefined || e.creatininaMgDl === undefined) {
+      return { clcrMlMin: null, clcrOrigen: null, clcrMedidoAt: null };
+    }
+
+    try {
+      return {
+        clcrMlMin: calcularClcr({
+          edadAnios: edadEnAnios(e.fechaNacimiento, new Date()),
+          pesoKg: e.pesoKg,
+          creatininaMgDl: e.creatininaMgDl,
+          sexo: e.sexo,
+        }),
+        clcrOrigen: 'CALCULADO_COCKCROFT' as const,
+        clcrMedidoAt: new Date(),
+      };
+    } catch {
+      // Dato fuera de rango: se guarda sin Clcr. Mostrar neutro es correcto,
+      // inventar un número no.
+      return { clcrMlMin: null, clcrOrigen: null, clcrMedidoAt: null };
+    }
+  }
+
   private aDatos(dto: CrearPacienteDto) {
     const fechaNacimiento = new Date(dto.fechaNacimiento);
-    let clcrMlMin: number | null = dto.clcrMlMin ?? null;
-    let clcrOrigen: 'CALCULADO_COCKCROFT' | 'INGRESADO_MANUAL' | null =
-      dto.clcrMlMin !== undefined ? 'INGRESADO_MANUAL' : null;
-
-    if (clcrMlMin === null && dto.pesoKg !== undefined && dto.creatininaMgDl !== undefined) {
-      try {
-        clcrMlMin = calcularClcr({
-          edadAnios: edadEnAnios(fechaNacimiento, new Date()),
-          pesoKg: dto.pesoKg,
-          creatininaMgDl: dto.creatininaMgDl,
-          sexo: dto.sexo,
-        });
-        clcrOrigen = 'CALCULADO_COCKCROFT';
-      } catch {
-        clcrMlMin = null;
-        clcrOrigen = null;
-      }
-    }
+    const { clcrMlMin, clcrOrigen, clcrMedidoAt } = this.resolverClcr({
+      fechaNacimiento,
+      sexo: dto.sexo as Sexo,
+      pesoKg: dto.pesoKg,
+      creatininaMgDl: dto.creatininaMgDl,
+      clcrMlMin: dto.clcrMlMin,
+    });
 
     return {
       nombre: dto.nombre,
@@ -223,7 +300,7 @@ export class PacientesService {
       creatininaMgDl: dto.creatininaMgDl ?? null,
       clcrMlMin,
       clcrOrigen,
-      clcrMedidoAt: clcrMlMin !== null ? new Date() : null,
+      clcrMedidoAt,
       semanaGestacion: dto.semanaGestacion ?? null,
       estaLactando: dto.estaLactando ?? null,
     };
