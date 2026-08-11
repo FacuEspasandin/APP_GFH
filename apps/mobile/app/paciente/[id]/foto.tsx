@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
-import { AvisoNeutro, Boton, Card, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { AvisoNeutro, Boton, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
+import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 import { useColores } from '@/ui/tema';
 
 interface Linea {
@@ -126,12 +128,12 @@ export default function CargaPorLista() {
           {lineas.map((l, i) => {
             const activa = aceptadas.has(i);
             return (
-              <Card key={i} className="mb-2 px-3.5 py-3">
+              <Superficie key={i} elevacion="plana" className="mb-2 px-3.5 py-3">
                 <Text className="font-sans text-meta text-ink-suave">«{l.textoOriginal}»</Text>
 
                 {l.requiereBusquedaManual ? (
                   <>
-                    <Text className="mt-1.5 text-body font-medio" style={{ color: '#92400E' }}>
+                    <Text className="mt-1.5 text-body font-medio" style={{ color: COLOR_SEVERIDAD.media }}>
                       Sin coincidencia en el catálogo
                     </Text>
                     <Text className="font-sans mt-1 text-meta leading-5 text-ink-suave">
@@ -149,7 +151,7 @@ export default function CargaPorLista() {
                     </View>
                   </>
                 )}
-              </Card>
+              </Superficie>
             );
           })}
 

@@ -6,7 +6,9 @@ import { Pressable, Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import { Icono } from '@/ui/iconos';
 import { hapticaExito } from '@/ui/haptica';
-import { AvisoNeutro, Boton, CampoTexto, Card, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { AvisoNeutro, Boton, CampoTexto, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
 const VIAS = ['ORAL', 'IV', 'SC', 'IM', 'TOPICA', 'INHALATORIA', 'SUBLINGUAL', 'RECTAL'] as const;
@@ -81,12 +83,12 @@ export default function AceptarAlternativa() {
 
   return (
     <Pantalla>
-      <Card className="mb-5 px-3.5 py-3.5">
+      <Superficie elevacion="plana" className="mb-5 px-3.5 py-3.5">
         <Text className="font-sans text-eyebrow uppercase tracking-wider text-ink-suave">Sale</Text>
         <Text className="text-fila font-fuerte text-ink">{origen ?? 'el fármaco actual'}</Text>
         <Text className="font-sans mt-2 text-eyebrow uppercase tracking-wider text-ink-suave">Entra</Text>
         <Text className="text-fila font-fuerte text-primary">{alternativa ?? 'la alternativa'}</Text>
-      </Card>
+      </Superficie>
 
       <Eyebrow>Pauta de {alternativa ?? 'la alternativa'}</Eyebrow>
       <CampoTexto

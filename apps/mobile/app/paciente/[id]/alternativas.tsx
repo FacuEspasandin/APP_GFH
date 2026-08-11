@@ -4,9 +4,10 @@ import { Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
 import { Icono } from '@/ui/iconos';
-import { AvisoNeutro, Boton, Cargando, Card, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { AvisoNeutro, Boton, Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
 import { BadgeConteo } from '@/ui/severidad';
-import { colorEspina, type RangoGravedad } from '@gfh/shared-types';
+import { COLOR_SEVERIDAD, colorEspina, type RangoGravedad } from '@gfh/shared-types';
 
 interface Alternativa {
   paAlternativaId: string;
@@ -27,6 +28,23 @@ interface Respuesta {
   viables: Alternativa[];
   descartadas: Array<{ nombre: string; motivo: string }>;
   paOrigenIds?: string[];
+}
+
+/** El verde de "documentada" marca un estado del registro, no gravedad
+ *  clínica: por eso no sale de `COLOR_SEVERIDAD`. */
+const VERDE_DOCUMENTADA = '#166534';
+
+/** La franja de una alternativa: el peor de los problemas que la tocan. Sin
+ *  problemas queda en el verde de la escala, que ahí sí significa "limpia". */
+function peorDeLaAlternativa(alt: Alternativa): RangoGravedad | null {
+  const rangos: RangoGravedad[] = [
+    ...alt.interaccionesPotenciales.map((i) =>
+      i.severidad === 'CONTRAINDICADA' ? 0 : i.severidad === 'ALTA' ? 1 : 3,
+    ),
+    ...alt.alertasCondicion.map(() => 2 as RangoGravedad),
+    ...(alt.alergia ? [alt.alergia.rango] : []),
+  ];
+  return rangos.length === 0 ? null : (Math.min(...rangos) as RangoGravedad);
 }
 
 const MOTIVO: Record<string, string> = {
@@ -56,11 +74,32 @@ export default function Alternativas() {
     enabled: Boolean(pacienteId && prescripcion),
   });
 
+  if (!prescripcion) {
+    // Se llega acá sólo por enlace directo: desde el cockpit siempre viene con
+    // la prescripción. Antes mostraba "No se pudo cargar" con el detalle vacío,
+    // que parecía una falla del servidor.
+    return (
+      <Pantalla>
+        <Estado
+          titulo="Sin fármaco elegido"
+          detalle="Las alternativas se piden desde un fármaco del tratamiento."
+        />
+      </Pantalla>
+    );
+  }
+
   if (isLoading) return <Cargando />;
   if (error || !data) {
     return (
       <Pantalla>
-        <Estado titulo="No se pudo cargar" detalle={String((error as Error)?.message ?? '')} />
+        <Estado
+          titulo="No se pudo cargar"
+          detalle={
+            error instanceof Error && error.message
+              ? error.message
+              : 'Probá de nuevo en unos segundos.'
+          }
+        />
       </Pantalla>
     );
   }
@@ -79,16 +118,21 @@ export default function Alternativas() {
       ) : null}
 
       {data.viables.map((alt) => (
-        <Card key={alt.paAlternativaId} className="mb-2.5 px-3.5 py-3">
+        <Superficie
+          key={alt.paAlternativaId}
+          elevacion={alt.totalProblemas === 0 ? 'media' : 'plana'}
+          className="mb-2.5 px-3.5 py-3"
+          style={{ borderLeftWidth: 4, borderLeftColor: colorEspina(peorDeLaAlternativa(alt)) }}
+        >
           <View className="flex-row items-start justify-between gap-2">
             <View className="flex-1">
               <Text className="text-body font-medio text-ink">{alt.nombre}</Text>
               {alt.yaAceptada ? (
                 <View className="mt-0.5 flex-row items-center gap-1">
-                  <Icono nombre="check" tamano={12} color="#166534" />
+                  <Icono nombre="check" tamano={12} color={VERDE_DOCUMENTADA} />
                   <Text
                     className="text-eyebrow font-fuerte uppercase tracking-wider"
-                    style={{ color: '#166534' }}
+                    style={{ color: VERDE_DOCUMENTADA }}
                   >
                     Documentada
                   </Text>
@@ -114,7 +158,7 @@ export default function Alternativas() {
           {alt.alertasCondicion.map((a, k) => (
             <Problema
               key={`c${k}`}
-              color="#F59E0B"
+              color={COLOR_SEVERIDAD.media}
               texto={`Alerta por ${a.condicionNombre} (${a.severidad.toLowerCase()})`}
             />
           ))}
@@ -146,18 +190,18 @@ export default function Alternativas() {
               {`Reemplazar por ${alt.nombre}`}
             </Boton>
           </View>
-        </Card>
+        </Superficie>
       ))}
 
       {data.descartadas.length > 0 ? (
         <View className="mt-4">
           <Eyebrow>No se ofrecen</Eyebrow>
           {data.descartadas.map((d, i) => (
-            <View key={i} className="mb-2 rounded-card border border-line bg-surface px-3.5 py-2.5">
+            <Superficie key={i} elevacion="plana" className="mb-2 px-3.5 py-2.5">
               <Text className="font-sans text-meta text-ink">
                 <Text className="font-medio">{d.nombre}</Text> — {MOTIVO[d.motivo] ?? 'descartada'}
               </Text>
-            </View>
+            </Superficie>
           ))}
         </View>
       ) : null}
