@@ -12,8 +12,17 @@ import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { FilaAnimada } from '@/ui/animacion';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { Veredicto } from '@/ui/herramienta';
 import { BadgeConteo, Espina } from '@/ui/severidad';
-import { COLOR_SEVERIDAD, nombreSexo, type RangoGravedad, type Sexo } from '@gfh/shared-types';
+import {
+  claveColorPorRango,
+  COLOR_SEVERIDAD,
+  nombreSexo,
+  peorRango,
+  RANGO_ETIQUETA,
+  type RangoGravedad,
+  type Sexo,
+} from '@gfh/shared-types';
 import { useColores } from '@/ui/tema';
 
 const NOMBRE_CATEGORIA: Record<CategoriaHallazgo, string> = {
@@ -26,13 +35,14 @@ const NOMBRE_CATEGORIA: Record<CategoriaHallazgo, string> = {
 /**
  * Cockpit de paciente (3.1.1).
  *
- * Tres bloques y nada más: quién es el paciente, el resumen del diagnóstico, y
- * qué está tomando. Los hallazgos NO van acá — cada tarjeta del diagnóstico y
- * cada fármaco abren su propia pantalla.
+ * Abre con el veredicto: la app existe para contestar "¿es seguro este fármaco
+ * para este paciente, hoy?" y antes esa respuesta había que armarla sumando
+ * cuatro contadores. "1 interacción contraindicada" es la respuesta.
  *
- * Es deliberado: catorce hallazgos sueltos uno abajo del otro son una pared de
- * texto donde no se distingue lo grave de lo informativo. Esta pantalla
- * responde "¿cuánto hay y de qué tipo?"; el detalle se pide.
+ * Los dos hallazgos más graves se muestran acá; el resto se pide. Sigue siendo
+ * deliberado no volcar los catorce: una pared de texto donde no se distingue lo
+ * grave de lo informativo no ayuda. Pero tener que entrar a una categoría para
+ * leer siquiera uno era el extremo contrario.
  */
 export default function CockpitPaciente() {
   const col = useColores();
@@ -64,6 +74,19 @@ export default function CockpitPaciente() {
   const p = data.paciente;
   const totalAvisos = data.avisos.length;
 
+  const peor = peorRango(data.hallazgos.map((h) => h.rango));
+
+  // Los dos peores, y sólo si hay algo que mirar. Ordenar por rango y cortar es
+  // suficiente: dentro de la misma gravedad da igual cuál va primero.
+  const destacados = [...data.hallazgos].sort((a, b) => a.rango - b.rango).slice(0, 2);
+
+  // El ajuste hepático no tiene tabla contra la cual evaluar, y el motor lo
+  // dice con este aviso. Mostrar "0" ahí afirmaría que se miró y no había nada
+  // — que es justo lo que la regla 5 prohíbe.
+  const hepaticoNoEvaluable = data.avisos.some((a) => a.codigo === 'SIN_CHILD_PUGH');
+
+  const peorPorCategoria = peoresPorCategoria(data.hallazgos);
+
   return (
     <>
       <Stack.Screen
@@ -84,6 +107,13 @@ export default function CockpitPaciente() {
       />
 
       <Pantalla>
+        {/* ---------- 0. Veredicto ---------- */}
+        <Veredicto
+          rango={peor}
+          titulo={titularCockpit(peor, data.hallazgos)}
+          detalle={detalleCockpit(data.hallazgos)}
+        />
+
         {/* ---------- 1. Datos del paciente ---------- */}
         {/* La única superficie con elevación alta de la pantalla: es el sujeto
             de todo lo demás, y la jerarquía la marca la profundidad y no el
@@ -131,17 +161,56 @@ export default function CockpitPaciente() {
             </Pressable>
           ) : null}
 
-          <Pressable
-            onPress={() => router.push(`/paciente/${id}/editar` as never)}
-            accessibilityRole="button"
-            className="mt-3.5 self-start"
-          >
-            <Text className="text-meta font-medio text-accent">Editar datos</Text>
-          </Pressable>
         </Superficie>
 
-        {/* ---------- 2. Diagnóstico ---------- */}
-        <Eyebrow>Diagnóstico</Eyebrow>
+        {/* ---------- 2. Lo más grave ---------- */}
+        {destacados.length > 0 ? (
+          <>
+            <Eyebrow>Lo más grave</Eyebrow>
+            <View className="mb-2 mt-1">
+              {destacados.map((h) => (
+                <Superficie
+                  key={h.clave}
+                  elevacion="plana"
+                  className="mb-2 px-3.5 py-3"
+                  style={{
+                    borderLeftWidth: 4,
+                    borderLeftColor: COLOR_SEVERIDAD[claveColorPorRango(h.rango)],
+                  }}
+                >
+                  <View className="flex-row items-baseline">
+                    <Text className="flex-1 pr-2 text-body font-medio text-ink">{h.titulo}</Text>
+                    <Text
+                      className="font-fuerte text-eyebrow uppercase tracking-wider"
+                      style={{ color: COLOR_SEVERIDAD[claveColorPorRango(h.rango)] }}
+                    >
+                      {RANGO_ETIQUETA[h.rango]}
+                    </Text>
+                  </View>
+                  <Text className="font-sans mt-1 text-meta leading-5 text-ink-suave">
+                    {h.detalle}
+                  </Text>
+                </Superficie>
+              ))}
+
+              {data.hallazgos.length > destacados.length ? (
+                <Pressable
+                  onPress={() => router.push(`/paciente/${id}/hallazgos` as never)}
+                  accessibilityRole="button"
+                  className="items-center rounded-card border border-line bg-surface py-2.5"
+                >
+                  <Text className="font-medio text-meta text-primary">
+                    Ver los {data.hallazgos.length} hallazgos
+                  </Text>
+                </Pressable>
+              ) : null}
+            </View>
+            <View className="mb-3" />
+          </>
+        ) : null}
+
+        {/* ---------- 3. Diagnóstico ---------- */}
+        <Eyebrow>Por categoría</Eyebrow>
         {/* `justify-between` con ancho fijo, y NO `flex-1` con `flex-wrap`.
             En web las dos formas se ven igual, pero en el teléfono Yoga no
             calcula bien el alto de un contenedor que envuelve hijos con
@@ -150,6 +219,9 @@ export default function CockpitPaciente() {
         <View className="mb-5 flex-row flex-wrap justify-between gap-y-2">
           {(Object.keys(NOMBRE_CATEGORIA) as CategoriaHallazgo[]).map((cat) => {
             const n = data.dashboard[cat];
+            const rangoCat = peorPorCategoria[cat] ?? null;
+            const sinEvaluar = cat === 'AJUSTE_HEPATICO' && hepaticoNoEvaluable;
+            const color = rangoCat !== null ? COLOR_SEVERIDAD[claveColorPorRango(rangoCat)] : null;
             return (
               // Las que tienen hallazgos se elevan; las que están en cero
               // quedan planas. Con cuatro tarjetas idénticas el ojo tiene que
@@ -162,15 +234,42 @@ export default function CockpitPaciente() {
                 // el View interno y las cuatro saldrían del ancho de su texto.
                 contenedor="w-[48.5%]"
                 className="px-3.5 py-3.5"
-                style={n === 0 ? { opacity: 0.72 } : undefined}
+                // La franja toma la gravedad del peor hallazgo de la categoría.
+                // El número solo decía cuántos: tres informativos y tres
+                // contraindicados se pintaban igual, porque el badge usa la
+                // escala de CONTEO, que es otro eje.
+                style={{
+                  ...(color ? { borderLeftWidth: 4, borderLeftColor: color } : {}),
+                  ...(n === 0 ? { opacity: 0.72 } : {}),
+                }}
                 onPress={() => router.push(`/paciente/${id}/hallazgos?categoria=${cat}` as never)}
-                accesibilidad={`${NOMBRE_CATEGORIA[cat]}, ${n} hallazgos`}
+                accesibilidad={
+                  sinEvaluar
+                    ? `${NOMBRE_CATEGORIA[cat]}, sin datos para evaluar`
+                    : `${NOMBRE_CATEGORIA[cat]}, ${n} hallazgos${
+                        rangoCat !== null ? `, lo peor es ${RANGO_ETIQUETA[rangoCat]}` : ''
+                      }`
+                }
               >
                 <View className="flex-row items-center justify-between">
                   <Text className="mr-2 flex-1 text-meta font-medio text-ink">
                     {NOMBRE_CATEGORIA[cat]}
                   </Text>
-                  <BadgeConteo n={n} />
+                  {/* El número toma el color de la GRAVEDAD, no el del
+                      conteo. Con la franja ya teñida por gravedad, un badge que
+                      colorea por cantidad pintaba la misma tarjeta de dos
+                      colores distintos: ajuste renal salía con franja naranja y
+                      número rojo. Son dos escalas y no pueden convivir acá. */}
+                  {sinEvaluar ? (
+                    <Text className="font-mono-fuerte text-fila text-tenue">—</Text>
+                  ) : (
+                    <Text
+                      className="font-mono-fuerte text-fila"
+                      style={{ color: color ?? col.tenue, fontVariant: ['tabular-nums'] }}
+                    >
+                      {n}
+                    </Text>
+                  )}
                 </View>
               </SuperficieTocable>
             );
@@ -179,7 +278,7 @@ export default function CockpitPaciente() {
 
         {/* ---------- 3. Tratamiento activo ---------- */}
         <View className="mb-2 flex-row items-center justify-between">
-          <Eyebrow>Tratamiento activo</Eyebrow>
+          <Eyebrow>Tratamiento activo · {data.prescripciones.length}</Eyebrow>
           <Pressable
             onPress={() => router.push(`/paciente/${id}/foto` as never)}
             accessibilityRole="button"
@@ -226,6 +325,7 @@ export default function CockpitPaciente() {
       {/* Menú del + (3.1.5) */}
       <HojaInferior visible={menuAbierto} onCerrar={() => setMenuAbierto(false)}>
         {[
+          ['Editar datos del paciente', `/paciente/${id}/editar`],
           ['Agregar fármaco', `/paciente/${id}/agregar-farmaco`],
           ['Agregar condición', `/paciente/${id}/agregar-condicion`],
           ['Agregar alergia', `/paciente/${id}/agregar-alergia`],
@@ -327,4 +427,74 @@ function FilaTratamiento({
       </View>
     </SuperficieTocable>
   );
+}
+
+/**
+ * El titular: la peor gravedad y cuántos hallazgos hay de ésa.
+ *
+ * Los adjetivos concuerdan con la categoría de lo peor —"interacción
+ * contraindicada", "alerta grave"— porque decir "1 hallazgo contraindicado"
+ * es correcto pero no dice de qué.
+ */
+function titularCockpit(peor: RangoGravedad | null, hallazgos: Cockpit['hallazgos']): string {
+  if (peor === null) return 'Sin hallazgos';
+
+  const deEsaGravedad = hallazgos.filter((h) => h.rango === peor);
+  const n = deEsaGravedad.length;
+  const categoria = deEsaGravedad[0]!.categoria;
+  const [singular, plural] = SUSTANTIVO[categoria];
+  const adjetivo = ADJETIVO[peor][n === 1 ? 0 : 1];
+
+  return `${n} ${n === 1 ? singular : plural} ${adjetivo}`;
+}
+
+/** Sustantivo por categoría, para que el titular diga de qué se trata. */
+const SUSTANTIVO: Record<CategoriaHallazgo, [string, string]> = {
+  INTERACCION: ['interacción', 'interacciones'],
+  CONDICION: ['alerta', 'alertas'],
+  AJUSTE_RENAL: ['ajuste renal', 'ajustes renales'],
+  AJUSTE_HEPATICO: ['ajuste hepático', 'ajustes hepáticos'],
+};
+
+/** Femenino: concuerda con "interacción" y "alerta", que son las dos
+ *  categorías que más aparecen como lo peor. */
+const ADJETIVO: Record<RangoGravedad, [string, string]> = {
+  0: ['contraindicada', 'contraindicadas'],
+  1: ['grave', 'graves'],
+  2: ['de atención', 'de atención'],
+  3: ['informativa', 'informativas'],
+};
+
+/** El desglose completo, para no perder lo que las tarjetas ya no repiten. */
+function detalleCockpit(hallazgos: Cockpit['hallazgos']): string | undefined {
+  if (hallazgos.length === 0) {
+    return 'Ningún fármaco del tratamiento dispara alertas con los datos cargados. No es lo mismo que decir que sea seguro.';
+  }
+
+  const partes = ([0, 1, 2, 3] as RangoGravedad[])
+    .map((r) => ({ r, n: hallazgos.filter((h) => h.rango === r).length }))
+    .filter((x) => x.n > 0)
+    // Rango 2 se lee "de atención": "5 atención" no es español.
+    .map((x) =>
+      x.r === 2
+        ? `${x.n} de atención`
+        : `${x.n} ${RANGO_ETIQUETA[x.r].toLowerCase()}${x.n > 1 ? 's' : ''}`,
+    );
+
+  const total = hallazgos.length;
+  return `${total} ${total === 1 ? 'hallazgo' : 'hallazgos'} en total: ${partes.join(', ')}.`;
+}
+
+/** El peor rango de cada categoría. Ausente = la categoría no tiene ninguno. */
+function peoresPorCategoria(
+  hallazgos: Cockpit['hallazgos'],
+): Partial<Record<CategoriaHallazgo, RangoGravedad>> {
+  const salida: Partial<Record<CategoriaHallazgo, RangoGravedad>> = {};
+
+  for (const h of hallazgos) {
+    const actual = salida[h.categoria];
+    if (actual === undefined || h.rango < actual) salida[h.categoria] = h.rango;
+  }
+
+  return salida;
 }
