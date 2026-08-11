@@ -21,6 +21,9 @@ import { coloresChrome, useTema } from '@/ui/tema';
  * parado.
  */
 
+/** Alto de la zona con íconos, sin contar el área segura del teléfono. */
+const ALTO_CONTENIDO = 50;
+
 interface Destino {
   clave: string;
   ruta: string;
@@ -103,6 +106,19 @@ export function MenuInferior() {
 
   if (SIN_MENU.has(segmentos[0] ?? '')) return null;
 
+  /**
+   * El área segura del teléfono, recortada.
+   *
+   * iOS reserva 34pt bajo el indicador de inicio y esa franja es la que se veía
+   * como espacio muerto: más alta que los propios rótulos. Se dejan 24, que
+   * mantiene los elementos tocables fuera de la zona del gesto —el indicador
+   * ocupa los últimos 8pt— sin regalar el resto.
+   *
+   * En teléfonos sin indicador (`insets.bottom === 0`) queda un respiro mínimo
+   * para que los rótulos no toquen el borde de la pantalla.
+   */
+  const respiro = insets.bottom > 0 ? insets.bottom - 10 : 8;
+
   const activa = seccionActiva(segmentos);
 
   const ir = (ruta: string) => {
@@ -126,8 +142,8 @@ export function MenuInferior() {
         accessibilityLabel={d.titulo}
         className="flex-1 items-center justify-center"
       >
-        <Icono nombre={d.icono} tamano={21} color={color} />
-        <Text className="font-medio" style={{ color, fontSize: 10, marginTop: 3 }}>
+        <Icono nombre={d.icono} tamano={20} color={color} />
+        <Text className="font-medio" style={{ color, fontSize: 10, marginTop: 2 }}>
           {d.titulo}
         </Text>
       </Pressable>
@@ -138,7 +154,7 @@ export function MenuInferior() {
     <>
       {/* El contenedor reserva lo que sobresale el botón, para que ninguna
           pantalla quede tapada por él. */}
-      <View style={{ paddingTop: 22 }}>
+      <View style={{ paddingTop: 20 }}>
         <View style={{ position: 'relative' }}>
           {/* De borde a borde: el verde llega a los lados de la pantalla y baja
               hasta el borde inferior, cubriendo el área segura del teléfono.
@@ -147,8 +163,8 @@ export function MenuInferior() {
           <View
             className="flex-row items-start"
             style={{
-              height: 64 + insets.bottom,
-              paddingBottom: insets.bottom,
+              height: ALTO_CONTENIDO + respiro,
+              paddingBottom: respiro,
               backgroundColor: c.fondoHeader,
               shadowColor: '#122A23',
               shadowOpacity: 0.18,
@@ -157,10 +173,10 @@ export function MenuInferior() {
               elevation: 12,
             }}
           >
-            <View className="flex-1 flex-row" style={{ height: 64, paddingRight: 34 }}>
+            <View className="flex-1 flex-row" style={{ height: ALTO_CONTENIDO, paddingRight: 34 }}>
               {IZQUIERDA.map(item)}
             </View>
-            <View className="flex-1 flex-row" style={{ height: 64, paddingLeft: 34 }}>
+            <View className="flex-1 flex-row" style={{ height: ALTO_CONTENIDO, paddingLeft: 34 }}>
               {DERECHA.map(item)}
             </View>
           </View>
@@ -172,7 +188,7 @@ export function MenuInferior() {
               herramientas: el Pressable invisible tapaba media barra. */}
           <View
             pointerEvents="box-none"
-            style={{ position: 'absolute', left: 0, right: 0, top: -26, alignItems: 'center' }}
+            style={{ position: 'absolute', left: 0, right: 0, top: -24, alignItems: 'center' }}
           >
             <Pressable
               onPress={() => {
