@@ -131,14 +131,15 @@ function Navegacion() {
 
         <Stack.Screen name="farmaco/[id]" options={{ title: 'Ficha' }} />
 
-        <Stack.Screen name="perfil/cuenta" options={{ title: 'Cuenta' }} />
-        <Stack.Screen name="perfil/password" options={{ title: 'Cambiar contraseña' }} />
+        <Stack.Screen name="perfil/cuenta" options={{ title: 'Datos personales' }} />
+        <Stack.Screen name="perfil/password" options={{ title: 'Contraseña' }} />
         <Stack.Screen name="perfil/sesiones" options={{ title: 'Sesiones activas' }} />
-        <Stack.Screen name="perfil/configuracion" options={{ title: 'Configuración' }} />
+        <Stack.Screen name="perfil/tema" options={{ title: 'Tema' }} />
+        <Stack.Screen name="perfil/notificaciones" options={{ title: 'Notificaciones' }} />
+        <Stack.Screen name="perfil/umbral" options={{ title: 'Umbral de adulto mayor' }} />
         <Stack.Screen name="perfil/suscripcion" options={{ title: 'Suscripción' }} />
         <Stack.Screen name="perfil/ayuda" options={{ title: 'Ayuda y soporte' }} />
-        <Stack.Screen name="perfil/terminos" options={{ title: 'Términos' }} />
-        <Stack.Screen name="perfil/privacidad" options={{ title: 'Privacidad' }} />
+        <Stack.Screen name="perfil/legales" options={{ title: 'Términos y privacidad' }} />
         <Stack.Screen name="perfil/acerca" options={{ title: 'Acerca de GFH' }} />
         <Stack.Screen name="perfil/eliminar-cuenta" options={{ title: 'Eliminar cuenta' }} />
       </Stack>

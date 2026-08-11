@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Boton, CampoTexto, Cargando, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
 
@@ -54,19 +55,32 @@ export default function Cuenta() {
 
   return (
     <Pantalla>
-      <CampoTexto etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
-      <CampoTexto etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
-      <CampoTexto
-        etiqueta="Email"
-        value={c.email}
-        onChangeText={campo('email')}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+      <BloqueFormulario titulo="Tus datos" exigencia="Obligatorio">
+        <View className="flex-row gap-3">
+          <View className="flex-1">
+            <CampoTexto etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
+          </View>
+          <View className="flex-1">
+            <CampoTexto etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
+          </View>
+        </View>
+        <CampoTexto
+          etiqueta="Email"
+          value={c.email}
+          onChangeText={campo('email')}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
+      </BloqueFormulario>
 
-      <Text className="font-sans mb-4 px-1 text-meta text-ink-suave">
-        Usuario: {data?.nombreUsuario} · no se puede cambiar.
-      </Text>
+      {/* El usuario es identificador de login: cambiarlo rompería sesiones y
+          referencias, así que se muestra pero no se edita. */}
+      <BloqueFormulario titulo="Nombre de usuario">
+        <Text className="font-mono text-body text-ink">{data?.nombreUsuario}</Text>
+        <Text className="font-sans mt-1 text-meta text-ink-suave">
+          No se puede cambiar: es con lo que entrás.
+        </Text>
+      </BloqueFormulario>
 
       {error ? (
         <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>

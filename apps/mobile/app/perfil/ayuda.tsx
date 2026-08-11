@@ -1,6 +1,7 @@
 import { Text } from 'react-native';
 
-import { Card, Eyebrow, Pantalla } from '@/ui/kit';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { Eyebrow, Pantalla } from '@/ui/kit';
 
 /** Ayuda y soporte (6.10). */
 export default function Ayuda() {
@@ -30,9 +31,8 @@ export default function Ayuda() {
 
 function Bloque({ titulo, texto }: { titulo: string; texto: string }) {
   return (
-    <Card className="mb-2.5 px-3.5 py-3">
-      <Text className="text-body font-medio text-ink">{titulo}</Text>
-      <Text className="font-sans mt-1.5 text-meta leading-5 text-ink-suave">{texto}</Text>
-    </Card>
+    <BloqueFormulario titulo={titulo}>
+      <Text className="font-sans text-meta leading-5 text-ink-suave">{texto}</Text>
+    </BloqueFormulario>
   );
 }

@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 
-import { Card, Eyebrow, Pantalla } from '@/ui/kit';
+import { Eyebrow, Pantalla } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
 
 /** Acerca de GFH (6.13). */
 export default function Acerca() {
@@ -15,20 +16,20 @@ export default function Acerca() {
       </View>
 
       <Eyebrow>Contenido clínico</Eyebrow>
-      <Card className="mb-2 px-3.5 py-3">
+      <Superficie elevacion="plana" className="mb-2 px-3.5 py-3">
         <Text className="font-sans text-meta leading-5 text-ink">
           Las tablas de ajuste renal son transcripción de <Text className="font-medio">Nefrología al día</Text>,
           Sociedad Española de Nefrología (mayo 2025). Los textos de interacciones, alertas y
           alternativas son de redacción propia y están pendientes de validación profesional.
         </Text>
-      </Card>
+      </Superficie>
 
-      <Card className="px-3.5 py-3">
+      <Superficie elevacion="plana" className="px-3.5 py-3">
         <Text className="font-sans text-meta leading-5 text-ink">
           Cero decisiones clínicas salen de un modelo de lenguaje. Severidad, ajuste de dosis e
           interacciones salen siempre de tablas y reglas deterministas.
         </Text>
-      </Card>
+      </Superficie>
     </Pantalla>
   );
 }

@@ -246,18 +246,18 @@ export async function iniciarSesion(identificador: string, password: string): Pr
 
   await guardar(CLAVE_ACCESS, cuerpo.data.accessToken);
   await guardar(CLAVE_REFRESH, cuerpo.data.refreshToken);
-  hayTokenEnMemoria = true;
+  marcarSesion(true);
 }
 
 export async function cerrarSesionLocal(): Promise<void> {
   await borrar(CLAVE_ACCESS);
   await borrar(CLAVE_REFRESH);
-  hayTokenEnMemoria = false;
+  marcarSesion(false);
 }
 
 export async function haySesion(): Promise<boolean> {
   const token = await leer(CLAVE_ACCESS);
-  hayTokenEnMemoria = token !== null;
+  marcarSesion(token !== null);
   return hayTokenEnMemoria;
 }
 
@@ -269,6 +269,30 @@ export async function haySesion(): Promise<boolean> {
 let hayTokenEnMemoria = false;
 export function haySesionSincrona(): boolean {
   return hayTokenEnMemoria;
+}
+
+/**
+ * Avisar cuando la sesión aparece o se va.
+ *
+ * Sin esto, una query con `enabled: haySesionSincrona()` que se monta antes de
+ * que el splash termine de leer el token queda deshabilitada para siempre: el
+ * flag cambia pero nadie vuelve a renderizar al componente que la declara.
+ * Pasaba con la configuración del médico —tema y umbral de adulto mayor—, que
+ * en un arranque en frío nunca se pedía y la app se quedaba con los valores por
+ * defecto sin decirlo.
+ */
+type Oyente = (hay: boolean) => void;
+const oyentes = new Set<Oyente>();
+
+export function suscribirseASesion(fn: Oyente): () => void {
+  oyentes.add(fn);
+  return () => oyentes.delete(fn);
+}
+
+function marcarSesion(hay: boolean): void {
+  if (hayTokenEnMemoria === hay) return;
+  hayTokenEnMemoria = hay;
+  for (const fn of oyentes) fn(hay);
 }
 
 export { BASE as URL_API };

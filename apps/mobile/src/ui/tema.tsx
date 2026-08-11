@@ -1,8 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useColorScheme } from 'nativewind';
-import { createContext, useContext, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
-import { api, haySesionSincrona } from '@/api/cliente';
+import { api, haySesionSincrona, suscribirseASesion } from '@/api/cliente';
 import { paleta, type Paleta } from './tokens';
 
 export type Tema = 'CLARO' | 'OSCURO' | 'SISTEMA';
@@ -40,11 +40,24 @@ export function ProveedorTema({ children }: { children: ReactNode }) {
   const { colorScheme, setColorScheme } = useColorScheme();
   const qc = useQueryClient();
 
+  /**
+   * `enabled` tiene que ser ESTADO y no una lectura directa del flag.
+   *
+   * Este proveedor monta antes de que el splash termine de leer el token, así
+   * que `haySesionSincrona()` daba `false` y la consulta quedaba deshabilitada
+   * para siempre: el flag cambiaba después, pero nada volvía a renderizar este
+   * componente. Resultado: en un arranque en frío la configuración del médico
+   * —tema y umbral de adulto mayor— nunca se pedía y la app usaba los valores
+   * por defecto sin decirlo.
+   */
+  const [haySesion, setHaySesion] = useState(haySesionSincrona);
+  useEffect(() => suscribirseASesion(setHaySesion), []);
+
   const { data } = useQuery({
     queryKey: ['configuracion'],
     queryFn: () => api.get<Configuracion>('/perfil/configuracion'),
     // Sin sesión no hay a quién pedirle la configuración.
-    enabled: haySesionSincrona(),
+    enabled: haySesion,
     staleTime: 5 * 60 * 1000,
   });
 

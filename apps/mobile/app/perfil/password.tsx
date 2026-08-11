@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Text } from 'react-native';
 
 import { api, cerrarSesionLocal } from '@/api/cliente';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
 
@@ -36,9 +37,15 @@ export default function CambiarPassword() {
 
   return (
     <Pantalla>
-      <CampoTexto etiqueta="Contraseña actual" value={actual} onChangeText={setActual} secureTextEntry />
-      <CampoTexto etiqueta="Nueva contraseña" value={nueva} onChangeText={setNueva} secureTextEntry />
-      <CampoTexto etiqueta="Repetir la nueva" value={confirmar} onChangeText={setConfirmar} secureTextEntry />
+      <BloqueFormulario titulo="Contraseña actual" exigencia="Obligatorio">
+        <CampoTexto value={actual} onChangeText={setActual} secureTextEntry />
+      </BloqueFormulario>
+
+      <BloqueFormulario titulo="Nueva contraseña" exigencia="Obligatorio">
+        <CampoTexto etiqueta="Nueva" value={nueva} onChangeText={setNueva} secureTextEntry />
+        <CampoTexto etiqueta="Repetir" value={confirmar} onChangeText={setConfirmar} secureTextEntry />
+        <Text className="font-sans text-meta text-ink-suave">Al menos 10 caracteres.</Text>
+      </BloqueFormulario>
 
       {error ? (
         <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>

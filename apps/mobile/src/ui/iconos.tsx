@@ -46,7 +46,17 @@ export type NombreIcono =
   | 'grupos'
   | 'barras'
   | 'gota'
-  | 'higado';
+  | 'higado'
+  // Perfil: la pantalla de ajustes necesita un ícono por fila, y ninguno de
+  // los clínicos sirve para 'contraseña' o 'cerrar sesión'.
+  | 'candado'
+  | 'dispositivo'
+  | 'sol'
+  | 'campana'
+  | 'documento'
+  | 'salir'
+  | 'basura'
+  | 'ayuda';
 
 interface Props {
   nombre: NombreIcono;
@@ -284,6 +294,66 @@ function trazos(nombre: NombreIcono, c: Comun) {
         <>
           <Path d="M3 8.5a2 2 0 0 1 2-2h2.5L9 4.5h6L16.5 6.5H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" {...c} />
           <Circle cx="12" cy="13" r="3.5" {...c} />
+        </>
+      );
+
+    case 'candado':
+      return (
+        <>
+          <Rect x="4" y="10.5" width="16" height="10" rx="2" {...c} />
+          <Path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" {...c} />
+        </>
+      );
+    case 'dispositivo':
+      return (
+        <>
+          <Rect x="6" y="2.5" width="12" height="19" rx="2" {...c} />
+          <Path d="M12 18h.01" {...c} />
+        </>
+      );
+    case 'sol':
+      return (
+        <>
+          <Circle cx="12" cy="12" r="4" {...c} />
+          <Path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" {...c} />
+        </>
+      );
+    case 'campana':
+      return (
+        <>
+          <Path d="M18 8.5a6 6 0 0 0-12 0c0 6.5-2.5 8.5-2.5 8.5h17S18 15 18 8.5" {...c} />
+          <Path d="M13.7 20.5a2 2 0 0 1-3.4 0" {...c} />
+        </>
+      );
+    case 'documento':
+      return (
+        <>
+          <Path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8Z" {...c} />
+          <Polyline points="14 2.5 14 8 19.5 8" {...c} />
+        </>
+      );
+    case 'salir':
+      return (
+        <>
+          <Path d="M9.5 21H5.5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" {...c} />
+          <Polyline points="16 16.5 20.5 12 16 7.5" {...c} />
+          <Path d="M20.5 12H9.5" {...c} />
+        </>
+      );
+    case 'basura':
+      return (
+        <>
+          <Path d="M3.5 6.5h17" {...c} />
+          <Path d="M8.5 6.5V4.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2" {...c} />
+          <Path d="M18.5 6.5l-.9 13a2 2 0 0 1-2 1.9H8.4a2 2 0 0 1-2-1.9l-.9-13" {...c} />
+        </>
+      );
+    case 'ayuda':
+      return (
+        <>
+          <Circle cx="12" cy="12" r="9" {...c} />
+          <Path d="M9.2 9.3a3 3 0 0 1 5.8 1c0 2-2.9 2.6-2.9 4" {...c} />
+          <Path d="M12 17.3h.01" {...c} />
         </>
       );
   }

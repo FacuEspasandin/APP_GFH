@@ -3,7 +3,8 @@ import { useRouter } from 'expo-router';
 import { Text } from 'react-native';
 
 import { api } from '@/api/cliente';
-import { AvisoNeutro, Boton, Cargando, Card, Eyebrow, Pantalla } from '@/ui/kit';
+import { AvisoNeutro, Boton, Cargando, Eyebrow, Pantalla } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
 interface Estado {
@@ -41,7 +42,7 @@ export default function Suscripcion() {
   return (
     <Pantalla>
       <Eyebrow>Estado</Eyebrow>
-      <Card className="mb-4 px-3.5 py-3.5" >
+      <Superficie elevacion="plana" className="mb-4 px-3.5 py-3.5">
         <Text className="text-fila font-fuerte" style={{ color }}>
           {TEXTO[data?.estado ?? 'SIN_SUSCRIPCION']}
         </Text>
@@ -56,7 +57,7 @@ export default function Suscripcion() {
             {data.store === 'APP_STORE' ? 'App Store' : 'Google Play'}
           </Text>
         ) : null}
-      </Card>
+      </Superficie>
 
       {!data?.vigente ? <Boton onPress={() => router.push('/paywall')}>Ver planes</Boton> : null}
 
