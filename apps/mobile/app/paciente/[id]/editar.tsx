@@ -74,6 +74,9 @@ export default function EditarPaciente() {
     mutationFn: () => api.delete(`/pacientes/${id}`),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['inicio'] });
+      // Borrar libera cupo del plan gratis: sin invalidar esto, "Nuevo
+      // paciente" seguiría mandando al paywall con el conteo viejo.
+      await qc.invalidateQueries({ queryKey: ['plan'] });
       router.dismissAll();
       router.replace('/(tabs)');
     },

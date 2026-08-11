@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
+import { usePlan } from '@/api/plan';
 import type { FilaPaciente, Inicio as DatosInicio } from '@/api/tipos';
 import { FilaAnimada } from '@/ui/animacion';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
@@ -36,6 +37,13 @@ export default function Pacientes() {
         consulta.trim() ? `/inicio?q=${encodeURIComponent(consulta.trim())}` : '/inicio',
       ),
   });
+
+  // Con el plan gratis lleno, "Nuevo paciente" lleva al paywall directo. El
+  // formulario también se protege solo, pero mandar ahí para que rebote deja
+  // ver medio segundo una pantalla que nunca se iba a poder usar.
+  const { data: plan } = usePlan();
+  const sinCupo = plan !== undefined && !plan.puedeCrearPaciente;
+  const rutaNuevoPaciente = sinCupo ? '/paywall' : '/crear-paciente';
 
   const pacientes = data?.pacientes ?? [];
   const conHallazgos = pacientes.filter((p) => p.peorRango !== null);
@@ -88,7 +96,7 @@ export default function Pacientes() {
               titulo="Todavía no cargaste pacientes"
               detalle="Creá uno para ver interacciones, ajuste renal y alertas."
               accion="Crear paciente"
-              onAccion={() => router.push('/crear-paciente')}
+              onAccion={() => router.push(rutaNuevoPaciente as never)}
             />
           ) : null}
 
@@ -118,16 +126,24 @@ export default function Pacientes() {
 
       <HojaInferior visible={menuAbierto} onCerrar={() => setMenuAbierto(false)}>
         {[
-          ['Crear paciente', '/crear-paciente', 'pacientes'],
-          ['Crear grupo', '/crear-grupo', 'grupos'],
-        ].map(([titulo, ruta, icono]) => (
+          {
+            titulo: 'Crear paciente',
+            ruta: rutaNuevoPaciente,
+            icono: 'pacientes' as const,
+            // Se dice antes de tocar, no después: el médico elige si quiere
+            // entrar al paywall en vez de que se le aparezca encima.
+            detalle: sinCupo ? 'Incluido en la suscripción' : undefined,
+          },
+          { titulo: 'Crear grupo', ruta: '/crear-grupo', icono: 'grupos' as const },
+        ].map((o) => (
           <OpcionHoja
-            key={ruta}
-            titulo={titulo!}
-            icono={icono as 'pacientes' | 'grupos'}
+            key={o.titulo}
+            titulo={o.titulo}
+            icono={o.icono}
+            detalle={o.detalle}
             onPress={() => {
               setMenuAbierto(false);
-              router.push(ruta as never);
+              router.push(o.ruta as never);
             }}
           />
         ))}

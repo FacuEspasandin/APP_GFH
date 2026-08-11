@@ -1,11 +1,13 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
+import { usePlan } from '@/api/plan';
 import type { Inicio } from '@/api/tipos';
 import { CampoFecha } from '@/ui/campo-fecha';
+import { Skeleton } from '@/ui/estados-sistema';
 import { validarFecha } from '@/ui/fecha';
 import { AvisoNeutro, Boton, CampoTexto, Chip, Eyebrow, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
@@ -17,6 +19,25 @@ export default function CrearPaciente() {
   const router = useRouter();
   const qc = useQueryClient();
   const { data: inicio } = useQuery({ queryKey: ['inicio'], queryFn: () => api.get<Inicio>('/inicio') });
+
+  /**
+   * El muro va ANTES del formulario, no después de enviarlo.
+   *
+   * Dejar llenar doce campos para recién ahí decir que hace falta pagar es
+   * cobrarle al médico el trabajo dos veces: la segunda cuando vuelva a
+   * escribir todo. Y va acá adentro y no en cada botón que trae a esta
+   * pantalla, porque así el próximo acceso que agreguemos —un atajo, una
+   * sugerencia, un deep link— queda cubierto sin que nadie tenga que
+   * acordarse.
+   */
+  const { data: plan, isError: planFallo } = usePlan();
+  const bloqueado = plan !== undefined && !plan.puedeCrearPaciente;
+
+  useEffect(() => {
+    // `replace` y no `push`: el formulario no tiene que quedar debajo del
+    // paywall esperando a que lo cierren.
+    if (bloqueado) router.replace('/paywall');
+  }, [bloqueado, router]);
 
   const [c, setC] = useState({
     nombre: '',
@@ -57,6 +78,10 @@ export default function CrearPaciente() {
           : {}),
       });
       await qc.invalidateQueries({ queryKey: ['inicio'] });
+      // El conteo de pacientes es lo que decide el límite: sin esto, el médico
+      // gratis podría abrir el formulario una segunda vez con el plan viejo en
+      // caché.
+      await qc.invalidateQueries({ queryKey: ['plan'] });
       router.back();
     } catch (e) {
       // El paywall lo abre el cliente HTTP, para CUALQUIER acción que exceda
@@ -69,6 +94,18 @@ export default function CrearPaciente() {
   };
 
   const grupos = inicio?.grupos ?? [];
+
+  // Mientras no se sabe, no se muestra el formulario: aparecer y desaparecer es
+  // peor que tardar un segundo. Si la consulta del plan falla se deja pasar —
+  // el límite lo aplica igual el backend, y trabar por un dato de facturación
+  // que no llegó sería inventar un muro que quizá no existe.
+  if (bloqueado || (plan === undefined && !planFallo)) {
+    return (
+      <Pantalla>
+        <Skeleton filas={4} />
+      </Pantalla>
+    );
+  }
 
   return (
     <Pantalla>
