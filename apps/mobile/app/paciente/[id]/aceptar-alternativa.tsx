@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
 import { Icono } from '@/ui/iconos';
 import { hapticaExito } from '@/ui/haptica';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
-import { AvisoNeutro, Boton, CampoTexto, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
@@ -82,79 +82,126 @@ export default function AceptarAlternativa() {
   const listo = f.dosis.trim().length > 0 && f.frecuencia.trim().length > 0 && confirmado;
 
   return (
-    <Pantalla>
-      <Superficie elevacion="plana" className="mb-5 px-3.5 py-3.5">
-        <Text className="font-sans text-eyebrow uppercase tracking-wider text-ink-suave">Sale</Text>
-        <Text className="text-fila font-fuerte text-ink">{origen ?? 'el fármaco actual'}</Text>
-        <Text className="font-sans mt-2 text-eyebrow uppercase tracking-wider text-ink-suave">Entra</Text>
-        <Text className="text-fila font-fuerte text-primary">{alternativa ?? 'la alternativa'}</Text>
-      </Superficie>
+    <KeyboardAvoidingView
+      className="flex-1 bg-paper"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+        {/* Sale → entra, en una línea. Dos renglones apilados no comunican que
+            uno reemplaza al otro: parecían dos datos sueltos. */}
+        <Superficie elevacion="plana" className="mb-3.5 flex-row items-center px-3.5 py-3.5">
+          <View className="flex-1">
+            <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-tenue">Sale</Text>
+            <Text
+              className="text-fila font-fuerte text-ink-suave"
+              style={{ textDecorationLine: 'line-through' }}
+              numberOfLines={1}
+            >
+              {origen ?? 'el fármaco actual'}
+            </Text>
+          </View>
 
-      <Eyebrow>Pauta de {alternativa ?? 'la alternativa'}</Eyebrow>
-      <CampoTexto
-        etiqueta="Dosis"
-        value={f.dosis}
-        onChangeText={(v) => setF((p) => ({ ...p, dosis: v }))}
-        placeholder="500 mg"
-      />
-      <CampoTexto
-        etiqueta="Frecuencia"
-        value={f.frecuencia}
-        onChangeText={(v) => setF((p) => ({ ...p, frecuencia: v }))}
-        placeholder="cada 8 h"
-      />
+          <Text className="mx-2 text-body text-tenue">→</Text>
 
-      <Eyebrow>Vía</Eyebrow>
-      <View className="mb-4 flex-row flex-wrap gap-2">
-        {VIAS.map((v) => (
-          <Chip key={v} texto={v} activo={via === v} onPress={() => setVia(v)} />
-        ))}
-      </View>
+          <View className="flex-1">
+            <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-tenue">Entra</Text>
+            <Text className="text-fila font-fuerte text-primary" numberOfLines={1}>
+              {alternativa ?? 'la alternativa'}
+            </Text>
+          </View>
+        </Superficie>
 
-      <AvisoNeutro>
-        La dosis la ponés vos: el catálogo no la trae y el sistema no la inventa.
-      </AvisoNeutro>
-
-      {prescripcion ? (
-        <AvisoNeutro>
-          {origen ?? 'El fármaco actual'} sale del tratamiento. Si querés sumar la alternativa sin
-          sacarlo, usá «Agregar fármaco».
-        </AvisoNeutro>
-      ) : null}
-
-      {/* Disclaimer obligatorio antes de aceptar (regla no negociable 7) */}
-      <Pressable
-        onPress={() => setConfirmado((v) => !v)}
-        accessibilityRole="checkbox"
-        accessibilityState={{ checked: confirmado }}
-        className="mt-4 flex-row items-start gap-3 rounded-card border border-line bg-surface p-3.5"
-      >
-        <View
-          className="mt-0.5 h-5 w-5 items-center justify-center rounded-[5px] border-2"
-          style={{
-            borderColor: confirmado ? col.primary : col.tenue,
-            backgroundColor: confirmado ? col.primary : 'transparent',
-          }}
+        <BloqueFormulario
+          titulo={`Pauta de ${alternativa ?? 'la alternativa'}`}
+          exigencia="Obligatorio"
         >
-          {confirmado ? <Icono nombre="check" tamano={14} color="#FFFFFF" /> : null}
-        </View>
-        <Text className="font-sans flex-1 text-meta leading-5 text-ink">
-          El cambio es una decisión mía. GFH muestra los problemas conocidos de cada opción, no
-          decide cuál corresponde. Queda registrado con mi usuario.
-        </Text>
-      </Pressable>
+          <View className="flex-row gap-3">
+            <View className="flex-1">
+              <CampoTexto
+                etiqueta="Dosis"
+                value={f.dosis}
+                onChangeText={(v) => setF((p) => ({ ...p, dosis: v }))}
+                placeholder="500 mg"
+              />
+            </View>
+            <View className="flex-1">
+              <CampoTexto
+                etiqueta="Frecuencia"
+                value={f.frecuencia}
+                onChangeText={(v) => setF((p) => ({ ...p, frecuencia: v }))}
+                placeholder="cada 8 h"
+              />
+            </View>
+          </View>
 
-      {error ? (
-        <Text className="font-sans mt-3 text-meta" style={{ color: col.peligro }}>
-          {error}
-        </Text>
-      ) : null}
+          <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+            Vía
+          </Text>
+          <View className="flex-row flex-wrap gap-2">
+            {VIAS.map((v) => (
+              <Chip key={v} texto={v} activo={via === v} onPress={() => setVia(v)} />
+            ))}
+          </View>
 
-      <View className="mt-4">
-        <Boton onPress={() => aceptar.mutate()} deshabilitado={!listo} cargando={aceptar.isPending}>
+          {/* El aviso de la dosis va adentro del bloque que la pide, no suelto
+              al final de la pantalla. */}
+          <Text className="font-sans mt-3 text-meta leading-4 text-ink-suave">
+            La dosis la ponés vos: el catálogo no la trae y el sistema no la inventa.
+          </Text>
+        </BloqueFormulario>
+
+        {prescripcion ? (
+          <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
+            <Text className="font-sans text-meta leading-5 text-ink-suave">
+              {origen ?? 'El fármaco actual'} sale del tratamiento. Si querés sumar la alternativa
+              sin sacarlo, usá «Agregar fármaco».
+            </Text>
+          </Superficie>
+        ) : null}
+
+        {error ? (
+          <Text className="font-sans mb-1 px-1 text-meta" style={{ color: col.peligro }}>
+            {error}
+          </Text>
+        ) : null}
+      </ScrollView>
+
+      {/* El consentimiento y el botón, al pie: es el tercero de los cuatro
+          puntos de la regla 7 y estaba a mitad del scroll, lejos de donde se
+          decide. */}
+      <View className="border-t border-line bg-surface px-4 py-3">
+        <Pressable
+          onPress={() => setConfirmado((v) => !v)}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: confirmado }}
+          className="mb-3 flex-row items-start gap-3"
+        >
+          <View
+            className="mt-0.5 h-5 w-5 items-center justify-center rounded-[5px] border-2"
+            style={{
+              borderColor: confirmado ? col.primary : col.tenue,
+              backgroundColor: confirmado ? col.primary : 'transparent',
+            }}
+          >
+            {confirmado ? <Icono nombre="check" tamano={14} color="#FFFFFF" /> : null}
+          </View>
+          <Text className="font-sans flex-1 text-meta leading-5 text-ink-suave">
+            El cambio es una decisión mía. GFH muestra los problemas conocidos de cada opción, no
+            decide cuál corresponde. Queda registrado con mi usuario.
+          </Text>
+        </Pressable>
+
+        <Boton
+          onPress={() => {
+            setError(null);
+            aceptar.mutate();
+          }}
+          cargando={aceptar.isPending}
+          deshabilitado={!listo}
+        >
           Aplicar cambio
         </Boton>
       </View>
-    </Pantalla>
+    </KeyboardAvoidingView>
   );
 }

@@ -120,7 +120,7 @@ function Navegacion() {
         <Stack.Screen name="paciente/[id]/datos-hepaticos" options={{ title: 'Función hepática' }} />
         <Stack.Screen name="paciente/[id]/alternativas" options={{ title: "Alternativas" }} />
         <Stack.Screen name="paciente/[id]/aceptar-alternativa" options={{ title: "Reemplazar fármaco" }} />
-        <Stack.Screen name="paciente/[id]/foto" options={{ title: 'Cargar por lista' }} />
+        <Stack.Screen name="paciente/[id]/cargar-tratamiento" options={{ title: 'Cargar tratamiento' }} />
         <Stack.Screen name="paciente/[id]/hallazgos" options={{ title: 'Hallazgo' }} />
         <Stack.Screen name="prescripcion/[id]" options={{ title: 'Fármaco' }} />
 

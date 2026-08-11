@@ -280,10 +280,10 @@ export default function CockpitPaciente() {
         <View className="mb-2 flex-row items-center justify-between">
           <Eyebrow>Tratamiento activo · {data.prescripciones.length}</Eyebrow>
           <Pressable
-            onPress={() => router.push(`/paciente/${id}/foto` as never)}
+            onPress={() => router.push(`/paciente/${id}/cargar-tratamiento` as never)}
             accessibilityRole="button"
           >
-            <Text className="mb-2 text-meta font-medio text-accent">Cargar lista</Text>
+            <Text className="mb-2 text-meta font-medio text-accent">Cargar tratamiento</Text>
           </Pressable>
         </View>
 
