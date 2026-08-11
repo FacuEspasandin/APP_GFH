@@ -5,7 +5,9 @@ import {
   RANGO_POR_SEVERIDAD_INTERACCION,
   RANGO_POR_TIPO_AJUSTE,
   bloqueaPrescripcion,
+  claveHallazgo,
   claveColorPorClcr,
+  partesClaveAlerta,
   claveColorPorConteo,
   claveColorPorRango,
   esGrave,
@@ -159,5 +161,32 @@ describe('normalización de nombres (motor §5.2)', () => {
     // "Espirolactona" es como la nombra SEN. Escribir "Espironolactona" en una
     // regla borra ocho pares sin un solo error — de ahí el test de grafía.
     expect(normalizar('Espirolactona')).not.toBe(normalizar('Espironolactona'));
+  });
+});
+
+describe('partesClaveAlerta', () => {
+  it('lee de vuelta lo que arma claveHallazgo.alerta', () => {
+    const clave = claveHallazgo.alerta('presc-1', 'cond-9', 'CONDICION');
+    expect(partesClaveAlerta(clave)).toEqual({
+      prescripcionId: 'presc-1',
+      condicionId: 'cond-9',
+      origen: 'CONDICION',
+    });
+  });
+
+  it('distingue el origen alergia', () => {
+    const clave = claveHallazgo.alerta('p', 'c', 'ALERGIA');
+    expect(partesClaveAlerta(clave)?.origen).toBe('ALERGIA');
+  });
+
+  it('devuelve null para claves de otras categorías', () => {
+    expect(partesClaveAlerta(claveHallazgo.interaccion('x'))).toBeNull();
+    expect(partesClaveAlerta(claveHallazgo.renal('p', 'r'))).toBeNull();
+    expect(partesClaveAlerta(claveHallazgo.hepatico('p', 'r'))).toBeNull();
+  });
+
+  it('devuelve null si la clave viene malformada', () => {
+    expect(partesClaveAlerta('al:solo:dos')).toBeNull();
+    expect(partesClaveAlerta('al:p:c:OTRO')).toBeNull();
   });
 });

@@ -47,6 +47,10 @@ export interface PacienteCockpit {
   alturaCm: number | null;
   clcrMlMin: number | null;
   clcrOrigen: string | null;
+  /** Cuándo se calculó y con qué. La pantalla de función renal pisa el Clcr,
+   *  y hacerlo sin ver de dónde salía el anterior es a ciegas. */
+  clcrMedidoAt: string | null;
+  creatininaMgDl: number | null;
   gradoKdigo: string | null;
   childPughClase: string | null;
   semanaGestacion: number | null;

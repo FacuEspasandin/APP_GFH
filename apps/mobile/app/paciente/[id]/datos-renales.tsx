@@ -1,16 +1,39 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
-import { AvisoNeutro, Boton, CampoTexto, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import type { Cockpit } from '@/api/tipos';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { Cargando, Boton, CampoTexto, Chip } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
+import {
+  calcularClcr,
+  claveColorPorClcr,
+  COLOR_SEVERIDAD,
+  DatoClinicoInvalido,
+  type Sexo,
+} from '@gfh/shared-types';
 
-/** Editar datos renales (3.1.3). Calculado o pisado a mano. */
+/**
+ * Editar datos renales (3.1.3). Calculado o pisado a mano.
+ *
+ * Antes esta pantalla pedía peso y creatinina, avisaba que "se calcula por
+ * Cockcroft-Gault" y no mostraba ni el Clcr vigente ni el que iba a quedar. El
+ * médico sobrescribía a ciegas un número del que cuelga todo el ajuste renal
+ * del paciente.
+ */
 export default function DatosRenales() {
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
+
+  const { data: cockpit, isLoading } = useQuery({
+    queryKey: ['cockpit', pacienteId],
+    queryFn: () => api.get<Cockpit>(`/pacientes/${pacienteId}/cockpit`),
+    enabled: Boolean(pacienteId),
+  });
 
   const [modo, setModo] = useState<'calcular' | 'manual'>('calcular');
   const [pesoKg, setPesoKg] = useState('');
@@ -33,45 +56,220 @@ export default function DatosRenales() {
     },
   });
 
+  if (isLoading || !cockpit) return <Cargando />;
+
+  const p = cockpit.paciente;
+
+  // El valor que quedaría al guardar, con la MISMA función que corre el
+  // backend: si difirieran, el número que el médico vio no sería el que manda.
+  const nuevo =
+    modo === 'manual'
+      ? (num(clcr) ?? null)
+      : calcularSeguro(p.edadAnios, num(pesoKg), num(creatinina), p.sexo as Sexo);
+
+  const listo = modo === 'manual' ? num(clcr) !== undefined : nuevo !== null;
+
   return (
-    <Pantalla>
-      <Eyebrow>Cómo cargar el Clcr</Eyebrow>
-      <View className="mb-4 flex-row gap-2">
-        <Chip texto="Calcular" activo={modo === 'calcular'} onPress={() => setModo('calcular')} />
-        <Chip texto="Ingresarlo" activo={modo === 'manual'} onPress={() => setModo('manual')} />
-      </View>
+    <KeyboardAvoidingView
+      className="flex-1 bg-paper"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+        <BloqueFormulario titulo="Ahora" etiqueta={p.clcrMlMin !== null ? 'Vigente' : undefined}>
+          <ClcrVigente paciente={p} />
+        </BloqueFormulario>
 
-      {modo === 'calcular' ? (
-        <>
-          <CampoTexto etiqueta="Peso (kg)" value={pesoKg} onChangeText={setPesoKg} keyboardType="numeric" />
-          <CampoTexto
-            etiqueta="Creatinina (mg/dL)"
-            value={creatinina}
-            onChangeText={setCreatinina}
-            keyboardType="numeric"
-          />
-          <AvisoNeutro>
-            Se calcula por Cockcroft-Gault con la edad y el sexo del paciente.
-          </AvisoNeutro>
-        </>
-      ) : (
-        <>
-          <CampoTexto etiqueta="Clcr (mL/min)" value={clcr} onChangeText={setClcr} keyboardType="numeric" />
-          <AvisoNeutro>
-            Pisa al calculado y queda marcado como ingresado a mano.
-          </AvisoNeutro>
-        </>
-      )}
+        <BloqueFormulario titulo="Nuevo valor">
+          <View className="mb-3.5 flex-row gap-2">
+            <Chip texto="Calcular" activo={modo === 'calcular'} onPress={() => setModo('calcular')} />
+            <Chip texto="Ingresarlo" activo={modo === 'manual'} onPress={() => setModo('manual')} />
+          </View>
 
-      <View className="mt-2">
-        <Boton
-          onPress={() => guardar.mutate()}
-          cargando={guardar.isPending}
-          deshabilitado={modo === 'manual' ? !clcr : !pesoKg || !creatinina}
-        >
-          Guardar
+          {modo === 'calcular' ? (
+            <View className="flex-row gap-3">
+              <View className="flex-1">
+                <CampoTexto
+                  etiqueta="Peso"
+                  value={pesoKg}
+                  onChangeText={setPesoKg}
+                  keyboardType="numeric"
+                  placeholder="kg"
+                />
+              </View>
+              <View className="flex-1">
+                <CampoTexto
+                  etiqueta="Creatinina"
+                  value={creatinina}
+                  onChangeText={setCreatinina}
+                  keyboardType="numeric"
+                  placeholder="mg/dL"
+                />
+              </View>
+            </View>
+          ) : (
+            <CampoTexto
+              etiqueta="Clcr (mL/min)"
+              value={clcr}
+              onChangeText={setClcr}
+              keyboardType="numeric"
+            />
+          )}
+
+          <Delta antes={p.clcrMlMin} despues={nuevo} manual={modo === 'manual'} />
+        </BloqueFormulario>
+      </ScrollView>
+
+      <View className="border-t border-line bg-surface px-4 py-3">
+        {/* "Guardar y recalcular" y no "Guardar": esto vuelve a correr las cinco
+            verificaciones del paciente, y el botón tiene que decirlo. */}
+        <Boton onPress={() => guardar.mutate()} cargando={guardar.isPending} deshabilitado={!listo}>
+          Guardar y recalcular
         </Boton>
       </View>
-    </Pantalla>
+    </KeyboardAvoidingView>
   );
+}
+
+function ClcrVigente({ paciente }: { paciente: Cockpit['paciente'] }) {
+  if (paciente.clcrMlMin === null) {
+    return (
+      <Text className="font-sans text-meta leading-5 text-ink-suave">
+        El paciente no tiene Clcr cargado, así que el ajuste renal está en neutro para todo su
+        tratamiento.
+      </Text>
+    );
+  }
+
+  const color = COLOR_SEVERIDAD[claveColorPorClcr(paciente.clcrMlMin)];
+
+  return (
+    <>
+      <View className="flex-row items-baseline">
+        <Text
+          className="font-mono-fuerte mr-2.5"
+          style={{ color, fontSize: 26, fontVariant: ['tabular-nums'] }}
+        >
+          {String(paciente.clcrMlMin).replace('.', ',')}
+        </Text>
+        <Text className="font-sans text-meta text-ink-suave">
+          mL/min{paciente.gradoKdigo ? ` · KDIGO ${paciente.gradoKdigo}` : ''}
+        </Text>
+      </View>
+
+      <Text className="font-sans mt-2 text-meta leading-4 text-ink-suave">
+        {procedencia(paciente)}
+      </Text>
+    </>
+  );
+}
+
+/** De dónde salió el número que se está por pisar. */
+function procedencia(p: Cockpit['paciente']): string {
+  const calculado = p.clcrOrigen === 'CALCULADO_COCKCROFT';
+  const cuando = p.clcrMedidoAt
+    ? new Date(p.clcrMedidoAt).toLocaleDateString('es-UY', { day: 'numeric', month: 'long' })
+    : null;
+
+  if (!calculado) {
+    return cuando ? `Ingresado a mano el ${cuando}.` : 'Ingresado a mano.';
+  }
+
+  const con = [
+    p.pesoKg !== null ? `${p.pesoKg} kg` : null,
+    p.creatininaMgDl !== null ? `creatinina ${String(p.creatininaMgDl).replace('.', ',')}` : null,
+  ].filter(Boolean);
+
+  return [
+    cuando ? `Calculado el ${cuando} por Cockcroft-Gault` : 'Calculado por Cockcroft-Gault',
+    con.length > 0 ? `, con ${con.join(' y ')}.` : '.',
+  ].join('');
+}
+
+/**
+ * De cuánto a cuánto.
+ *
+ * Ninguno de los dos números solo dice lo que importa: si el paciente cruza un
+ * umbral de la tabla de ajuste o se queda donde estaba.
+ */
+function Delta({
+  antes,
+  despues,
+  manual,
+}: {
+  antes: number | null;
+  despues: number | null;
+  manual: boolean;
+}) {
+  const col = useColores();
+  if (despues === null) return null;
+
+  const color = COLOR_SEVERIDAD[claveColorPorClcr(despues)];
+
+  return (
+    <View className="mt-3 flex-row items-center rounded-chip bg-primary-light px-3 py-2.5">
+      {antes !== null ? (
+        <>
+          <Text
+            className="font-mono text-fila text-tenue"
+            style={{ textDecorationLine: 'line-through', fontVariant: ['tabular-nums'] }}
+          >
+            {String(antes).replace('.', ',')}
+          </Text>
+          <Text className="font-sans mx-2 text-meta text-tenue">→</Text>
+        </>
+      ) : null}
+
+      <Text
+        className="font-mono-fuerte mr-3"
+        style={{ color, fontSize: 22, fontVariant: ['tabular-nums'] }}
+      >
+        {String(despues).replace('.', ',')}
+      </Text>
+
+      <Text className="font-sans flex-1 text-eyebrow leading-4" style={{ color: col.inkSuave }}>
+        {leyenda(antes, despues, manual)}
+      </Text>
+    </View>
+  );
+}
+
+/** Los cortes son los mismos que usa el resto de la app para colorear el Clcr. */
+function tramo(clcr: number): 'grave' | 'medio' | 'normal' {
+  if (clcr < 30) return 'grave';
+  if (clcr < 60) return 'medio';
+  return 'normal';
+}
+
+function leyenda(antes: number | null, despues: number, manual: boolean): string {
+  const sufijo = manual ? ' Queda marcado como ingresado a mano.' : '';
+
+  if (antes === null) return `Pasa a tener Clcr.${sufijo}`;
+  if (tramo(antes) === tramo(despues)) {
+    return tramo(despues) === 'grave'
+      ? `Sigue bajo 30: el ajuste renal se mantiene.${sufijo}`
+      : `Se mantiene en el mismo tramo de la tabla.${sufijo}`;
+  }
+  return `Cambia de tramo: los ajustes se recalculan.${sufijo}`;
+}
+
+/**
+ * `null` cuando todavía no alcanza para calcular.
+ *
+ * Mientras se tipea "1" camino a "1,4" el valor pasa por estados imposibles, y
+ * un error en cada tecla sería ruido: se muestra el resultado recién cuando
+ * existe.
+ */
+function calcularSeguro(
+  edadAnios: number,
+  pesoKg: number | undefined,
+  creatininaMgDl: number | undefined,
+  sexo: Sexo,
+): number | null {
+  if (pesoKg === undefined || creatininaMgDl === undefined) return null;
+  try {
+    return calcularClcr({ edadAnios, pesoKg, creatininaMgDl, sexo });
+  } catch (e) {
+    if (e instanceof DatoClinicoInvalido) return null;
+    throw e;
+  }
 }

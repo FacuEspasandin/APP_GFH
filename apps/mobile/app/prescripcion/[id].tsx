@@ -5,6 +5,7 @@ import { Alert, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
 import { hapticaExito } from '@/ui/haptica';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { AvisoNeutro, Boton, CampoTexto, Chip, Eyebrow, Pantalla } from '@/ui/kit';
 
 const VIAS = ['ORAL', 'IV', 'SC', 'IM', 'TOPICA', 'INHALATORIA', 'SUBLINGUAL', 'RECTAL'] as const;
@@ -57,43 +58,50 @@ export default function EditarPrescripcion() {
 
   return (
     <Pantalla>
-      {nombre ? (
-        <Text className="mb-4 text-fila font-fuerte text-ink">{nombre}</Text>
-      ) : null}
+      <BloqueFormulario titulo={nombre || 'Pauta'} exigencia="Obligatorio">
+        <View className="flex-row gap-3">
+          <View className="flex-1">
+            <CampoTexto
+              etiqueta="Dosis"
+              value={f.dosis}
+              onChangeText={(v) => setF((p) => ({ ...p, dosis: v }))}
+            />
+          </View>
+          <View className="flex-1">
+            <CampoTexto
+              etiqueta="Frecuencia"
+              value={f.frecuencia}
+              onChangeText={(v) => setF((p) => ({ ...p, frecuencia: v }))}
+            />
+          </View>
+        </View>
 
-      <CampoTexto
-        etiqueta="Dosis"
-        value={f.dosis}
-        onChangeText={(v) => setF((p) => ({ ...p, dosis: v }))}
-      />
-      <CampoTexto
-        etiqueta="Frecuencia"
-        value={f.frecuencia}
-        onChangeText={(v) => setF((p) => ({ ...p, frecuencia: v }))}
-      />
+        <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+          Vía
+        </Text>
+        <View className="flex-row flex-wrap gap-2">
+          {VIAS.map((v) => (
+            <Chip key={v} texto={v} activo={viaSel === v} onPress={() => setViaSel(v)} />
+          ))}
+        </View>
+      </BloqueFormulario>
 
-      <Eyebrow>Vía</Eyebrow>
-      <View className="mb-4 flex-row flex-wrap gap-2">
-        {VIAS.map((v) => (
-          <Chip key={v} texto={v} activo={viaSel === v} onPress={() => setViaSel(v)} />
-        ))}
-      </View>
+      <BloqueFormulario titulo="Estado">
+        <View className="flex-row flex-wrap gap-2">
+          {ESTADOS.map((e) => (
+            <Chip key={e} texto={e} activo={estadoSel === e} onPress={() => setEstadoSel(e)} />
+          ))}
+        </View>
+        {estadoSel !== 'ACTIVO' ? (
+          <Text className="font-sans mt-2.5 text-meta leading-4 text-ink-suave">
+            Deja de entrar a las verificaciones, pero queda registrado.
+          </Text>
+        ) : null}
+      </BloqueFormulario>
 
-      <Eyebrow>Estado</Eyebrow>
-      <View className="mb-3 flex-row flex-wrap gap-2">
-        {ESTADOS.map((e) => (
-          <Chip key={e} texto={e} activo={estadoSel === e} onPress={() => setEstadoSel(e)} />
-        ))}
-      </View>
-      {estadoSel !== 'ACTIVO' ? (
-        <AvisoNeutro>Deja de entrar a las verificaciones, pero queda registrado.</AvisoNeutro>
-      ) : null}
-
-      <View className="mt-2">
-        <Boton onPress={() => guardar.mutate()} cargando={guardar.isPending}>
-          Guardar cambios
-        </Boton>
-      </View>
+      <Boton onPress={() => guardar.mutate()} cargando={guardar.isPending}>
+        Guardar cambios
+      </Boton>
 
       <View className="mt-8" />
       <Eyebrow>Zona de riesgo</Eyebrow>

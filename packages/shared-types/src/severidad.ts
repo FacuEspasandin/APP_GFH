@@ -295,6 +295,29 @@ export const claveHallazgo = {
   hepatico: (prescripcionId: string, rangoId: string) => `hep:${prescripcionId}:${rangoId}`,
 } as const;
 
+/**
+ * Lee de vuelta la clave de una alerta.
+ *
+ * La app necesita saber cuántos fármacos toca cada condición cargada, y el
+ * cockpit ya trae los hallazgos: la cuenta sale de agrupar por `condicionId`
+ * sin pedir nada más al servidor. Parsear el string desde la UI ataría el
+ * formato a dos lugares, así que la vuelta vive al lado de la ida.
+ *
+ * `null` si la clave no es de una alerta —una interacción o un ajuste— o si
+ * viene malformada.
+ */
+export function partesClaveAlerta(
+  clave: string,
+): { prescripcionId: string; condicionId: string; origen: 'CONDICION' | 'ALERGIA' } | null {
+  const partes = clave.split(':');
+  if (partes.length !== 4 || partes[0] !== 'al') return null;
+
+  const [, prescripcionId, condicionId, origen] = partes as [string, string, string, string];
+  if (origen !== 'CONDICION' && origen !== 'ALERGIA') return null;
+
+  return { prescripcionId, condicionId, origen };
+}
+
 // ---------------------------------------------------------------------------
 // 7. Forma del hallazgo unificado
 // ---------------------------------------------------------------------------

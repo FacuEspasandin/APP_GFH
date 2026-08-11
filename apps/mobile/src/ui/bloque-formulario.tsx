@@ -20,19 +20,28 @@ export type Exigencia = 'Obligatorio' | 'Recomendado' | 'Opcional';
 export function BloqueFormulario({
   titulo,
   exigencia,
+  etiqueta,
   children,
 }: {
   titulo: string;
   exigencia?: Exigencia;
+  /**
+   * Rótulo libre para el mismo lugar, cuando lo que hay que decir no es una
+   * exigencia sino un estado — "Vigente" sobre el Clcr actual. Se mantiene
+   * aparte para que `Exigencia` no se convierta en un cajón de strings.
+   */
+  etiqueta?: string;
   children: ReactNode;
 }) {
+  const derecha = exigencia ?? etiqueta;
+
   return (
     <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3.5">
       <View className="mb-3 flex-row items-baseline justify-between">
         <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
-        {exigencia ? (
+        {derecha ? (
           <Text className="font-medio text-eyebrow uppercase tracking-wider text-tenue">
-            {exigencia}
+            {derecha}
           </Text>
         ) : null}
       </View>

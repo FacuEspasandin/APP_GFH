@@ -16,6 +16,10 @@ export interface PacienteResumen {
   alturaCm: number | null;
   clcrMlMin: number | null;
   clcrOrigen: string | null;
+  /** Cuándo y con qué se calculó. La pantalla de función renal sobrescribe el
+   *  Clcr, y hacerlo sin ver la procedencia del que ya estaba es a ciegas. */
+  clcrMedidoAt: string | null;
+  creatininaMgDl: number | null;
   gradoKdigo: string | null;
   childPughClase: string | null;
   semanaGestacion: number | null;
@@ -89,6 +93,8 @@ export class CockpitService {
         alturaCm: contexto.paciente.alturaCm,
         clcrMlMin: resultado.clcrMlMin,
         clcrOrigen: resultado.clcrOrigen,
+        clcrMedidoAt: contexto.paciente.clcrMedidoAt?.toISOString() ?? null,
+        creatininaMgDl: contexto.paciente.creatininaMgDl,
         gradoKdigo: resultado.gradoKdigo,
         childPughClase: contexto.paciente.childPughClase,
         semanaGestacion: contexto.paciente.semanaGestacion,
