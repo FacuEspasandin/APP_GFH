@@ -1,9 +1,11 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
 import { api, iniciarSesion } from '@/api/cliente';
-import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { Boton, CampoTexto } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
 /** Registro (1.4). Nombre de usuario único + email + contraseña. */
@@ -49,54 +51,85 @@ export default function Registro() {
 
   const campo = (k: keyof typeof c) => (v: string) => setC((p) => ({ ...p, [k]: v }));
 
+  const listo =
+    Boolean(c.nombre.trim() && c.apellido.trim() && c.email.trim() && c.nombreUsuario.trim()) &&
+    c.password.length > 0;
+
   return (
-    <Pantalla>
-      <CampoTexto etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
-      <CampoTexto etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
-      <CampoTexto
-        etiqueta="Nombre de usuario"
-        value={c.nombreUsuario}
-        onChangeText={campo('nombreUsuario')}
-        autoCapitalize="none"
-        placeholder="solo letras, números, . _ -"
-      />
-      <CampoTexto
-        etiqueta="Email"
-        value={c.email}
-        onChangeText={campo('email')}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-      <CampoTexto
-        etiqueta="Contraseña"
-        value={c.password}
-        onChangeText={campo('password')}
-        secureTextEntry
-        placeholder="mínimo 10 caracteres"
-      />
-      <CampoTexto
-        etiqueta="Confirmar contraseña"
-        value={c.confirmar}
-        onChangeText={campo('confirmar')}
-        secureTextEntry
-      />
+    <KeyboardAvoidingView
+      className="flex-1 bg-paper"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+        <BloqueFormulario titulo="Quién sos" exigencia="Obligatorio">
+          <View className="flex-row gap-3">
+            <View className="flex-1">
+              <CampoTexto etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
+            </View>
+            <View className="flex-1">
+              <CampoTexto etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
+            </View>
+          </View>
+          <CampoTexto
+            etiqueta="Email"
+            value={c.email}
+            onChangeText={campo('email')}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+        </BloqueFormulario>
 
-      {error ? (
-        <Text className="font-sans mb-3 text-meta" style={{ color: col.peligro }}>
-          {error}
-        </Text>
-      ) : null}
+        <BloqueFormulario titulo="Para entrar" exigencia="Obligatorio">
+          <CampoTexto
+            etiqueta="Nombre de usuario"
+            value={c.nombreUsuario}
+            onChangeText={campo('nombreUsuario')}
+            autoCapitalize="none"
+          />
+          {/* La regla de formato deja de vivir en el placeholder, que se borra
+              apenas se escribe la primera letra. Y se dice que es definitivo:
+              hoy eso se descubre recién en Perfil. */}
+          <Text className="font-sans -mt-2 mb-3.5 px-1 text-meta leading-4 text-ink-suave">
+            Letras, números, punto, guion y guion bajo. No se puede cambiar después.
+          </Text>
 
-      <Boton onPress={enviar} cargando={enviando}>
-        Crear cuenta
-      </Boton>
+          <CampoTexto
+            etiqueta="Contraseña"
+            value={c.password}
+            onChangeText={campo('password')}
+            secureTextEntry
+            placeholder="Mínimo 10 caracteres"
+          />
+          <CampoTexto
+            etiqueta="Repetir"
+            value={c.confirmar}
+            onChangeText={campo('confirmar')}
+            secureTextEntry
+          />
+        </BloqueFormulario>
 
-      <View className="mt-4">
-        <AvisoNeutro>
-          El acceso es de pago desde el primer día, sin prueba gratuita. Después de crear la cuenta
-          se elige el plan.
-        </AvisoNeutro>
+        {/* Decía "El acceso es de pago desde el primer día, sin prueba
+            gratuita". Era verdad antes del plan gratis, y quedó contradiciendo
+            al paywall — que sí ofrece un paciente sin pagar. */}
+        <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
+          <Text className="font-sans text-meta leading-5 text-ink-suave">
+            Empezás con el plan gratis: un paciente, con todas las verificaciones. Cuando quieras el
+            segundo, ahí se elige plan.
+          </Text>
+        </Superficie>
+
+        {error ? (
+          <Text className="font-sans mb-1 px-1 text-meta" style={{ color: col.peligro }}>
+            {error}
+          </Text>
+        ) : null}
+      </ScrollView>
+
+      <View className="border-t border-line bg-surface px-4 py-3">
+        <Boton onPress={enviar} cargando={enviando} deshabilitado={!listo}>
+          Crear cuenta
+        </Boton>
       </View>
-    </Pantalla>
+    </KeyboardAvoidingView>
   );
 }

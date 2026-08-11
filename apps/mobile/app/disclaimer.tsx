@@ -34,10 +34,10 @@ export default function DisclaimerPrimerIngreso() {
   };
 
   return (
-    <View className="flex-1 bg-paper px-6 pb-10 pt-16">
-      <Text className="text-grande font-fuerte text-ink">Antes de empezar</Text>
+    <View className="flex-1 bg-paper pt-16">
+      <Text className="px-6 text-grande font-fuerte text-ink">Antes de empezar</Text>
 
-      <ScrollView className="mt-4 flex-1">
+      <ScrollView className="mt-4 flex-1" contentContainerClassName="px-6 pb-4">
         <Text className="font-sans text-body leading-6 text-ink">
           GFH es una <Text className="font-fuerte">herramienta de apoyo a la decisión clínica</Text>.
           Las recomendaciones que muestra no sustituyen el juicio del médico tratante.
@@ -53,11 +53,12 @@ export default function DisclaimerPrimerIngreso() {
         </Text>
       </ScrollView>
 
+      <View className="border-t border-line bg-surface px-6 pb-8 pt-4">
       <Pressable
         onPress={() => setAceptado((v) => !v)}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: aceptado }}
-        className="my-5 flex-row items-start gap-3"
+        className="mb-4 flex-row items-start gap-3"
       >
         <View
           className="mt-0.5 h-5 w-5 items-center justify-center rounded-[5px] border-2"
@@ -76,6 +77,7 @@ export default function DisclaimerPrimerIngreso() {
       <Boton onPress={continuar} deshabilitado={!aceptado} cargando={enviando}>
         Continuar
       </Boton>
+      </View>
     </View>
   );
 }
