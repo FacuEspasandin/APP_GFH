@@ -3,40 +3,41 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
-import type { CategoriaHallazgo, Cockpit, Hallazgo } from '@/api/tipos';
+import type { Cockpit, Hallazgo } from '@/api/tipos';
+import {
+  filtrarAvisos,
+  filtrarHallazgos,
+  mensajeVacio,
+  tituloDeVista,
+  vistaDesdeParams,
+} from '@/dominio/hallazgos';
 import { Cargando, Estado, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { ChipSeveridad, Espina } from '@/ui/severidad';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
-const TITULO: Record<CategoriaHallazgo, string> = {
-  INTERACCION: 'Interacciones',
-  CONDICION: 'Condiciones y alergias',
-  AJUSTE_RENAL: 'Ajuste renal',
-  AJUSTE_HEPATICO: 'Ajuste hepático',
-};
-
-const VACIO: Record<CategoriaHallazgo, string> = {
-  INTERACCION: 'Ninguna interacción conocida entre los fármacos cargados.',
-  CONDICION: 'Ninguna alerta por las condiciones y alergias cargadas.',
-  AJUSTE_RENAL: 'Ningún fármaco necesita ajuste con este Clcr.',
-  AJUSTE_HEPATICO: 'Sin tabla de ajuste hepático todavía.',
-};
-
 /**
- * Detalle de hallazgos, filtrado por categoría, por fármaco o los avisos.
+ * Detalle de hallazgos: todos, por categoría, por fármaco o los avisos.
  *
- * Una sola pantalla para los tres cortes: la diferencia es qué se filtra, no
+ * Una sola pantalla para los cuatro cortes: la diferencia es qué se filtra, no
  * cómo se muestra. Duplicarla en seis archivos sería seis lugares donde la
  * espina puede quedar de un color distinto.
+ *
+ * Qué se filtra está en `@/dominio/hallazgos` y no acá. Era un ternario
+ * anidado adentro del JSX y le faltaba el caso «sin parámetros» —el que usa
+ * «Ver los N hallazgos»—, que caía en el filtro por fármaco con el id vacío:
+ * el cockpit decía 11 y la pantalla decía que no había ninguno. Un filtro que
+ * devuelve vacío no tira ningún error y no lo ve ningún barrido.
  */
 export default function Hallazgos() {
-  const { id, categoria, prescripcion, avisos } = useLocalSearchParams<{
+  const params = useLocalSearchParams<{
     id: string;
-    categoria?: CategoriaHallazgo;
+    categoria?: string;
     prescripcion?: string;
     avisos?: string;
   }>();
+  const id = params.id;
+  const vista = vistaDesdeParams(params);
   const router = useRouter();
 
   const { data, isLoading, error } = useQuery({
@@ -55,35 +56,17 @@ export default function Hallazgos() {
   }
 
   const nombres = new Map(data.prescripciones.map((x) => [x.id, x.nombre]));
-  const mostrandoAvisos = avisos === '1';
 
-  const titulo = mostrandoAvisos
-    ? 'Datos faltantes'
-    : categoria
-      ? TITULO[categoria]
-      : (nombres.get(prescripcion ?? '') ?? 'Hallazgos');
-
-  const lista = mostrandoAvisos
-    ? []
-    : categoria
-      ? data.hallazgos.filter((h) => h.categoria === categoria)
-      : data.hallazgos.filter((h) => h.prescripcionIds.includes(prescripcion ?? ''));
-
-  // Los avisos de esta categoría/fármaco se muestran acá y no en el cockpit:
+  const titulo = tituloDeVista(vista, (pid) => nombres.get(pid));
+  const lista = filtrarHallazgos(vista, data.hallazgos);
+  // Los avisos de esta categoría o fármaco van acá y no en el cockpit:
   // pertenecen al detalle, no al resumen.
-  const avisosRelevantes = mostrandoAvisos
-    ? data.avisos
-    : prescripcion
-      ? data.avisos.filter((a) => a.prescripcionId === prescripcion)
-      : categoria === 'AJUSTE_RENAL'
-        ? data.avisos.filter((a) => a.codigo === 'SIN_CLCR' || a.codigo === 'FARMACO_LIBRE_CLCR_BAJO')
-        : categoria === 'AJUSTE_HEPATICO'
-          ? data.avisos.filter((a) => a.codigo === 'SIN_CHILD_PUGH')
-          : categoria === 'CONDICION'
-            ? data.avisos.filter((a) => a.codigo === 'SIN_SEMANA_GESTACION')
-            : [];
+  const avisosRelevantes = filtrarAvisos(vista, data.avisos);
 
-  const prescripcionActual = prescripcion ? data.prescripciones.find((x) => x.id === prescripcion) : null;
+  const prescripcionActual =
+    vista.tipo === 'prescripcion'
+      ? (data.prescripciones.find((x) => x.id === vista.prescripcionId) ?? null)
+      : null;
 
   return (
     <Pantalla>
@@ -125,9 +108,7 @@ export default function Hallazgos() {
           className="rounded-card border border-line bg-surface px-3.5 py-3"
           style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.ok }}
         >
-          <Text className="font-sans text-meta text-ink">
-            {categoria ? VACIO[categoria] : 'Sin hallazgos para este fármaco.'}
-          </Text>
+          <Text className="font-sans text-meta text-ink">{mensajeVacio(vista)}</Text>
         </View>
       ) : null}
 

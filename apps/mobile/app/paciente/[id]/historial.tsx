@@ -76,10 +76,9 @@ export default function HistorialPaciente() {
   }
 
   return (
-    // El `pb-24` deja pasar la barra inferior: es lo último de la lista lo que
-    // quedaría abajo de todo, y el evento más viejo del paciente es
-    // justamente el que se va a buscar.
-    <ScrollView className="flex-1 bg-paper" contentContainerClassName="px-4 pb-24 pt-3">
+    // Mismo padding que `Pantalla`: la barra inferior ocupa su propio espacio
+    // en el layout raíz, no flota encima, así que no hay que reservarle nada.
+    <ScrollView className="flex-1 bg-paper" contentContainerClassName="px-4 pb-6 pt-3">
       {dias.map((dia) => (
         <View key={dia.clave} className="mb-1">
           <Text className="font-mono-fuerte mb-1 mt-3 text-eyebrow uppercase tracking-wider text-ink-suave">
