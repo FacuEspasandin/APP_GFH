@@ -23,8 +23,10 @@ import {
   AgregarAlergiaDto,
   AgregarCondicionDto,
   CrearPrescripcionDto,
+  DatosHepaticosDto,
   DatosRenalesDto,
   HerramientaCondicionAlergiaDto,
+  HerramientaHepaticaDto,
   HerramientaInteraccionesDto,
   HerramientaRenalDto,
 } from './dto/tratamiento.dto';
@@ -90,6 +92,15 @@ export class TratamientoController {
   @HttpCode(204)
   quitarAlergia(@MedicoActual() medicoId: string, @Param('id', new ParseUUIDPipe()) id: string) {
     return this.tratamiento.quitarAlergia(medicoId, id);
+  }
+
+  @Patch('pacientes/:id/datos-hepaticos')
+  datosHepaticos(
+    @MedicoActual() medicoId: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Cuerpo(DatosHepaticosDto) dto: DatosHepaticosDto,
+  ) {
+    return this.tratamiento.actualizarDatosHepaticos(medicoId, id, dto);
   }
 
   @Patch('pacientes/:id/datos-renales')
@@ -171,7 +182,7 @@ export class HerramientasController {
 
   @Post('ajuste-hepatico')
   @HttpCode(200)
-  ajusteHepatico() {
-    return this.herramientas.ajusteHepatico();
+  ajusteHepatico(@Cuerpo(HerramientaHepaticaDto) dto: HerramientaHepaticaDto) {
+    return this.herramientas.ajusteHepatico(dto);
   }
 }

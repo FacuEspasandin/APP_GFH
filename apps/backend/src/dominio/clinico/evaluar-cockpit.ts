@@ -28,7 +28,14 @@ import type { ContextoCockpit, PrescripcionActiva } from './puertos';
 import { gradoKdigo, type GradoKdigo } from '@gfh/shared-types';
 
 export interface AvisoFaltaDeDato {
-  codigo: 'SIN_CLCR' | 'SIN_SEMANA_GESTACION' | 'SIN_CHILD_PUGH' | 'FARMACO_LIBRE_CLCR_BAJO';
+  codigo:
+    | 'SIN_CLCR'
+    | 'SIN_SEMANA_GESTACION'
+    /** Falta el estado hepático del paciente: lo puede resolver el médico. */
+    | 'SIN_CHILD_PUGH'
+    /** Está la clase, falta la tabla de ajuste por fármaco: no lo puede resolver. */
+    | 'SIN_TABLA_HEPATICA'
+    | 'FARMACO_LIBRE_CLCR_BAJO';
   detalle: string;
   prescripcionId?: string;
 }
@@ -218,10 +225,19 @@ export function evaluarCockpit(
         'Hay alertas que dependen de la semana de gestación y no está registrada. Se mantienen todas.',
     });
   }
+  // Dos motivos distintos por los que el ajuste hepático no evalúa, y decir el
+  // equivocado sería mentirle al médico: o falta el dato del paciente —que él
+  // puede resolver— o falta la tabla de ajuste por fármaco —que no—. Antes los
+  // dos casos daban el mismo aviso, así que cargar Child-Pugh parecía inútil.
   if (p.childPughClase === null) {
     avisos.push({
       codigo: 'SIN_CHILD_PUGH',
       detalle: 'Sin estado hepático: el ajuste hepático no se puede evaluar.',
+    });
+  } else {
+    avisos.push({
+      codigo: 'SIN_TABLA_HEPATICA',
+      detalle: `Clase Child-Pugh ${p.childPughClase} registrada. Todavía no hay tabla de ajuste hepático por fármaco contra la cual evaluarla.`,
     });
   }
 

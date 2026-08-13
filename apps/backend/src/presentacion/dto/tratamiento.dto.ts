@@ -91,6 +91,25 @@ export class DatosRenalesDto {
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(300) clcrMlMin?: number;
 }
 
+/**
+ * Los cinco criterios de Child-Pugh, todos opcionales.
+ *
+ * Opcionales porque la pantalla guarda lo que haya: un paciente al que todavía
+ * no le llegó el INR igual tiene bilirrubina y albúmina cargadas, y perderlas
+ * hasta que llegue el tercer valor no ayuda a nadie. La clase se calcula sólo
+ * cuando están los cinco.
+ *
+ * Las unidades son las que guarda el esquema —mg/dL y g/dL—; la conversión
+ * desde µmol/L y g/L la hace el cliente, que es donde el médico elige la unidad.
+ */
+export class DatosHepaticosDto {
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0.01) @Max(80) bilirrubinaMgDl?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0.1) @Max(10) albuminaGDl?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0.5) @Max(20) inr?: number;
+  @IsOptional() @IsEnum(['AUSENTE', 'LEVE', 'MODERADA_SEVERA']) ascitis?: 'AUSENTE' | 'LEVE' | 'MODERADA_SEVERA';
+  @IsOptional() @IsEnum(['AUSENTE', 'GRADO_1_2', 'GRADO_3_4']) encefalopatia?: 'AUSENTE' | 'GRADO_1_2' | 'GRADO_3_4';
+}
+
 // --- herramientas standalone -------------------------------------------------
 // No persisten nada: son puro cálculo sin estado (modelo §5).
 
@@ -100,6 +119,19 @@ export class HerramientaInteraccionesDto {
   @ArrayMaxSize(20)
   @IsUUID('4', { each: true })
   principioActivoIds!: string[];
+}
+
+/**
+ * La herramienta suelta: mismos criterios, sin paciente y sin guardar nada.
+ * Se declara aparte del DTO del paciente a propósito — si mañana el de
+ * paciente suma un campo, la herramienta no tiene por qué heredarlo.
+ */
+export class HerramientaHepaticaDto {
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0.01) @Max(80) bilirrubinaMgDl?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0.1) @Max(10) albuminaGDl?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0.5) @Max(20) inr?: number;
+  @IsOptional() @IsEnum(['AUSENTE', 'LEVE', 'MODERADA_SEVERA']) ascitis?: 'AUSENTE' | 'LEVE' | 'MODERADA_SEVERA';
+  @IsOptional() @IsEnum(['AUSENTE', 'GRADO_1_2', 'GRADO_3_4']) encefalopatia?: 'AUSENTE' | 'GRADO_1_2' | 'GRADO_3_4';
 }
 
 export class HerramientaCondicionAlergiaDto {

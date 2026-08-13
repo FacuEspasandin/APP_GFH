@@ -77,13 +77,24 @@ historial" en las herramientas standalone (son descartables a propósito).
 
 ## Genuinamente sin decidir — no inventar, preguntar
 
-- Clasificación de ajuste hepático (Child-Pugh propuesto, no confirmado —
-  no hay tabla de datos real todavía).
 - Comportamiento exacto de "suscripción vencida" (el wireframe asume
   bloqueo total, sin confirmar).
 - Lógica de "eliminar cuenta" (período de gracia, qué pasa con la
   suscripción activa en la tienda).
 - Origen de `codigoATC` para la jerarquía de "Similares".
+- Si la tabla de ajuste hepático va a indexarse por **clase** (A/B/C) o por
+  **puntaje**. Child-Pugh se usa casi siempre por clase, pero conviene fijarlo
+  antes de cargar datos: cambiarlo después obliga a recargar todo.
+
+## Decidido — ya no preguntar
+
+- **Child-Pugh es la clasificación hepática.** Confirmado. La calculadora está
+  en `packages/shared-types/src/child-pugh.ts` y la usan las dos pantallas: la
+  del paciente, que guarda la clase, y la herramienta suelta, que descarta.
+  Lo que sigue faltando es la tabla de ajuste **por fármaco** — sin ella la
+  categoría del cockpit queda en neutro con el aviso `SIN_TABLA_HEPATICA`,
+  que es distinto de `SIN_CHILD_PUGH`: uno lo resuelve el médico cargando el
+  dato, el otro no.
 
 ## Orden sugerido de construcción
 

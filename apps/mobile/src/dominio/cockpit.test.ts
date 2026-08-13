@@ -118,6 +118,9 @@ describe('hallazgos destacados', () => {
 describe('ajuste hepático sin evaluar', () => {
   it('lo detecta desde el aviso del motor, no de una constante', () => {
     expect(hepaticoSinEvaluar([{ codigo: 'SIN_CHILD_PUGH' }])).toBe(true);
+    // Con la clase cargada el motivo cambia —falta la tabla, no el dato— pero
+    // sigue sin poder evaluar, así que sigue mostrando «—» y no «0».
+    expect(hepaticoSinEvaluar([{ codigo: 'SIN_TABLA_HEPATICA' }])).toBe(true);
   });
 
   it('con estado hepático cargado, cero significa cero', () => {

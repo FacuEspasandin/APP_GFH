@@ -111,11 +111,12 @@ export function destacados<T extends HallazgoResumible>(
 }
 
 /**
- * El ajuste hepático no tiene tabla contra la cual evaluar, y el motor lo dice
- * con este aviso. Mostrar "0" ahí afirmaría que se miró y no había nada.
+ * El ajuste hepático no evalúa, por uno de dos motivos: falta el estado
+ * hepático del paciente, o falta la tabla de ajuste por fármaco. Los dos casos
+ * muestran "—": un "0" afirmaría que se miró y no había nada.
  */
 export function hepaticoSinEvaluar(avisos: readonly { codigo: string }[]): boolean {
-  return avisos.some((a) => a.codigo === 'SIN_CHILD_PUGH');
+  return avisos.some((a) => a.codigo === 'SIN_CHILD_PUGH' || a.codigo === 'SIN_TABLA_HEPATICA');
 }
 
 /**

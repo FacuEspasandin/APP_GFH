@@ -84,7 +84,7 @@ export function filtrarAvisos<T extends AvisoFiltrable>(vista: Vista, avisos: re
 
 const CODIGOS_POR_CATEGORIA: Record<CategoriaHallazgo, readonly string[]> = {
   AJUSTE_RENAL: ['SIN_CLCR', 'FARMACO_LIBRE_CLCR_BAJO'],
-  AJUSTE_HEPATICO: ['SIN_CHILD_PUGH'],
+  AJUSTE_HEPATICO: ['SIN_CHILD_PUGH', 'SIN_TABLA_HEPATICA'],
   CONDICION: ['SIN_SEMANA_GESTACION'],
   INTERACCION: [],
 };

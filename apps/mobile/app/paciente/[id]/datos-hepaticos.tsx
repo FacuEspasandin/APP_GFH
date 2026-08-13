@@ -1,36 +1,114 @@
-import { AvisoNeutro, Estado, Eyebrow, Pantalla } from '@/ui/kit';
-import { Text } from 'react-native';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+
+import { api } from '@/api/cliente';
+import {
+  borradorDesde,
+  cuerpoDeGuardado,
+  evaluar,
+  sePuedeGuardar,
+  type Borrador,
+} from '@/dominio/hepatico';
+import { FormularioChildPugh, ResultadoChildPugh } from '@/ui/child-pugh';
+import { Boton, Cargando } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
 
 /**
- * Datos hepáticos (3.1.4).
+ * Lo que hace falta de `GET /pacientes/:id`. Los tres primeros son `Decimal` en
+ * el esquema, y Prisma los serializa como string.
+ */
+interface PacienteHepatico {
+  bilirrubinaMgDl: string | number | null;
+  albuminaGDl: string | number | null;
+  inr: string | number | null;
+  ascitis: string | null;
+  encefalopatia: string | null;
+  childPughClase: string | null;
+}
+
+const aNumeros = (p: PacienteHepatico) => ({
+  bilirrubinaMgDl: p.bilirrubinaMgDl === null ? null : Number(p.bilirrubinaMgDl),
+  albuminaGDl: p.albuminaGDl === null ? null : Number(p.albuminaGDl),
+  inr: p.inr === null ? null : Number(p.inr),
+  ascitis: p.ascitis,
+  encefalopatia: p.encefalopatia,
+});
+
+/**
+ * Función hepática del paciente (3.1.4).
  *
- * El esquema existe —`Paciente` tiene bilirrubina, albúmina, INR, ascitis,
- * encefalopatía y clase Child-Pugh— pero no hay tabla de ajuste hepático contra
- * la cual evaluarlos, y la clasificación clínica todavía no está confirmada.
+ * Reemplaza la pantalla que sólo explicaba por qué no se podía evaluar. Ahora
+ * calcula y guarda la clase de Child-Pugh, que es lo que va a consumir el
+ * ajuste hepático el día que exista la tabla por fármaco.
  *
- * Cargar los cinco valores sin motor que los use daría la impresión de que el
- * sistema está evaluando algo. Por eso la pantalla explica en vez de pedir
- * datos que hoy no cambian ningún resultado.
+ * Esa tabla sigue sin existir, y la pantalla lo dice arriba del botón en vez de
+ * esconderlo: guardar sirve igual —la clase es un dato del paciente— pero
+ * prometer un ajuste que no va a aparecer sería mentir.
  */
 export default function DatosHepaticos() {
+  const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
+  const qc = useQueryClient();
+
+  // Se pide el paciente completo y no el cockpit: los cinco criterios son datos
+  // crudos que el motor no necesita, y meterlos en el contexto clínico sería
+  // ensuciar el puerto del dominio con algo que sólo usa esta pantalla.
+  const { data: paciente, isLoading } = useQuery({
+    queryKey: ['paciente', pacienteId],
+    queryFn: () => api.get<PacienteHepatico>(`/pacientes/${pacienteId}`),
+    enabled: Boolean(pacienteId),
+  });
+
+  const [editado, setEditado] = useState<Borrador | null>(null);
+
+  const guardar = useMutation({
+    mutationFn: (b: Borrador) =>
+      api.patch(`/pacientes/${pacienteId}/datos-hepaticos`, cuerpoDeGuardado(b)),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
+      await qc.invalidateQueries({ queryKey: ['historial', pacienteId] });
+      await qc.invalidateQueries({ queryKey: ['inicio'] });
+      router.back();
+    },
+  });
+
+  if (isLoading || !paciente) return <Cargando />;
+
+  // Lo guardado es el punto de partida; lo que el médico toca lo pisa.
+  const borrador = editado ?? borradorDesde(aNumeros(paciente));
+  const yaTenia = paciente.childPughClase !== null;
+  const r = evaluar(borrador);
+
   return (
-    <Pantalla>
-      <Estado
-        titulo="Todavía no se puede evaluar"
-        detalle="El ajuste hepático no tiene tabla de datos cargada, así que cargar los valores no cambiaría ningún resultado."
-      />
+    <KeyboardAvoidingView
+      className="flex-1 bg-paper"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+        <FormularioChildPugh valor={borrador} onCambio={setEditado} />
 
-      <Eyebrow>Qué falta</Eyebrow>
-      <Text className="font-sans mb-3 px-1 text-meta leading-5 text-ink-suave">
-        Dos cosas, en este orden: confirmar la clasificación clínica —Child-Pugh es lo propuesto,
-        por ser el criterio de las tablas publicadas— y construir la tabla de ajuste por fármaco.
-        El esquema de base ya está listo para recibirla, con el mismo patrón que el renal.
-      </Text>
+        <ResultadoChildPugh valor={borrador} />
 
-      <AvisoNeutro>
-        Mientras tanto la categoría «Ajuste hepático» del diagnóstico queda en cero y en neutro. No
-        es que no haya problema: es que no se sabe.
-      </AvisoNeutro>
-    </Pantalla>
+        <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
+          <Text className="font-sans text-meta leading-5 text-ink-suave">
+            {r.clase === null
+              ? 'La clase se guarda cuando estén los cinco criterios. Mientras tanto, lo que cargues queda igual.'
+              : 'La clase queda en el paciente. La tabla de ajuste por fármaco todavía no existe: cuando esté, se aplica sola sobre el tratamiento que ya cargaste.'}
+          </Text>
+        </Superficie>
+      </ScrollView>
+
+      <View className="border-t border-line bg-surface px-4 py-3">
+        <Boton
+          onPress={() => guardar.mutate(borrador)}
+          cargando={guardar.isPending}
+          deshabilitado={!sePuedeGuardar(borrador)}
+        >
+          {yaTenia ? 'Actualizar' : 'Guardar y recalcular'}
+        </Boton>
+      </View>
+    </KeyboardAvoidingView>
   );
 }

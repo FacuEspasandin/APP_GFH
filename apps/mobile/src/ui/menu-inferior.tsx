@@ -60,6 +60,13 @@ const HERRAMIENTAS: { ruta: string; titulo: string; detalle: string; icono: Nomb
     detalle: 'Alertas sobre un fármaco',
     icono: 'alerta',
   },
+  {
+    ruta: '/herramientas/hepatico',
+    titulo: 'Ajuste hepático',
+    // Dice lo que hace HOY: la clase sí, el ajuste por fármaco todavía no.
+    detalle: 'Clase de Child-Pugh',
+    icono: 'higado',
+  },
 ];
 
 /**
@@ -235,14 +242,7 @@ export function MenuInferior() {
             }}
           />
         ))}
-        {/* Apagado y no oculto: existe en el producto, falta el dato. Esconderlo
-            haría parecer que nunca existió. */}
-        <OpcionHoja
-          titulo="Ajuste hepático"
-          detalle="Sin tabla de datos todavía"
-          icono="higado"
-          deshabilitada
-        />
+
       </HojaInferior>
     </>
   );

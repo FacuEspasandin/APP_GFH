@@ -1,3 +1,4 @@
+export * from './child-pugh';
 export * from './clcr';
 export * from './enums';
 export * from './severidad';

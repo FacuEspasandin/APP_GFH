@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 
-import { gradoKdigo, parClave, RANGO_POR_TIPO_AJUSTE } from '@gfh/shared-types';
+import { gradoKdigo, parClave, RANGO_POR_TIPO_AJUSTE , calcularChildPugh, GLOSA_CLASE } from '@gfh/shared-types';
 
 import { elegirRango } from '../../dominio/clinico/ajuste-renal';
 import { evaluarAlergias, type GrupoAlergenico } from '../../dominio/clinico/alergias';
@@ -10,6 +10,7 @@ import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/cat
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import type {
   HerramientaCondicionAlergiaDto,
+  HerramientaHepaticaDto,
   HerramientaInteraccionesDto,
   HerramientaRenalDto,
 } from '../../presentacion/dto/tratamiento.dto';
@@ -245,11 +246,31 @@ export class HerramientasService {
    * clínica todavía no está confirmada. Se responde explícitamente "sin datos"
    * en vez de devolver una lista vacía que se lea como "no hay problema".
    */
-  ajusteHepatico() {
+  /**
+   * Child-Pugh sin paciente. No guarda nada: las herramientas sueltas son
+   * descartables a propósito (modelo §5).
+   *
+   * `disponible: false` sigue significando lo mismo que antes —no hay tabla de
+   * ajuste por fármaco— pero ahora la clase sí se calcula. Pasar de «no se
+   * puede evaluar» a «clase B, sin tabla todavía» es la diferencia entre una
+   * pantalla muerta y una que sirve.
+   */
+  ajusteHepatico(dto: HerramientaHepaticaDto) {
+    const r = calcularChildPugh({
+      bilirrubinaMgDl: dto.bilirrubinaMgDl,
+      albuminaGDl: dto.albuminaGDl,
+      inr: dto.inr,
+      ascitis: dto.ascitis,
+      encefalopatia: dto.encefalopatia,
+    });
+
     return {
-      disponible: false,
+      ...r,
+      glosa: r.clase === null ? null : GLOSA_CLASE[r.clase],
+      /** La tabla de ajuste por fármaco: sigue sin existir. */
+      tablaDisponible: false,
       motivo:
-        'El ajuste hepático todavía no tiene tabla de datos cargada. No se puede evaluar.',
+        'La clase se calcula, pero todavía no hay tabla de ajuste por fármaco contra la cual evaluarla.',
       resultados: [],
     };
   }

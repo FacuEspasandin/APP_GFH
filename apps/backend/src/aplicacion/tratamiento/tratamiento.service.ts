@@ -9,9 +9,17 @@ import type {
   AgregarAlergiaDto,
   AgregarCondicionDto,
   CrearPrescripcionDto,
+  DatosHepaticosDto,
   DatosRenalesDto,
 } from '../../presentacion/dto/tratamiento.dto';
-import { calcularClcr, edadEnAnios } from '@gfh/shared-types';
+import {
+  calcularChildPugh,
+  edadEnAnios,
+  calcularClcr,
+  NOMBRE_ASCITIS,
+  NOMBRE_ENCEFALOPATIA,
+  GLOSA_CLASE,
+} from '@gfh/shared-types';
 
 /**
  * Escrituras sobre el tratamiento de un paciente.
@@ -429,6 +437,100 @@ export class TratamientoService {
     }
 
     return { clcrMlMin, clcrOrigen };
+  }
+
+  // --- datos hepáticos ------------------------------------------------------
+
+  /**
+   * Child-Pugh sobre los cinco criterios.
+   *
+   * Guarda lo que vino y recalcula la clase con los valores YA fusionados: si
+   * el médico corrige sólo el INR, la clase tiene que salir de ese INR nuevo y
+   * de la bilirrubina vieja, no de un cálculo a medias.
+   *
+   * Con un criterio sin cargar la clase queda en `null` — nunca se estima. Un
+   * Child-Pugh incompleto redondeado hacia abajo diría «clase A» de un paciente
+   * que puede ser C.
+   */
+  async actualizarDatosHepaticos(medicoId: string, pacienteId: string, dto: DatosHepaticosDto) {
+    const paciente = await this.exigirPaciente(medicoId, pacienteId);
+
+    const numero = (v: unknown) => (v === null || v === undefined ? undefined : Number(v));
+
+    const fusionado = {
+      bilirrubinaMgDl: dto.bilirrubinaMgDl ?? numero(paciente.bilirrubinaMgDl),
+      albuminaGDl: dto.albuminaGDl ?? numero(paciente.albuminaGDl),
+      inr: dto.inr ?? numero(paciente.inr),
+      ascitis: dto.ascitis ?? paciente.ascitis ?? undefined,
+      encefalopatia: dto.encefalopatia ?? paciente.encefalopatia ?? undefined,
+    };
+
+    const r = calcularChildPugh(fusionado);
+
+    await this.prisma.paciente.updateMany({
+      where: { id: pacienteId, medicoId },
+      data: {
+        ...(dto.bilirrubinaMgDl !== undefined ? { bilirrubinaMgDl: dto.bilirrubinaMgDl } : {}),
+        ...(dto.albuminaGDl !== undefined ? { albuminaGDl: dto.albuminaGDl } : {}),
+        ...(dto.inr !== undefined ? { inr: dto.inr } : {}),
+        ...(dto.ascitis !== undefined ? { ascitis: dto.ascitis } : {}),
+        ...(dto.encefalopatia !== undefined ? { encefalopatia: dto.encefalopatia } : {}),
+        childPughClase: r.clase,
+        childPughOrigen: r.clase === null ? null : 'CALCULADO',
+        childPughMedidoAt: r.clase === null ? null : new Date(),
+      },
+    });
+
+    const cambios = diferencias([
+      {
+        campo: 'Bilirrubina',
+        antes: paciente.bilirrubinaMgDl,
+        despues: dto.bilirrubinaMgDl,
+        formato: (v) => conUnidad(v, 'mg/dL'),
+      },
+      {
+        campo: 'Albúmina',
+        antes: paciente.albuminaGDl,
+        despues: dto.albuminaGDl,
+        formato: (v) => conUnidad(v, 'g/dL'),
+      },
+      { campo: 'INR', antes: paciente.inr, despues: dto.inr, formato: (v) => String(Number(v)) },
+      {
+        campo: 'Ascitis',
+        antes: paciente.ascitis,
+        despues: dto.ascitis,
+        formato: (v) => NOMBRE_ASCITIS[v as keyof typeof NOMBRE_ASCITIS] ?? String(v),
+      },
+      {
+        campo: 'Encefalopatía',
+        antes: paciente.encefalopatia,
+        despues: dto.encefalopatia,
+        formato: (v) => NOMBRE_ENCEFALOPATIA[v as keyof typeof NOMBRE_ENCEFALOPATIA] ?? String(v),
+      },
+      // La clase entra aunque no la haya escrito nadie: la recalculó el sistema.
+      {
+        campo: 'Clase Child-Pugh',
+        antes: paciente.childPughClase,
+        despues: r.clase,
+        formato: (v) => String(v),
+      },
+    ]);
+
+    if (cambios.length > 0) {
+      await this.eventos.registrar({
+        medicoId,
+        pacienteId,
+        tipo: 'DATOS_HEPATICOS',
+        titulo: 'Función hepática actualizada',
+        detalle:
+          r.clase === null
+            ? `Faltan ${r.faltan.length} criterio${r.faltan.length === 1 ? '' : 's'} para poder clasificar.`
+            : `${r.puntos} de 15 puntos. ${GLOSA_CLASE[r.clase]}`,
+        cambios,
+      });
+    }
+
+    return { ...r, childPughClase: r.clase };
   }
 
   // --- internos -------------------------------------------------------------
