@@ -1,6 +1,6 @@
 import { FlashList } from '@shopify/flash-list';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
@@ -48,7 +48,12 @@ export default function Buscador() {
   const col = useColores();
 
   const router = useRouter();
-  const [consulta, setConsulta] = useState('');
+  // Arranca con lo que venga en la ruta: el vacío de Herramientas —«ninguna
+  // herramienta se llama warfarina»— manda para acá con el término puesto, y
+  // hacérselo escribir de nuevo desperdiciaría el único momento en que ya
+  // sabemos qué estaba buscando.
+  const { q } = useLocalSearchParams<{ q?: string }>();
+  const [consulta, setConsulta] = useState(q ?? '');
   // Se busca por el valor demorado, pero el campo muestra el inmediato: el
   // texto tiene que aparecer al ritmo del tipeo aunque la consulta espere.
   const consultaBuscada = useValorDemorado(consulta.trim());

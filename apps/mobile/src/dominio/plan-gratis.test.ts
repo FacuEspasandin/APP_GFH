@@ -5,12 +5,12 @@ import {
   decidirEntrada,
   detalleDeAcceso,
   gastaConsulta,
-  HERRAMIENTAS,
   rutaHerramienta,
   rutaNuevoPaciente,
   textoCupo,
   type EstadoDelPlan,
 } from './plan-gratis';
+import { HERRAMIENTAS } from './herramientas';
 
 const plan = (p: Partial<EstadoDelPlan> = {}): EstadoDelPlan => ({
   vigente: false,
@@ -74,6 +74,7 @@ describe('el acceso desde la lista', () => {
 describe('las herramientas sueltas', () => {
   const buscar = (clave: string) => HERRAMIENTAS.find((h) => h.clave === clave)!;
 
+  // El catálogo vive en `herramientas.ts`; acá se prueba sólo el precio.
   it('las dos calculadoras entran gratis: son fórmulas publicadas', () => {
     expect(buscar('clcr').cruza).toBe(false);
     expect(buscar('child-pugh').cruza).toBe(false);

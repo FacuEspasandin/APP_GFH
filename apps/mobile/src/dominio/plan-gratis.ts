@@ -78,64 +78,20 @@ export function esDePago(plan: EstadoDelPlan | undefined): boolean {
 
 // --- las herramientas sueltas ------------------------------------------------
 
-export interface Herramienta {
-  clave: string;
-  titulo: string;
-  detalle: string;
+/**
+ * Lo único que este módulo necesita saber de una herramienta.
+ *
+ * El catálogo entero —títulos, íconos, categorías— vive en `herramientas.ts`.
+ * Acá sólo importa si cruza el catálogo, que es lo que decide el precio.
+ */
+interface Cobrable {
   ruta: string;
-  /** false = calcula sin cruzar nada, y por eso es libre. */
   cruza: boolean;
 }
 
-/**
- * Las herramientas sin paciente, partidas por lo único que decide el precio:
- * si cruzan o sólo calculan.
- *
- * Las dos libres son fórmulas publicadas —Cockcroft-Gault y Child-Pugh— y no
- * consultan el catálogo. Cobrarlas nos pondría a competir con cualquier
- * calculadora web y no defenderían nada.
- */
-export const HERRAMIENTAS: readonly Herramienta[] = [
-  {
-    clave: 'clcr',
-    titulo: 'Clearance de creatinina',
-    detalle: 'Cockcroft-Gault, con el grado KDIGO',
-    ruta: '/herramientas/clcr',
-    cruza: false,
-  },
-  {
-    clave: 'child-pugh',
-    titulo: 'Child-Pugh',
-    detalle: 'Clase A, B o C a partir de los cinco criterios',
-    ruta: '/herramientas/hepatico',
-    cruza: false,
-  },
-  {
-    clave: 'interacciones',
-    titulo: 'Interacción fármaco-fármaco',
-    detalle: 'Todos los pares de una lista de fármacos',
-    ruta: '/herramientas/interacciones',
-    cruza: true,
-  },
-  {
-    clave: 'condicion-alergia',
-    titulo: 'Condición y alergia',
-    detalle: 'Un fármaco candidato contra condiciones y alergias',
-    ruta: '/herramientas/condicion-alergia',
-    cruza: true,
-  },
-  {
-    clave: 'renal',
-    titulo: 'Ajuste renal por fármaco',
-    detalle: 'Cuánto ajustar cada fármaco para un Clcr dado',
-    ruta: '/herramientas/renal',
-    cruza: true,
-  },
-] as const;
-
 /** A dónde lleva tocar una herramienta. Las pagas se ven igual: esconderlas
  *  esconde el producto, y el médico no puede querer lo que no sabe que existe. */
-export function rutaHerramienta(h: Herramienta, plan: EstadoDelPlan | undefined): string {
+export function rutaHerramienta(h: Cobrable, plan: EstadoDelPlan | undefined): string {
   return h.cruza && esDePago(plan) ? rutaPaywall('herramienta') : h.ruta;
 }
 

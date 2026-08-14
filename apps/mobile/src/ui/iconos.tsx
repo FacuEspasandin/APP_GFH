@@ -47,6 +47,7 @@ export type NombreIcono =
   | 'grupos'
   | 'barras'
   | 'gota'
+  | 'calculadora'
   | 'embarazo'
   | 'lactancia'
   | 'higado'
@@ -198,6 +199,16 @@ function trazos(nombre: NombreIcono, c: Comun) {
       );
     case 'gota':
       return <Path d="M12 3c3.5 3.2 5.5 6 5.5 9a5.5 5.5 0 0 1-11 0c0-3 2-5.8 5.5-9Z" {...c} />;
+    case 'calculadora':
+      // Las herramientas que sólo calculan, en la lista de herramientas.
+      return (
+        <>
+          <Path d="M5.5 3.5h13a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z" {...c} />
+          <Path d="M8 7.5h8" {...c} />
+          <Path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01" {...c} />
+          <Path d="M8 15.5h.01M12 15.5h.01M16 15.5h.01" {...c} />
+        </>
+      );
     // Embarazo: el contorno de un vientre con el feto adentro. No es la gota
     // del riñón ni el pulso: las cuatro restricciones de la ficha se ven juntas
     // y tienen que distinguirse de un vistazo.
