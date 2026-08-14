@@ -180,6 +180,7 @@ describe('datos hepáticos', () => {
   it('no toca al paciente de otro médico', async () => {
     const id = await crear();
     const otro = await crearMedico(api);
+    await darSuscripcion(ctx.prisma, otro.id);
     medicos.push(otro.id);
 
     const r = await api.patch(`/pacientes/${id}/datos-hepaticos`, COMPLETO_A, otro.token);

@@ -246,6 +246,7 @@ describe('historial del paciente', () => {
     const id = await crearPaciente();
 
     const otro = await crearMedico(api);
+    await darSuscripcion(ctx.prisma, otro.id);
     medicos.push(otro.id);
 
     const r = await api.get(`/pacientes/${id}/historial`, otro.token);

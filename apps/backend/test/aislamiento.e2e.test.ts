@@ -6,6 +6,7 @@ import {
   cliente,
   crearMedico,
   crearPaciente,
+  darSuscripcion,
   levantarApp,
   type Contexto,
 } from './ayuda';
@@ -33,6 +34,10 @@ describe('aislamiento por medicoId', () => {
     A = await crearMedico(api);
     B = await crearMedico(api);
     medicos.push(A.id, B.id);
+    // Los dos con suscripción a propósito: lo que se prueba acá es el
+    // aislamiento por medicoId, no el muro del plan gratis.
+    await darSuscripcion(ctx.prisma, A.id);
+    await darSuscripcion(ctx.prisma, B.id);
 
     pacienteDeA = await crearPaciente(api, A.token);
   }, 60_000);

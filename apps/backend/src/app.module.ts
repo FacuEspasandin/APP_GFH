@@ -14,6 +14,8 @@ import { HerramientasService } from './aplicacion/herramientas/herramientas.serv
 import { PerfilService } from './aplicacion/perfil/perfil.service';
 import { SuscripcionService } from './aplicacion/suscripcion/suscripcion.service';
 import { DemoService } from './aplicacion/demo/demo.service';
+import { AccesoService } from './aplicacion/suscripcion/acceso.service';
+import { PlanGuard } from './presentacion/comun/requiere-suscripcion';
 import { EventosService } from './aplicacion/historial/eventos.service';
 import { PacientesService } from './aplicacion/pacientes/pacientes.service';
 import { TratamientoService } from './aplicacion/tratamiento/tratamiento.service';
@@ -66,6 +68,8 @@ import {
     HashService,
     AuthService,
     CockpitService,
+    AccesoService,
+    PlanGuard,
     DemoService,
     EventosService,
     PacientesService,

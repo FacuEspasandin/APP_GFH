@@ -6,7 +6,7 @@ import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import type { ActualizarPacienteDto, CrearPacienteDto } from '../../presentacion/dto/paciente.dto';
 import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
 import { resumenDeMedico, type ResumenDeMedico } from './resumen-pacientes';
-import { CODIGO_LIMITE_PLAN_GRATIS, PLAN_GRATIS } from '../suscripcion/plan';
+import { CODIGO_LIMITE_PLAN_GRATIS } from '../suscripcion/plan';
 import { SuscripcionService } from '../suscripcion/suscripcion.service';
 import { EventosService } from '../historial/eventos.service';
 import { conUnidad, diferencias, fecha } from '../historial/redaccion';
@@ -106,10 +106,7 @@ export class PacientesService {
 
     throw new ForbiddenException({
       codigo: CODIGO_LIMITE_PLAN_GRATIS,
-      mensaje:
-        PLAN_GRATIS.pacientes === 1
-          ? 'El plan gratis incluye un paciente. Suscribite para seguir a todos los tuyos.'
-          : `El plan gratis incluye ${PLAN_GRATIS.pacientes} pacientes. Suscribite para seguir a todos los tuyos.`,
+      mensaje: 'Cargar pacientes necesita suscripción.',
     });
   }
 

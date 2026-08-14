@@ -178,6 +178,9 @@ export class CatalogoService {
        * Las mismas interacciones, agrupadas por regla y familia. Litio tiene 26
        * y las 26 comparten el mismo texto: en tres grupos se leen, en veintiséis
        * renglones no.
+       *
+       * Sólo va en el DETALLE, no en la ficha: la ficha la mira cualquiera y el
+       * detalle consume cupo.
        */
       gruposInteraccion: agruparInteracciones(
         unicasPorFarmaco(

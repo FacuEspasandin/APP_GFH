@@ -13,6 +13,7 @@ import {
 import { AlternativasService } from '../aplicacion/alternativas/alternativas.service';
 import { FotoService } from '../aplicacion/foto/foto.service';
 import { Cuerpo } from './comun/cuerpo';
+import { DePago } from './comun/requiere-suscripcion';
 import { JwtGuard, MedicoActual } from './comun/medico-actual';
 import { SuscripcionGuard } from './comun/suscripcion.guard';
 
@@ -42,6 +43,9 @@ export class FotoDto {
   @IsString() imagenBase64!: string;
 }
 
+/** Las alternativas terapéuticas y la carga por foto son de paciente: el
+ *  controlador entero va del otro lado del muro. */
+@DePago('Las alternativas terapéuticas')
 @Controller('pacientes/:pacienteId')
 @UseGuards(JwtGuard, SuscripcionGuard)
 export class AlternativasController {

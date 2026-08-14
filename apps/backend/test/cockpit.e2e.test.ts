@@ -181,6 +181,7 @@ describe('cockpit', () => {
   it('reemplazar por una alternativa saca el fármaco viejo', async () => {
     const otro = await crearMedico(api);
     medicos.push(otro.id);
+    await darSuscripcion(ctx.prisma, otro.id);
     const p2 = await crearPaciente(api, otro.token);
 
     const ibu = await buscarProducto(api, otro.token, 'Ibuprofeno');

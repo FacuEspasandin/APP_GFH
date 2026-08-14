@@ -1,30 +1,36 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { borrarMedicos, cliente, crearMedico, crearPaciente, levantarApp, type Contexto } from './ayuda';
+import { borrarMedicos, cliente, crearMedico, darSuscripcion, levantarApp, type Contexto } from './ayuda';
 
 /**
- * El corte del freemium.
+ * El muro del plan gratis.
  *
- * Dónde está la frontera importa más que dónde no: el plan gratis regala las
- * herramientas —donde competimos contra vademécums gratuitos y no ganamos— y
- * cobra el seguimiento de pacientes, que es lo único que un buscador de
- * fármacos no puede tener.
- *
- * Estos tests fijan esa decisión de negocio en código. Si alguien mueve el
- * límite sin querer, se entera acá y no por un médico que se quedó sin poder
- * cargar a su paciente.
+ * Lo que estos tests protegen es que el límite viva en el SERVIDOR. Esconder
+ * botones en la app no alcanza: cualquiera con un token válido y `curl` tendría
+ * el producto entero, y el primero que lo pruebe lo publica.
  */
 describe('plan gratis', () => {
   let ctx: Contexto;
   let api: ReturnType<typeof cliente>;
   const medicos: string[] = [];
-  let medico: { id: string; token: string };
+  let gratis: { id: string; token: string };
+  let pago: { id: string; token: string };
+
+  const NUEVO = {
+    nombre: 'Prueba',
+    apellido: 'Plan',
+    fechaNacimiento: '1960-01-01T00:00:00.000Z',
+    sexo: 'M',
+  };
 
   beforeAll(async () => {
     ctx = await levantarApp();
     api = cliente(ctx.app);
-    medico = await crearMedico(api);
-    medicos.push(medico.id);
+
+    gratis = await crearMedico(api);
+    pago = await crearMedico(api);
+    medicos.push(gratis.id, pago.id);
+    await darSuscripcion(ctx.prisma, pago.id);
   }, 90_000);
 
   afterAll(async () => {
@@ -32,83 +38,144 @@ describe('plan gratis', () => {
     await ctx.cerrar();
   });
 
-  it('arranca sin pacientes y pudiendo crear uno', async () => {
-    const r = await api.get('/perfil/plan', medico.token);
-    expect(r.cuerpo!.data).toMatchObject({
-      vigente: false,
-      pacientes: 0,
-      limitePacientes: 1,
-      puedeCrearPaciente: true,
+  describe('pacientes', () => {
+    it('sin suscripción NO se puede crear ninguno', async () => {
+      const r = await api.post('/pacientes', NUEVO, gratis.token);
+      expect(r.status).toBe(403);
+      expect(r.cuerpo!.error?.code ?? (r.cuerpo as never as { codigo: string }).codigo).toBeTruthy();
+    });
+
+    it('con suscripción sí', async () => {
+      const r = await api.post('/pacientes', NUEVO, pago.token);
+      expect(r.status).toBe(201);
+    });
+
+    it('el inicio de una cuenta gratis trae SÓLO el de demostración', async () => {
+      const r = await api.get('/inicio', gratis.token);
+      expect(r.status).toBe(200);
+
+      const d = r.cuerpo!.data as {
+        pacientes: { id: string }[];
+        grupos: { nombre: string }[];
+        soloDemostracion?: boolean;
+      };
+      expect(d.soloDemostracion).toBe(true);
+      expect(d.pacientes).toHaveLength(1);
+      expect(d.pacientes[0]!.id.startsWith('demo-')).toBe(true);
+      expect(d.grupos[0]!.nombre).toBe('Consultorio');
+    });
+
+    it('el paciente de demostración se puede mirar entero', async () => {
+      const r = await api.get('/pacientes/demo-paciente-0000-0000-000000000001/cockpit', gratis.token);
+      expect(r.status).toBe(200);
+
+      const d = r.cuerpo!.data as {
+        hallazgos: unknown[];
+        prescripciones: unknown[];
+        esDemostracion?: boolean;
+      };
+      expect(d.esDemostracion).toBe(true);
+      // El escaparate no sirve vacío: tiene que traer tratamiento y hallazgos.
+      expect(d.prescripciones.length).toBeGreaterThan(3);
+      expect(d.hallazgos.length).toBeGreaterThan(5);
+    });
+
+    it('sobre el de demostración no se puede escribir', async () => {
+      const r = await api.patch(
+        '/pacientes/demo-paciente-0000-0000-000000000001',
+        { apellido: 'Cambiado' },
+        gratis.token,
+      );
+      expect(r.status).toBe(403);
     });
   });
 
-  it('el primer paciente entra en el plan gratis', async () => {
-    const id = await crearPaciente(api, medico.token);
-    expect(id).toBeTruthy();
+  describe('herramientas', () => {
+    it('las que CRUZAN piden suscripción', async () => {
+      const r = await api.post('/herramientas/interacciones', { principioActivoIds: [] }, gratis.token);
+      expect(r.status).toBe(403);
+    });
 
-    const r = await api.get('/perfil/plan', medico.token);
-    expect(r.cuerpo!.data.pacientes).toBe(1);
-    expect(r.cuerpo!.data.puedeCrearPaciente).toBe(false);
+    it('la calculadora de Child-Pugh es libre', async () => {
+      // Es una fórmula publicada: cobrarla nos pondría a competir con
+      // cualquier calculadora web.
+      const r = await api.post(
+        '/herramientas/ajuste-hepatico',
+        { bilirrubinaMgDl: 1, albuminaGDl: 4, inr: 1.1, ascitis: 'AUSENTE', encefalopatia: 'AUSENTE' },
+        gratis.token,
+      );
+      expect(r.status).toBe(200);
+      expect(r.cuerpo!.data.clase).toBe('A');
+    });
   });
 
-  it('sobre ese paciente el cockpit funciona COMPLETO', async () => {
-    // Es lo que hace que la app se pueda evaluar antes de pagar: si el gratis
-    // no llegara al cockpit, nos comparan con un buscador de fármacos.
-    const inicio = await api.get('/inicio', medico.token);
-    const pacienteId = inicio.cuerpo!.data.pacientes[0].id;
+  describe('las diez consultas', () => {
+    let productos: string[] = [];
 
-    const r = await api.get(`/pacientes/${pacienteId}/cockpit`, medico.token);
-    expect(r.status).toBe(200);
-    expect(r.cuerpo!.data.dashboard).toBeDefined();
-    expect(r.cuerpo!.data.paciente.clcrMlMin).not.toBeNull();
-  });
+    beforeAll(async () => {
+      const filas = await ctx.prisma.productoComercial.findMany({ take: 4, select: { id: true } });
+      productos = filas.map((p) => p.id);
+    });
 
-  it('el segundo paciente pide suscripción, con código propio', async () => {
-    const r = await api.post(
-      '/pacientes',
-      {
-        nombre: 'Segundo',
-        apellido: 'Paciente',
-        fechaNacimiento: new Date(Date.UTC(1970, 0, 1)).toISOString(),
-        sexo: 'M',
-      },
-      medico.token,
-    );
+    const consultar = (token: string, productoId: string, herramienta: string) =>
+      api.post(`/catalogo/productos/${productoId}/restricciones/${herramienta}`, {}, token);
 
-    expect(r.status).toBe(403);
-    // NO es SUSCRIPCION_VENCIDA: la app tiene que abrir el paywall
-    // ("se desbloquea pagando"), no la pantalla de bloqueo ("perdiste acceso").
-    expect(r.cuerpo!.error!.code).toBe('LIMITE_PLAN_GRATIS');
-    expect(r.cuerpo!.error!.message).toContain('plan gratis');
-  });
+    it('la ficha se ve sin gastar cupo', async () => {
+      const r = await api.get(`/catalogo/productos/${productos[0]}`, gratis.token);
+      expect(r.status).toBe(200);
+      expect(await ctx.prisma.consultaGratis.count({ where: { medicoId: gratis.id } })).toBe(0);
+    });
 
-  it('las herramientas quedan completas y sin límite', async () => {
-    // El argumento entero del corte: acá no se cobra nada.
-    const pa = await api.get('/catalogo/principios-activos?q=warfarina', medico.token);
-    const warfarina = pa.cuerpo!.data[0].id;
-    const otros = await api.get('/catalogo/principios-activos?q=ibuprofeno', medico.token);
+    it('entrar a una restricción gasta una', async () => {
+      const r = await consultar(gratis.token, productos[0]!, 'renal');
+      expect(r.status).toBe(200);
+      expect(await ctx.prisma.consultaGratis.count({ where: { medicoId: gratis.id } })).toBe(1);
+    });
 
-    const r = await api.post(
-      '/herramientas/interacciones',
-      { principioActivoIds: [warfarina, otros.cuerpo!.data[0].id] },
-      medico.token,
-    );
-    expect(r.status).toBeLessThan(300);
-  });
+    it('volver a la MISMA no gasta otra', async () => {
+      await consultar(gratis.token, productos[0]!, 'renal');
+      await consultar(gratis.token, productos[0]!, 'renal');
+      expect(await ctx.prisma.consultaGratis.count({ where: { medicoId: gratis.id } })).toBe(1);
+    });
 
-  it('el buscador del catálogo también es libre', async () => {
-    const r = await api.get('/catalogo/productos?desde=0', medico.token);
-    expect(r.status).toBe(200);
-    expect(r.cuerpo!.data.length).toBeGreaterThan(0);
-  });
+    it('otra herramienta del mismo fármaco sí gasta', async () => {
+      await consultar(gratis.token, productos[0]!, 'embarazo');
+      expect(await ctx.prisma.consultaGratis.count({ where: { medicoId: gratis.id } })).toBe(2);
+    });
 
-  it('borrar el paciente devuelve el cupo', async () => {
-    const inicio = await api.get('/inicio', medico.token);
-    const pacienteId = inicio.cuerpo!.data.pacientes[0].id;
+    it('a la décima corta, y con su propio código', async () => {
+      const herramientas = ['interacciones', 'renal', 'hepatico', 'embarazo', 'lactancia'];
+      for (const p of productos) {
+        for (const h of herramientas) {
+          await consultar(gratis.token, p!, h);
+        }
+      }
 
-    await api.delete(`/pacientes/${pacienteId}`, medico.token);
+      const usadas = await ctx.prisma.consultaGratis.count({ where: { medicoId: gratis.id } });
+      expect(usadas).toBe(10);
 
-    const r = await api.get('/perfil/plan', medico.token);
-    expect(r.cuerpo!.data.puedeCrearPaciente).toBe(true);
+      const r = await consultar(gratis.token, productos[3]!, 'lactancia');
+      expect(r.status).toBe(403);
+      // Veinte peticiones seguidas contra la base real: el tiempo por defecto
+      // no alcanza y el corte es lo que se quiere probar, no la velocidad.
+    }, 120_000);
+
+    it('el suscriptor no gasta nada', async () => {
+      for (const h of ['interacciones', 'renal', 'embarazo', 'lactancia', 'hepatico']) {
+        const r = await consultar(pago.token, productos[0]!, h);
+        expect(r.status).toBe(200);
+      }
+      expect(await ctx.prisma.consultaGratis.count({ where: { medicoId: pago.id } })).toBe(0);
+    });
+
+    it('el detalle trae sólo su herramienta, no las cinco', async () => {
+      // Si viniera todo junto, una consulta pagaría por las otras cuatro.
+      const r = await consultar(pago.token, productos[0]!, 'renal');
+      const d = r.cuerpo!.data as Record<string, unknown>;
+      expect(d.herramienta).toBe('RENAL');
+      expect('tablasRenales' in d).toBe(true);
+      expect('gruposInteraccion' in d).toBe(false);
+      expect('alertas' in d).toBe(false);
+    });
   });
 });

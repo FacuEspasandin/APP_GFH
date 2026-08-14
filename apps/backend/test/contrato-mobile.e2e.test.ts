@@ -7,6 +7,7 @@ import {
   cliente,
   crearMedico,
   crearPaciente,
+  darSuscripcion,
   levantarApp,
   type Contexto,
   type Respuesta,
@@ -46,6 +47,7 @@ describe('contrato con el mobile', () => {
     api = cliente(ctx.app);
     medico = await crearMedico(api);
     medicos.push(medico.id);
+    await darSuscripcion(ctx.prisma, medico.id);
 
     paciente = await crearPaciente(api, medico.token);
     productoId = (await buscarProducto(api, medico.token, 'Ibuprofeno')).id;
@@ -321,6 +323,7 @@ describe('contrato con el mobile', () => {
   it('perfil/eliminar-cuenta.tsx', async () => {
     // Cuenta descartable: este cuerpo borra de verdad.
     const victima = await crearMedico(api);
+    await darSuscripcion(ctx.prisma, victima.id);
     const r = await api.post(
       '/perfil/eliminar-cuenta',
       { password: 'PruebaIntegracion1' },

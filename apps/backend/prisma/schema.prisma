@@ -112,6 +112,17 @@ enum Encefalopatia {
 /// Cada cosa que le pasa a un paciente. El nombre dice QUE paso, no en que
 /// pantalla se hizo: el mismo tipo de evento puede entrar por el cockpit, por
 /// las herramientas o por aceptar una alternativa.
+/// Las cinco herramientas de la ficha que consumen cuota en el plan gratis.
+/// La ficha tecnica —composicion, presentacion, familia alergenica— no entra:
+/// es texto y queda libre siempre.
+enum HerramientaFicha {
+  INTERACCIONES
+  RENAL
+  HEPATICO
+  EMBARAZO
+  LACTANCIA
+}
+
 enum TipoEventoPaciente {
   PACIENTE_CREADO
   PACIENTE_EDITADO
@@ -645,6 +656,7 @@ model Medico {
   interaccionesDetectadas InteraccionDetectada[]
   alternativasAceptadas   AlternativaAceptada[]
   eventos                 EventoPaciente[]
+  consultasGratis         ConsultaGratis[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -971,6 +983,30 @@ model InteraccionDetectada {
 /// el producto del catalogo cambia de nombre, la linea del historial tiene que
 /// seguir diciendo lo mismo. Guardar ids y resolverlos al leer daria filas en
 /// blanco justo en los casos que mas importan.
+/// Una consulta de restriccion gastada del cupo gratis.
+///
+/// La unicidad es (medico, producto, herramienta): volver a entrar a lo mismo
+/// no descuenta otra vez. Sin eso, ir y volver quemaria el cupo y el limite se
+/// sentiria tramposo.
+///
+/// No se borra ni se repone: el cupo es de por vida. Al suscribirse deja de
+/// consultarse, pero las filas quedan — si la suscripcion caduca, el medico
+/// vuelve a donde estaba y no arranca de cero.
+model ConsultaGratis {
+  id                  String           @id @default(uuid())
+  medicoId            String
+  productoComercialId String
+  herramienta         HerramientaFicha
+
+  createdAt DateTime @default(now())
+
+  medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  @@unique([medicoId, productoComercialId, herramienta])
+  @@index([medicoId])
+  @@map("consulta_gratis")
+}
+
 model EventoPaciente {
   id         String @id @default(uuid())
   medicoId   String
