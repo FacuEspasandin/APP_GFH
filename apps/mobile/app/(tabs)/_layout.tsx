@@ -35,7 +35,9 @@ export default function LayoutTabs() {
       <Tabs.Screen name="perfil" options={{ title: 'Perfil' }} />
       {/* Sigue existiendo como ruta pero fuera de la barra: al menú de
           herramientas se llega por el botón central. */}
-      <Tabs.Screen name="herramientas" options={{ href: null }} />
+      {/* Con `title` explícito: sin él Expo Router cae al nombre del archivo y
+          la barra decía «herramientas» en minúscula al lado de «Pacientes». */}
+      <Tabs.Screen name="herramientas" options={{ href: null, title: 'Herramientas' }} />
     </Tabs>
   );
 }

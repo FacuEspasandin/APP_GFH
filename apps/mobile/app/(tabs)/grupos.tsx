@@ -88,6 +88,7 @@ export default function Grupos() {
               <TarjetaGrupo
                 grupo={g}
                 onPress={() => abrir(g.id === null ? '/grupo/sin-grupo' : `/grupo/${g.id}`)}
+                conCandado={esDePago(plan)}
               />
             </FilaAnimada>
           ))}
@@ -97,7 +98,15 @@ export default function Grupos() {
   );
 }
 
-function TarjetaGrupo({ grupo, onPress }: { grupo: ResumenGrupo; onPress: () => void }) {
+function TarjetaGrupo({
+  grupo,
+  onPress,
+  conCandado,
+}: {
+  grupo: ResumenGrupo;
+  onPress: () => void;
+  conCandado: boolean;
+}) {
   const col = useColores();
   // `esGrave` es la definición del sistema: contraindicado o grave.
   const conRiesgo = grupo.contraindicados + grupo.graves;
@@ -113,7 +122,18 @@ function TarjetaGrupo({ grupo, onPress }: { grupo: ResumenGrupo; onPress: () => 
     >
       <View className="flex-row items-center justify-between">
         <Text className="text-fila font-fuerte text-ink">{grupo.nombre}</Text>
-        <Icono nombre="chevron" tamano={16} color={COLOR_SEVERIDAD.neutro} />
+        {/* El candado va donde iría el chevron: es lo que pasa al tocar, y ese
+            es el lugar donde el ojo busca qué va a pasar. */}
+        {conCandado ? (
+          <View
+            className="h-7 w-7 items-center justify-center rounded-full"
+            style={{ backgroundColor: col.primaryLight }}
+          >
+            <Icono nombre="candado" tamano={14} color={col.primary} />
+          </View>
+        ) : (
+          <Icono nombre="chevron" tamano={16} color={COLOR_SEVERIDAD.neutro} />
+        )}
       </View>
 
       {grupo.pacientes > 0 ? (
