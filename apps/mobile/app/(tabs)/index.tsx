@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, Stack, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
+import { buscar } from '@/dominio/busqueda';
 import { detalleDeAcceso, esDePago, rutaNuevoPaciente, rutaPaywall } from '@/dominio/plan-gratis';
 import type { FilaPaciente, Inicio as DatosInicio } from '@/api/tipos';
 import { FilaAnimada } from '@/ui/animacion';
-import { useValorDemorado } from '@/ui/demora';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Icono } from '@/ui/iconos';
 import { CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
@@ -32,17 +32,12 @@ export default function Pacientes() {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [consulta, setConsulta] = useState('');
 
-  // Mismo tratamiento que el Buscador: una consulta por pausa de tipeo, no una
-  // por tecla, y la lista anterior sigue a la vista mientras llega la nueva.
-  const consultaBuscada = useValorDemorado(consulta.trim());
-
+  // Una sola consulta, sin `q`: `/inicio` ya trae la lista entera con el motor
+  // corrido —es de donde salen los hallazgos de cada fila— así que filtrar acá
+  // no le esconde nada al médico y sale desde la primera letra.
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['inicio', consultaBuscada],
-    queryFn: () =>
-      api.get<DatosInicio>(
-        consultaBuscada ? `/inicio?q=${encodeURIComponent(consultaBuscada)}` : '/inicio',
-      ),
-    placeholderData: (anteriores) => anteriores,
+    queryKey: ['inicio'],
+    queryFn: () => api.get<DatosInicio>('/inicio'),
   });
 
   // Con el plan gratis lleno, "Nuevo paciente" lleva al paywall directo. El
@@ -51,7 +46,20 @@ export default function Pacientes() {
   const { data: plan } = usePlan();
   const rutaNueva = rutaNuevoPaciente(plan);
 
-  const pacientes = data?.pacientes ?? [];
+  const texto = consulta.trim();
+  const buscando = texto.length >= 1;
+
+  // Por apellido y por nombre, en ese orden: es como se lee la fila.
+  //
+  // El documento NO se busca, aunque el campo lo prometía desde antes de este
+  // cambio: no viaja en la lista, y meterlo ahí obligaría a agregarlo al
+  // contexto que usa el motor clínico, que no tiene por qué conocer un
+  // identificador administrativo.
+  const pacientes = useMemo(
+    () => buscar(data?.pacientes ?? [], texto, { nombre: (p) => `${p.apellido}, ${p.nombre}` }),
+    [data?.pacientes, texto],
+  );
+
   const conHallazgos = pacientes.filter((p) => p.peorRango !== null);
   const limpios = pacientes.filter((p) => p.peorRango === null);
 
@@ -78,7 +86,7 @@ export default function Pacientes() {
         <CampoTexto
           value={consulta}
           onChangeText={setConsulta}
-          placeholder="Buscar por nombre o documento"
+          placeholder="Buscar por nombre o apellido"
           autoCapitalize="none"
           autoCorrect={false}
           accessibilityLabel="Buscar paciente"
@@ -90,14 +98,14 @@ export default function Pacientes() {
           onReintentar={() => void refetch()}
           filasSkeleton={3}
         >
-          {pacientes.length === 0 && data?.buscando ? (
+          {pacientes.length === 0 && buscando ? (
             <Estado
               titulo="Sin coincidencias"
-              detalle={`Ningún paciente coincide con «${consultaBuscada}».`}
+              detalle={`Ningún paciente coincide con «${texto}».`}
             />
           ) : null}
 
-          {pacientes.length === 0 && !data?.buscando ? (
+          {pacientes.length === 0 && !buscando ? (
             <Estado
               titulo="Todavía no cargaste pacientes"
               detalle="Creá uno para ver interacciones, ajuste renal y alertas."

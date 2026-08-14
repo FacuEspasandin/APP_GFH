@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
+import { buscar } from '@/dominio/busqueda';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
-import { useValorDemorado } from '@/ui/demora';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
 
 interface Condicion { id: string; codigo: string; nombre: string; descripcion: string | null }
@@ -17,7 +17,8 @@ export default function AgregarCondicion() {
   const qc = useQueryClient();
   const [elegida, setElegida] = useState<string | null>(null);
   const [texto, setTexto] = useState('');
-  const filtro = useValorDemorado(texto.trim().toLowerCase());
+  // Sin pausa: la lista ya está en memoria y `buscar` normaliza sola.
+  const filtro = texto.trim();
 
   const { data } = useQuery({ queryKey: ['cond'], queryFn: () => api.get<Condicion[]>('/catalogo/condiciones') });
 
@@ -35,10 +36,14 @@ export default function AgregarCondicion() {
 
   // Con el catálogo entero volcado como chips, encontrar una era leerlas
   // todas. El buscador aparece recién cuando hay suficientes para perderse.
-  const visibles =
-    filtro.length >= 2
-      ? cargables.filter((c) => c.nombre.toLowerCase().includes(filtro))
-      : cargables;
+  //
+  // Filtra desde la primera letra y con el mismo motor que el resto de la app:
+  // ordena por las que empiezan con lo escrito, ignora tildes y encuentra por
+  // la descripción además del nombre.
+  const visibles = buscar(cargables, filtro, {
+    nombre: (c) => c.nombre,
+    tambien: (c) => [c.descripcion ?? ''],
+  });
 
   return (
     <Pantalla>

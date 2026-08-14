@@ -24,9 +24,17 @@ export class CatalogoService {
     private readonly catalogoInteracciones: CatalogoInteraccionesService,
   ) {}
 
+  /**
+   * Búsqueda del lado del servidor.
+   *
+   * La app ya no la usa para productos —se bajó el catálogo entero y busca en
+   * el teléfono—, pero sigue acá y probada porque es el camino para cuando el
+   * catálogo no entre más. Desde una letra, no dos: el corte en dos era para
+   * ahorrar peticiones y con el índice trigram ya no hace falta.
+   */
   async buscarProductos(consulta: string, limite = 30) {
     const texto = normalizar(consulta);
-    if (texto.length < 2) return [];
+    if (texto.length < 1) return [];
 
     const productos = await this.prisma.productoComercial.findMany({
       where: { nombreNormalizado: { contains: texto } },
@@ -55,6 +63,53 @@ export class CatalogoService {
    */
   async conteoProductos(): Promise<{ productos: number }> {
     return { productos: await this.prisma.productoComercial.count() };
+  }
+
+  /**
+   * El catálogo entero, de una, para que el teléfono busque sin red.
+   *
+   * Son 638 productos y 163 KB. La alternativa —una consulta por tecla— cuesta
+   * ~390 ms cada una, y medido contra esta misma base da igual escribir «i»
+   * (542 coincidencias) que «pirac» (2): el tiempo es la ida y vuelta a São
+   * Paulo, no la consulta. Con el catálogo en el teléfono, cada tecla vale cero
+   * y el buscador anda sin señal.
+   *
+   * Reemplaza a las dieciséis peticiones paginadas que la pestaña ya hacía para
+   * el listado A-Z, así que además baja el tráfico.
+   *
+   * Esto deja de servir cuando el catálogo sea un vademécum de verdad —a partir
+   * de unos pocos miles de productos ya no entra—. Para ese día está el índice
+   * trigram sobre `nombreNormalizado` y `buscarProductos`, que siguen acá.
+   */
+  async indiceProductos() {
+    const productos = await this.prisma.productoComercial.findMany({
+      orderBy: [{ esGenerico: 'asc' }, { nombreComercial: 'asc' }],
+      include: {
+        principiosActivos: {
+          include: {
+            principioActivo: {
+              select: { id: true, nombre: true, tieneAjusteRenal: true, tieneAjusteHepatico: true },
+            },
+          },
+        },
+      },
+    });
+    return productos.map((p) => this.aResumen(p));
+  }
+
+  /** Lo mismo para los principios activos: 631 filas, 91 KB. Lo piden sólo las
+   *  pantallas que lo usan, y no el arranque de la app. */
+  async indicePrincipiosActivos() {
+    return this.prisma.principioActivo.findMany({
+      orderBy: { nombre: 'asc' },
+      select: {
+        id: true,
+        nombre: true,
+        grupoTerapeutico: true,
+        tieneAjusteRenal: true,
+        tieneAjusteHepatico: true,
+      },
+    });
   }
 
   /** Catálogo completo A-Z, paginado. */
@@ -264,7 +319,7 @@ export class CatalogoService {
 
   async buscarPrincipiosActivos(consulta: string, limite = 30) {
     const texto = normalizar(consulta);
-    if (texto.length < 2) return [];
+    if (texto.length < 1) return [];
     return this.prisma.principioActivo.findMany({
       where: { nombreNormalizado: { contains: texto } },
       orderBy: { nombre: 'asc' },

@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import { useIndicePrincipiosActivos } from '@/api/catalogo';
+import { buscar, POR_NOMBRE } from '@/dominio/busqueda';
 import { Icono } from './iconos';
 import { CampoTexto, Eyebrow } from './kit';
 import { useColores } from './tema';
@@ -20,6 +20,10 @@ export interface PaSugerido {
  * Las herramientas trabajan a nivel de principio activo y no de producto
  * comercial: acá no hay prescripción, hay un chequeo puntual. El Buscador y la
  * carga de tratamiento sí van por producto (regla no negociable 10).
+ *
+ * Los 631 principios activos se bajan una vez —91 KB— y se filtran acá. Antes
+ * era una petición por tecla a partir de la segunda letra; ahora las
+ * sugerencias salen con la primera y al ritmo del dedo.
  */
 export function BuscadorPrincipioActivo({
   seleccionados,
@@ -35,12 +39,15 @@ export function BuscadorPrincipioActivo({
   const col = useColores();
 
   const [consulta, setConsulta] = useState('');
+  const { data: todos } = useIndicePrincipiosActivos();
 
-  const { data } = useQuery({
-    queryKey: ['pa', consulta],
-    queryFn: () => api.get<PaSugerido[]>(`/catalogo/principios-activos?q=${encodeURIComponent(consulta)}`),
-    enabled: consulta.trim().length >= 2,
-  });
+  const texto = consulta.trim();
+  // Ocho sugerencias: más no entran arriba del teclado, y la novena nunca se
+  // llegó a leer.
+  const sugerencias = useMemo(
+    () => (texto === '' ? [] : buscar(todos ?? [], texto, POR_NOMBRE, { tope: 8 })),
+    [todos, texto],
+  );
 
   return (
     <View>
@@ -48,14 +55,14 @@ export function BuscadorPrincipioActivo({
         etiqueta={unico ? 'Fármaco' : 'Buscar fármaco'}
         value={consulta}
         onChangeText={setConsulta}
-        placeholder="Escribí al menos 2 letras"
+        placeholder="Escribí el nombre"
         autoCapitalize="none"
         autoCorrect={false}
       />
 
-      {consulta.trim().length >= 2 && (data?.length ?? 0) > 0 ? (
+      {sugerencias.length > 0 ? (
         <View className="mb-4 overflow-hidden rounded-card border border-line bg-surface">
-          {data?.slice(0, 8).map((pa) => (
+          {sugerencias.map((pa) => (
             <Pressable
               key={pa.id}
               onPress={() => {
@@ -74,7 +81,7 @@ export function BuscadorPrincipioActivo({
         </View>
       ) : null}
 
-      {consulta.trim().length >= 2 && (data?.length ?? 0) === 0 ? (
+      {texto !== '' && sugerencias.length === 0 ? (
         <Text className="font-sans mb-4 px-1 text-meta text-ink-suave">
           Sin resultados para «{consulta}». La grafía del catálogo importa: probá con el nombre del
           principio activo.

@@ -5,7 +5,6 @@ import { ScrollView, Text, View } from 'react-native';
 import { api } from '@/api/cliente';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
-import { useValorDemorado } from '@/ui/demora';
 import {
   AvisoDescartable,
   Consulta,
@@ -177,7 +176,8 @@ function SelectorFiltrable({
   vacio: string;
 }) {
   const [texto, setTexto] = useState('');
-  const filtro = useValorDemorado(texto.trim().toLowerCase());
+  // Sin pausa: la lista ya está en memoria.
+  const filtro = texto.trim().toLowerCase();
 
   const seleccionados = catalogo.filter((o) => elegidos.includes(o.id));
   const resto = catalogo

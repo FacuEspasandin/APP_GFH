@@ -1,9 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
+import { POR_PRODUCTO, useIndiceProductos } from '@/api/catalogo';
+import { buscar } from '@/dominio/busqueda';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { hapticaAdvertencia, hapticaBloqueo, hapticaExito } from '@/ui/haptica';
 import { Boton, CampoTexto, Chip } from '@/ui/kit';
@@ -46,11 +48,15 @@ export default function AgregarFarmaco() {
   const [via, setVia] = useState<(typeof VIAS)[number]>('ORAL');
   const [conflicto, setConflicto] = useState<{ codigo: string; mensaje: string } | null>(null);
 
-  const { data: sugerencias } = useQuery({
-    queryKey: ['productos', consulta],
-    queryFn: () => api.get<Producto[]>(`/catalogo/productos?q=${encodeURIComponent(consulta)}`),
-    enabled: consulta.trim().length >= 2 && !producto && !libre,
-  });
+  // El mismo índice que usa el Buscador, ya en memoria: cambiar de pantalla no
+  // vuelve a bajarlo y las sugerencias salen desde la primera letra.
+  const { data: catalogo } = useIndiceProductos();
+
+  const sugerencias = useMemo(() => {
+    const texto = consulta.trim();
+    if (texto === '' || producto || libre) return [];
+    return buscar(catalogo ?? [], texto, POR_PRODUCTO, { tope: 8 });
+  }, [catalogo, consulta, producto, libre]);
 
   const crear = useMutation({
     mutationFn: (confirmar: boolean) =>
@@ -137,7 +143,7 @@ export default function AgregarFarmaco() {
                 placeholder="Buscar por marca, ej. Eliquis"
                 autoCapitalize="none"
               />
-              {sugerencias?.slice(0, 8).map((p) => (
+              {sugerencias.map((p) => (
                 <Pressable
                   key={p.id}
                   onPress={() => setProducto(p)}

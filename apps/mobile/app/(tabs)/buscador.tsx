@@ -1,31 +1,16 @@
 import { FlashList } from '@shopify/flash-list';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Pressable, Text, View } from 'react-native';
 
-import { api, ErrorApi } from '@/api/cliente';
+import { ErrorApi } from '@/api/cliente';
+import { POR_PRODUCTO, useIndiceProductos, type ProductoResumen } from '@/api/catalogo';
+import { buscar, contar } from '@/dominio/busqueda';
 import { cambiaDeLetra, inicialDe, textoConteo, TOPE_BUSQUEDA } from '@/dominio/catalogo';
-import { useValorDemorado } from '@/ui/demora';
 import { ErrorGenerico, SinConexion, Skeleton } from '@/ui/estados-sistema';
-import { Boton, CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { MarcadoresAjuste } from '@/ui/marcadores-ajuste';
 import { Superficie } from '@/ui/superficie';
-import { useColores } from '@/ui/tema';
-
-interface ProductoResumen {
-  id: string;
-  nombreComercial: string;
-  laboratorio: string | null;
-  formaFarmaceutica: string | null;
-  dosisTexto: string | null;
-  esGenerico: boolean;
-  principiosActivos: string[];
-  tieneAjusteRenal: boolean;
-  tieneAjusteHepatico: boolean;
-}
-
-const POR_PAGINA = 40;
 
 /**
  * Buscador a nivel de PRODUCTO COMERCIAL (regla no negociable 10).
@@ -43,9 +28,15 @@ const POR_PAGINA = 40;
  * que la primera letra que disparaba una consulta se llevaba puesta la
  * pantalla entera —campo, teclado y foco— y volvía como una pantalla de carga.
  * Escribir no puede sacarte de donde estás escribiendo.
+ *
+ * **La búsqueda ya no viaja.** El catálogo entero —638 productos, 163 KB— se
+ * baja una vez y se filtra acá. Antes cada tecla era una petición de ~390 ms
+ * contra São Paulo y había que esperar dos letras y una pausa de tipeo para
+ * disparar; ahora los resultados salen desde la primera letra, al ritmo del
+ * dedo, y sin señal. Se fueron con eso la demora, la paginación de a 40 y el
+ * botón de «cargar más».
  */
 export default function Buscador() {
-  const col = useColores();
 
   const router = useRouter();
   // Arranca con lo que venga en la ruta: el vacío de Herramientas —«ninguna
@@ -54,51 +45,21 @@ export default function Buscador() {
   // sabemos qué estaba buscando.
   const { q } = useLocalSearchParams<{ q?: string }>();
   const [consulta, setConsulta] = useState(q ?? '');
-  // Se busca por el valor demorado, pero el campo muestra el inmediato: el
-  // texto tiene que aparecer al ritmo del tipeo aunque la consulta espere.
-  const consultaBuscada = useValorDemorado(consulta.trim());
-  const buscando = consultaBuscada.length >= 2;
 
-  const busqueda = useQuery({
-    queryKey: ['catalogo-buscar', consultaBuscada],
-    queryFn: () => api.get<ProductoResumen[]>(`/catalogo/productos?q=${encodeURIComponent(consultaBuscada)}`),
-    enabled: buscando,
-    // Los resultados anteriores quedan a la vista mientras llegan los nuevos.
-    // Vaciar la lista en cada tecla hace parpadear la pantalla y da la
-    // sensación de que la búsqueda se reinicia sola.
-    placeholderData: (anteriores) => anteriores,
-  });
+  const catalogo = useIndiceProductos();
+  const todos = useMemo(() => catalogo.data ?? [], [catalogo.data]);
 
-  const catalogo = useInfiniteQuery({
-    queryKey: ['catalogo-todo'],
-    queryFn: ({ pageParam }) => api.get<ProductoResumen[]>(`/catalogo/productos?desde=${pageParam}`),
-    initialPageParam: 0,
-    // Si la página vino incompleta, no hay más.
-    getNextPageParam: (ultima, todas) =>
-      ultima.length < POR_PAGINA ? undefined : todas.length * POR_PAGINA,
-    enabled: !buscando,
-  });
+  const texto = consulta.trim();
+  const buscando = texto.length >= 1;
 
-  // Cuántos productos hay en total. Va en su propia consulta porque no cambia
-  // entre páginas: pedirlo con cada página sería contar la tabla entera cada
-  // vez que alguien baja el scroll.
-  const conteo = useQuery({
-    queryKey: ['catalogo-conteo'],
-    queryFn: () => api.get<{ productos: number }>('/catalogo/productos/conteo'),
-    staleTime: 60 * 60_000,
-  });
-
-  const lista = buscando ? (busqueda.data ?? []) : (catalogo.data?.pages.flat() ?? []);
-  const error = buscando ? busqueda.error : catalogo.error;
-  const reintentar = () => void (buscando ? busqueda.refetch() : catalogo.refetch());
-
-  // Sólo cuando no hay NADA que mostrar. Con resultados viejos en pantalla la
-  // espera se indica con el punto al lado del rótulo, sin taparlos.
-  const vacioYCargando =
-    lista.length === 0 && (buscando ? busqueda.isFetching : catalogo.isLoading);
-  // El campo ya tiene texto pero la consulta todavía no salió: sin esto,
-  // durante esos 250 ms se lee "Sin resultados" para algo que ni se preguntó.
-  const esperandoDemora = consulta.trim().length >= 2 && consultaBuscada !== consulta.trim();
+  // `useMemo` y no cálculo suelto: recorrer 638 productos por tecla no se nota,
+  // pero `FlashList` remonta las filas si el array cambia de identidad, y eso
+  // sí se nota.
+  const lista = useMemo(
+    () => buscar(todos, texto, POR_PRODUCTO, { tope: TOPE_BUSQUEDA }),
+    [todos, texto],
+  );
+  const coincidencias = useMemo(() => contar(todos, texto, POR_PRODUCTO), [todos, texto]);
 
 
   return (
@@ -120,22 +81,21 @@ export default function Buscador() {
 
       <View className="mb-1 flex-row items-center">
         <Eyebrow>{buscando ? 'Resultados' : 'Catálogo'}</Eyebrow>
-        <Text className="font-mono mb-1.5 ml-2 text-eyebrow text-tenue">{textoConteo(buscando, lista.length, conteo.data?.productos)}</Text>
-        {busqueda.isFetching || esperandoDemora ? (
-          <ActivityIndicator size="small" color={col.tenue} className="mb-1.5 ml-2" />
-        ) : null}
+        <Text className="font-mono mb-1.5 ml-2 text-eyebrow text-tenue">
+          {textoConteo(buscando, coincidencias, todos.length)}
+        </Text>
       </View>
 
-      {error ? (
-        error instanceof ErrorApi && error.esSinConexion ? (
-          <SinConexion onReintentar={reintentar} />
+      {catalogo.error ? (
+        catalogo.error instanceof ErrorApi && catalogo.error.esSinConexion ? (
+          <SinConexion onReintentar={() => void catalogo.refetch()} />
         ) : (
           <ErrorGenerico
-            onReintentar={reintentar}
-            detalle={error instanceof Error ? error.message : undefined}
+            onReintentar={() => void catalogo.refetch()}
+            detalle={catalogo.error instanceof Error ? catalogo.error.message : undefined}
           />
         )
-      ) : vacioYCargando || esperandoDemora ? (
+      ) : catalogo.isLoading ? (
         <Skeleton filas={5} />
       ) : (
         <FlashList
@@ -145,40 +105,12 @@ export default function Buscador() {
           // toque: sin esto el primer tap sólo baja el teclado y hay que
           // volver a tocar.
           keyboardShouldPersistTaps="handled"
-          // Se pagina sola al llegar al final, sin interrumpir la lectura para
-          // pedir lo que ya se estaba pidiendo. En web no dispara — ver el pie.
-          onEndReachedThreshold={0.6}
-          onEndReached={() => {
-            if (!buscando && catalogo.hasNextPage && !catalogo.isFetchingNextPage) {
-              void catalogo.fetchNextPage();
-            }
-          }}
           ListEmptyComponent={
             buscando ? (
               <Estado
                 titulo="Sin resultados"
-                detalle={`Ningún producto coincide con «${consultaBuscada}».`}
+                detalle={`Ningún producto coincide con «${texto}».`}
               />
-            ) : null
-          }
-          ListFooterComponent={
-            catalogo.isFetchingNextPage ? (
-              <View className="py-4">
-                <ActivityIndicator color={col.primary} />
-              </View>
-            ) : !buscando && catalogo.hasNextPage ? (
-              // El botón queda aunque `onEndReached` esté puesto: en web no
-              // llega a dispararse, y sin él las 638 filas del catálogo se
-              // vuelven inalcanzables después de la primera página. Cuando el
-              // scroll infinito sí funciona, esto casi nunca se ve.
-              <View className="mb-4 mt-2">
-                <Boton
-                  variante="secundario"
-                  onPress={() => void catalogo.fetchNextPage()}
-                >
-                  Cargar más
-                </Boton>
-              </View>
             ) : null
           }
           renderItem={({ item: p, index }) => (

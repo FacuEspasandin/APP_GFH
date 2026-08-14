@@ -137,8 +137,19 @@ export class CatalogoController {
 
   @Get('productos')
   productos(@Query('q') q?: string, @Query('desde') desde?: string) {
-    if (q && q.length >= 2) return this.catalogo.buscarProductos(q);
+    if (q && q.length >= 1) return this.catalogo.buscarProductos(q);
     return this.catalogo.listarProductos(Number(desde ?? 0));
+  }
+
+  /**
+   * El catálogo entero para buscar en el teléfono.
+   *
+   * Va antes que `productos/:id` como `conteo`: si no, «indice» se parsea como
+   * un uuid y devuelve 400.
+   */
+  @Get('productos/indice')
+  indiceProductos() {
+    return this.catalogo.indiceProductos();
   }
 
   /** Antes que `productos/:id`: si no, `conteo` se parsea como un UUID. */
@@ -203,6 +214,11 @@ export class CatalogoController {
               : { alertas: ficha.lactancia };
 
     return { herramienta: clave, ...detalle, cupo };
+  }
+
+  @Get('principios-activos/indice')
+  indicePrincipiosActivos() {
+    return this.catalogo.indicePrincipiosActivos();
   }
 
   @Get('principios-activos')

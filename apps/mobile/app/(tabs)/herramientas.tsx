@@ -17,7 +17,6 @@ import {
 } from '@/dominio/herramientas';
 import { esDePago, rutaHerramienta } from '@/dominio/plan-gratis';
 import { mostrarRecientes, recientesVigentes } from '@/dominio/recientes';
-import { useValorDemorado } from '@/ui/demora';
 import { Icono } from '@/ui/iconos';
 import { CampoTexto, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -42,10 +41,9 @@ export default function Herramientas() {
   const [consulta, setConsulta] = useState('');
   const [categoria, setCategoria] = useState<CategoriaHerramienta | null>(null);
 
-  // Mismo tratamiento que el Buscador: el filtrado corre por pausa de tipeo y
-  // no por tecla. Acá el costo es una lista de cinco, pero la pantalla está
-  // hecha para veinte y el hábito conviene tenerlo desde ahora.
-  const buscada = useValorDemorado(consulta.trim());
+  // Sin pausa de tipeo: el filtro corre acá, no hay petición que ahorrar y
+  // esperar 250 ms entre la letra y el resultado sería retardo puro.
+  const buscada = consulta.trim();
   const buscando = buscada !== '';
 
   const conCandado = esDePago(plan);

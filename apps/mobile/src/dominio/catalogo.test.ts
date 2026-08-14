@@ -34,9 +34,14 @@ describe('conteo de lo que se está mirando', () => {
     expect(textoConteo(true, 7)).toBe('7');
   });
 
-  it('al llegar al corte del backend lo aclara', () => {
-    // "30 resultados" haría creer que no hay más y que no vale la pena afinar.
-    expect(textoConteo(true, TOPE_BUSQUEDA)).toBe('primeros 30');
+  it('si hay más de las que se dibujan, dice cuántas hay', () => {
+    // «30 resultados» haría creer que no hay más y que no vale la pena afinar.
+    // Desde que se busca en el teléfono se conoce el total, así que se dice.
+    expect(textoConteo(true, 542)).toBe('30 de 542');
+  });
+
+  it('justo en el tope no aclara nada: están todas a la vista', () => {
+    expect(textoConteo(true, TOPE_BUSQUEDA)).toBe('30');
   });
 
   it('sin resultados no muestra un cero suelto', () => {
