@@ -216,3 +216,90 @@ export function detectarInteracciones(
 
   return detectadas;
 }
+
+
+/**
+ * Las interacciones de un fármaco, agrupadas por regla y por familia.
+ *
+ * La ficha las listaba planas: litio tiene 26 y las 26 comparten el MISMO
+ * texto, porque salen de una sola regla contra tres familias —AINEs, IECA y
+ * tiazidas—. Veintiséis renglones repitiendo la misma frase no se leen.
+ *
+ * La familia se reconstruye desde las listas del catálogo. Se pierde al cargar
+ * —`Regla.a`/`b` ya vienen resueltas a nombres sueltos— y volver a atarla acá
+ * es más barato que arrastrar los tokens crudos por todo el motor, que no los
+ * necesita para nada.
+ */
+export interface FamiliaInteraccion {
+  nombre: string;
+  miembros: string[];
+}
+
+export interface GrupoInteraccion {
+  severidad: SeveridadInteraccion;
+  texto: string;
+  familias: FamiliaInteraccion[];
+  /** Los que no caen en ninguna lista: fármacos nombrados sueltos en la regla. */
+  sueltos: string[];
+  total: number;
+}
+
+/** A qué lista pertenece un fármaco. `null` si la regla lo nombró suelto. */
+export function familiaDe(
+  nombre: string,
+  listas: Readonly<Record<string, readonly string[]>>,
+): string | null {
+  const buscado = normalizar(nombre);
+  for (const [familia, miembros] of Object.entries(listas)) {
+    if (miembros.some((m) => normalizar(m) === buscado)) return familia;
+  }
+  return null;
+}
+
+export function agruparInteracciones(
+  interacciones: readonly { conNombre: string; severidad: SeveridadInteraccion; texto: string }[],
+  listas: Readonly<Record<string, readonly string[]>>,
+): GrupoInteraccion[] {
+  // La clave del grupo es severidad + texto: es lo que identifica a la regla
+  // que los generó, sin tener que arrastrar su número de orden hasta acá.
+  const porRegla = new Map<string, GrupoInteraccion>();
+
+  for (const i of interacciones) {
+    const clave = `${i.severidad} ${i.texto}`;
+    let grupo = porRegla.get(clave);
+    if (!grupo) {
+      grupo = { severidad: i.severidad, texto: i.texto, familias: [], sueltos: [], total: 0 };
+      porRegla.set(clave, grupo);
+    }
+    grupo.total += 1;
+
+    const familia = familiaDe(i.conNombre, listas);
+    if (familia === null) {
+      grupo.sueltos.push(i.conNombre);
+      continue;
+    }
+
+    const existente = grupo.familias.find((f) => f.nombre === familia);
+    if (existente) existente.miembros.push(i.conNombre);
+    else grupo.familias.push({ nombre: familia, miembros: [i.conNombre] });
+  }
+
+  // Lo más grave primero; dentro de cada regla, la familia más numerosa
+  // primero: es la que explica mejor de qué se trata la interacción.
+  const peso: Record<SeveridadInteraccion, number> = {
+    CONTRAINDICADA: 0,
+    ALTA: 1,
+    INFORMATIVA: 2,
+  };
+
+  const grupos = [...porRegla.values()];
+  for (const g of grupos) {
+    g.familias.sort(
+      (x, y) => y.miembros.length - x.miembros.length || x.nombre.localeCompare(y.nombre),
+    );
+    g.sueltos.sort((x, y) => x.localeCompare(y));
+    for (const fam of g.familias) fam.miembros.sort((x, y) => x.localeCompare(y));
+  }
+
+  return grupos.sort((x, y) => peso[x.severidad] - peso[y.severidad] || y.total - x.total);
+}

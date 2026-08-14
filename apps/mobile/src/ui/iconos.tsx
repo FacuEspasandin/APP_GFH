@@ -47,6 +47,8 @@ export type NombreIcono =
   | 'grupos'
   | 'barras'
   | 'gota'
+  | 'embarazo'
+  | 'lactancia'
   | 'higado'
   // Perfil: la pantalla de ajustes necesita un ícono por fila, y ninguno de
   // los clínicos sirve para 'contraseña' o 'cerrar sesión'.
@@ -196,6 +198,26 @@ function trazos(nombre: NombreIcono, c: Comun) {
       );
     case 'gota':
       return <Path d="M12 3c3.5 3.2 5.5 6 5.5 9a5.5 5.5 0 0 1-11 0c0-3 2-5.8 5.5-9Z" {...c} />;
+    // Embarazo: el contorno de un vientre con el feto adentro. No es la gota
+    // del riñón ni el pulso: las cuatro restricciones de la ficha se ven juntas
+    // y tienen que distinguirse de un vistazo.
+    case 'embarazo':
+      return (
+        <>
+          <Path d="M13 21c-3.3 0-5.6-2.4-5.6-5.6 0-3.2 2-5.2 2-8.4" {...c} />
+          <Circle cx="9.6" cy="4.2" r="1.9" {...c} />
+          <Circle cx="12.6" cy="15" r="2.6" {...c} />
+        </>
+      );
+    // Lactancia: la gota de leche, más redonda que la del riñón y con el
+    // reflejo adentro para que no se confundan a 18 px.
+    case 'lactancia':
+      return (
+        <>
+          <Path d="M12 20.5c-3.4 0-6-2.5-6-5.7C6 11 9 7.6 12 3.5c3 4.1 6 7.5 6 11.3 0 3.2-2.6 5.7-6 5.7Z" {...c} />
+          <Path d="M9.3 15.2a2.8 2.8 0 0 0 2.2 2.6" {...c} />
+        </>
+      );
     case 'higado':
       return (
         <>

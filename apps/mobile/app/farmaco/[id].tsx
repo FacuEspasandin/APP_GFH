@@ -1,148 +1,135 @@
-import { useQuery } from '@tanstack/react-query';
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { Pressable, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
-import { Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
-import { Pestanas, type Pestana } from '@/ui/pestanas';
+import { useFicha, type Ficha } from '@/api/ficha';
+import { restriccionesDe, type ClaveRestriccion } from '@/dominio/restricciones';
+import { Icono } from '@/ui/iconos';
+import { Chip, Eyebrow, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
+import { GrillaRestricciones } from '@/ui/restricciones';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
-import {
-  colorEspina,
-  COLOR_SEVERIDAD,
-  RANGO_ETIQUETA,
-  RANGO_POR_SEVERIDAD_INTERACCION,
-  type RangoGravedad,
-  type SeveridadInteraccion,
-} from '@gfh/shared-types';
-
-interface Ficha {
-  id: string;
-  nombreComercial: string;
-  esGenerico: boolean;
-  laboratorio: string | null;
-  formaFarmaceutica: string | null;
-  dosisTexto: string | null;
-  principiosActivos: Array<{
-    id: string;
-    nombre: string;
-    grupoTerapeutico: string | null;
-    codigoATC: string | null;
-  }>;
-  tieneAjusteRenal: boolean;
-  tieneAjusteHepatico: boolean;
-  tablasRenales: Array<{
-    principioActivo: string;
-    via: string;
-    dosisFrNormal: string;
-    suplementoHd: string | null;
-    requiereRevision: boolean;
-    rangos: Array<{ rangoTexto: string; textoRecomendacion: string | null; tipo: string }>;
-  }>;
-  interaccionesConocidas: Array<{ conNombre: string; severidad: SeveridadInteraccion; texto: string }>;
-  monografia: null;
-}
-
-type Seccion = 'tecnica' | 'ajuste' | 'interacciones';
+import { colorEspina, RANGO_POR_SEVERIDAD_INTERACCION } from '@gfh/shared-types';
 
 /**
- * Ficha de fármaco (5.4-5.9), en tres pestañas.
+ * Ficha de fármaco (5.4-5.9).
  *
- * Por qué pestañas y no un scroll único: las interacciones no tienen techo —un
- * fármaco puede tener treinta— y en una sola página entierran la tabla de
- * dosis, que es el dato que se vino a buscar. Cada sección crece hacia abajo
- * sin empujar a las otras.
+ * Sin pestañas. Antes eran tres —técnica, ajuste, interacciones— y el problema
+ * no era la barra sino qué quedaba adentro: «Ajuste» tenía renal y hepático y
+ * nada de embarazo ni lactancia, así que dos de los cuatro marcadores de
+ * restricción no llevaban a ningún lado y estaban apagados a la fuerza.
  *
- * "Similares" no está: necesita el código ATC, que no está cargado en el
- * catálogo. Una pestaña que sólo dice "todavía no" enseña a no tocar la barra.
+ * Ahora la ficha es una sola página con la grilla de restricciones arriba, y
+ * cada una abre su propia pantalla. La barra de pestañas sobra: las cuatro
+ * tarjetas ya dicen qué hay en cada una antes de tocarla.
+ *
+ * "Similares" sigue sin estar: necesita el código ATC, que no está cargado.
  */
 export default function FichaFarmaco() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [seccion, setSeccion] = useState<Seccion>('tecnica');
+  const router = useRouter();
+  const { data, isLoading, error, refetch } = useFicha(id);
 
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['ficha', id],
-    queryFn: () => api.get<Ficha>(`/catalogo/productos/${id}`),
-    enabled: Boolean(id),
-  });
-
-  const pestanas: readonly Pestana<Seccion>[] = [
-    { clave: 'tecnica', titulo: 'Ficha técnica' },
-    { clave: 'ajuste', titulo: 'Ajuste', conteo: data?.tablasRenales.length ?? null },
-    {
-      clave: 'interacciones',
-      titulo: 'Interacciones',
-      conteo: data?.interaccionesConocidas.length ?? null,
-    },
-  ];
+  const abrir = (clave: ClaveRestriccion) => router.push(`/farmaco/${id}/${clave}` as never);
 
   return (
     <>
       <Stack.Screen options={{ title: data?.nombreComercial ?? 'Fármaco' }} />
+      <Pantalla>
+        <ResultadoConsulta
+          cargando={isLoading}
+          error={error}
+          onReintentar={() => void refetch()}
+          filasSkeleton={4}
+        >
+          {data ? (
+            <>
+              <Encabezado f={data} />
 
-      {/* La barra se dibuja aunque la ficha esté cargando: si apareciera recién
-          con los datos, la pantalla saltaría 44px hacia abajo al llegar. */}
-      <View className="flex-1 bg-paper">
-        <Pestanas pestanas={pestanas} activa={seccion} onCambiar={setSeccion} />
+              <Eyebrow>Restricciones</Eyebrow>
+              <GrillaRestricciones restricciones={restriccionesDe(data)} onAbrir={abrir} />
 
-        <Pantalla>
-          <ResultadoConsulta
-            cargando={isLoading}
-            error={error}
-            onReintentar={() => void refetch()}
-            filasSkeleton={4}
-          >
-            {data ? (
-              <>
-                {seccion === 'tecnica' ? <FichaTecnica f={data} /> : null}
-                {seccion === 'ajuste' ? <Ajuste f={data} /> : null}
-                {seccion === 'interacciones' ? <Interacciones f={data} /> : null}
-              </>
-            ) : null}
-          </ResultadoConsulta>
-        </Pantalla>
-      </View>
+              <FilaInteracciones
+                f={data}
+                onPress={() => router.push(`/farmaco/${id}/interacciones` as never)}
+              />
+
+              <Composicion f={data} />
+            </>
+          ) : null}
+        </ResultadoConsulta>
+      </Pantalla>
     </>
   );
 }
 
-// --- pestaña 1 --------------------------------------------------------------
+function Encabezado({ f }: { f: Ficha }) {
+  return (
+    <View className="mb-3.5 rounded-card bg-primary-light px-3.5 py-3.5">
+      <Text className="text-grande font-fuerte text-ink">
+        {f.nombreComercial}
+        {f.dosisTexto ? <Text className="font-sans text-ink-suave"> {f.dosisTexto}</Text> : null}
+      </Text>
+      <Text className="font-sans mt-1 text-meta text-ink-suave">
+        {[f.formaFarmaceutica, f.laboratorio].filter(Boolean).join(' · ') ||
+          'Sin datos de presentación'}
+      </Text>
+      <View className="mt-2.5 flex-row flex-wrap gap-1.5">
+        {f.principiosActivos.map((p) => (
+          <Chip key={p.id} texto={p.nombre} />
+        ))}
+      </View>
+    </View>
+  );
+}
 
-function FichaTecnica({ f }: { f: Ficha }) {
+/**
+ * Las interacciones van en una fila y no en la grilla: no son una restricción
+ * del fármaco contra un estado del paciente, son el fármaco contra otros
+ * fármacos. Mezclarlas en las cuatro tarjetas borraría esa diferencia.
+ */
+function FilaInteracciones({ f, onPress }: { f: Ficha; onPress: () => void }) {
+  const col = useColores();
+  const total = f.interaccionesConocidas.length;
+
+  const peor = f.gruposInteraccion[0];
+  const color = peor
+    ? colorEspina(RANGO_POR_SEVERIDAD_INTERACCION[peor.severidad])
+    : col.tenue;
+
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Interacciones, ${total}`}
+      className="mb-4 flex-row items-center rounded-card border border-line bg-surface px-3.5 py-3"
+    >
+      <Text className="flex-1 text-fila font-medio text-ink">Interacciones</Text>
+      {total > 0 ? (
+        <View className="mr-2 rounded px-2 py-0.5" style={{ backgroundColor: col.paper }}>
+          <Text className="font-mono-fuerte text-meta" style={{ color }}>
+            {total}
+          </Text>
+        </View>
+      ) : (
+        <Text className="font-sans mr-2 text-meta text-tenue">Ninguna conocida</Text>
+      )}
+      <Icono nombre="chevron" tamano={15} color={col.tenue} />
+    </Pressable>
+  );
+}
+
+function Composicion({ f }: { f: Ficha }) {
   const familias = [
     ...new Set(f.principiosActivos.map((p) => p.grupoTerapeutico).filter(Boolean)),
   ] as string[];
 
   return (
     <>
-      <View className="mb-3.5 rounded-card bg-primary-light px-3.5 py-3.5">
-        <Text className="text-grande font-fuerte text-ink">
-          {f.nombreComercial}
-          {f.dosisTexto ? (
-            <Text className="font-sans text-ink-suave"> {f.dosisTexto}</Text>
-          ) : null}
-        </Text>
-        <Text className="font-sans mt-1 text-meta text-ink-suave">
-          {[f.formaFarmaceutica, f.laboratorio].filter(Boolean).join(' · ') || 'Sin datos de presentación'}
-        </Text>
-        <View className="mt-2.5 flex-row flex-wrap gap-1.5">
-          {f.principiosActivos.map((p) => (
-            <Chip key={p.id} texto={p.nombre} />
-          ))}
-        </View>
-      </View>
-
-      <Restricciones f={f} />
-
       <Eyebrow>Composición</Eyebrow>
       <Superficie elevacion="plana" className="mb-4">
         {f.principiosActivos.map((p, i) => (
-          <View
-            key={p.id}
-            className={`px-3.5 py-2.5 ${i > 0 ? 'border-t border-line' : ''}`}
-          >
+          <View key={p.id} className={`px-3.5 py-2.5 ${i > 0 ? 'border-t border-line' : ''}`}>
             <Text className="text-body font-medio text-ink">{p.nombre}</Text>
             <Text className="font-sans text-meta text-ink-suave">
               {p.grupoTerapeutico ?? 'Sin grupo terapéutico en el catálogo'}
@@ -164,232 +151,11 @@ function FichaTecnica({ f }: { f: Ficha }) {
         </>
       ) : null}
 
-      <Eyebrow>Embarazo y lactancia</Eyebrow>
-      <Superficie elevacion="plana" className="mb-4 px-3.5 py-3">
-        <Text className="font-sans text-meta leading-4 text-ink-suave">
-          La severidad se calcula contra un paciente concreto y su semana de gestación. Sin
-          paciente no se puede instanciar, así que acá no se muestra ninguna.
-        </Text>
-      </Superficie>
-
       <Eyebrow>Monografía</Eyebrow>
       <Superficie elevacion="plana" className="mb-4 px-3.5 py-3">
         <Text className="font-sans text-meta leading-4 text-ink-suave">
           La ficha descriptiva todavía no está conectada. El ajuste de dosis y las interacciones
           que sí ves salen del motor propio.
-        </Text>
-      </Superficie>
-    </>
-  );
-}
-
-/**
- * Los cuatro puntos de restricción.
- *
- * Encendido significa "hay algo que mirar", apagado "no hay dato" — nunca
- * "es seguro" (regla 5). Embarazo y lactancia están siempre apagados porque el
- * catálogo todavía no trae esas restricciones a nivel de producto; se dejan a
- * la vista para que se note que faltan, en vez de desaparecer y hacer creer
- * que el fármaco no tiene ninguna.
- */
-function Restricciones({ f }: { f: Ficha }) {
-  const col = useColores();
-
-  const items: Array<[string, boolean]> = [
-    ['Renal', f.tieneAjusteRenal],
-    ['Hepático', f.tieneAjusteHepatico],
-    ['Embarazo', false],
-    ['Lactancia', false],
-  ];
-
-  return (
-    <Superficie elevacion="plana" className="mb-4 flex-row px-2 py-3">
-      {items.map(([nombre, tiene]) => (
-        <View key={nombre} className="flex-1 items-center">
-          <View
-            className="mb-1.5 rounded-full"
-            style={{
-              width: 8,
-              height: 8,
-              backgroundColor: tiene ? COLOR_SEVERIDAD.media : col.line,
-            }}
-          />
-          <Text
-            className={tiene ? 'font-medio text-eyebrow text-ink' : 'font-sans text-eyebrow text-tenue'}
-          >
-            {nombre}
-          </Text>
-        </View>
-      ))}
-    </Superficie>
-  );
-}
-
-// --- pestaña 2 --------------------------------------------------------------
-
-function Ajuste({ f }: { f: Ficha }) {
-  return (
-    <>
-      <Eyebrow>Función renal</Eyebrow>
-      {f.tablasRenales.length === 0 ? (
-        <SinTabla detalle="Este producto no tiene tabla de ajuste renal en el catálogo." />
-      ) : (
-        f.tablasRenales.map((t, i) => (
-          <Superficie key={i} elevacion="plana" className="mb-3">
-            <View className="border-b border-line px-3.5 py-3">
-              <Text className="text-body font-medio text-ink">
-                {t.principioActivo}
-                <Text className="font-sans text-ink-suave"> · vía {t.via.toLowerCase()}</Text>
-              </Text>
-              <Text className="font-sans mt-0.5 text-meta text-ink-suave">
-                Función normal: {t.dosisFrNormal}
-              </Text>
-            </View>
-
-            {t.rangos.map((r, j) => (
-              <View
-                key={j}
-                className={`flex-row px-3.5 py-2 ${j > 0 ? 'border-t border-line' : ''}`}
-              >
-                {/* Monoespaciada y de ancho fijo: los rangos se leen como una
-                    columna de números, no como texto corrido. */}
-                <Text
-                  className="font-mono-fuerte text-meta text-ink"
-                  style={{ width: 88, fontVariant: ['tabular-nums'] }}
-                >
-                  {r.rangoTexto}
-                </Text>
-                <Text className="font-sans flex-1 text-meta leading-4 text-ink-suave">
-                  {r.textoRecomendacion ?? '—'}
-                </Text>
-              </View>
-            ))}
-
-            {t.suplementoHd ? (
-              <View className="border-t border-line px-3.5 py-2.5">
-                <Text className="font-sans text-meta text-ink-suave">
-                  Hemodiálisis: {t.suplementoHd}
-                </Text>
-              </View>
-            ) : null}
-
-            {t.requiereRevision ? (
-              <View className="border-t border-line px-3.5 py-2">
-                <Text
-                  className="font-sans text-eyebrow uppercase tracking-wider"
-                  style={{ color: COLOR_SEVERIDAD.media }}
-                >
-                  Entrada marcada para revisión en la fuente
-                </Text>
-              </View>
-            ) : null}
-          </Superficie>
-        ))
-      )}
-
-      <View className="mt-2" />
-      <Eyebrow>Función hepática</Eyebrow>
-      {/* Dicho y no escondido: el ajuste hepático no está cargado para ningún
-          producto todavía. Ocultar la sección haría parecer que el fármaco no
-          lo necesita, que es exactamente lo que no sabemos (regla 5). */}
-      <SinTabla detalle="El ajuste hepático todavía no está cargado en el catálogo. No significa que no haga falta: significa que no lo sabemos." />
-    </>
-  );
-}
-
-function SinTabla({ detalle }: { detalle: string }) {
-  return (
-    <Superficie elevacion="plana" className="mb-3 px-3.5 py-3">
-      <Text className="text-body font-medio text-tenue">Sin tabla en el catálogo</Text>
-      <Text className="font-sans mt-1 text-meta leading-4 text-ink-suave">{detalle}</Text>
-    </Superficie>
-  );
-}
-
-// --- pestaña 3 --------------------------------------------------------------
-
-/** El orden en que se muestran los grupos: lo peor primero, siempre. */
-const ORDEN_RANGOS: RangoGravedad[] = [0, 1, 2, 3];
-
-function Interacciones({ f }: { f: Ficha }) {
-  const [filtro, setFiltro] = useState<RangoGravedad | null>(null);
-
-  const conRango = f.interaccionesConocidas.map((i) => ({
-    ...i,
-    rango: RANGO_POR_SEVERIDAD_INTERACCION[i.severidad],
-  }));
-
-  const grupos = ORDEN_RANGOS.map((rango) => ({
-    rango,
-    filas: conRango.filter((i) => i.rango === rango),
-  })).filter((g) => g.filas.length > 0);
-
-  const visibles = filtro === null ? grupos : grupos.filter((g) => g.rango === filtro);
-
-  if (conRango.length === 0) {
-    return (
-      <Estado
-        titulo="Sin interacciones conocidas"
-        detalle="Ninguna regla del catálogo involucra a este fármaco."
-      />
-    );
-  }
-
-  return (
-    <>
-      {/* El filtro sólo aparece si hay más de un grupo: con todo en una sola
-          gravedad, filtrar no separa nada. */}
-      {grupos.length > 1 ? (
-        <View className="mb-3 flex-row flex-wrap gap-2">
-          <Chip texto="Todas" activo={filtro === null} onPress={() => setFiltro(null)} />
-          {grupos.map((g) => (
-            <Chip
-              key={g.rango}
-              texto={`${RANGO_ETIQUETA[g.rango]} ${g.filas.length}`}
-              activo={filtro === g.rango}
-              onPress={() => setFiltro(g.rango)}
-            />
-          ))}
-        </View>
-      ) : null}
-
-      {visibles.map((g) => (
-        <View key={g.rango} className="mb-2">
-          <View className="mb-1.5 flex-row items-center">
-            <View
-              className="mr-2 rounded-full"
-              style={{ width: 8, height: 8, backgroundColor: colorEspina(g.rango) }}
-            />
-            <Eyebrow>
-              {RANGO_ETIQUETA[g.rango]} · {g.filas.length}
-            </Eyebrow>
-          </View>
-
-          {g.filas.map((i, k) => (
-            <Superficie
-              key={`${i.conNombre}-${k}`}
-              elevacion="plana"
-              className="mb-2 px-3.5 py-2.5"
-              style={{ borderLeftWidth: 4, borderLeftColor: colorEspina(g.rango) }}
-            >
-              <Text className="text-body font-medio capitalize text-ink">{i.conNombre}</Text>
-              {/* La severidad no se repite acá: ya la dice el encabezado del
-                  grupo. Ese lugar lo ocupa el mecanismo, que es lo que se
-                  necesita para decidir. */}
-              {i.texto ? (
-                <Text className="font-sans mt-0.5 text-meta leading-4 text-ink-suave">
-                  {i.texto}
-                </Text>
-              ) : null}
-            </Superficie>
-          ))}
-        </View>
-      ))}
-
-      <Superficie elevacion="plana" className="mb-4 px-3.5 py-3">
-        <Text className="font-sans text-meta leading-4 text-ink-suave">
-          Sin paciente no hay severidad instanciada: esto es la regla, no el riesgo de alguien
-          concreto. Para eso, cargá el fármaco en un paciente.
         </Text>
       </Superficie>
     </>

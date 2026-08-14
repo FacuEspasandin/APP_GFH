@@ -2,7 +2,10 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import { normalizar } from '@gfh/shared-types';
 
-import { interaccionesDe } from '../../dominio/clinico/interacciones';
+import {
+  agruparInteracciones,
+  interaccionesDe,
+} from '../../dominio/clinico/interacciones';
  import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
  import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 
@@ -98,6 +101,32 @@ export class CatalogoService {
 
     const pas = producto.principiosActivos.map((x) => x.principioActivo);
 
+    // Embarazo y lactancia: el dato SIEMPRE estuvo en el catálogo —81 alertas
+    // de embarazo y 10 de lactancia— pero la ficha no lo pedía, así que los dos
+    // marcadores de la pantalla estaban apagados a la fuerza y mentían.
+    const alertas = await this.prisma.alertaCondicionFarmaco.findMany({
+      where: {
+        principioActivoId: { in: pas.map((p) => p.id) },
+        condicionClinica: { codigo: { in: ['EMBARAZO', 'LACTANCIA'] } },
+      },
+      include: {
+        condicionClinica: { select: { codigo: true } },
+        principioActivo: { select: { nombre: true } },
+      },
+    });
+
+    const porCondicion = (codigo: string) =>
+      alertas
+        .filter((a) => a.condicionClinica.codigo === codigo)
+        .map((a) => ({
+          principioActivo: a.principioActivo.nombre,
+          severidad: a.severidad,
+          texto: a.texto,
+          semanaMin: a.semanaMin,
+          semanaMax: a.semanaMax,
+          estadoValidacion: a.estadoValidacion,
+        }));
+
     return {
       id: producto.id,
       nombreComercial: producto.nombreComercial,
@@ -145,6 +174,20 @@ export class CatalogoService {
           })),
         ),
       ),
+      /**
+       * Las mismas interacciones, agrupadas por regla y familia. Litio tiene 26
+       * y las 26 comparten el mismo texto: en tres grupos se leen, en veintiséis
+       * renglones no.
+       */
+      gruposInteraccion: agruparInteracciones(
+        unicasPorFarmaco(
+          pas.flatMap((pa) => interaccionesDe(pa.nombre, this.catalogoInteracciones.obtener())),
+        ),
+        this.catalogoInteracciones.listas(),
+      ),
+      /** Restricciones que no son tabla de dosis sino alerta por condición. */
+      embarazo: porCondicion('EMBARAZO'),
+      lactancia: porCondicion('LACTANCIA'),
       /** Sin proveedor de monografías integrado. NUNCA se nombra al proveedor
        *  en la UI (regla no negociable 9). */
       monografia: null as null,

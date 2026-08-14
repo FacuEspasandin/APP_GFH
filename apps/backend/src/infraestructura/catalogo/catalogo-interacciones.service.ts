@@ -19,10 +19,13 @@ import { cargarReglasInteraccion, RUTA_REGLAS_POR_DEFECTO } from './cargar-regla
 export class CatalogoInteraccionesService implements OnModuleInit {
   private readonly logger = new Logger(CatalogoInteraccionesService.name);
   private catalogo: CatalogoInteracciones = new Map();
+  /** Las familias terapéuticas, tal cual están declaradas en el archivo. */
+  private familias: Record<string, string[]> = {};
 
   onModuleInit(): void {
-    const { reglas, listasSinUso } = cargarReglasInteraccion(RUTA_REGLAS_POR_DEFECTO);
+    const { reglas, listas, listasSinUso } = cargarReglasInteraccion(RUTA_REGLAS_POR_DEFECTO);
     this.catalogo = construirCatalogo(reglas);
+    this.familias = listas;
 
     this.logger.log(
       `Catálogo de interacciones: ${reglas.length} reglas → ${this.catalogo.size} pares`,
@@ -34,5 +37,14 @@ export class CatalogoInteraccionesService implements OnModuleInit {
 
   obtener(): CatalogoInteracciones {
     return this.catalogo;
+  }
+
+  /**
+   * Las listas del archivo —AINES, IECA, TIAZIDAS…— para poder volver a
+   * agrupar. El motor no las necesita: trabaja con pares ya expandidos. Las usa
+   * sólo la ficha, para no listar veintiséis renglones con el mismo texto.
+   */
+  listas(): Readonly<Record<string, readonly string[]>> {
+    return this.familias;
   }
 }

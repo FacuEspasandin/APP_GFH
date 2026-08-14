@@ -132,6 +132,11 @@ function Navegacion() {
         <Stack.Screen name="herramientas/hepatico" options={{ title: 'Ajuste hepático' }} />
 
         <Stack.Screen name="farmaco/[id]" options={{ title: 'Ficha' }} />
+        <Stack.Screen name="farmaco/[id]/renal" options={{ title: 'Función renal' }} />
+        <Stack.Screen name="farmaco/[id]/hepatico" options={{ title: 'Función hepática' }} />
+        <Stack.Screen name="farmaco/[id]/embarazo" options={{ title: 'Embarazo' }} />
+        <Stack.Screen name="farmaco/[id]/lactancia" options={{ title: 'Lactancia' }} />
+        <Stack.Screen name="farmaco/[id]/interacciones" options={{ title: 'Interacciones' }} />
 
         <Stack.Screen name="perfil/cuenta" options={{ title: 'Datos personales' }} />
         <Stack.Screen name="perfil/password" options={{ title: 'Contraseña' }} />
