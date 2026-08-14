@@ -1,10 +1,14 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { useFicha, type Ficha } from '@/api/ficha';
-import { restriccionesDe, type ClaveRestriccion } from '@/dominio/restricciones';
+import { useFicha, type ClaveDetalle, type Ficha } from '@/api/ficha';
+import { usePlan } from '@/api/plan';
+import { cupoAgotado, gastaConsulta, rutaPaywall, textoCupo } from '@/dominio/plan-gratis';
 import { Icono } from '@/ui/iconos';
-import { Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { HojaInferior } from '@/ui/hoja-inferior';
+import { Boton, Chip, Eyebrow, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { GrillaRestricciones } from '@/ui/restricciones';
 import { Superficie } from '@/ui/superficie';
@@ -29,8 +33,37 @@ export default function FichaFarmaco() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { data, isLoading, error, refetch } = useFicha(id);
+  const { data: plan } = usePlan();
 
-  const abrir = (clave: ClaveRestriccion) => router.push(`/farmaco/${id}/${clave}` as never);
+  const textoContador = textoCupo(plan);
+  const sinCupo = cupoAgotado(plan);
+
+  // Qué pares (fármaco, herramienta) ya abrió en esta sesión. El backend no los
+  // vuelve a cobrar, así que tampoco hay que advertir por ellos.
+  const cache = useQueryClient();
+  const yaVistas = (['embarazo', 'lactancia', 'renal', 'hepatico', 'interacciones'] as const).filter(
+    (c) => cache.getQueryData(['restriccion', id, c]) !== undefined,
+  );
+
+  /** La que el médico tocó y todavía no confirmó. */
+  const [porConfirmar, setPorConfirmar] = useState<ClaveDetalle | null>(null);
+
+  const ir = (clave: ClaveDetalle) => router.push(`/farmaco/${id}/${clave}` as never);
+
+  /**
+   * Con el cupo agotado se manda al paywall directo: dejar entrar para que el
+   * servidor rechace mostraría medio segundo una pantalla en blanco y un error,
+   * cuando lo que hay que decir es que se terminaron las consultas.
+   *
+   * Y si la consulta se va a gastar, se pregunta antes. Descontar en silencio
+   * una de diez que no se reponen se lee como una trampa cuando el médico
+   * descubre el contador en 7.
+   */
+  const abrir = (clave: ClaveDetalle) => {
+    if (sinCupo) return router.push(rutaPaywall('consultas') as never);
+    if (gastaConsulta(plan, clave, yaVistas)) return setPorConfirmar(clave);
+    ir(clave);
+  };
 
   return (
     <>
@@ -47,19 +80,106 @@ export default function FichaFarmaco() {
               <Encabezado f={data} />
 
               <Eyebrow>Restricciones</Eyebrow>
-              <GrillaRestricciones restricciones={restriccionesDe(data)} onAbrir={abrir} />
+              <GrillaRestricciones restricciones={data.restricciones} onAbrir={abrir} />
 
-              <FilaInteracciones
-                f={data}
-                onPress={() => router.push(`/farmaco/${id}/interacciones` as never)}
-              />
+              <FilaInteracciones f={data} onPress={() => abrir('interacciones')} />
+
+              {/* El contador va debajo de las cinco puertas que lo gastan, no
+                  arriba de la pantalla: es lo que se lee antes de tocar una. */}
+              {textoContador ? <Contador texto={textoContador} agotado={sinCupo} /> : null}
 
               <Composicion f={data} />
             </>
           ) : null}
         </ResultadoConsulta>
       </Pantalla>
+
+      <ConfirmarConsulta
+        clave={porConfirmar}
+        restantes={plan?.consultas?.restantes ?? 0}
+        onCerrar={() => setPorConfirmar(null)}
+        onSeguir={() => {
+          const clave = porConfirmar;
+          setPorConfirmar(null);
+          if (clave) ir(clave);
+        }}
+      />
     </>
+  );
+}
+
+const NOMBRE_RESTRICCION: Record<ClaveDetalle, string> = {
+  embarazo: 'las alertas de embarazo',
+  lactancia: 'las alertas de lactancia',
+  renal: 'el ajuste renal',
+  hepatico: 'el ajuste hepático',
+  interacciones: 'las interacciones',
+};
+
+/**
+ * Antes de gastar una de las diez.
+ *
+ * Se pregunta porque no se reponen: descontar en silencio y que el médico
+ * descubra el contador en 7 se lee como una trampa. Dice cuántas quedan y qué
+ * se lleva por esa, para que la decisión sea sobre algo concreto.
+ *
+ * Volver atrás no cuenta —la cuenta es por par (fármaco, herramienta)— y eso
+ * también se dice acá, que es donde importa.
+ */
+function ConfirmarConsulta({
+  clave,
+  restantes,
+  onCerrar,
+  onSeguir,
+}: {
+  clave: ClaveDetalle | null;
+  restantes: number;
+  onCerrar: () => void;
+  onSeguir: () => void;
+}) {
+  return (
+    <HojaInferior visible={clave !== null} onCerrar={onCerrar} titulo="Consultas gratis">
+      <Text className="mb-1.5 mt-1 text-fila font-fuerte text-ink">
+        Ver {clave ? NOMBRE_RESTRICCION[clave] : ''} usa una de tus {restantes}
+      </Text>
+      <Text className="font-sans mb-4 text-meta leading-5 text-ink-suave">
+        Queda abierta: volver a esta misma pantalla de este mismo fármaco no gasta otra.
+      </Text>
+
+      <Boton onPress={onSeguir}>Ver, y usar una</Boton>
+
+      <Pressable onPress={onCerrar} accessibilityRole="button" className="items-center py-3">
+        <Text className="font-medio text-meta text-ink-suave">Ahora no</Text>
+      </Pressable>
+    </HojaInferior>
+  );
+}
+
+/**
+ * Cuántas consultas quedan.
+ *
+ * Aparece recién cuando el backend lo pide —no desde la primera— porque un
+ * contador en 1/10 convierte cada consulta en una transacción. Cuando queda
+ * poco, en cambio, el dato sirve para decidir sobre cuál fármaco gastarla.
+ *
+ * Lleva el celeste de propiedad y no un color de la escala clínica: es un dato
+ * de la cuenta, no del paciente. Pintarlo de ámbar lo pondría a competir con
+ * las alertas de la misma pantalla.
+ */
+function Contador({ texto, agotado }: { texto: string; agotado: boolean }) {
+  const col = useColores();
+
+  return (
+    <View
+      className="mb-4 flex-row items-center rounded-card px-3.5 py-3"
+      style={{ backgroundColor: col.primaryLight }}
+    >
+      <Icono nombre={agotado ? 'candado' : 'info'} tamano={15} color={col.primary} />
+      <Text className="font-sans ml-2.5 flex-1 text-meta leading-5 text-ink">
+        {texto}
+        {agotado ? '. Con la suscripción dejás de contarlas.' : '. Volver a una que ya viste no gasta otra.'}
+      </Text>
+    </View>
   );
 }
 
@@ -90,11 +210,10 @@ function Encabezado({ f }: { f: Ficha }) {
  */
 function FilaInteracciones({ f, onPress }: { f: Ficha; onPress: () => void }) {
   const col = useColores();
-  const total = f.interaccionesConocidas.length;
+  const { total, peorSeveridad } = f.interacciones;
 
-  const peor = f.gruposInteraccion[0];
-  const color = peor
-    ? colorEspina(RANGO_POR_SEVERIDAD_INTERACCION[peor.severidad])
+  const color = peorSeveridad
+    ? colorEspina(RANGO_POR_SEVERIDAD_INTERACCION[peorSeveridad])
     : col.tenue;
 
   return (

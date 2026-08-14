@@ -7,7 +7,7 @@
  * fármacos. Este script:
  *
  *   · le da suscripción vigente a `demo@gfh.app`  → experiencia PAGA
- *   · crea `gratis@gfh.app` con UN paciente        → experiencia GRATIS
+ *   · crea `gratis@gfh.app` SIN pacientes propios  → experiencia GRATIS
  *
  * La suscripción se escribe directo en la base. Es la única vía posible acá:
  * el camino real de escritura es el webhook de RevenueCat (regla no negociable
@@ -75,60 +75,16 @@ async function main() {
   // de registrar y no pagó.
   await prisma.suscripcion.deleteMany({ where: { medicoId: gratuito.id } });
 
-  // Un solo paciente, que es lo que el plan gratis permite. Con interacción y
-  // ajuste renal para que el cockpit tenga algo real que mostrar — si estuviera
-  // vacío no se vería que la versión gratis SÍ llega al cockpit completo.
+  /**
+   * Sin pacientes propios. Cero, no uno.
+   *
+   * El plan gratis ya no incluye ninguno: lo que el médico ve al entrar es el
+   * paciente de demostración, que no está en la base —lo arma `DemoService` en
+   * memoria y lo pasa por el motor real— y es el mismo para todas las cuentas.
+   * Sembrar uno propio acá dejaría en la base un paciente que `/inicio` no va a
+   * mostrar, y depurar esa diferencia costaría más que el minuto que ahorra.
+   */
   await prisma.paciente.deleteMany({ where: { medicoId: gratuito.id } });
-
-  const nacimiento = new Date('1955-09-20T00:00:00Z');
-  const paciente = await prisma.paciente.create({
-    data: {
-      medicoId: gratuito.id,
-      nombre: 'Jorge',
-      apellido: 'Fernández',
-      documento: 'GRATIS-1',
-      fechaNacimiento: nacimiento,
-      sexo: 'M',
-      alturaCm: 174,
-      pesoKg: 82,
-      creatininaMgDl: 1.4,
-      clcrMedidoAt: new Date(),
-    },
-  });
-
-  const clcr = calcularClcr({
-    edadAnios: edadEnAnios(nacimiento, new Date()),
-    pesoKg: 82,
-    creatininaMgDl: 1.4,
-    sexo: 'M',
-  });
-  if (clcr !== null) {
-    await prisma.paciente.update({
-      where: { id: paciente.id },
-      data: { clcrMlMin: clcr, clcrOrigen: 'CALCULADO_COCKCROFT' },
-    });
-  }
-
-  // Warfarina + Ibuprofeno: interacción conocida del catálogo real.
-  for (const nombre of ['Coumadin', 'Ibupirac']) {
-    const producto = await prisma.productoComercial.findFirst({
-      where: { nombreComercial: nombre },
-      select: { id: true },
-    });
-    if (!producto) continue;
-
-    await prisma.prescripcion.create({
-      data: {
-        medicoId: gratuito.id,
-        pacienteId: paciente.id,
-        productoComercialId: producto.id,
-        dosis: nombre === 'Coumadin' ? '5 mg' : '600 mg',
-        frecuencia: nombre === 'Coumadin' ? 'cada 24 h' : 'cada 8 h',
-        via: 'ORAL',
-        estado: 'ACTIVO',
-      },
-    });
-  }
 
   console.log('\n  CUENTA PAGA');
   console.log(`    ${PAGA.email}  ·  DemoGFH2026!`);
@@ -137,9 +93,10 @@ async function main() {
 
   console.log('\n  CUENTA GRATIS');
   console.log(`    ${GRATIS.email}  ·  ${GRATIS.password}`);
-  console.log('    sin suscripción');
-  console.log(`    1 paciente (Fernández, Jorge — Clcr ${clcr ?? 'sin dato'}) con su cockpit completo`);
-  console.log('    al crear el segundo → 403 LIMITE_PLAN_GRATIS y la app abre el paywall\n');
+  console.log('    sin suscripción, sin pacientes propios');
+  console.log('    ve el paciente de demostración con su cockpit completo, y no lo puede tocar');
+  console.log('    10 consultas de restricción, contadas por (fármaco, herramienta)');
+  console.log('    al crear un paciente → 403 LIMITE_PLAN_GRATIS y la app abre el paywall\n');
 
   console.log('  Para que el corte se note, el backend tiene que correr con EXIGIR_SUSCRIPCION=1.\n');
 }

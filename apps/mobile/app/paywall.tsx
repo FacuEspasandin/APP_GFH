@@ -1,9 +1,10 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
+import type { MotivoPaywall } from '@/dominio/plan-gratis';
 import { Icono } from '@/ui/iconos';
-import { Boton, Pantalla } from '@/ui/kit';
+import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
@@ -24,9 +25,41 @@ const PRECIO: Record<Plan, { titulo: string; precio: string; detalle: string; bo
   },
 };
 
+/**
+ * Qué se le dice según de dónde venga.
+ *
+ * El precio y lo que incluye son siempre los mismos; lo que cambia es la
+ * primera línea. Al que gastó sus diez consultas decirle "creá tu primer
+ * paciente" le habla de algo que no estaba haciendo, y se lee como un cartel
+ * genérico en vez de como una respuesta.
+ */
+const ENCABEZADO: Record<MotivoPaywall, { titulo: string; texto: string }> = {
+  paciente: {
+    titulo: 'Cargá tus pacientes',
+    texto:
+      'Con la suscripción cargás a los que atendés y cada uno se verifica solo: interacciones, ajuste renal, condiciones, embarazo y lactancia, cada vez que agregás un fármaco.',
+  },
+  consultas: {
+    titulo: 'Usaste tus consultas gratis',
+    texto:
+      'Las diez consultas de restricción vienen con la cuenta y no se reponen. Con la suscripción dejás de contarlas: entrás a la que quieras, sobre cualquier fármaco.',
+  },
+  herramienta: {
+    titulo: 'Esta herramienta cruza el catálogo',
+    texto:
+      'Las calculadoras de clearance y Child-Pugh son libres. Cruzar fármacos entre sí, o contra una condición o un riñón concreto, entra en la suscripción.',
+  },
+  grupo: {
+    titulo: 'Separá dónde atendés',
+    texto:
+      'Los grupos ordenan a tus pacientes por consultorio, CTI o guardia, y muestran cómo viene cada lugar sin abrir uno por uno.',
+  },
+};
+
 const INCLUYE = [
   'Pacientes ilimitados, con su cockpit completo',
-  'Interacciones, ajuste renal y alertas, sobre todos',
+  'Las cinco verificaciones sobre cada tratamiento',
+  'Restricciones de cualquier fármaco, sin contar consultas',
   'Grupos para separar consultorio, CTI o guardia',
 ];
 
@@ -37,26 +70,28 @@ const INCLUYE = [
  * RevenueCat, y el backend se entera SOLO por webhook (regla no negociable 6).
  * Hasta que el SDK esté integrado, la pantalla lo dice en vez de fingir.
  *
- * Los dos caminos son dos controles. Antes había un solo botón "Continuar" que
- * llevaba al disclaimer: continuaba SIN comprar, sin decirlo, y el precio
- * elegido no aparecía en ningún lado de la acción.
+ * No hay "seguir con el plan gratis" abajo: no es una decisión que se tome acá.
+ * El médico llegó desde algo concreto que quería hacer, y el camino de vuelta
+ * es cerrar esta pantalla — por eso se abre con `push` y conserva la anterior.
  */
 export default function Paywall() {
   const router = useRouter();
+  const { motivo } = useLocalSearchParams<{ motivo?: string }>();
   const [plan, setPlan] = useState<Plan>('anual');
   const [avisoCobro, setAvisoCobro] = useState(false);
+
+  const cabecera = ENCABEZADO[(motivo as MotivoPaywall) ?? 'paciente'] ?? ENCABEZADO.paciente;
 
   return (
     <View className="flex-1 bg-paper">
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
-        <Text className="text-grande font-fuerte text-ink">Todos tus pacientes</Text>
+        <Text className="text-grande font-fuerte text-ink">{cabecera.titulo}</Text>
         <Text className="font-sans mt-1.5 text-meta leading-5 text-ink-suave">
-          El plan gratis sigue a un paciente. Con la suscripción cargás todos los que atendés y cada
-          uno se verifica solo.
+          {cabecera.texto}
         </Text>
 
-        {/* Qué se lleva, en concreto. Un paywall que sólo muestra precios obliga
-            al médico a recordar por qué llegó hasta acá. */}
+        {/* Qué se lleva, en concreto. Un paywall que sólo muestra precios
+            obliga al médico a recordar por qué llegó hasta acá. */}
         <Superficie elevacion="plana" className="mb-4 mt-3.5">
           {INCLUYE.map((linea, i) => (
             <Incluye key={linea} texto={linea} primera={i === 0} />
@@ -95,11 +130,11 @@ export default function Paywall() {
         <Boton onPress={() => setAvisoCobro(true)}>{PRECIO[plan].boton}</Boton>
 
         <Pressable
-          onPress={() => router.push('/disclaimer')}
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
           accessibilityRole="button"
           className="mt-1 items-center py-2.5"
         >
-          <Text className="font-medio text-meta text-ink-suave">Seguir con el plan gratis</Text>
+          <Text className="font-medio text-meta text-ink-suave">Ahora no</Text>
         </Pressable>
       </View>
     </View>

@@ -8,6 +8,7 @@ import type { CategoriaHallazgo, Cockpit, PrescripcionCockpit } from '@/api/tipo
 import { Icono } from '@/ui/iconos';
 import { AnilloClcr } from '@/ui/anillo-clcr';
 import { etiquetaEmbarazo } from '@/dominio/gestacion';
+import { rutaPaywall } from '@/dominio/plan-gratis';
 import { esSintetica, nombreCondicion } from '@/ui/condiciones';
 import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { FilaAnimada } from '@/ui/animacion';
@@ -86,6 +87,19 @@ export default function CockpitPaciente() {
   const p = data.paciente;
   const totalAvisos = data.avisos.length;
 
+  /**
+   * Sobre el paciente sintético no se escribe.
+   *
+   * Se mira entero —es el escaparate, y un muro sin escaparate no vende— pero
+   * cualquier acción que lo toque abre el paywall. El backend lo rechaza igual;
+   * hacerlo acá evita que el médico llene un formulario para que rebote.
+   *
+   * Los hallazgos son la excepción: salen de esta misma respuesta, así que se
+   * leen sin pedirle nada al servidor.
+   */
+  const abrir = (ruta: string) =>
+    router.push((data.esDemostracion ? rutaPaywall('paciente') : ruta) as never);
+
   const peor = peorRango(data.hallazgos.map((h) => h.rango));
 
   const destacados = hallazgosDestacados(data.hallazgos);
@@ -156,7 +170,7 @@ export default function CockpitPaciente() {
 
           {data.condicionesEfectivas.length > 0 ? (
             <Pressable
-              onPress={() => router.push(`/paciente/${id}/condiciones-alergias` as never)}
+              onPress={() => abrir(`/paciente/${id}/condiciones-alergias`)}
               accessibilityRole="button"
               accessibilityLabel="Ver condiciones y alergias"
               className="mt-4 flex-row flex-wrap gap-1.5 border-t border-line pt-3.5"
@@ -303,7 +317,7 @@ export default function CockpitPaciente() {
         <View className="mb-2 flex-row items-center justify-between">
           <Eyebrow>Tratamiento activo · {data.prescripciones.length}</Eyebrow>
           <Pressable
-            onPress={() => router.push(`/paciente/${id}/cargar-tratamiento` as never)}
+            onPress={() => abrir(`/paciente/${id}/cargar-tratamiento`)}
             accessibilityRole="button"
           >
             <Text className="mb-2 text-meta font-medio text-accent">Cargar tratamiento</Text>
@@ -315,7 +329,7 @@ export default function CockpitPaciente() {
             titulo="Sin medicación cargada"
             detalle="Agregá un fármaco para que se evalúe."
             accion="Agregar fármaco"
-            onAccion={() => router.push(`/paciente/${id}/agregar-farmaco` as never)}
+            onAccion={() => abrir(`/paciente/${id}/agregar-farmaco`)}
           />
         ) : (
           // Animadas porque esta lista se recalcula sola: suspender un fármaco
@@ -357,7 +371,7 @@ export default function CockpitPaciente() {
             titulo={titulo!}
             onPress={() => {
               setMenu('ninguno');
-              router.push(ruta as never);
+              abrir(ruta!);
             }}
           />
         ))}
@@ -376,7 +390,7 @@ export default function CockpitPaciente() {
             icono={o.icono}
             onPress={() => {
               setMenu('ninguno');
-              router.push(o.ruta as never);
+              abrir(o.ruta);
             }}
           />
         ))}

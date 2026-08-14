@@ -1,22 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 
+import type { EstadoDelPlan } from '@/dominio/plan-gratis';
 import { api } from './cliente';
 
 /**
  * Qué permite el plan del médico.
  *
- * El backend es la autoridad: `puedeCrearPaciente` sale de contar los
- * pacientes que ya tiene contra el límite del plan gratis, no de una marca en
- * la cuenta. La app usa esto sólo para no ofrecer lo que va a ser rechazado —
- * el límite real lo sigue aplicando la API.
+ * El backend es la autoridad: tanto `puedeCrearPaciente` como el cupo de
+ * consultas se calculan allá. La app usa esto sólo para no ofrecer lo que va a
+ * ser rechazado — el límite real lo sigue aplicando la API.
+ *
+ * La forma la define el dominio y no este archivo: es lo que deciden
+ * `rutaHerramienta`, `textoCupo` y compañía, y tenerla escrita dos veces
+ * llevaría a que una de las dos se quede vieja.
  */
-export interface Plan {
-  vigente: boolean;
-  pacientes: number;
-  /** `null` cuando la suscripción está vigente: no hay tope. */
-  limitePacientes: number | null;
-  puedeCrearPaciente: boolean;
-}
+export type Plan = EstadoDelPlan;
 
 export function usePlan() {
   return useQuery({

@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 
+import type { MotivoPaywall } from '@/dominio/plan-gratis';
 import { borrar, CLAVE_ACCESS, CLAVE_REFRESH, guardar, leer } from './almacen';
 
 /**
@@ -47,9 +48,17 @@ export class ErrorApi extends Error {
 
   /** El plan gratis no da para esto. No es un error: es el momento de vender. */
   get esLimiteDelPlanGratis(): boolean {
-    return this.codigo === 'LIMITE_PLAN_GRATIS';
+    return this.codigo === 'LIMITE_PLAN_GRATIS' || this.codigo === 'SIN_CONSULTAS_GRATIS';
   }
 }
+
+/** Los dos códigos que abren el paywall, con el motivo que le toca a cada uno.
+ *  Son distintos porque dicen cosas distintas: uno es "esto es de pago", el
+ *  otro "esto era gratis y se terminó". */
+const MOTIVO_POR_CODIGO: Record<string, MotivoPaywall> = {
+  LIMITE_PLAN_GRATIS: 'paciente',
+  SIN_CONSULTAS_GRATIS: 'consultas',
+};
 
 /**
  * Qué hacer cuando el backend dice que la suscripción venció.
@@ -72,8 +81,8 @@ export function registrarManejadorSuscripcionVencida(fn: () => void): void {
  * el manejador central, cualquier acción que el backend rechace por plan abre
  * la misma pantalla, sin que haya que recordarlo.
  */
-let alLlegarAlLimite: (() => void) | null = null;
-export function registrarManejadorLimitePlan(fn: () => void): void {
+let alLlegarAlLimite: ((motivo: MotivoPaywall) => void) | null = null;
+export function registrarManejadorLimitePlan(fn: (motivo: MotivoPaywall) => void): void {
   alLlegarAlLimite = fn;
 }
 
@@ -195,8 +204,8 @@ async function pedir<T>(
 
     // Distinto del anterior: acá no se perdió el acceso, hay algo que se
     // desbloquea pagando. Por eso el paywall y no la pantalla de bloqueo.
-    if (res.status === 403 && codigo === 'LIMITE_PLAN_GRATIS') {
-      alLlegarAlLimite?.();
+    if (res.status === 403 && MOTIVO_POR_CODIGO[codigo]) {
+      alLlegarAlLimite?.(MOTIVO_POR_CODIGO[codigo]!);
     }
 
     throw new ErrorApi(

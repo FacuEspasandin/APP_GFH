@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';
 
-import { useFicha, type Ficha } from '@/api/ficha';
+import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { nombreFamilia, nombreLegible } from '@/dominio/restricciones';
 import { Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
@@ -26,7 +26,7 @@ import {
  */
 export default function InteraccionesFarmaco() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data, isLoading, error, refetch } = useFicha(id);
+  const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'interacciones');
 
   return (
     <>
@@ -45,8 +45,10 @@ export default function InteraccionesFarmaco() {
   );
 }
 
-function Contenido({ f }: { f: Ficha }) {
-  if (f.gruposInteraccion.length === 0) {
+function Contenido({ f }: { f: DetalleRestriccion }) {
+  const grupos = f.gruposInteraccion ?? [];
+
+  if (grupos.length === 0) {
     return (
       <Estado
         titulo="Sin interacciones conocidas"
@@ -57,7 +59,7 @@ function Contenido({ f }: { f: Ficha }) {
 
   return (
     <>
-      {f.gruposInteraccion.map((g, i) => (
+      {grupos.map((g, i) => (
         <Grupo key={`${g.severidad}-${i}`} g={g} />
       ))}
 
@@ -72,7 +74,7 @@ function Contenido({ f }: { f: Ficha }) {
   );
 }
 
-function Grupo({ g }: { g: Ficha['gruposInteraccion'][number] }) {
+function Grupo({ g }: { g: NonNullable<DetalleRestriccion['gruposInteraccion']>[number] }) {
   const col = useColores();
   const rango = RANGO_POR_SEVERIDAD_INTERACCION[g.severidad as SeveridadInteraccion];
   const color = colorEspina(rango);

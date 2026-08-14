@@ -158,7 +158,7 @@ export class CatalogoController {
    */
   @Get('productos/:id')
   ficha(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.catalogo.fichaProducto(id);
+    return this.catalogo.fichaLibre(id);
   }
 
   /**

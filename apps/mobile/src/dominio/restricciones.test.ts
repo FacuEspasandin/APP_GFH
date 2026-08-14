@@ -50,6 +50,13 @@ describe('restricciones del fármaco', () => {
       expect(estadoDeAlertas([alerta(), alerta({ severidad: 'EVITAR' })])).toBe('evitar');
       expect(estadoDeAlertas([alerta(), alerta()])).toBe('precaucion');
     });
+
+    it('CONTRAINDICADO cae del lado de evitar, no de precaución', () => {
+      // Es el nivel más duro del enum y durante un tiempo caía en precaución
+      // por omisión: la condición miraba sólo `EVITAR`, así que la alerta más
+      // grave del catálogo se pintaba más suave de lo que es.
+      expect(estadoDeAlertas([alerta({ severidad: 'CONTRAINDICADO' })])).toBe('evitar');
+    });
   });
 
   describe('las cuatro tarjetas', () => {

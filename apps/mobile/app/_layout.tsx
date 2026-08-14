@@ -12,6 +12,7 @@ import {
   registrarManejadorLimitePlan,
   registrarManejadorSuscripcionVencida,
 } from '@/api/cliente';
+import { rutaPaywall } from '@/dominio/plan-gratis';
 import { BotonVolverHeader } from '@/ui/boton-volver';
 import { useFuentes } from '@/ui/fuentes';
 import { MenuInferior } from '@/ui/menu-inferior';
@@ -68,8 +69,8 @@ function Navegacion() {
     // `push` y no `replace`: el médico estaba haciendo algo y tiene que poder
     // volver a eso cerrando el paywall. Perder la pantalla donde estaba lo
     // castiga por haber tocado una función paga.
-    registrarManejadorLimitePlan(() => {
-      router.push('/paywall');
+    registrarManejadorLimitePlan((motivo) => {
+      router.push(rutaPaywall(motivo) as never);
     });
   }, [router]);
 

@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 
-import { useFicha, type Ficha } from '@/api/ficha';
+import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { peldanosHepaticos } from '@/dominio/restricciones';
 import { Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
@@ -20,7 +20,7 @@ import { PeldanosHepaticos, PieContexto, TapaRestriccion } from '@/ui/restriccio
  */
 export default function RestriccionHepatica() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data, isLoading, error, refetch } = useFicha(id);
+  const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'hepatico');
 
   return (
     <>
@@ -39,11 +39,12 @@ export default function RestriccionHepatica() {
   );
 }
 
-function Contenido({ f }: { f: Ficha }) {
+function Contenido({ f }: { f: DetalleRestriccion }) {
   // El catálogo todavía no devuelve filas hepáticas por fármaco: los tres
   // peldaños salen sin dato hasta que exista la tabla.
-  const peldanos = peldanosHepaticos();
-  const hayTabla = f.tieneAjusteHepatico;
+  const filas = f.tablasHepaticas ?? [];
+  const peldanos = peldanosHepaticos(filas);
+  const hayTabla = filas.length > 0;
 
   return (
     <>

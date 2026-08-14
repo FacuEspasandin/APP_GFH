@@ -163,11 +163,28 @@ export class SuscripcionService {
     const s = await this.estado(medicoId);
     const pacientes = await this.prisma.paciente.count({ where: { medicoId } });
 
+    // El cupo se cuenta acá y no en `AccesoService` para no cruzar los dos
+    // servicios: aquél ya depende de éste.
+    const usadas = s.vigente ? 0 : await this.prisma.consultaGratis.count({ where: { medicoId } });
+
     return {
       vigente: s.vigente,
       pacientes,
       limitePacientes: s.vigente ? null : PLAN_GRATIS.pacientes,
       puedeCrearPaciente: s.vigente || pacientes < PLAN_GRATIS.pacientes,
+      /**
+       * El cupo de consultas de restricción. `null` con suscripción vigente:
+       * no hay nada que contar y la app no tiene que mostrar contador.
+       */
+      consultas: s.vigente
+        ? null
+        : {
+            usadas,
+            total: PLAN_GRATIS.consultasRestriccion,
+            restantes: Math.max(0, PLAN_GRATIS.consultasRestriccion - usadas),
+            /** Desde acá se le muestra al médico, no antes: ver `PLAN_GRATIS`. */
+            avisar: usadas >= PLAN_GRATIS.avisarDesde,
+          },
     };
   }
 }

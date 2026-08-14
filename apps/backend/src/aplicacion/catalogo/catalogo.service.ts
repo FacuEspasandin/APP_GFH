@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
-import { normalizar } from '@gfh/shared-types';
+import { normalizar, restriccionesDe } from '@gfh/shared-types';
 
 import {
   agruparInteracciones,
@@ -194,6 +194,53 @@ export class CatalogoService {
       /** Sin proveedor de monografías integrado. NUNCA se nombra al proveedor
        *  en la UI (regla no negociable 9). */
       monografia: null as null,
+    };
+  }
+
+  /**
+   * La ficha que ve cualquiera, pague o no.
+   *
+   * Trae lo que un vademécum gratuito ya da —composición, presentación, familia
+   * alergénica— más el ESTADO de cada restricción y una glosa de una línea:
+   * «Baja hasta el 25 %», «2 alertas». Alcanza para saber si hay algo que mirar,
+   * que es lo que hace que valga la pena entrar.
+   *
+   * Lo que NO trae es el detalle: los tramos con su recomendación, el texto de
+   * cada alerta, con qué fármacos interactúa. Eso sale por
+   * `restriccionesDetalle`, que descuenta cupo. Si viniera todo acá el límite no
+   * se podría aplicar: la app ya tendría las cinco respuestas y esconderlas
+   * sería maquillaje.
+   */
+  async fichaLibre(id: string) {
+    const f = await this.fichaProducto(id);
+
+    const {
+      tablasRenales,
+      embarazo,
+      lactancia,
+      interaccionesConocidas,
+      gruposInteraccion,
+      ...libre
+    } = f;
+
+    return {
+      ...libre,
+      /** Las cuatro tarjetas, resueltas acá con la misma función que antes
+       *  corría en la app. */
+      restricciones: restriccionesDe({
+        embarazo,
+        lactancia,
+        tablasRenales,
+        tieneAjusteHepatico: f.tieneAjusteHepatico,
+      }),
+      /**
+       * De las interacciones sólo el conteo y la peor severidad: es lo que
+       * dibuja la fila de la ficha. Los nombres son el detalle.
+       */
+      interacciones: {
+        total: interaccionesConocidas.length,
+        peorSeveridad: gruposInteraccion[0]?.severidad ?? null,
+      },
     };
   }
 

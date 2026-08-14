@@ -126,6 +126,34 @@ describe('plan gratis', () => {
       expect(await ctx.prisma.consultaGratis.count({ where: { medicoId: gratis.id } })).toBe(0);
     });
 
+    it('la ficha trae el ESTADO de cada restricción, no el detalle', async () => {
+      // Es la costura por donde el muro se saltearía sin tocar la app: si la
+      // ficha —que es libre— mandara las tablas y las alertas completas,
+      // esconderlas en la pantalla sería maquillaje y un `curl` tendría las
+      // cinco respuestas sin gastar una sola consulta.
+      const r = await api.get(`/catalogo/productos/${productos[0]}`, gratis.token);
+      const d = r.cuerpo!.data as Record<string, unknown>;
+
+      const restricciones = d.restricciones as Array<{ clave: string; estado: string }>;
+      expect(restricciones.map((x) => x.clave)).toEqual([
+        'embarazo',
+        'lactancia',
+        'renal',
+        'hepatico',
+      ]);
+      expect((d.interacciones as { total: number }).total).toBeGreaterThanOrEqual(0);
+
+      for (const campo of [
+        'tablasRenales',
+        'embarazo',
+        'lactancia',
+        'gruposInteraccion',
+        'interaccionesConocidas',
+      ]) {
+        expect(campo in d, `la ficha libre no debería traer «${campo}»`).toBe(false);
+      }
+    });
+
     it('entrar a una restricción gasta una', async () => {
       const r = await consultar(gratis.token, productos[0]!, 'renal');
       expect(r.status).toBe(200);

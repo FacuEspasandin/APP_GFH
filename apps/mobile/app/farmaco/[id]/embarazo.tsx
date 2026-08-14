@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 
-import { useFicha, type Ficha } from '@/api/ficha';
+import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { estadoDeAlertas, porTrimestre } from '@/dominio/restricciones';
 import { Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
@@ -24,7 +24,7 @@ import {
  */
 export default function RestriccionEmbarazo() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data, isLoading, error, refetch } = useFicha(id);
+  const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'embarazo');
 
   return (
     <>
@@ -43,10 +43,11 @@ export default function RestriccionEmbarazo() {
   );
 }
 
-function Contenido({ f }: { f: Ficha }) {
-  const estado = estadoDeAlertas(f.embarazo);
+function Contenido({ f }: { f: DetalleRestriccion }) {
+  const alertas = f.alertas ?? [];
+  const estado = estadoDeAlertas(alertas);
 
-  if (f.embarazo.length === 0) {
+  if (alertas.length === 0) {
     return (
       <>
         <TapaRestriccion
@@ -63,7 +64,7 @@ function Contenido({ f }: { f: Ficha }) {
     );
   }
 
-  const trimestres = porTrimestre(f.embarazo);
+  const trimestres = porTrimestre(alertas);
   const peor = trimestres.find((t) => t.estado === 'evitar');
 
   return (

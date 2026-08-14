@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';
 
-import { useFicha, type Ficha } from '@/api/ficha';
+import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { estadoDeAlertas } from '@/dominio/restricciones';
 import { Icono } from '@/ui/iconos';
 import { Pantalla } from '@/ui/kit';
@@ -20,7 +20,7 @@ import { useColores } from '@/ui/tema';
  */
 export default function RestriccionLactancia() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data, isLoading, error, refetch } = useFicha(id);
+  const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'lactancia');
 
   return (
     <>
@@ -39,11 +39,12 @@ export default function RestriccionLactancia() {
   );
 }
 
-function Contenido({ f }: { f: Ficha }) {
+function Contenido({ f }: { f: DetalleRestriccion }) {
   const col = useColores();
-  const estado = estadoDeAlertas(f.lactancia);
+  const alertas = f.alertas ?? [];
+  const estado = estadoDeAlertas(alertas);
   const c = coloresDe(estado, col);
-  const alerta = f.lactancia[0];
+  const alerta = alertas[0];
 
   return (
     <>

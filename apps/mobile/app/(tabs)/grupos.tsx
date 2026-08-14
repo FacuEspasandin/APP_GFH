@@ -3,6 +3,8 @@ import { Stack, useRouter } from 'expo-router';
 import { Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
+import { usePlan } from '@/api/plan';
+import { esDePago, rutaPaywall } from '@/dominio/plan-gratis';
 import type { Inicio, ResumenGrupo } from '@/api/tipos';
 import { FilaAnimada } from '@/ui/animacion';
 import { Icono } from '@/ui/iconos';
@@ -25,6 +27,18 @@ import { Pressable } from 'react-native';
  */
 export default function Grupos() {
   const router = useRouter();
+  const { data: plan } = usePlan();
+
+  /**
+   * Los grupos entran enteros en la suscripción.
+   *
+   * No hay media función posible: sirven para repartir pacientes propios, y sin
+   * suscripción no hay pacientes propios que repartir. Se muestran igual —el de
+   * demostración vive en «Consultorio»— porque esconderlos escondería para qué
+   * sirven.
+   */
+  const abrir = (ruta: string) =>
+    router.push((esDePago(plan) ? rutaPaywall('grupo') : ruta) as never);
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['inicio', ''],
@@ -41,7 +55,7 @@ export default function Grupos() {
           title: 'Grupos',
           headerRight: () => (
             <Pressable
-              onPress={() => router.push('/crear-grupo')}
+              onPress={() => abrir('/crear-grupo')}
               accessibilityRole="button"
               accessibilityLabel="Crear grupo"
               className="mr-3 h-8 w-8 items-center justify-center rounded-full"
@@ -65,7 +79,7 @@ export default function Grupos() {
               titulo="Todavía no tenés grupos"
               detalle="Sirven para separar consultorio, CTI o guardia. Un paciente puede estar en uno solo."
               accion="Crear grupo"
-              onAccion={() => router.push('/crear-grupo')}
+              onAccion={() => abrir('/crear-grupo')}
             />
           ) : null}
 
@@ -73,11 +87,7 @@ export default function Grupos() {
             <FilaAnimada key={g.id ?? 'sin-grupo'} indice={i}>
               <TarjetaGrupo
                 grupo={g}
-                onPress={() =>
-                  router.push(
-                    g.id === null ? '/grupo/sin-grupo' : (`/grupo/${g.id}` as never),
-                  )
-                }
+                onPress={() => abrir(g.id === null ? '/grupo/sin-grupo' : `/grupo/${g.id}`)}
               />
             </FilaAnimada>
           ))}

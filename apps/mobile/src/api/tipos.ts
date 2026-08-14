@@ -91,4 +91,7 @@ export interface Cockpit {
   hallazgos: Hallazgo[];
   avisos: Array<{ codigo: string; detalle: string; prescripcionId?: string }>;
   condicionesEfectivas: string[];
+  /** El paciente sintético que ve una cuenta sin suscripción. Se mira entero;
+   *  no se toca. */
+  esDemostracion?: boolean;
 }

@@ -1,19 +1,44 @@
 /**
- * Cuándo se muestra el formulario de crear paciente y cuándo el paywall.
+ * Qué puede hacer el médico con el plan gratis, y qué le mostramos antes de que
+ * lo intente.
  *
- * La frontera del plan gratis es el PACIENTE, no la cantidad de fármacos: es
- * lo único que un buscador de fármacos no puede tener sin convertirse en otro
- * producto. Acá se decide qué ve el médico antes de escribir nada.
+ * La frontera es **cruzar**. Calcular no se cobra —un clearance o un Child-Pugh
+ * son fórmulas publicadas—; lo que es nuestro es cruzar un fármaco contra otro,
+ * contra una condición, contra un embarazo o contra un riñón concreto. Eso,
+ * multiplicado por un paciente entero, es el producto.
+ *
+ * El muro real vive en el servidor. Esto sólo decide qué se ofrece: mandar al
+ * médico a una pantalla para que rebote con un 403 lo castiga por haber tocado
+ * algo, y no ofrecer nada esconde lo que estamos vendiendo.
  */
+
+export interface CupoConsultas {
+  usadas: number;
+  total: number;
+  restantes: number;
+  /** El backend decide desde cuándo se muestra: antes es ruido, después aviso. */
+  avisar: boolean;
+}
 
 export interface EstadoDelPlan {
   vigente: boolean;
   pacientes: number;
   limitePacientes: number | null;
   puedeCrearPaciente: boolean;
+  /** `null` con suscripción vigente: no hay nada que contar. */
+  consultas: CupoConsultas | null;
 }
 
 export type Decision = 'formulario' | 'paywall' | 'esperar';
+
+/**
+ * Por qué se abrió el paywall. Cambia el texto, no el precio.
+ *
+ * Son tres situaciones distintas y mezclarlas se nota: al que gastó sus diez
+ * consultas decirle "creá tu primer paciente" le habla de otra cosa que la que
+ * estaba haciendo.
+ */
+export type MotivoPaywall = 'paciente' | 'consultas' | 'herramienta' | 'grupo';
 
 /**
  * `plan` sin definir mientras la consulta viaja; `fallo` cuando no llegó.
@@ -34,9 +59,118 @@ export function detalleDeAcceso(plan: EstadoDelPlan | undefined): string | undef
   return 'Incluido en la suscripción';
 }
 
-/** A dónde manda "Nuevo paciente". Con el plan lleno, directo al paywall: el
- *  formulario también se protege solo, pero mandar ahí para que rebote muestra
- *  medio segundo una pantalla que no se iba a poder usar. */
+/** A dónde manda "Nuevo paciente". */
 export function rutaNuevoPaciente(plan: EstadoDelPlan | undefined): string {
-  return plan !== undefined && !plan.puedeCrearPaciente ? '/paywall' : '/crear-paciente';
+  return plan !== undefined && !plan.puedeCrearPaciente
+    ? rutaPaywall('paciente')
+    : '/crear-paciente';
+}
+
+export function rutaPaywall(motivo: MotivoPaywall): string {
+  return `/paywall?motivo=${motivo}`;
+}
+
+/** Con suscripción no hay nada bloqueado; sin ella, todo lo que toca a un
+ *  paciente propio o cruza fármacos sin paciente. */
+export function esDePago(plan: EstadoDelPlan | undefined): boolean {
+  return plan !== undefined && !plan.vigente;
+}
+
+// --- las herramientas sueltas ------------------------------------------------
+
+export interface Herramienta {
+  clave: string;
+  titulo: string;
+  detalle: string;
+  ruta: string;
+  /** false = calcula sin cruzar nada, y por eso es libre. */
+  cruza: boolean;
+}
+
+/**
+ * Las herramientas sin paciente, partidas por lo único que decide el precio:
+ * si cruzan o sólo calculan.
+ *
+ * Las dos libres son fórmulas publicadas —Cockcroft-Gault y Child-Pugh— y no
+ * consultan el catálogo. Cobrarlas nos pondría a competir con cualquier
+ * calculadora web y no defenderían nada.
+ */
+export const HERRAMIENTAS: readonly Herramienta[] = [
+  {
+    clave: 'clcr',
+    titulo: 'Clearance de creatinina',
+    detalle: 'Cockcroft-Gault, con el grado KDIGO',
+    ruta: '/herramientas/clcr',
+    cruza: false,
+  },
+  {
+    clave: 'child-pugh',
+    titulo: 'Child-Pugh',
+    detalle: 'Clase A, B o C a partir de los cinco criterios',
+    ruta: '/herramientas/hepatico',
+    cruza: false,
+  },
+  {
+    clave: 'interacciones',
+    titulo: 'Interacción fármaco-fármaco',
+    detalle: 'Todos los pares de una lista de fármacos',
+    ruta: '/herramientas/interacciones',
+    cruza: true,
+  },
+  {
+    clave: 'condicion-alergia',
+    titulo: 'Condición y alergia',
+    detalle: 'Un fármaco candidato contra condiciones y alergias',
+    ruta: '/herramientas/condicion-alergia',
+    cruza: true,
+  },
+  {
+    clave: 'renal',
+    titulo: 'Ajuste renal por fármaco',
+    detalle: 'Cuánto ajustar cada fármaco para un Clcr dado',
+    ruta: '/herramientas/renal',
+    cruza: true,
+  },
+] as const;
+
+/** A dónde lleva tocar una herramienta. Las pagas se ven igual: esconderlas
+ *  esconde el producto, y el médico no puede querer lo que no sabe que existe. */
+export function rutaHerramienta(h: Herramienta, plan: EstadoDelPlan | undefined): string {
+  return h.cruza && esDePago(plan) ? rutaPaywall('herramienta') : h.ruta;
+}
+
+// --- el cupo de consultas ----------------------------------------------------
+
+/**
+ * El renglón del contador, o `null` cuando no corresponde mostrarlo.
+ *
+ * No se muestra desde la primera porque un contador en 1/10 convierte una
+ * consulta en una transacción. Aparece cuando queda poco, que es cuando el dato
+ * sirve para decidir.
+ */
+export function textoCupo(plan: EstadoDelPlan | undefined): string | null {
+  const c = plan?.consultas;
+  if (!c || !c.avisar) return null;
+  if (c.restantes === 0) return 'Usaste tus consultas gratis';
+  return `Te ${c.restantes === 1 ? 'queda' : 'quedan'} ${c.restantes} de ${c.total} consultas`;
+}
+
+/** Si entrar a una restricción va a chocar contra el muro. */
+export function cupoAgotado(plan: EstadoDelPlan | undefined): boolean {
+  const c = plan?.consultas;
+  return c !== null && c !== undefined && c.restantes === 0;
+}
+
+/**
+ * Si ENTRAR a esta restricción va a gastar una consulta.
+ *
+ * `yaVistas` son los pares (producto, herramienta) que este médico ya abrió: el
+ * backend no las vuelve a cobrar, así que la app tampoco tiene que advertir.
+ */
+export function gastaConsulta(
+  plan: EstadoDelPlan | undefined,
+  clave: string,
+  yaVistas: readonly string[],
+): boolean {
+  return esDePago(plan) && !yaVistas.includes(clave);
 }

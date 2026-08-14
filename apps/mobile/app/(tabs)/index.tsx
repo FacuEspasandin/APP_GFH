@@ -5,7 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { api } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
-import { detalleDeAcceso, rutaNuevoPaciente } from '@/dominio/plan-gratis';
+import { detalleDeAcceso, esDePago, rutaNuevoPaciente, rutaPaywall } from '@/dominio/plan-gratis';
 import type { FilaPaciente, Inicio as DatosInicio } from '@/api/tipos';
 import { FilaAnimada } from '@/ui/animacion';
 import { useValorDemorado } from '@/ui/demora';
@@ -140,7 +140,12 @@ export default function Pacientes() {
             // entrar al paywall en vez de que se le aparezca encima.
             detalle: detalleDeAcceso(plan),
           },
-          { titulo: 'Crear grupo', ruta: '/crear-grupo', icono: 'grupos' as const },
+          {
+            titulo: 'Crear grupo',
+            ruta: esDePago(plan) ? rutaPaywall('grupo') : '/crear-grupo',
+            icono: 'grupos' as const,
+            detalle: detalleDeAcceso(plan),
+          },
         ].map((o) => (
           <OpcionHoja
             key={o.titulo}

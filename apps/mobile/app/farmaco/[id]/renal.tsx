@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { Fragment } from 'react';
 
-import { useFicha } from '@/api/ficha';
+import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { tramosRenales } from '@/dominio/restricciones';
 import { Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
@@ -22,7 +22,7 @@ import {
  */
 export default function RestriccionRenal() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data, isLoading, error, refetch } = useFicha(id);
+  const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'renal');
 
   return (
     <>
@@ -41,8 +41,10 @@ export default function RestriccionRenal() {
   );
 }
 
-function Contenido({ f }: { f: ReturnType<typeof useFicha>['data'] & object }) {
-  if (f.tablasRenales.length === 0) {
+function Contenido({ f }: { f: DetalleRestriccion }) {
+  const tablas = f.tablasRenales ?? [];
+
+  if (tablas.length === 0) {
     return (
       <>
         <TapaRestriccion
@@ -61,7 +63,7 @@ function Contenido({ f }: { f: ReturnType<typeof useFicha>['data'] & object }) {
 
   return (
     <>
-      {f.tablasRenales.map((tabla, i) => (
+      {tablas.map((tabla, i) => (
         <Fragment key={`${tabla.principioActivo}-${i}`}>
           <TapaRestriccion
             clave="renal"
