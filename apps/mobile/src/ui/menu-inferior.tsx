@@ -1,10 +1,8 @@
 import { useRouter, useSegments } from 'expo-router';
-import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { hapticaSeleccion } from '@/ui/haptica';
-import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Icono, type NombreIcono } from '@/ui/iconos';
 import { coloresChrome, useTema } from '@/ui/tema';
 
@@ -16,9 +14,11 @@ import { coloresChrome, useTema } from '@/ui/tema';
  * detalle — que es donde el médico pasa la mayor parte del tiempo. Acá se
  * dibuja en el layout raíz, por fuera del `Stack`, así que está siempre.
  *
- * El botón central NO se marca como activo. Herramientas no es un lugar donde
- * uno está, es un menú que se abre: resaltarlo mentiría sobre dónde estás
- * parado.
+ * El botón central lleva a la pantalla de Herramientas, y se marca como activo
+ * mientras estás ahí. Antes abría una hoja inferior con su propia lista de
+ * cuatro herramientas escrita a mano: sin la calculadora de Clcr, sin candados
+ * y sin buscador. Eran dos catálogos para lo mismo, y agregar una herramienta
+ * era acordarse de los dos.
  */
 
 /** Alto de la zona con íconos, sin contar el área segura del teléfono. */
@@ -39,34 +39,6 @@ const IZQUIERDA: Destino[] = [
 const DERECHA: Destino[] = [
   { clave: 'buscador', ruta: '/(tabs)/buscador', titulo: 'Buscador', icono: 'buscar' },
   { clave: 'perfil', ruta: '/(tabs)/perfil', titulo: 'Perfil', icono: 'usuario' },
-];
-
-const HERRAMIENTAS: { ruta: string; titulo: string; detalle: string; icono: NombreIcono }[] = [
-  {
-    ruta: '/herramientas/interacciones',
-    titulo: 'Interacciones',
-    detalle: 'Entre dos o más fármacos',
-    icono: 'interacciones',
-  },
-  {
-    ruta: '/herramientas/renal',
-    titulo: 'Ajuste renal',
-    detalle: 'Según clearance de creatinina',
-    icono: 'gota',
-  },
-  {
-    ruta: '/herramientas/condicion-alergia',
-    titulo: 'Condición y alergia',
-    detalle: 'Alertas sobre un fármaco',
-    icono: 'alerta',
-  },
-  {
-    ruta: '/herramientas/hepatico',
-    titulo: 'Ajuste hepático',
-    // Dice lo que hace HOY: la clase sí, el ajuste por fármaco todavía no.
-    detalle: 'Clase de Child-Pugh',
-    icono: 'higado',
-  },
 ];
 
 /**
@@ -96,8 +68,9 @@ function seccionActiva(segmentos: string[]): string {
   if (primero === 'grupo') return 'grupos';
   if (primero === 'farmaco') return 'buscador';
   if (primero === 'perfil') return 'perfil';
-  // Las herramientas no marcan nada: el botón central no es un destino.
-  if (primero === 'herramientas') return '';
+  // Las pantallas de cada herramienta cuelgan de `/herramientas/…` y no del
+  // grupo de pestañas, así que se marcan a mano.
+  if (primero === 'herramientas') return 'herramientas';
 
   // Paciente, prescripción, crear-paciente.
   return 'index';
@@ -109,7 +82,6 @@ export function MenuInferior() {
   const { oscuro } = useTema();
   const insets = useSafeAreaInsets();
   const c = coloresChrome(oscuro);
-  const [abierta, setAbierta] = useState(false);
 
   if (SIN_MENU.has(segmentos[0] ?? '')) return null;
 
@@ -127,6 +99,7 @@ export function MenuInferior() {
   const respiro = insets.bottom > 0 ? insets.bottom - 10 : 8;
 
   const activa = seccionActiva(segmentos);
+  const enHerramientas = activa === 'herramientas';
 
   const ir = (ruta: string) => {
     // `navigate` y no `push`: si la sección ya está en el historial vuelve a
@@ -198,18 +171,22 @@ export function MenuInferior() {
             style={{ position: 'absolute', left: 0, right: 0, top: -24, alignItems: 'center' }}
           >
             <Pressable
-              onPress={() => {
-                hapticaSeleccion();
-                setAbierta((v) => !v);
-              }}
-              accessibilityRole="button"
-              accessibilityLabel={abierta ? 'Cerrar herramientas' : 'Herramientas'}
-              accessibilityState={{ expanded: abierta }}
+              onPress={() => ir('/(tabs)/herramientas')}
+              accessibilityRole="tab"
+              accessibilityLabel="Herramientas"
+              accessibilityState={{ selected: enHerramientas }}
               className="items-center justify-center rounded-full"
               style={{
                 width: 58,
                 height: 58,
-                backgroundColor: oscuro ? c.fondoHeader : '#FFFFFF',
+                // Estando ahí se rellena de verde, como los rótulos de los
+                // costados se ponen blancos: es el mismo idioma para decir
+                // «acá estás».
+                backgroundColor: enHerramientas
+                  ? c.fondoHeader
+                  : oscuro
+                    ? c.fondoHeader
+                    : '#FFFFFF',
                 borderWidth: 5,
                 borderColor: oscuro ? '#0C1613' : '#F3F6F3',
                 shadowColor: '#122A23',
@@ -220,30 +197,15 @@ export function MenuInferior() {
               }}
             >
               <Icono
-                nombre={abierta ? 'cerrar' : 'barras'}
+                nombre="barras"
                 tamano={23}
-                color={oscuro ? '#FFFFFF' : c.fondoHeader}
+                color={enHerramientas || oscuro ? '#FFFFFF' : c.fondoHeader}
               />
             </Pressable>
           </View>
         </View>
       </View>
 
-      <HojaInferior visible={abierta} onCerrar={() => setAbierta(false)} titulo="Herramientas">
-        {HERRAMIENTAS.map((h) => (
-          <OpcionHoja
-            key={h.ruta}
-            titulo={h.titulo}
-            detalle={h.detalle}
-            icono={h.icono}
-            onPress={() => {
-              setAbierta(false);
-              router.push(h.ruta as never);
-            }}
-          />
-        ))}
-
-      </HojaInferior>
     </>
   );
 }
