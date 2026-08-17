@@ -27,19 +27,15 @@ export default function HerramientaHepatica() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerClassName="px-4 pb-8 pt-3" keyboardShouldPersistTaps="handled">
-        <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
-          <Text className="font-sans text-meta leading-5 text-ink-suave">
-            Para un paciente que no está cargado. No se guarda nada: al salir de
-            la herramienta, estos valores se pierden.
-          </Text>
-        </Superficie>
-
-        <FormularioChildPugh valor={borrador} onCambio={setBorrador} />
-
+        {/* El resultado arriba, como en la del paciente: es la respuesta. */}
         <ResultadoChildPugh valor={borrador} />
 
+        {/* Sin el campo del valor exacto: acá se descarta todo al salir, así que
+            pedirlo sería pedir por pedir. */}
+        <FormularioChildPugh valor={borrador} onCambio={setBorrador} />
+
         {r.clase !== null ? (
-          <Superficie elevacion="plana" className="px-3.5 py-3">
+          <Superficie elevacion="plana" className="mt-2 px-3.5 py-3">
             <Text className="font-sans text-meta leading-5 text-ink-suave">
               La clase está calculada, pero todavía no hay tabla de ajuste por
               fármaco contra la cual evaluarla. Para eso, por ahora, la app no
@@ -47,6 +43,13 @@ export default function HerramientaHepatica() {
             </Text>
           </Superficie>
         ) : null}
+
+        {/* El aviso de descartable bajó al pie: arriba ocupaba el lugar más
+            caro de la pantalla, antes de que se viera un solo criterio. */}
+        <Text className="font-sans mt-3 px-1 text-eyebrow leading-4 text-ink-suave">
+          Para un paciente que no está cargado. No se guarda nada: al salir de la
+          herramienta, estos valores se pierden.
+        </Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );

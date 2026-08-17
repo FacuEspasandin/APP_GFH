@@ -1,210 +1,185 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  aEntrada,
-  aNumero,
-  bandaActiva,
-  borradorDesde,
   BORRADOR_VACIO,
-  claveColorClase,
+  borradorDesde,
+  criterioAbierto,
+  criterioSiguiente,
+  cuantosContestados,
   cuerpoDeGuardado,
   evaluar,
   sePuedeGuardar,
   textoDeFaltantes,
+  valoresExactos,
   type Borrador,
 } from './hepatico';
 
-const con = (parcial: Partial<Borrador>): Borrador => ({ ...BORRADOR_VACIO, ...parcial });
+const b = (p: Partial<Borrador> = {}): Borrador => ({ ...BORRADOR_VACIO, ...p });
 
-const COMPLETO = con({
-  bilirrubina: '1.0',
-  albumina: '4.0',
-  inr: '1.1',
-  ascitis: 'AUSENTE',
+/** Los cinco contestados: 3 + 2 + 1 + leve(2) + ausente(1) = 9 → clase B. */
+const COMPLETO = b({
+  bilirrubina: 3,
+  albumina: 2,
+  inr: 1,
+  ascitis: 'LEVE',
   encefalopatia: 'AUSENTE',
 });
 
-describe('función hepática — pantalla', () => {
-  describe('leer lo que se escribe', () => {
-    it('acepta coma decimal', () => {
-      // El teclado numérico en español pone coma.
-      expect(aNumero('2,5')).toBe(2.5);
-      expect(aNumero('2.5')).toBe(2.5);
-    });
+describe('el puntaje sale de las bandas', () => {
+  it('con los cinco contestados hay clase', () => {
+    const r = evaluar(COMPLETO);
+    expect(r.puntos).toBe(9);
+    expect(r.clase).toBe('B');
+  });
 
-    it('un campo vacío es criterio sin cargar', () => {
-      expect(aNumero('')).toBeUndefined();
-      expect(aNumero('   ')).toBeUndefined();
-    });
+  it('con uno sin contestar no hay clase, y se dice cuál falta', () => {
+    // Regla 5: un Child-Pugh incompleto redondeado diría «A» de alguien que
+    // puede ser C.
+    const r = evaluar(b({ ...COMPLETO, encefalopatia: null }));
+    expect(r.clase).toBeNull();
+    expect(r.puntos).toBe(8);
+    expect(textoDeFaltantes(r.faltan)).toBe('Falta encefalopatía.');
+  });
 
-    it('texto que no es número tampoco puntúa', () => {
-      // Escribir «abc» no puede valer 1 punto.
-      expect(aNumero('abc')).toBeUndefined();
-      expect(aNumero('2.5.1')).toBeUndefined();
-    });
+  it('el valor exacto NO cambia el puntaje', () => {
+    // Es la garantía de la opción B: la banda decide, el número acompaña.
+    const conValor = b({ ...COMPLETO, bilirrubinaValor: '9.9' });
+    expect(evaluar(conValor).puntos).toBe(evaluar(COMPLETO).puntos);
+    expect(evaluar(conValor).clase).toBe(evaluar(COMPLETO).clase);
+  });
 
-    it('el cero es un número, no una falta de dato', () => {
-      expect(aNumero('0')).toBe(0);
+  it('vacío no puntúa nada', () => {
+    expect(evaluar(BORRADOR_VACIO).puntos).toBe(0);
+    expect(evaluar(BORRADOR_VACIO).clase).toBeNull();
+  });
+});
+
+describe('el valor exacto', () => {
+  it('convierte a las unidades del esquema', () => {
+    const x = b({ bilirrubinaValor: '34.2', unidadBilirrubina: 'umol/L' });
+    expect(valoresExactos(x).bilirrubinaMgDl).toBeCloseTo(2, 5);
+  });
+
+  it('acepta coma decimal, que es lo que pone el teclado en español', () => {
+    expect(valoresExactos(b({ inrValor: '1,8' })).inr).toBe(1.8);
+  });
+
+  it('texto que no es número no vale', () => {
+    expect(valoresExactos(b({ inrValor: 'abc' })).inr).toBeUndefined();
+  });
+});
+
+describe('qué se manda al servidor', () => {
+  it('manda los puntos, que es de donde sale la clase', () => {
+    expect(cuerpoDeGuardado(COMPLETO)).toEqual({
+      bilirrubinaPuntos: 3,
+      albuminaPuntos: 2,
+      inrPuntos: 1,
+      ascitis: 'LEVE',
+      encefalopatia: 'AUSENTE',
     });
   });
 
-  describe('unidades', () => {
-    it('convierte µmol/L a mg/dL antes de puntuar', () => {
-      const e = aEntrada(con({ bilirrubina: '34.2', unidadBilirrubina: 'umol/L' }));
-      expect(e.bilirrubinaMgDl).toBeCloseTo(2, 3);
-    });
-
-    it('convierte g/L a g/dL', () => {
-      const e = aEntrada(con({ albumina: '35', unidadAlbumina: 'g/L' }));
-      expect(e.albuminaGDl).toBe(3.5);
-    });
-
-    it('cambiar la unidad cambia el puntaje del mismo número escrito', () => {
-      // 4 en mg/dL son 3 puntos; 4 en µmol/L es casi nada y son 1.
-      const enMg = evaluar(con({ bilirrubina: '4', unidadBilirrubina: 'mg/dL' }));
-      const enUmol = evaluar(con({ bilirrubina: '4', unidadBilirrubina: 'umol/L' }));
-      expect(enMg.detalle.bilirrubina).toBe(3);
-      expect(enUmol.detalle.bilirrubina).toBe(1);
-    });
+  it('el valor exacto va sólo si el médico lo anotó', () => {
+    const cuerpo = cuerpoDeGuardado(b({ bilirrubina: 2, bilirrubinaValor: '2.4' }));
+    expect(cuerpo).toEqual({ bilirrubinaPuntos: 2, bilirrubinaMgDl: 2.4 });
   });
 
-  describe('evaluación', () => {
-    it('el borrador completo más favorable da clase A', () => {
-      const r = evaluar(COMPLETO);
-      expect(r.puntos).toBe(5);
-      expect(r.clase).toBe('A');
-    });
-
-    it('sin los cinco no hay clase', () => {
-      const r = evaluar(con({ bilirrubina: '1.0', albumina: '4.0' }));
-      expect(r.clase).toBeNull();
-      expect(r.puntos).toBe(2);
-    });
-
-    it('un borrador vacío no puntúa nada', () => {
-      const r = evaluar(BORRADOR_VACIO);
-      expect(r.puntos).toBe(0);
-      expect(r.faltan).toHaveLength(5);
-    });
+  it('un criterio sin contestar se omite en vez de mandarse en null', () => {
+    // Vaciar no es una acción del médico: es un dato que todavía no llegó, y
+    // borrar el valor viejo del paciente sería perder información.
+    expect(cuerpoDeGuardado(b({ inr: 1 }))).toEqual({ inrPuntos: 1 });
   });
 
-  describe('banda activa', () => {
-    it('ninguna encendida con el campo vacío', () => {
-      // Distinto de «la primera encendida»: nadie eligió todavía.
-      expect(bandaActiva(null)).toBeNull();
-    });
+  it('sin nada contestado no hay nada para guardar', () => {
+    expect(sePuedeGuardar(BORRADOR_VACIO)).toBe(false);
+    expect(sePuedeGuardar(b({ ascitis: 'AUSENTE' }))).toBe(true);
+  });
+});
 
-    it('el índice sale del puntaje', () => {
-      expect(bandaActiva(1)).toBe(0);
-      expect(bandaActiva(3)).toBe(2);
-    });
+describe('la cascada', () => {
+  it('vacío abre el primero y anticipa el segundo', () => {
+    expect(criterioAbierto(BORRADOR_VACIO, null)).toBe('bilirrubina');
+    expect(criterioSiguiente(BORRADOR_VACIO, 'bilirrubina')).toBe('albumina');
   });
 
-  describe('qué se manda al guardar', () => {
-    it('sólo lo cargado', () => {
-      const cuerpo = cuerpoDeGuardado(con({ inr: '1.4', ascitis: 'LEVE' }));
-      expect(cuerpo).toEqual({ inr: 1.4, ascitis: 'LEVE' });
-    });
-
-    it('un criterio vacío se OMITE, no se manda null', () => {
-      // Vaciar un campo acá no es una acción deliberada: es un dato que
-      // todavía no llegó. Mandar null borraría el valor viejo del paciente.
-      const cuerpo = cuerpoDeGuardado(con({ bilirrubina: '2' }));
-      expect('albuminaGDl' in cuerpo).toBe(false);
-      expect('inr' in cuerpo).toBe(false);
-    });
-
-    it('manda el valor convertido, no el escrito', () => {
-      const cuerpo = cuerpoDeGuardado(con({ albumina: '35', unidadAlbumina: 'g/L' }));
-      expect(cuerpo.albuminaGDl).toBe(3.5);
-    });
-
-    it('redondea a dos decimales, que es lo que guarda el esquema', () => {
-      const cuerpo = cuerpoDeGuardado(con({ bilirrubina: '39', unidadBilirrubina: 'umol/L' }));
-      expect(cuerpo.bilirrubinaMgDl).toBe(2.28);
-    });
-
-    it('con un solo criterio ya se puede guardar', () => {
-      expect(sePuedeGuardar(con({ inr: '1.2' }))).toBe(true);
-      expect(sePuedeGuardar(con({ ascitis: 'LEVE' }))).toBe(true);
-    });
-
-    it('con el borrador vacío no', () => {
-      expect(sePuedeGuardar(BORRADOR_VACIO)).toBe(false);
-    });
+  it('avanza al primero sin contestar', () => {
+    const x = b({ bilirrubina: 1, albumina: 2 });
+    expect(criterioAbierto(x, null)).toBe('inr');
+    expect(cuantosContestados(x)).toBe(2);
   });
 
-  describe('texto de lo que falta', () => {
-    it('no dice nada si está completo', () => {
-      expect(textoDeFaltantes([])).toBeNull();
-    });
-
-    it('uno, varios y los cinco se dicen distinto', () => {
-      expect(textoDeFaltantes(['inr'])).toBe('Falta INR.');
-      expect(textoDeFaltantes(['ascitis', 'encefalopatia'])).toBe(
-        'Faltan ascitis y encefalopatía.',
-      );
-      expect(textoDeFaltantes(['albumina', 'ascitis', 'encefalopatia'])).toBe(
-        'Faltan albúmina, ascitis y encefalopatía.',
-      );
-      expect(
-        textoDeFaltantes(['bilirrubina', 'albumina', 'inr', 'ascitis', 'encefalopatia']),
-      ).toBe('Faltan los cinco criterios.');
-    });
+  it('con los cinco listos no queda ninguno abierto', () => {
+    expect(criterioAbierto(COMPLETO, null)).toBeNull();
+    expect(criterioSiguiente(COMPLETO, null)).toBeNull();
+    expect(cuantosContestados(COMPLETO)).toBe(5);
   });
 
-  describe('color de la clase', () => {
-    it('usa la escala de gravedad de siempre, no una nueva', () => {
-      expect(claveColorClase('A')).toBe('ok');
-      expect(claveColorClase('B')).toBe('media');
-      expect(claveColorClase('C')).toBe('grave');
-    });
-
-    it('sin clase el color es neutro, no verde', () => {
-      // Regla 5: la falta de dato nunca se pinta como «está bien».
-      expect(claveColorClase(null)).toBe('neutro');
-    });
+  it('tocar uno ya contestado lo abre a él, y a ninguno más', () => {
+    // Corregir el segundo no puede reabrir los tres de abajo.
+    expect(criterioAbierto(COMPLETO, 'albumina')).toBe('albumina');
   });
 
-  describe('abrir con lo que el paciente ya tenía', () => {
-    it('trae los valores puestos', () => {
-      const b = borradorDesde({
-        bilirrubinaMgDl: 2.5,
-        albuminaGDl: 3.1,
-        inr: 1.9,
-        ascitis: 'LEVE',
-        encefalopatia: null,
-      });
-      expect(b.bilirrubina).toBe('2.5');
-      expect(b.ascitis).toBe('LEVE');
-      expect(b.encefalopatia).toBeNull();
-      // Y vuelve a evaluar igual que como se guardó.
-      expect(evaluar(b).puntos).toBe(8);
-    });
+  it('corrigiendo uno del medio no se anticipa nada', () => {
+    // El anticipo diría que falta algo que ya está contestado.
+    expect(criterioSiguiente(COMPLETO, 'albumina')).toBeNull();
+  });
 
-    it('un paciente sin nada abre vacío', () => {
-      const b = borradorDesde({
-        bilirrubinaMgDl: null,
-        albuminaGDl: null,
-        inr: null,
-        ascitis: null,
-        encefalopatia: null,
-      });
-      expect(b).toEqual(BORRADOR_VACIO);
-    });
+  it('el anticipo saltea los que ya están', () => {
+    const x = b({ bilirrubina: 1, inr: 2 });
+    expect(criterioSiguiente(x, 'albumina')).toBe('ascitis');
+  });
+});
 
-    it('abre siempre en las unidades del esquema', () => {
-      // Lo guardado está en mg/dL y g/dL; abrir en µmol/L mostraría el número
-      // equivocado.
-      const b = borradorDesde({
-        bilirrubinaMgDl: 2,
-        albuminaGDl: 3,
-        inr: null,
-        ascitis: null,
-        encefalopatia: null,
-      });
-      expect(b.unidadBilirrubina).toBe('mg/dL');
-      expect(b.unidadAlbumina).toBe('g/dL');
+describe('reabrir un paciente guardado', () => {
+  it('usa la banda guardada', () => {
+    const x = borradorDesde({
+      bilirrubinaPuntos: 3,
+      albuminaPuntos: null,
+      inrPuntos: null,
+      bilirrubinaMgDl: null,
+      albuminaGDl: null,
+      inr: null,
+      ascitis: null,
+      encefalopatia: null,
     });
+    expect(x.bilirrubina).toBe(3);
+  });
+
+  it('sin banda, la deriva del valor viejo', () => {
+    // Los pacientes cargados antes del cambio tienen el número y no el puntaje.
+    // Sin este respaldo, abrirlos mostraría las bandas apagadas al lado de su
+    // Child-Pugh guardado, que se leería como un error.
+    const x = borradorDesde({
+      bilirrubinaMgDl: 2.5,
+      albuminaGDl: 3.1,
+      inr: 1.9,
+      ascitis: 'LEVE',
+      encefalopatia: 'AUSENTE',
+    });
+    expect([x.bilirrubina, x.albumina, x.inr]).toEqual([2, 2, 2]);
+    expect(evaluar(x).clase).toBe('B');
+  });
+
+  it('conserva el valor exacto para poder mostrarlo', () => {
+    const x = borradorDesde({
+      bilirrubinaMgDl: 2.5,
+      albuminaGDl: null,
+      inr: null,
+      ascitis: null,
+      encefalopatia: null,
+    });
+    expect(x.bilirrubinaValor).toBe('2.5');
+  });
+
+  it('un paciente sin nada cargado abre vacío', () => {
+    const x = borradorDesde({
+      bilirrubinaMgDl: null,
+      albuminaGDl: null,
+      inr: null,
+      ascitis: null,
+      encefalopatia: null,
+    });
+    expect(cuantosContestados(x)).toBe(0);
   });
 });

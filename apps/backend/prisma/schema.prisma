@@ -803,6 +803,14 @@ model Paciente {
   // Mismo patron dual que renal: los 5 valores para calcular, o la clase directa.
   // ABIERTO (modelo §7.1): si la fuente real no usa Child-Pugh, estos 5 campos
   // cambian. El resto del schema no.
+  /// Los tres criterios de laboratorio se responden por BANDA y no por valor:
+  /// la escala no distingue una bilirrubina de 2,4 de una de 2,9 —las dos son
+  /// «2 – 3», dos puntos—. El puntaje es el dato del que sale la clase.
+  bilirrubinaPuntos Int?
+  albuminaPuntos    Int?
+  inrPuntos         Int?
+  /// El valor exacto es opcional y no decide el puntaje: se guarda sólo para
+  /// que el historial pueda decir el número y se vea la evolución.
   bilirrubinaMgDl   Decimal?        @db.Decimal(5, 2)
   albuminaGDl       Decimal?        @db.Decimal(4, 2)
   inr               Decimal?        @db.Decimal(4, 2)

@@ -182,6 +182,73 @@ export function calcularChildPugh(e: EntradaChildPugh): ResultadoChildPugh {
   });
 }
 
+// --- las bandas, tal como se muestran ----------------------------------------
+
+export interface Banda {
+  texto: string;
+  puntos: Punto;
+}
+
+/**
+ * Las bandas visibles cambian con la unidad, el puntaje no.
+ *
+ * Son los mismos cortes expresados distinto: 2 mg/dL y 34 µmol/L son el mismo
+ * número. Se escriben las dos versiones en vez de convertir el rótulo al vuelo
+ * porque «34.2 µmol/L» no es como está publicada la escala.
+ *
+ * Viven en shared porque las usan los dos lados: la app las dibuja y el backend
+ * las escribe en el historial cuando cambia una.
+ */
+export const BANDAS_BILIRRUBINA: Record<UnidadBilirrubina, Banda[]> = {
+  'mg/dL': [
+    { texto: '< 2', puntos: 1 },
+    { texto: '2 – 3', puntos: 2 },
+    { texto: '> 3', puntos: 3 },
+  ],
+  'umol/L': [
+    { texto: '< 34', puntos: 1 },
+    { texto: '34 – 50', puntos: 2 },
+    { texto: '> 50', puntos: 3 },
+  ],
+};
+
+export const BANDAS_ALBUMINA: Record<UnidadAlbumina, Banda[]> = {
+  'g/dL': [
+    { texto: '> 3.5', puntos: 1 },
+    { texto: '2.8 – 3.5', puntos: 2 },
+    { texto: '< 2.8', puntos: 3 },
+  ],
+  'g/L': [
+    { texto: '> 35', puntos: 1 },
+    { texto: '28 – 35', puntos: 2 },
+    { texto: '< 28', puntos: 3 },
+  ],
+};
+
+export const BANDAS_INR: Banda[] = [
+  { texto: '< 1.7', puntos: 1 },
+  { texto: '1.7 – 2.3', puntos: 2 },
+  { texto: '> 2.3', puntos: 3 },
+];
+
+/**
+ * El rótulo de una banda con su unidad, para el historial.
+ *
+ * Se usan las unidades del esquema —mg/dL y g/dL— y no la que el médico tenía
+ * elegida: el historial es un registro, y dos entradas del mismo paciente en
+ * unidades distintas no se pueden comparar de un vistazo.
+ */
+export function textoBanda(criterio: CriterioChildPugh, puntos: number): string {
+  if (criterio === 'bilirrubina') {
+    return `${BANDAS_BILIRRUBINA['mg/dL'][puntos - 1]?.texto ?? puntos} mg/dL`;
+  }
+  if (criterio === 'albumina') {
+    return `${BANDAS_ALBUMINA['g/dL'][puntos - 1]?.texto ?? puntos} g/dL`;
+  }
+  if (criterio === 'inr') return BANDAS_INR[puntos - 1]?.texto ?? String(puntos);
+  return String(puntos);
+}
+
 // --- textos ------------------------------------------------------------------
 
 export const NOMBRE_CRITERIO: Record<CriterioChildPugh, string> = {

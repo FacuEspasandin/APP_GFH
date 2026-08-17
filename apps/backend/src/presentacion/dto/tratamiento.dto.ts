@@ -99,10 +99,19 @@ export class DatosRenalesDto {
  * hasta que llegue el tercer valor no ayuda a nadie. La clase se calcula sólo
  * cuando están los cinco.
  *
- * Las unidades son las que guarda el esquema —mg/dL y g/dL—; la conversión
- * desde µmol/L y g/L la hace el cliente, que es donde el médico elige la unidad.
+ * **Los tres de laboratorio llegan como PUNTOS**, de 1 a 3. La escala no
+ * distingue una bilirrubina de 2,4 de una de 2,9 —las dos son «2 – 3»— así que
+ * la pantalla se contesta tocando la banda y no escribiendo el número.
+ *
+ * El valor exacto sigue aceptándose y no decide nada: se guarda para que el
+ * historial pueda decir «2,4 → 3,1 mg/dL». Las unidades son las del esquema
+ * —mg/dL y g/dL—; la conversión desde µmol/L y g/L la hace el cliente, que es
+ * donde el médico elige la unidad.
  */
 export class DatosHepaticosDto {
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(3) bilirrubinaPuntos?: number;
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(3) albuminaPuntos?: number;
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(3) inrPuntos?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.01) @Max(80) bilirrubinaMgDl?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.1) @Max(10) albuminaGDl?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.5) @Max(20) inr?: number;

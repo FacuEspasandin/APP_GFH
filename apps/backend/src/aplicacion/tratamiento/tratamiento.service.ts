@@ -13,7 +13,11 @@ import type {
   DatosRenalesDto,
 } from '../../presentacion/dto/tratamiento.dto';
 import {
-  calcularChildPugh,
+  childPughDePuntos,
+  puntosAlbumina,
+  puntosBilirrubina,
+  puntosInr,
+  textoBanda,
   edadEnAnios,
   calcularClcr,
   NOMBRE_ASCITIS,
@@ -444,9 +448,14 @@ export class TratamientoService {
   /**
    * Child-Pugh sobre los cinco criterios.
    *
-   * Guarda lo que vino y recalcula la clase con los valores YA fusionados: si
+   * Guarda lo que vino y recalcula la clase con los criterios YA fusionados: si
    * el médico corrige sólo el INR, la clase tiene que salir de ese INR nuevo y
    * de la bilirrubina vieja, no de un cálculo a medias.
+   *
+   * La clase sale de los PUNTOS y no de los valores. Un paciente cargado antes
+   * de este cambio puede tener el número y no la banda: para ése se deriva la
+   * banda del valor con los mismos cortes, que es lo que hizo la migración con
+   * los que ya estaban.
    *
    * Con un criterio sin cargar la clase queda en `null` — nunca se estima. Un
    * Child-Pugh incompleto redondeado hacia abajo diría «clase A» de un paciente
@@ -456,20 +465,42 @@ export class TratamientoService {
     const paciente = await this.exigirPaciente(medicoId, pacienteId);
 
     const numero = (v: unknown) => (v === null || v === undefined ? undefined : Number(v));
+    const punto = (v: number | null | undefined) => (v === null || v === undefined ? undefined : (v as 1 | 2 | 3));
+
+    /** La banda que vino, la que ya estaba, o la derivada del valor viejo. */
+    const banda = (
+      llega: number | undefined,
+      guardada: number | null,
+      valor: unknown,
+      desdeValor: (n: number) => 1 | 2 | 3,
+    ) => {
+      if (llega !== undefined) return llega as 1 | 2 | 3;
+      if (guardada !== null) return punto(guardada);
+      const n = numero(valor);
+      return n === undefined ? undefined : desdeValor(n);
+    };
 
     const fusionado = {
-      bilirrubinaMgDl: dto.bilirrubinaMgDl ?? numero(paciente.bilirrubinaMgDl),
-      albuminaGDl: dto.albuminaGDl ?? numero(paciente.albuminaGDl),
-      inr: dto.inr ?? numero(paciente.inr),
+      bilirrubina: banda(
+        dto.bilirrubinaPuntos,
+        paciente.bilirrubinaPuntos,
+        paciente.bilirrubinaMgDl,
+        puntosBilirrubina,
+      ),
+      albumina: banda(dto.albuminaPuntos, paciente.albuminaPuntos, paciente.albuminaGDl, puntosAlbumina),
+      inr: banda(dto.inrPuntos, paciente.inrPuntos, paciente.inr, puntosInr),
       ascitis: dto.ascitis ?? paciente.ascitis ?? undefined,
       encefalopatia: dto.encefalopatia ?? paciente.encefalopatia ?? undefined,
     };
 
-    const r = calcularChildPugh(fusionado);
+    const r = childPughDePuntos(fusionado);
 
     await this.prisma.paciente.updateMany({
       where: { id: pacienteId, medicoId },
       data: {
+        ...(dto.bilirrubinaPuntos !== undefined ? { bilirrubinaPuntos: dto.bilirrubinaPuntos } : {}),
+        ...(dto.albuminaPuntos !== undefined ? { albuminaPuntos: dto.albuminaPuntos } : {}),
+        ...(dto.inrPuntos !== undefined ? { inrPuntos: dto.inrPuntos } : {}),
         ...(dto.bilirrubinaMgDl !== undefined ? { bilirrubinaMgDl: dto.bilirrubinaMgDl } : {}),
         ...(dto.albuminaGDl !== undefined ? { albuminaGDl: dto.albuminaGDl } : {}),
         ...(dto.inr !== undefined ? { inr: dto.inr } : {}),
@@ -482,19 +513,44 @@ export class TratamientoService {
     });
 
     const cambios = diferencias([
+      // La banda primero: es lo que decide el puntaje desde que la pantalla se
+      // contesta tocando. El valor exacto va abajo y sólo si el médico lo anotó.
       {
         campo: 'Bilirrubina',
+        antes: paciente.bilirrubinaPuntos,
+        despues: dto.bilirrubinaPuntos,
+        formato: (v) => textoBanda('bilirrubina', Number(v)),
+      },
+      {
+        campo: 'Albúmina',
+        antes: paciente.albuminaPuntos,
+        despues: dto.albuminaPuntos,
+        formato: (v) => textoBanda('albumina', Number(v)),
+      },
+      {
+        campo: 'INR',
+        antes: paciente.inrPuntos,
+        despues: dto.inrPuntos,
+        formato: (v) => textoBanda('inr', Number(v)),
+      },
+      {
+        campo: 'Bilirrubina (valor)',
         antes: paciente.bilirrubinaMgDl,
         despues: dto.bilirrubinaMgDl,
         formato: (v) => conUnidad(v, 'mg/dL'),
       },
       {
-        campo: 'Albúmina',
+        campo: 'Albúmina (valor)',
         antes: paciente.albuminaGDl,
         despues: dto.albuminaGDl,
         formato: (v) => conUnidad(v, 'g/dL'),
       },
-      { campo: 'INR', antes: paciente.inr, despues: dto.inr, formato: (v) => String(Number(v)) },
+      {
+        campo: 'INR (valor)',
+        antes: paciente.inr,
+        despues: dto.inr,
+        formato: (v) => String(Number(v)),
+      },
       {
         campo: 'Ascitis',
         antes: paciente.ascitis,

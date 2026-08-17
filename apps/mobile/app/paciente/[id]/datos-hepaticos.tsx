@@ -20,6 +20,11 @@ import { Superficie } from '@/ui/superficie';
  * el esquema, y Prisma los serializa como string.
  */
 interface PacienteHepatico {
+  /** La banda es el dato del que sale la clase. Puede faltar en un paciente
+   *  cargado antes de que la pantalla pasara a bandas. */
+  bilirrubinaPuntos: number | null;
+  albuminaPuntos: number | null;
+  inrPuntos: number | null;
   bilirrubinaMgDl: string | number | null;
   albuminaGDl: string | number | null;
   inr: string | number | null;
@@ -29,6 +34,9 @@ interface PacienteHepatico {
 }
 
 const aNumeros = (p: PacienteHepatico) => ({
+  bilirrubinaPuntos: p.bilirrubinaPuntos,
+  albuminaPuntos: p.albuminaPuntos,
+  inrPuntos: p.inrPuntos,
   bilirrubinaMgDl: p.bilirrubinaMgDl === null ? null : Number(p.bilirrubinaMgDl),
   albuminaGDl: p.albuminaGDl === null ? null : Number(p.albuminaGDl),
   inr: p.inr === null ? null : Number(p.inr),
@@ -87,9 +95,14 @@ export default function DatosHepaticos() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
-        <FormularioChildPugh valor={borrador} onCambio={setEditado} />
-
+        {/* El resultado va arriba: es la respuesta, y dejarlo al final obliga a
+            scrollear cada vez que se corrige un criterio para ver qué pasó. */}
         <ResultadoChildPugh valor={borrador} />
+
+        {/* Con el valor exacto: acá el número se guarda y el historial puede
+            decir «2,4 → 3,1 mg/dL». No decide el puntaje — eso lo decide la
+            banda. */}
+        <FormularioChildPugh valor={borrador} onCambio={setEditado} conValorExacto />
 
         <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
           <Text className="font-sans text-meta leading-5 text-ink-suave">
