@@ -116,6 +116,24 @@ const ORDEN: CriterioChildPugh[] = [
   'encefalopatia',
 ];
 
+export type Punto = 1 | 2 | 3;
+
+/**
+ * Los cinco criterios ya puntuados.
+ *
+ * Es la forma primaria desde que la pantalla se contesta tocando bandas y no
+ * escribiendo números: la escala no distingue una bilirrubina de 2,4 de una de
+ * 2,9 —las dos son «2 – 3», dos puntos— así que pedir el valor exacto era pedir
+ * un dato más fino del que el cálculo usa.
+ */
+export interface PuntosChildPugh {
+  bilirrubina?: Punto;
+  albumina?: Punto;
+  inr?: Punto;
+  ascitis?: Ascitis;
+  encefalopatia?: Encefalopatia;
+}
+
 /**
  * Calcula sobre lo que haya.
  *
@@ -124,13 +142,13 @@ const ORDEN: CriterioChildPugh[] = [
  * falta de dato, neutro— y además un Child-Pugh incompleto redondeado hacia
  * abajo diría «clase A» de un paciente que puede ser C.
  */
-export function calcularChildPugh(e: EntradaChildPugh): ResultadoChildPugh {
+export function childPughDePuntos(p: PuntosChildPugh): ResultadoChildPugh {
   const detalle: Record<CriterioChildPugh, number | null> = {
-    bilirrubina: e.bilirrubinaMgDl === undefined ? null : puntosBilirrubina(e.bilirrubinaMgDl),
-    albumina: e.albuminaGDl === undefined ? null : puntosAlbumina(e.albuminaGDl),
-    inr: e.inr === undefined ? null : puntosInr(e.inr),
-    ascitis: e.ascitis === undefined ? null : puntosAscitis(e.ascitis),
-    encefalopatia: e.encefalopatia === undefined ? null : puntosEncefalopatia(e.encefalopatia),
+    bilirrubina: p.bilirrubina ?? null,
+    albumina: p.albumina ?? null,
+    inr: p.inr ?? null,
+    ascitis: p.ascitis === undefined ? null : puntosAscitis(p.ascitis),
+    encefalopatia: p.encefalopatia === undefined ? null : puntosEncefalopatia(p.encefalopatia),
   };
 
   const faltan = ORDEN.filter((c) => detalle[c] === null);
@@ -144,6 +162,24 @@ export function calcularChildPugh(e: EntradaChildPugh): ResultadoChildPugh {
     faltan,
     completo,
   };
+}
+
+/**
+ * Lo mismo, partiendo de los valores de laboratorio.
+ *
+ * Sigue existiendo porque hay dos caminos que traen números y no bandas: la
+ * herramienta de la API —que recibe mg/dL— y los pacientes cargados antes de
+ * que la pantalla pasara a bandas, cuyos valores viejos hay que poder volver a
+ * clasificar.
+ */
+export function calcularChildPugh(e: EntradaChildPugh): ResultadoChildPugh {
+  return childPughDePuntos({
+    bilirrubina: e.bilirrubinaMgDl === undefined ? undefined : puntosBilirrubina(e.bilirrubinaMgDl),
+    albumina: e.albuminaGDl === undefined ? undefined : puntosAlbumina(e.albuminaGDl),
+    inr: e.inr === undefined ? undefined : puntosInr(e.inr),
+    ascitis: e.ascitis,
+    encefalopatia: e.encefalopatia,
+  });
 }
 
 // --- textos ------------------------------------------------------------------

@@ -94,8 +94,9 @@ export default function CockpitPaciente() {
    * cualquier acción que lo toque abre el paywall. El backend lo rechaza igual;
    * hacerlo acá evita que el médico llene un formulario para que rebote.
    *
-   * Los hallazgos son la excepción: salen de esta misma respuesta, así que se
-   * leen sin pedirle nada al servidor.
+   * No hay excepciones. Los hallazgos salen de esta misma respuesta y podrían
+   * abrirse sin pedirle nada al servidor, pero que cuatro toques funcionen y el
+   * quinto mande a pagar se lee como que algo se rompió, no como un límite.
    */
   const abrir = (ruta: string) =>
     router.push((data.esDemostracion ? rutaPaywall('paciente') : ruta) as never);
@@ -232,7 +233,7 @@ export default function CockpitPaciente() {
 
               {data.hallazgos.length > destacados.length ? (
                 <Pressable
-                  onPress={() => router.push(`/paciente/${id}/hallazgos` as never)}
+                  onPress={() => abrir(`/paciente/${id}/hallazgos`)}
                   accessibilityRole="button"
                   className="items-center rounded-card border border-line bg-surface py-2.5"
                 >
@@ -279,7 +280,7 @@ export default function CockpitPaciente() {
                   ...(color ? { borderLeftWidth: 4, borderLeftColor: color } : {}),
                   ...(n === 0 ? { opacity: 0.72 } : {}),
                 }}
-                onPress={() => router.push(`/paciente/${id}/hallazgos?categoria=${cat}` as never)}
+                onPress={() => abrir(`/paciente/${id}/hallazgos?categoria=${cat}`)}
                 accesibilidad={
                   sinEvaluar
                     ? `${NOMBRE_CATEGORIA[cat]}, sin datos para evaluar`
@@ -338,7 +339,7 @@ export default function CockpitPaciente() {
             <FilaAnimada key={pr.id} indice={i}>
               <FilaTratamiento
                 prescripcion={pr}
-                onPress={() => router.push(`/paciente/${id}/hallazgos?prescripcion=${pr.id}` as never)}
+                onPress={() => abrir(`/paciente/${id}/hallazgos?prescripcion=${pr.id}`)}
               />
             </FilaAnimada>
           ))
@@ -346,7 +347,7 @@ export default function CockpitPaciente() {
 
         {totalAvisos > 0 ? (
           <Pressable
-            onPress={() => router.push(`/paciente/${id}/hallazgos?avisos=1` as never)}
+            onPress={() => abrir(`/paciente/${id}/hallazgos?avisos=1`)}
             accessibilityRole="button"
             className="mt-3 flex-row items-center rounded-card border border-line bg-surface px-3.5 py-3"
             style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}

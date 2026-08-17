@@ -4,6 +4,7 @@ import {
   albuminaAGDl,
   bilirrubinaAMgDl,
   calcularChildPugh,
+  childPughDePuntos,
   claseDePuntos,
   puntosAlbumina,
   puntosAscitis,
@@ -188,5 +189,56 @@ describe('Child-Pugh', () => {
       expect(r.clase).toBeNull();
       expect(r.faltan).toEqual(['encefalopatia']);
     });
+  });
+});
+
+describe('el puntaje directo, desde las bandas', () => {
+  it('da lo mismo tocar la banda que escribir un valor de esa banda', () => {
+    // Es la garantía que sostiene el cambio de pantalla: la escala no distingue
+    // 2,4 de 2,9 —las dos son «2 – 3»— así que los dos caminos tienen que
+    // terminar en el mismo puntaje y la misma clase.
+    const porValor = calcularChildPugh({
+      bilirrubinaMgDl: 2.4,
+      albuminaGDl: 3.0,
+      inr: 1.5,
+      ascitis: 'LEVE',
+      encefalopatia: 'AUSENTE',
+    });
+    const porBanda = childPughDePuntos({
+      bilirrubina: 2,
+      albumina: 2,
+      inr: 1,
+      ascitis: 'LEVE',
+      encefalopatia: 'AUSENTE',
+    });
+
+    expect(porBanda.puntos).toBe(porValor.puntos);
+    expect(porBanda.clase).toBe(porValor.clase);
+    expect(porBanda.detalle).toEqual(porValor.detalle);
+  });
+
+  it('sin un criterio no hay clase, igual que por valor', () => {
+    const r = childPughDePuntos({ bilirrubina: 3, albumina: 3, inr: 3, ascitis: 'LEVE' });
+    expect(r.clase).toBeNull();
+    expect(r.puntos).toBe(11);
+    expect(r.faltan).toEqual(['encefalopatia']);
+  });
+
+  it('sin nada da cero puntos y los cinco faltantes', () => {
+    const r = childPughDePuntos({});
+    expect(r.puntos).toBe(0);
+    expect(r.clase).toBeNull();
+    expect(r.faltan).toHaveLength(5);
+  });
+
+  it('los tres puntajes extremos caen donde deben', () => {
+    const min = childPughDePuntos({
+      bilirrubina: 1, albumina: 1, inr: 1, ascitis: 'AUSENTE', encefalopatia: 'AUSENTE',
+    });
+    const max = childPughDePuntos({
+      bilirrubina: 3, albumina: 3, inr: 3, ascitis: 'MODERADA_SEVERA', encefalopatia: 'GRADO_3_4',
+    });
+    expect([min.puntos, min.clase]).toEqual([5, 'A']);
+    expect([max.puntos, max.clase]).toEqual([15, 'C']);
   });
 });
