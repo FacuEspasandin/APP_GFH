@@ -37,8 +37,11 @@ describe('el catálogo', () => {
     const hay = categoriasConContenido();
     expect(hay).toContain('renal');
     expect(hay).toContain('hepatico');
+    // «Laboratorio» apareció sola al sumar la calculadora de LDL: es el
+    // comportamiento que se quiere, la categoría se enciende con su primera
+    // herramienta.
+    expect(hay).toContain('laboratorio');
     expect(hay).not.toContain('embarazo');
-    expect(hay).not.toContain('laboratorio');
   });
 
   it('respeta el orden declarado y no el de aparición', () => {
@@ -48,6 +51,7 @@ describe('el catálogo', () => {
       'interacciones',
       'condiciones',
       'dosis',
+      'laboratorio',
     ]);
   });
 });
@@ -107,7 +111,7 @@ describe('agrupar', () => {
   it('separa lo que calcula de lo que cruza el catálogo', () => {
     const g = agrupar(HERRAMIENTAS);
     expect(g.map((x) => x.titulo)).toEqual(['Calculadoras', 'Contra el catálogo']);
-    expect(claves(g[0]!.herramientas)).toEqual(['child-pugh', 'clcr']);
+    expect(claves(g[0]!.herramientas)).toEqual(['child-pugh', 'clcr', 'ldl']);
   });
 
   it('ordena por TÍTULO y no por clave', () => {

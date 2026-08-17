@@ -95,6 +95,16 @@ export const HERRAMIENTAS: readonly Herramienta[] = [
     busca: ['cirrosis', 'bilirrubina', 'albumina', 'inr', 'ascitis'],
   },
   {
+    clave: 'ldl',
+    titulo: 'Colesterol LDL y no-HDL',
+    detalle: 'Friedewald, con las alternativas para triglicéridos altos',
+    ruta: '/herramientas/ldl',
+    cruza: false,
+    categorias: ['laboratorio'],
+    icono: 'calculadora',
+    busca: ['colesterol', 'friedewald', 'lipidos', 'trigliceridos', 'hdl', 'dislipemia'],
+  },
+  {
     clave: 'renal',
     titulo: 'Ajuste renal por fármaco',
     detalle: 'Cuánto ajustar cada fármaco para un Clcr dado',
