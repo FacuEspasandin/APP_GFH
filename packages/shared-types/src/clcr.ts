@@ -1,3 +1,4 @@
+import { RANGOS, type Rango } from './rangos';
 import type { Sexo } from './sexo';
 
 /**
@@ -27,22 +28,23 @@ export class DatoClinicoInvalido extends Error {
 }
 
 /**
- * Rangos de entrada del motor §4.1, con dos endurecimientos DELIBERADOS:
+ * Los rangos salen de `rangos.ts`, que es la única tabla.
  *
- * El documento admite `peso 0-500` y `creatinina 0-30`, pero el 0 no sirve en
- * ninguno de los dos: con creatinina 0 la fórmula divide por cero y devuelve
- * Infinity, y con peso 0 devuelve un Clcr de 0 que caería en el peor tramo de
- * la tabla como si fuera un dato real. Ninguno de los dos valores existe en un
- * paciente. Se rechazan en vez de calcular igual.
+ * Estaban acá y repetidos en los `@Min/@Max` de los DTO, y ya habían
+ * divergido: el motor pedía peso mayor a 0 y el DTO mayor o igual a 0,1.
+ *
+ * Los dos endurecimientos siguen siendo DELIBERADOS y viven allá: el documento
+ * §4.1 admite `peso 0-500` y `creatinina 0-30`, pero el 0 no sirve en ninguno
+ * de los dos —con creatinina 0 la fórmula divide por cero y devuelve Infinity,
+ * y con peso 0 devuelve un Clcr de 0 que caería en el peor tramo de la tabla
+ * como si fuera un dato real—. Ninguno existe en un paciente.
  */
-const LIMITES = {
-  edadAnios: { min: 0, max: 120, minExclusivo: false },
-  pesoKg: { min: 0, max: 500, minExclusivo: true },
-  creatininaMgDl: { min: 0, max: 30, minExclusivo: true },
-} as const;
+type CampoClcr = 'edadAnios' | 'pesoKg' | 'creatininaMgDl';
 
-function validar(campo: keyof typeof LIMITES, valor: number): void {
-  const { min, max, minExclusivo } = LIMITES[campo];
+function validar(campo: CampoClcr, valor: number): void {
+  // `RANGOS` es un `as const`, así que la unión no declara `minExclusivo` en
+  // las entradas que no lo tienen. Se lee como `Rango`, que sí lo tiene opcional.
+  const { min, max, minExclusivo } = RANGOS[campo] as Rango;
   if (!Number.isFinite(valor)) {
     throw new DatoClinicoInvalido(campo, valor, 'no es un número finito');
   }

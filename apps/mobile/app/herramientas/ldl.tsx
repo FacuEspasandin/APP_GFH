@@ -7,8 +7,11 @@ import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import {
   calcularLipidos,
+  colesterolDesdeMgDl,
   EXPLICACION_SIN_LDL,
   faltantesLipidos,
+  rangoConvertido,
+  RANGOS,
   type EntradaLipidos,
   type MotivoSinValor,
   type UnidadLipidos,
@@ -45,6 +48,25 @@ export default function CalculadoraLdl() {
 
   const r = calcularLipidos(entrada);
   const faltan = faltantesLipidos(entrada);
+
+  /**
+   * Los rangos, en la unidad que el médico eligió.
+   *
+   * Se declaran en mg/dL y se convierten: mostrar «1 – 1000» con mmol/L en
+   * pantalla sería peor que no mostrar nada.
+   */
+  const rangos =
+    unidad === 'mg/dL'
+      ? {
+          total: RANGOS.colesterolTotal,
+          hdl: RANGOS.hdl,
+          tg: RANGOS.trigliceridos,
+        }
+      : {
+          total: rangoConvertido(RANGOS.colesterolTotal, (n) => colesterolDesdeMgDl(n, unidad), 1),
+          hdl: rangoConvertido(RANGOS.hdl, (n) => colesterolDesdeMgDl(n, unidad), 1),
+          tg: rangoConvertido(RANGOS.trigliceridos, (n) => n / 88.57, 1),
+        };
   const algoEscrito = faltan.length < 3;
 
   // Las alternativas se abren solas cuando Friedewald no puede: ahí dejan de
@@ -76,6 +98,8 @@ export default function CalculadoraLdl() {
                   value={texto.total}
                   onChangeText={(v) => setTexto((p) => ({ ...p, total: v }))}
                   keyboardType="numeric"
+                  rango={rangos.total}
+                  valor={entrada.colesterolTotal}
                 />
               </View>
               <View className="flex-1">
@@ -84,6 +108,8 @@ export default function CalculadoraLdl() {
                   value={texto.hdl}
                   onChangeText={(v) => setTexto((p) => ({ ...p, hdl: v }))}
                   keyboardType="numeric"
+                  rango={rangos.hdl}
+                  valor={entrada.hdl}
                 />
               </View>
               <View className="flex-1">
@@ -92,6 +118,8 @@ export default function CalculadoraLdl() {
                   value={texto.tg}
                   onChangeText={(v) => setTexto((p) => ({ ...p, tg: v }))}
                   keyboardType="numeric"
+                  rango={rangos.tg}
+                  valor={entrada.trigliceridos}
                 />
               </View>
             </View>

@@ -11,6 +11,7 @@ import {
 
 import { hapticaSeleccion } from './haptica';
 import { useColores } from './tema';
+import { COLOR_SEVERIDAD, etiquetaRango, evaluarValor, type Rango } from '@gfh/shared-types';
 
 /**
  * Primitivos de UI. Todo el sistema visual sale de acá para que no haya
@@ -144,32 +145,78 @@ export function Boton({
   );
 }
 
-export const CampoTexto = forwardRef<TextInput, TextInputProps & { etiqueta?: string; error?: string }>(
-  function CampoTexto({ etiqueta, error, ...props }, ref) {
-    const col = useColores();
-    return (
-      <View className="mb-3.5">
-        {etiqueta ? (
-          <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
-            {etiqueta}
-          </Text>
-        ) : null}
-        <TextInput
-          ref={ref}
-          placeholderTextColor={col.tenue}
-          accessibilityLabel={etiqueta}
-          className="h-12 rounded-chip border border-line bg-surface px-3.5 text-body text-ink"
-          {...props}
-        />
-        {error ? (
-          <Text className="font-sans mt-1 text-meta" style={{ color: col.peligro }}>
-            {error}
-          </Text>
-        ) : null}
-      </View>
-    );
-  },
-);
+/**
+ * Un campo de texto, con el rango que acepta debajo.
+ *
+ * El rango está SIEMPRE visible, en gris, desde antes de escribir: es una ayuda
+ * mientras se escribe y sería un reproche si apareciera recién al equivocarse.
+ *
+ * Tres estados, y la diferencia entre los dos últimos es la que importa:
+ *
+ *   ok           El rótulo en gris, con el rango.
+ *   implausible  Ámbar. El valor existe pero casi seguro es una errata de
+ *                unidad. **Se calcula igual** — poner un techo donde la fórmula
+ *                no se rompe sería inventar un límite.
+ *   invalido     Rojo. El valor rompe la fórmula o no existe. No se calcula.
+ *
+ * El rojo de esta app significa que algo no se puede hacer; usarlo para
+ * «revisá esto» le sacaría fuerza donde importa.
+ */
+export const CampoTexto = forwardRef<
+  TextInput,
+  TextInputProps & {
+    etiqueta?: string;
+    error?: string;
+    /** El rango que acepta, ya en la unidad que se está mostrando. */
+    rango?: Rango;
+    /** Qué se escribió, para juzgarlo. Se pasa aparte de `value` porque el
+     *  valor de pantalla es texto y esto es el número ya parseado. */
+    valor?: number;
+  }
+>(function CampoTexto({ etiqueta, error, rango, valor, ...props }, ref) {
+  const col = useColores();
+
+  const v = rango ? evaluarValor(valor, rango) : { estado: 'ok' as const, mensaje: null };
+  const borde =
+    v.estado === 'invalido' ? col.peligro : v.estado === 'implausible' ? COLOR_SEVERIDAD.media : col.line;
+
+  // Debajo del campo va una sola línea: el mensaje si hay algo que decir, y el
+  // rango si no. Las dos juntas serían dos renglones para la misma pregunta.
+  const pie = error ?? v.mensaje ?? (rango ? etiquetaRango(rango) : null);
+  const colorPie =
+    error || v.estado === 'invalido'
+      ? col.peligro
+      : v.estado === 'implausible'
+        ? '#B45309'
+        : col.tenue;
+
+  return (
+    <View className="mb-3.5">
+      {etiqueta ? (
+        <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+          {etiqueta}
+        </Text>
+      ) : null}
+      <TextInput
+        ref={ref}
+        placeholderTextColor={col.tenue}
+        accessibilityLabel={etiqueta}
+        accessibilityHint={rango ? `Entre ${etiquetaRango(rango)}` : undefined}
+        className="h-12 rounded-chip border bg-surface px-3.5 text-body text-ink"
+        style={{ borderColor: borde, borderWidth: v.estado === 'ok' ? 1 : 1.5 }}
+        {...props}
+      />
+      {pie ? (
+        <Text
+          className={v.mensaje || error ? 'font-sans mt-1 text-meta' : 'font-mono mt-1 text-eyebrow'}
+          style={{ color: colorPie }}
+        >
+          {pie}
+        </Text>
+      ) : null}
+    </View>
+  );
+});
 
 export function Chip({
   texto,

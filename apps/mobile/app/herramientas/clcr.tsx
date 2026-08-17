@@ -9,8 +9,10 @@ import { Superficie } from '@/ui/superficie';
 import {
   calcularClcr,
   DatoClinicoInvalido,
+  evaluarValor,
   gradoKdigo,
   OPCIONES_SEXO,
+  RANGOS,
   type Sexo,
 } from '@gfh/shared-types';
 
@@ -37,6 +39,26 @@ export default function CalculadoraClcr() {
   const clcr = calcular(d, sexo);
   const grado = gradoKdigo(clcr);
 
+  /**
+   * Cuál de los tres campos rompe la fórmula, si alguno.
+   *
+   * Antes, un valor fuera de rango hacía que `calcularClcr` tirara y la
+   * pantalla devolviera `null` en silencio: el anillo quedaba vacío con el
+   * mismo gris que «todavía no escribiste nada».
+   */
+  const rechazado = (
+    [
+      ['Edad', num(d.edadAnios), RANGOS.edadAnios],
+      ['Peso', num(d.pesoKg), RANGOS.pesoKg],
+      ['Creatinina', num(d.creatininaMgDl), RANGOS.creatininaMgDl],
+    ] as const
+  )
+    .map(([nombre, valor, rango]) => {
+      const v = evaluarValor(valor, rango);
+      return v.estado === 'invalido' ? `${nombre}: ${v.mensaje}` : null;
+    })
+    .find(Boolean);
+
   return (
     <>
       <Stack.Screen options={{ title: 'Clearance de creatinina' }} />
@@ -59,6 +81,8 @@ export default function CalculadoraClcr() {
                   onChangeText={(v) => setD((p) => ({ ...p, edadAnios: v }))}
                   keyboardType="numeric"
                   placeholder="años"
+                  rango={RANGOS.edadAnios}
+                  valor={num(d.edadAnios)}
                 />
               </View>
               <View className="flex-1">
@@ -68,6 +92,8 @@ export default function CalculadoraClcr() {
                   onChangeText={(v) => setD((p) => ({ ...p, pesoKg: v }))}
                   keyboardType="numeric"
                   placeholder="kg"
+                  rango={RANGOS.pesoKg}
+                  valor={num(d.pesoKg)}
                 />
               </View>
               <View className="flex-1">
@@ -77,6 +103,8 @@ export default function CalculadoraClcr() {
                   onChangeText={(v) => setD((p) => ({ ...p, creatininaMgDl: v }))}
                   keyboardType="numeric"
                   placeholder="mg/dL"
+                  rango={RANGOS.creatininaMgDl}
+                  valor={num(d.creatininaMgDl)}
                 />
               </View>
             </View>
@@ -102,11 +130,15 @@ export default function CalculadoraClcr() {
           <Superficie elevacion="plana" className="mb-3.5 items-center px-3.5 py-4">
             <AnilloClcr clcrMlMin={clcr} gradoKdigo={grado} tamano={132} />
             <Text className="font-sans mt-2.5 text-center text-meta leading-5 text-ink-suave">
-              {clcr === null
-                ? 'Completá edad, peso y creatinina para calcular.'
-                : sexo === 'F'
+              {clcr !== null
+                ? sexo === 'F'
                   ? 'Cockcroft-Gault, con el factor 0,85 por sexo.'
-                  : 'Cockcroft-Gault.'}
+                  : 'Cockcroft-Gault.'
+                : /* Un valor rechazado y un campo vacío daban el mismo anillo
+                     gris. Ahora se distinguen: uno lo resuelve escribiendo, el
+                     otro corrigiendo. */
+                  (rechazado ??
+                  'Completá edad, peso y creatinina para calcular.')}
             </Text>
           </Superficie>
 
@@ -130,21 +162,20 @@ export default function CalculadoraClcr() {
   );
 }
 
-/** `null` mientras falte cualquiera de los tres, o si alguno no es un número
- *  que la fórmula acepte. Nunca un cero que se leería como resultado. */
+/** Vacío o texto que no es número es «sin cargar», no cero. */
+function num(v: string): number | undefined {
+  const n = Number(v.replace(',', '.'));
+  return v.trim() === '' || Number.isNaN(n) ? undefined : n;
+}
+
 function calcular(
   d: { edadAnios: string; pesoKg: string; creatininaMgDl: string },
   sexo: Sexo,
 ): number | null {
-  const num = (v: string) => {
-    const n = Number(v.replace(',', '.'));
-    return v.trim() === '' || Number.isNaN(n) ? null : n;
-  };
-
   const edadAnios = num(d.edadAnios);
   const pesoKg = num(d.pesoKg);
   const creatininaMgDl = num(d.creatininaMgDl);
-  if (edadAnios === null || pesoKg === null || creatininaMgDl === null) return null;
+  if (edadAnios === undefined || pesoKg === undefined || creatininaMgDl === undefined) return null;
 
   try {
     return calcularClcr({ edadAnios, pesoKg, creatininaMgDl, sexo });

@@ -14,7 +14,7 @@ import { edadDeFecha, validarFecha } from '@/ui/fecha';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
 import { ResultadoClcr } from '@/ui/resultado-clcr';
 import { useColores } from '@/ui/tema';
-import { OPCIONES_SEXO, type Sexo } from '@gfh/shared-types';
+import { OPCIONES_SEXO, RANGOS, type Sexo } from '@gfh/shared-types';
 
 /**
  * Crear paciente (2.5).
@@ -193,6 +193,8 @@ export default function CrearPaciente() {
                 onChangeText={campo('alturaCm')}
                 keyboardType="numeric"
                 placeholder="cm"
+                rango={RANGOS.alturaCm}
+                valor={numero(c.alturaCm)}
               />
             </View>
             <View className="flex-1">
@@ -202,6 +204,8 @@ export default function CrearPaciente() {
                 onChangeText={campo('pesoKg')}
                 keyboardType="numeric"
                 placeholder="kg"
+                rango={RANGOS.pesoKg}
+                valor={numero(c.pesoKg)}
               />
             </View>
             <View className="flex-1">
@@ -211,6 +215,8 @@ export default function CrearPaciente() {
                 onChangeText={campo('creatininaMgDl')}
                 keyboardType="numeric"
                 placeholder="mg/dL"
+                rango={RANGOS.creatininaMgDl}
+                valor={numero(c.creatininaMgDl)}
               />
             </View>
           </View>

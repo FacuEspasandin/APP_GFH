@@ -17,6 +17,7 @@ import {
   COLOR_SEVERIDAD,
   nombreSexo,
   OPCIONES_SEXO,
+  RANGOS,
   type RangoGravedad,
   type Sexo,
 } from '@gfh/shared-types';
@@ -113,6 +114,8 @@ export default function HerramientaRenal() {
               value={clcr}
               onChangeText={setClcr}
               keyboardType="numeric"
+              rango={RANGOS.clcrMlMin}
+              valor={num(clcr)}
             />
           ) : (
             <>
@@ -126,6 +129,8 @@ export default function HerramientaRenal() {
                     onChangeText={(v) => setD((p) => ({ ...p, edadAnios: v }))}
                     keyboardType="numeric"
                     placeholder="años"
+                    rango={RANGOS.edadAnios}
+                    valor={num(d.edadAnios)}
                   />
                 </View>
                 <View className="flex-1">
@@ -135,6 +140,8 @@ export default function HerramientaRenal() {
                     onChangeText={(v) => setD((p) => ({ ...p, pesoKg: v }))}
                     keyboardType="numeric"
                     placeholder="kg"
+                    rango={RANGOS.pesoKg}
+                    valor={num(d.pesoKg)}
                   />
                 </View>
                 <View className="flex-1">
@@ -144,6 +151,8 @@ export default function HerramientaRenal() {
                     onChangeText={(v) => setD((p) => ({ ...p, creatininaMgDl: v }))}
                     keyboardType="numeric"
                     placeholder="mg/dL"
+                    rango={RANGOS.creatininaMgDl}
+                    valor={num(d.creatininaMgDl)}
                   />
                 </View>
               </View>
