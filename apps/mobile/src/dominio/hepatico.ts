@@ -1,3 +1,4 @@
+import { cuantasContestadas, preguntaAbierta, preguntaSiguiente } from './cascada';
 import {
   albuminaAGDl,
   bilirrubinaAMgDl,
@@ -132,41 +133,29 @@ export function contestado(b: Borrador, c: CriterioChildPugh): boolean {
 }
 
 /**
- * Cuál se muestra abierto.
+ * Las tres de abajo son la cascada genérica de `cascada.ts`, atada a los
+ * criterios de Child-Pugh.
  *
- * El primero sin contestar, salvo que el médico haya tocado uno ya contestado
- * para corregirlo. Devuelve `null` con los cinco listos: ahí no hay nada
- * abierto y se ven los cinco renglones plegados.
- *
- * `abiertoAMano` gana siempre para que corregir el segundo no cierre lo que ya
- * estaba: tocar un renglón plegado tiene que abrir ESE y ninguno más.
+ * Se mantienen con estos nombres para que la pantalla no tenga que saber que la
+ * lógica se mudó, y para que los tests que ya existían sigan probando lo mismo
+ * — que es lo que hace verificable la extracción.
  */
 export function criterioAbierto(
   b: Borrador,
   abiertoAMano: CriterioChildPugh | null,
 ): CriterioChildPugh | null {
-  if (abiertoAMano !== null) return abiertoAMano;
-  return CRITERIOS.find((c) => !contestado(b, c)) ?? null;
+  return preguntaAbierta(CRITERIOS, (c) => contestado(b, c), abiertoAMano);
 }
 
-/**
- * El que se muestra apagado abajo del abierto, como anticipo.
- *
- * Sólo mientras se está completando: corrigiendo uno del medio, el anticipo
- * diría que falta algo que ya está contestado.
- */
 export function criterioSiguiente(
   b: Borrador,
   abierto: CriterioChildPugh | null,
 ): CriterioChildPugh | null {
-  if (abierto === null) return null;
-  const desde = CRITERIOS.indexOf(abierto) + 1;
-  return CRITERIOS.slice(desde).find((c) => !contestado(b, c)) ?? null;
+  return preguntaSiguiente(CRITERIOS, (c) => contestado(b, c), abierto);
 }
 
-/** Cuántos contestados, para el «3 de 5». */
 export function cuantosContestados(b: Borrador): number {
-  return CRITERIOS.filter((c) => contestado(b, c)).length;
+  return cuantasContestadas(CRITERIOS, (c) => contestado(b, c));
 }
 
 /**
