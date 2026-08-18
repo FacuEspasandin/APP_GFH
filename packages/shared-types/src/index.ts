@@ -2,6 +2,7 @@ export * from './child-pugh';
 export * from './clcr';
 export * from './enums';
 export * from './lipidos';
+export * from './orden-tratamiento';
 export * from './rangos';
 export * from './restricciones-ficha';
 export * from './severidad';

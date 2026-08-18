@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ordenarTratamiento } from '@gfh/shared-types';
 
 import { evaluarCockpit, type ResultadoCockpit } from '../../dominio/clinico/evaluar-cockpit';
 import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
@@ -100,17 +101,23 @@ export class CockpitService {
         semanaGestacion: contexto.paciente.semanaGestacion,
         estaLactando: contexto.paciente.estaLactando,
       },
-      prescripciones: contexto.prescripciones.map((p) => ({
-        id: p.id,
-        nombre: p.nombreMostrado,
-        dosis: p.dosis,
-        frecuencia: p.frecuencia,
-        via: p.via,
-        esFarmacoLibre: p.esFarmacoLibre,
-        // La espina: el peor rango que toca a este fármaco. null = sin hallazgos.
-        espina: resultado.espinaPorPrescripcion.get(p.id) ?? null,
-        conteoHallazgos: resultado.hallazgos.filter((h) => h.prescripcionIds.includes(p.id)).length,
-      })),
+      // El orden sale de acá y no de la pantalla: el paciente de ejemplo arma su
+      // lista en otro servicio y tiene que quedar igual. Gravedad primero,
+      // cantidad para desempatar — el porqué está en `orden-tratamiento.ts`.
+      prescripciones: ordenarTratamiento(
+        contexto.prescripciones.map((p) => ({
+          id: p.id,
+          nombre: p.nombreMostrado,
+          dosis: p.dosis,
+          frecuencia: p.frecuencia,
+          via: p.via,
+          esFarmacoLibre: p.esFarmacoLibre,
+          // La espina: el peor rango que toca a este fármaco. null = sin hallazgos.
+          espina: resultado.espinaPorPrescripcion.get(p.id) ?? null,
+          conteoHallazgos: resultado.hallazgos.filter((h) => h.prescripcionIds.includes(p.id))
+            .length,
+        })),
+      ),
     };
   }
 }

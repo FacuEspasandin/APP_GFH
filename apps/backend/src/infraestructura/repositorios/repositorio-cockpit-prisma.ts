@@ -63,6 +63,11 @@ export class RepositorioCockpitPrisma implements RepositorioCockpit {
     const [prescripciones, condiciones, alergias, configuracion] = await Promise.all([
       this.prisma.prescripcion.findMany({
         where: { medicoId, pacienteId, estado: 'ACTIVO' },
+        // Sin esto el orden lo elige Postgres y puede cambiar entre dos
+        // aperturas del cockpit sin que haya pasado nada. El orden que se
+        // muestra se decide después, por gravedad (`ordenarTratamiento`); éste
+        // es sólo el piso determinista sobre el que se aplica.
+        orderBy: { createdAt: 'asc' },
         include: {
           productoComercial: {
             include: {

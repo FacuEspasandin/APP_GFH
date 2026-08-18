@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger, type OnModuleInit } from '@nestjs/common';
+import { ordenarTratamiento } from '@gfh/shared-types';
 
 import { evaluarCockpit } from '../../dominio/clinico/evaluar-cockpit';
 import type { ContextoCockpit } from '../../dominio/clinico/puertos';
@@ -126,19 +127,24 @@ export class DemoService implements OnModuleInit {
         semanaGestacion: DATOS_DEMO.semanaGestacion,
         estaLactando: DATOS_DEMO.estaLactando,
       },
-      prescripciones: contexto.prescripciones.map((p) => {
-        const r = porPrescripcion.get(p.id);
-        return {
-          id: p.id,
-          nombre: p.nombreMostrado,
-          dosis: p.dosis,
-          frecuencia: p.frecuencia,
-          via: p.via,
-          esFarmacoLibre: p.esFarmacoLibre,
-          espina: r?.peor ?? null,
-          conteoHallazgos: r?.cuantos ?? 0,
-        };
-      }),
+      // El mismo orden que el cockpit real: el paciente de ejemplo es la primera
+      // pantalla que ve alguien que todavía no pagó, y tiene que enseñar cómo se
+      // lee la app, no otra cosa.
+      prescripciones: ordenarTratamiento(
+        contexto.prescripciones.map((p) => {
+          const r = porPrescripcion.get(p.id);
+          return {
+            id: p.id,
+            nombre: p.nombreMostrado,
+            dosis: p.dosis,
+            frecuencia: p.frecuencia,
+            via: p.via,
+            esFarmacoLibre: p.esFarmacoLibre,
+            espina: r?.peor ?? null,
+            conteoHallazgos: r?.cuantos ?? 0,
+          };
+        }),
+      ),
       // Las interacciones detectadas del demo NO se persisten: no hay paciente
       // en la base al que colgarlas.
       interaccionesDetectadas: [],
