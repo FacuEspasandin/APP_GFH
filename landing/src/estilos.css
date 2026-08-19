@@ -647,7 +647,32 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
    PRECIO
    ========================================================================== */
 
-.planes { display: grid; gap: 16px; grid-template-columns: 1fr; }
+/* El selector de ciclo. Botones y no un switch: un switch no dice cuál de los
+   dos estados está puesto sin mirar la cifra. */
+.selector {
+  display: inline-flex; gap: 4px;
+  background: #E7EEE9; border: 1px solid var(--linea);
+  border-radius: 999px; padding: 4px;
+  margin-bottom: 18px;
+}
+.selector .op {
+  border: 0; background: transparent; cursor: pointer;
+  font-family: inherit; font-size: 14.5px; font-weight: 600; color: var(--tinta-suave);
+  padding: 9px 18px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 9px;
+  transition: background .18s ease, color .18s ease;
+}
+.selector .op:hover { color: var(--tinta); }
+.selector .op.activo { background: var(--panel); color: var(--tinta); box-shadow: 0 1px 3px rgba(14,31,26,.12); }
+.selector .ahorro {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 9.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  background: var(--verde); color: #FFFFFF;
+  padding: 3px 7px; border-radius: 5px;
+}
+@media (prefers-reduced-motion: reduce) { .selector .op { transition: none; } }
+
+.planes { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: start; }
 @media (min-width: 760px) { .planes { grid-template-columns: 1fr 1fr; } }
 
 .plan {
@@ -664,6 +689,27 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .plan.pago li { color: #9FB5AC; }
 .plan li i { color: var(--verde); font-style: normal; font-weight: 700; }
 .plan.pago li i { color: var(--menta); }
+
+.plan { position: relative; }
+.plan .para { margin: -4px 0 0; font-size: 14px; line-height: 1.5; color: var(--tinta-tenue); }
+.plan.pago .para { color: #7C918A; }
+.plan .letra-chica { margin: 2px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--tinta-tenue); }
+.plan.pago .letra-chica { color: #6E8279; }
+
+/* La cinta dice que PRO no reemplaza al gratis, lo continúa: sin eso, dos
+   listas lado a lado se leen como dos productos y hay que compararlas. */
+.plan .cinta {
+  align-self: flex-start;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  background: var(--menta-tenue); color: var(--menta);
+  padding: 5px 10px; border-radius: 6px;
+  margin-bottom: -4px;
+}
+
+/* La cifra cambia al tocar el selector: en tabulares no se corre el resto. */
+.plan .precio span { font-variant-numeric: tabular-nums; }
+.plan .precio small { display: block; margin-top: 7px; }
 
 /* ==========================================================================
    CIERRE Y PIE
