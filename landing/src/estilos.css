@@ -106,7 +106,19 @@ h2 b { font-weight: 700; }
 
 /* --- secciones ----------------------------------------------------------- */
 
-section { padding: clamp(72px, 11vw, 128px) 0; }
+/*
+ * Arriba, un quinto de lo que había; abajo, igual que siempre.
+ *
+ * Era `clamp(72px, 11vw, 128px)` para los dos lados, así que entre dos
+ * secciones se juntaban 256px de nada en una pantalla ancha y el rótulo
+ * quedaba flotando lejísimo de lo que anuncia.
+ *
+ * Asimétrico a propósito: el rótulo y el título pertenecen a lo que viene
+ * abajo, no a lo que quedó arriba. Pegarlos a su contenido y dejar el aire
+ * grande DESPUÉS es lo que hace que se lea como una sección y no como texto
+ * suelto entre dos huecos iguales.
+ */
+section { padding: clamp(15px, 2.2vw, 26px) 0 clamp(72px, 11vw, 128px); }
 
 .cabecera-sec { display: flex; flex-direction: column; gap: 16px; margin-bottom: 44px; }
 .cabecera-sec .rotulo { color: var(--verde); }
