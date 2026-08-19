@@ -807,7 +807,7 @@ button.cta { font-family: inherit; border: 0; cursor: pointer; font-size: 14px; 
 .cierre .bajada { color: #C6DED3; margin: 18px auto 0; }
 .cierre .tiendas { justify-content: center; }
 
-.pie { background: var(--noche); color: #7C918A; padding: 56px 0 34px; font-size: 13.5px; }
+.pie { background: var(--noche); color: #7C918A; padding: 52px 0 28px; font-size: 13.5px; }
 .pie a { color: #9FB5AC; text-decoration: none; transition: color .16s ease; }
 .pie a:hover { color: #FFFFFF; }
 @media (prefers-reduced-motion: reduce) { .pie a { transition: none; } }
@@ -817,7 +817,7 @@ button.cta { font-family: inherit; border: 0; cursor: pointer; font-size: 14px; 
 .pie-alto {
   display: grid; gap: 36px;
   grid-template-columns: 1fr;
-  padding-bottom: 34px;
+  padding-bottom: 28px;
 }
 @media (min-width: 760px) { .pie-alto { grid-template-columns: 1.15fr 1.6fr; gap: 48px; } }
 
@@ -863,18 +863,17 @@ button.cta { font-family: inherit; border: 0; cursor: pointer; font-size: 14px; 
 
 /* --- el descargo, como aviso formal y no como nota al pie ---------------- */
 
-/* El bloque cruza la página; la medida del texto la limita el párrafo de
-   adentro. Con el `max-width` en el mismo elemento, las dos reglas se cortaban
-   a mitad de camino y el pie quedaba partido al medio. */
+/* Sin tope de medida: es un texto legal que se recorre, no que se lee de
+   corrido, y limitarlo a 88 caracteres sólo le agregaba renglones. Cruzando
+   entero baja de cuatro líneas a dos y el pie deja de estirarse. */
 .descargo {
   border-top: 1px solid rgba(255,255,255,.09);
   border-bottom: 1px solid rgba(255,255,255,.09);
-  padding: 22px 0;
+  padding: 18px 0;
 }
 .descargo p {
   margin: 0;
-  font-size: 12px; line-height: 1.65; color: #5E7169;
-  max-width: 88ch;
+  font-size: 12px; line-height: 1.6; color: #5E7169;
 }
 .descargo b { color: #8FA79D; font-weight: 600; }
 
@@ -882,7 +881,7 @@ button.cta { font-family: inherit; border: 0; cursor: pointer; font-size: 14px; 
 
 .pie-bajo {
   display: flex; flex-wrap: wrap; gap: 8px 22px;
-  padding-top: 22px;
+  padding-top: 18px;
   font-size: 12px; color: #5E7169;
 }
 
