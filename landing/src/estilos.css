@@ -807,12 +807,84 @@ button.cta { font-family: inherit; border: 0; cursor: pointer; font-size: 14px; 
 .cierre .bajada { color: #C6DED3; margin: 18px auto 0; }
 .cierre .tiendas { justify-content: center; }
 
-.pie { background: var(--noche); color: #7C918A; padding: 48px 0 56px; font-size: 13.5px; }
-.pie .env { display: flex; flex-wrap: wrap; gap: 22px 40px; align-items: center; justify-content: space-between; }
-.pie a { color: #9FB5AC; text-decoration: none; }
-.pie a:hover { color: #FFFFFF; text-decoration: underline; }
-.pie nav { display: flex; flex-wrap: wrap; gap: 22px; }
-.pie .legal { width: 100%; font-size: 12px; line-height: 1.6; color: #5E7169; max-width: 70ch; }
+.pie { background: var(--noche); color: #7C918A; padding: 56px 0 34px; font-size: 13.5px; }
+.pie a { color: #9FB5AC; text-decoration: none; transition: color .16s ease; }
+.pie a:hover { color: #FFFFFF; }
+@media (prefers-reduced-motion: reduce) { .pie a { transition: none; } }
+
+/* --- arriba: marca y navegación ------------------------------------------ */
+
+.pie-alto {
+  display: grid; gap: 36px;
+  grid-template-columns: 1fr;
+  padding-bottom: 34px;
+}
+@media (min-width: 760px) { .pie-alto { grid-template-columns: 1.15fr 1.6fr; gap: 48px; } }
+
+.pie-marca .marca { margin-bottom: 14px; }
+.pie-marca p { margin: 0; font-size: 13.5px; line-height: 1.6; color: #7C918A; max-width: 42ch; }
+
+.pie-estado {
+  /* Arriba y no al centro: si el texto envuelve, centrado deja el puntito
+     flotando entre las dos líneas en vez de al lado de la primera. */
+  display: flex; align-items: flex-start; gap: 8px;
+  margin-top: 14px !important;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .05em;
+  color: #6E8279 !important;
+}
+.pie-estado .punto {
+  width: 7px; height: 7px; border-radius: 999px; flex: none;
+  background: var(--menta);
+  margin-top: 6px;
+}
+
+.pie-cols { display: grid; gap: 28px 24px; grid-template-columns: 1fr 1fr; }
+@media (min-width: 520px) { .pie-cols { grid-template-columns: repeat(3, 1fr); } }
+.pie-cols > div { display: flex; flex-direction: column; align-items: flex-start; gap: 11px; }
+.pie-cols h4 {
+  margin: 0 0 3px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase;
+  color: #FFFFFF;
+}
+.pie-cols a { font-size: 13.5px; }
+
+/* El único botón del pie: abre el mismo pop-up que el resto de la página, así
+   que no puede ser un enlace a ningún lado. Se le saca el aspecto de botón. */
+.pie-boton {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font-family: inherit; font-size: 13.5px; color: var(--menta);
+  text-align: left;
+  transition: color .16s ease;
+}
+.pie-boton:hover { color: #FFFFFF; }
+@media (prefers-reduced-motion: reduce) { .pie-boton { transition: none; } }
+
+/* --- el descargo, como aviso formal y no como nota al pie ---------------- */
+
+/* El bloque cruza la página; la medida del texto la limita el párrafo de
+   adentro. Con el `max-width` en el mismo elemento, las dos reglas se cortaban
+   a mitad de camino y el pie quedaba partido al medio. */
+.descargo {
+  border-top: 1px solid rgba(255,255,255,.09);
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  padding: 22px 0;
+}
+.descargo p {
+  margin: 0;
+  font-size: 12px; line-height: 1.65; color: #5E7169;
+  max-width: 88ch;
+}
+.descargo b { color: #8FA79D; font-weight: 600; }
+
+/* --- abajo del todo ------------------------------------------------------- */
+
+.pie-bajo {
+  display: flex; flex-wrap: wrap; gap: 8px 22px;
+  padding-top: 22px;
+  font-size: 12px; color: #5E7169;
+}
 
 /* --- marcas de la maqueta (no van en la web real) ------------------------ */
 
