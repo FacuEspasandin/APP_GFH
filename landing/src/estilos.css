@@ -616,6 +616,123 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .vacio-res { font-size: 14px; color: #7C918A; padding: 15px 17px; border: 1px dashed rgba(255,255,255,.16); border-radius: 12px; }
 
 /* ==========================================================================
+   POP-UP DEL AVISO
+   ========================================================================== */
+
+/* `<dialog>` nativo: la trampa de foco, el Escape y el fondo inerte vienen
+   hechos con `showModal()`, que es justo lo que se implementa mal a mano. */
+.modal {
+  border: 0; padding: 0; background: transparent;
+  max-width: min(520px, calc(100vw - 32px));
+  width: 100%;
+  color: var(--tinta);
+  overflow: visible;
+}
+.modal::backdrop { background: rgba(6, 14, 11, .62); backdrop-filter: blur(3px); }
+
+.modal-caja {
+  background: var(--panel);
+  border-radius: 18px;
+  padding: 30px 30px 28px;
+  box-shadow: 0 30px 70px -30px rgba(0,0,0,.6);
+  display: flex; flex-direction: column; gap: 16px;
+  /* Un formulario alto en un teléfono bajo tiene que poder scrollear solo, sin
+     arrastrar la página de atrás. */
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+}
+/* El atributo `hidden` es sólo `display: none` de la hoja del navegador, y el
+   `display: flex` de arriba le gana por especificidad: sin esta regla el panel
+   de confirmación se dibuja DEBAJO del formulario, los dos a la vez. */
+.modal-caja[hidden] { display: none; }
+
+.modal-caja h3 { font-size: 24px; font-weight: 700; letter-spacing: -.02em; margin: 0; }
+.modal-caja .rotulo { color: var(--verde); margin-bottom: -8px; }
+.modal-bajada { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--tinta-suave); }
+
+.modal-x {
+  position: absolute; top: -14px; right: -14px; z-index: 2;
+  width: 36px; height: 36px; border-radius: 999px;
+  border: 1px solid var(--linea); background: var(--panel);
+  color: var(--tinta-suave); font-size: 20px; line-height: 1; cursor: pointer;
+  box-shadow: 0 6px 18px -8px rgba(0,0,0,.5);
+}
+.modal-x:hover { color: var(--tinta); }
+@media (max-width: 560px) {
+  .modal-x { top: 10px; right: 10px; box-shadow: none; border-color: transparent; background: transparent; }
+}
+
+/* --- campos --------------------------------------------------------------- */
+
+.campo-f { display: flex; flex-direction: column; gap: 6px; }
+.campo-f label { font-size: 13px; font-weight: 600; color: var(--tinta); }
+.campo-f .opc { font-weight: 400; color: var(--tinta-tenue); }
+
+.campo-f input,
+.campo-f select {
+  font-family: inherit; font-size: 15.5px; color: var(--tinta);
+  background: var(--papel);
+  border: 1px solid var(--linea); border-radius: 10px;
+  padding: 12px 13px;
+  width: 100%;
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+.campo-f input::placeholder { color: var(--tinta-tenue); }
+.campo-f input:focus-visible,
+.campo-f select:focus-visible {
+  outline: 0;
+  border-color: var(--verde);
+  box-shadow: 0 0 0 3px rgba(31,94,74,.16);
+}
+.campo-f input[aria-invalid="true"] { border-color: var(--grave); }
+
+.dos-f { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 460px) { .dos-f { grid-template-columns: 1fr 1fr; } }
+
+.error-f { margin: 0; font-size: 12.5px; line-height: 1.45; color: #B91C1C; }
+
+/* --- consentimiento ------------------------------------------------------- */
+
+.consiento {
+  display: grid; grid-template-columns: 18px 1fr; gap: 10px;
+  font-size: 12.5px; line-height: 1.5; color: var(--tinta-suave);
+  cursor: pointer;
+}
+.consiento input { width: 17px; height: 17px; margin: 1px 0 0; accent-color: var(--verde); cursor: pointer; }
+.consiento a { color: var(--verde); }
+
+/* --- envío ---------------------------------------------------------------- */
+
+.enviar-f {
+  font-family: inherit; font-size: 15.5px; font-weight: 600;
+  background: var(--verde); color: #FFFFFF;
+  border: 0; border-radius: 11px; padding: 14px 18px;
+  cursor: pointer;
+  transition: background .16s ease;
+}
+.enviar-f:hover { background: var(--verde-hover); }
+.enviar-f:disabled { opacity: .6; cursor: default; }
+
+.nota-f { margin: 0; font-size: 12.5px; line-height: 1.45; color: #B91C1C; text-align: center; }
+
+.tilde-ok {
+  width: 46px; height: 46px; border-radius: 999px;
+  background: var(--verde-tenue); color: var(--verde);
+  display: grid; place-items: center;
+  font-size: 24px; font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .campo-f input, .campo-f select, .enviar-f { transition: none; }
+}
+
+/* El disparador del cierre es un `button` y no un `a`: hereda el aspecto de
+   `.tienda` pero el navegador le pone su propio borde y tipografía. */
+button.tienda { font-family: inherit; border: 0; cursor: pointer; text-align: left; }
+button.tienda.pendiente { border: 1px solid rgba(255,255,255,.16); }
+button.cta { font-family: inherit; border: 0; cursor: pointer; font-size: 14px; }
+
+/* ==========================================================================
    PRECIO
    ========================================================================== */
 
