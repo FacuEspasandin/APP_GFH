@@ -615,34 +615,6 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
 .vacio-res { font-size: 14px; color: #7C918A; padding: 15px 17px; border: 1px dashed rgba(255,255,255,.16); border-radius: 12px; }
 
-/* El cierre de la sección de herramientas: lo que ninguna calculadora suelta
-   de internet puede hacer. */
-.remate {
-  margin-top: 16px;
-  display: grid; gap: 20px; grid-template-columns: 1fr;
-  background: var(--verde-tenue);
-  border: 1px solid #CFE2D7;
-  border-radius: var(--curva);
-  padding: 26px 26px 28px;
-}
-@media (min-width: 820px) { .remate { grid-template-columns: 1.5fr 1fr; gap: 34px; } }
-
-.remate h3 { font-size: 20px; font-weight: 700; letter-spacing: -.015em; color: var(--tinta); }
-.remate p { margin: 9px 0 0; font-size: 15.5px; line-height: 1.6; color: var(--tinta-suave); }
-
-.remate-nota {
-  border-left: 3px solid var(--verde);
-  padding-left: 15px;
-  align-self: center;
-}
-.remate-nota b {
-  display: block;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--verde);
-}
-.remate-nota span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.55; color: var(--tinta-suave); }
-
 /* ==========================================================================
    PRECIO
    ========================================================================== */
