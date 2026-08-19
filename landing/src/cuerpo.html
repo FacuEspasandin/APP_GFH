@@ -248,12 +248,12 @@
 <section class="demo" id="demo">
   <div class="env">
     <div class="cabecera-sec sube">
-      <div class="rotulo">Probalo acá mismo</div>
-      <h2 class="espina">Movele la creatinina.<br><b>Todo lo demás se recalcula.</b></h2>
+      <div class="rotulo">Probalo acá mismo · ajuste renal</div>
+      <h2 class="espina">Movele la creatinina.<br><b>El ajuste se recalcula solo.</b></h2>
       <p class="bajada">
         Es el mismo cálculo que corre adentro de la app, con la misma fórmula.
-        Sin servidor, sin adivinanza: mové el control y mirá <b>qué se recalcula
-        y qué no</b>.
+        Sin servidor, sin adivinanza: mové el control y mirá <b>qué fármaco hay
+        que ajustar y a cuánto</b>.
       </p>
     </div>
 
@@ -494,13 +494,6 @@
     return ['G5', 'g'];
   }
 
-  /* Lo que no depende del riñón se muestra siempre: es la mitad del punto,
-     ver qué cambia y qué no. */
-  var FIJO = [{
-    n: 'Coumadin + Bactrim', s: 'Grave', c: 'g',
-    p: 'Potenciación del efecto anticoagulante con elevación del INR y riesgo hemorrágico. Vigilar INR.'
-  }];
-
   var RENALES = [
     { n: 'Digoxina', s: 'Atención', p: 'Con Clcr 50–10: 75–25 % de la dosis, o cada 36 h.' },
     { n: 'Trimetoprim', s: 'Atención', p: 'Cada 12 h si el filtrado supera 30; cada 18 h entre 30 y 10.' },
@@ -523,11 +516,10 @@
     var ajusta = v <= 50 ? RENALES : [];
     document.getElementById('valAjustes').textContent = ajusta.length;
 
-    /* Cada tarjeta dice de qué verificación salió. Sin eso, una interacción
-       grave leída en una lista de ajustes renales parece un error nuestro. */
-    function tarjeta(h, categoria) {
+    /* Sin etiqueta de categoría: todo lo que sale acá es ajuste renal, y
+       repetirlo en cada tarjeta es ruido. */
+    function tarjeta(h) {
       return '<div class="res ' + (h.c || '') + '">' +
-             '<div class="cat">' + categoria + '</div>' +
              '<div class="n">' + h.n + '</div>' +
              '<div class="s">' + h.s + '</div>' +
              '<div class="p">' + h.p + '</div></div>';
@@ -535,22 +527,15 @@
 
     var html = '';
 
-    /* Primero lo que NO se mueve. Es la mitad del punto del demo: el riñón
-       cambia el ajuste y no toca la interacción. */
-    html += '<div class="grupo-res"><b>No cambia con el riñón</b>' +
-            '<span>La interacción está entre dos fármacos: el clearance no la altera.</span></div>';
-    FIJO.forEach(function (h) { html += tarjeta(h, 'Interacción'); });
-
-    html += '<div class="grupo-res"><b>Cambia con el riñón</b>' +
-            '<span>Se recalcula cada vez que movés la creatinina.</span></div>';
-
     if (ajusta.length === 0) {
+      /* Que no aparezca nada NO es una pantalla vacía: es una respuesta, y la
+         dice. Un panel en blanco se lee como que falló el cálculo. */
       html += tarjeta({
         n: 'Sin ajuste renal', s: 'Ninguno', c: 'ok',
         p: 'Con un clearance de ' + Math.round(v) + ' mL/min, ningún fármaco del tratamiento necesita ajuste.'
-      }, 'Ajuste renal');
+      });
     } else {
-      ajusta.forEach(function (h) { html += tarjeta(h, 'Ajuste renal'); });
+      ajusta.forEach(function (h) { html += tarjeta(h); });
     }
 
     salida.innerHTML = html;
