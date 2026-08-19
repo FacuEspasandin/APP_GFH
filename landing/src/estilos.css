@@ -693,22 +693,9 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .plan { position: relative; }
 .plan .para { margin: -4px 0 0; font-size: 14px; line-height: 1.5; color: var(--tinta-tenue); }
 .plan.pago .para { color: #7C918A; }
-.plan .letra-chica { margin: 2px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--tinta-tenue); }
-.plan.pago .letra-chica { color: #6E8279; }
 
 /* La cinta dice que PRO no reemplaza al gratis, lo continúa: sin eso, dos
    listas lado a lado se leen como dos productos y hay que compararlas. */
-.cta-plan {
-  display: block; text-align: center; text-decoration: none;
-  margin-top: 6px;
-  background: var(--menta); color: var(--noche);
-  font-size: 15px; font-weight: 600;
-  padding: 13px 18px; border-radius: 11px;
-  transition: background .18s ease, transform .18s ease;
-}
-.cta-plan:hover { background: #6FE0BB; transform: translateY(-1px); }
-@media (prefers-reduced-motion: reduce) { .cta-plan { transition: none; } .cta-plan:hover { transform: none; } }
-
 .plan .cinta {
   align-self: flex-start;
   font-family: "IBM Plex Mono", ui-monospace, monospace;
