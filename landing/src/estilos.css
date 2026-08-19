@@ -590,6 +590,25 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .res.g .s { color: var(--grave); }
 .res.ok .s { color: var(--ok); }
 .res .p { grid-column: 1 / -1; font-size: 13.5px; line-height: 1.5; color: #97ABA3; }
+.res .cat {
+  grid-column: 1 / -1;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 9.5px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase;
+  color: #7C918A;
+  margin-bottom: 1px;
+}
+
+/* El rótulo de cada mitad. El primero no lleva aire arriba: ya lo pone la
+   columna. */
+.grupo-res { margin-top: 20px; }
+.grupo-res:first-child { margin-top: 0; }
+.grupo-res b {
+  display: block;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--menta);
+}
+.grupo-res span { display: block; font-size: 12.5px; line-height: 1.5; color: #7C918A; margin-top: 4px; }
 
 @keyframes entraRes { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .res { animation: none; } }
