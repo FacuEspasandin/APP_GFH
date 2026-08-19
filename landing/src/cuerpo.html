@@ -1,8 +1,28 @@
 <!-- =========================================================================
+     NAVEGACIÓN — fija arriba de todo
+     ====================================================================== -->
+<nav class="nav" id="nav">
+  <div class="env nav-env">
+    <a class="marca" href="#inicio"><i>G</i> GFH</a>
+
+    <button class="hamb" id="hamb" aria-expanded="false" aria-controls="menu" aria-label="Abrir el menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="menu" id="menu">
+      <a href="#problema">El problema</a>
+      <a href="#verificaciones">Qué verifica</a>
+      <a href="#demo">Demo</a>
+      <a href="#precio">Precio</a>
+      <a class="cta" href="#avisame">Avisame cuando salga</a>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================================================================
      HERO
      ====================================================================== -->
-<header class="hero">
-  <div class="marca-tope"><i>G</i> GFH</div>
+<header class="hero" id="inicio">
 
   <div class="env">
     <div>
@@ -28,7 +48,7 @@
 
     <!-- El teléfono. Dibujado en HTML, no es una captura: por eso se puede
          animar pieza por pieza. -->
-    <div class="sube d2">
+    <div class="sube d2 hero-tel" id="cajaTel">
       <div class="tel" id="telHero">
         <div class="tel-barra">
           <span style="flex:1">Rodríguez, Ana María</span>
@@ -37,8 +57,8 @@
         <div class="tel-cuerpo">
 
           <div class="vered pieza p3">
-            <div class="t"><i></i> 1 alerta contraindicada</div>
-            <div class="d">11 hallazgos: 1 contraindicado, 4 graves, 6 de atención.</div>
+            <div class="t"><i></i> 2 alertas contraindicadas</div>
+            <div class="d">22 hallazgos en total: 2 contraindicados, 11 graves, 9 de atención.</div>
           </div>
 
           <div class="ficha pieza p1">
@@ -50,7 +70,7 @@
                   <circle class="arco" cx="50" cy="50" r="42" fill="none" stroke="#EF4444" stroke-width="9" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="203"></circle>
                 </svg>
                 <div class="mid">
-                  <span class="cf" style="color:#EF4444">26.5</span>
+                  <span class="cf" style="color:#EF4444">23.6</span>
                   <span class="un">mL/min</span>
                   <span class="kd" style="color:#EF4444;background:#FEE7E7">G4</span>
                 </div>
@@ -81,14 +101,14 @@
 
           <div class="hall pieza p5">
             <div class="cab">
-              <div class="nom">Coumadin + Bactrim</div>
-              <div class="sev">Grave</div>
+              <div class="nom">Ibuprofeno — Embarazo</div>
+              <div class="sev">Contraindicado</div>
             </div>
-            <div class="txt">Potenciación del efecto anticoagulante con elevación del INR. Vigilar.</div>
+            <div class="txt">AINE desde la semana 20: cierre prematuro del ductus arterioso. Usar paracetamol.</div>
           </div>
 
           <div class="tel-menu">
-            <span class="on">Pacientes</span><span>Grupos</span><span>Buscador</span><span>Perfil</span>
+            <span class="on">Pacientes</span><span>Grupos</span><i class="centro" aria-hidden="true"></i><span>Buscador</span><span>Perfil</span>
           </div>
         </div>
       </div>
@@ -99,7 +119,7 @@
 <!-- =========================================================================
      EL PROBLEMA
      ====================================================================== -->
-<section class="problema">
+<section class="problema" id="problema">
   <div class="env">
     <div class="cabecera-sec sube">
       <div class="rotulo">El problema</div>
@@ -170,7 +190,7 @@
 <!-- =========================================================================
      LAS CINCO VERIFICACIONES
      ====================================================================== -->
-<section>
+<section id="verificaciones">
   <div class="env">
     <div class="cabecera-sec sube">
       <div class="rotulo">Qué mira</div>
@@ -267,7 +287,7 @@
 <!-- =========================================================================
      PRECIO
      ====================================================================== -->
-<section>
+<section id="precio">
   <div class="env">
     <div class="cabecera-sec sube">
       <div class="rotulo">Precio</div>
@@ -465,5 +485,117 @@
     pintar(parseFloat(control.value));
     control.addEventListener('input', function () { pintar(parseFloat(control.value)); });
   }
+
+  /* --- el menú --------------------------------------------------------- */
+
+  var nav = document.getElementById('nav');
+  var hamb = document.getElementById('hamb');
+  var menu = document.getElementById('menu');
+
+  function cerrarMenu() {
+    menu.classList.remove('abierto');
+    hamb.setAttribute('aria-expanded', 'false');
+  }
+
+  if (hamb && menu) {
+    hamb.addEventListener('click', function () {
+      var abierto = menu.classList.toggle('abierto');
+      hamb.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    });
+
+    /* Tocar un link cierra el panel: si no, tapa justo la sección a la que
+       acaba de llevarte. */
+    menu.addEventListener('click', function (e) {
+      if (e.target.closest('a')) cerrarMenu();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') cerrarMenu();
+    });
+  }
+
+  /* La barra se opaca recién cuando hay algo detrás. Sobre el hero, que ya es
+     oscuro, una barra sólida le come el aire al titular. */
+  function alBajar() {
+    if (nav) nav.classList.toggle('pegada', window.scrollY > 24);
+  }
+  alBajar();
+  window.addEventListener('scroll', alBajar, { passive: true });
+
+  /* Marcar en qué sección estás. */
+  var enlaces = menu ? [].slice.call(menu.querySelectorAll('a[href^="#"]')) : [];
+  var destinos = enlaces
+    .map(function (a) { return { a: a, el: document.querySelector(a.getAttribute('href')) }; })
+    .filter(function (d) { return d.el; });
+
+  if (destinos.length) {
+    var mirar = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        destinos.forEach(function (d) { d.a.classList.toggle('activo', d.el === e.target); });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    destinos.forEach(function (d) { mirar.observe(d.el); });
+  }
+
+  /* --- el teléfono entra entero ---------------------------------------- */
+
+  /*
+   * El hero mide el alto de la pantalla, así que lo que sobra para el teléfono
+   * depende de la pantalla. Se mide y se escala.
+   *
+   * Va por JS y no por CSS porque el alto natural del teléfono no se puede
+   * escribir en una regla: sale del contenido. Y el alto de la caja se fija a
+   * mano porque `transform: scale` no reflota nada — sin eso el hero seguiría
+   * midiendo lo que medía sin escalar, que es justo el bug que esto arregla.
+   */
+  var caja = document.getElementById('cajaTel');
+  var tel = document.getElementById('telHero');
+
+  function escalarTel() {
+    if (!caja || !tel) return;
+
+    /* Medir siempre sin escala: si no, cada pasada mide lo que dejó la anterior
+       y el teléfono se va achicando solo. */
+    tel.style.transform = 'none';
+    caja.style.height = 'auto';
+    var natural = tel.getBoundingClientRect().height;
+    if (!natural) return;
+
+    /*
+     * En pantalla chica el hero se apila y NO se escala: entre el titular, la
+     * bajada y los dos botones no queda alto para un teléfono legible. Ahí lo
+     * que tiene que entrar en la primera pantalla son los botones —y entran—;
+     * el teléfono asoma abajo, que es lo que invita a bajar.
+     */
+    if (window.matchMedia('(max-width: 899px)').matches) {
+      caja.style.removeProperty('--esc');
+      caja.style.height = 'auto';
+      return;
+    }
+
+    /*
+     * Se mide contra la ventana y no contra el hero: el alto del hero depende
+     * del teléfono, así que usarlo sería preguntarle al resultado cuánto tiene
+     * que medir. Con el hero como referencia, una pantalla baja se quedaba en
+     * escala 0,96 y seguía sin entrar.
+     */
+    var nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--alto-nav')) || 68;
+    var disponible = window.innerHeight - nav - 80;
+
+    /* Nunca agranda —el teléfono tiene su tamaño de diseño— y nunca achica
+       tanto que el texto de adentro deje de leerse. */
+    var f = Math.max(0.62, Math.min(1, disponible / natural));
+
+    tel.style.transform = '';
+    caja.style.setProperty('--esc', f.toFixed(3));
+    caja.style.height = Math.ceil(natural * f) + 'px';
+  }
+
+  escalarTel();
+  window.addEventListener('resize', escalarTel, { passive: true });
+  /* Las fuentes incrustadas cambian el alto del teléfono cuando terminan de
+     cargar: sin esto, la primera medición es la de la fuente de sistema. */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(escalarTel);
 })();
 </script>

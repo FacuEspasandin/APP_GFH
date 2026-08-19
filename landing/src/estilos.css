@@ -54,6 +54,14 @@ body {
 
 .env { width: 100%; max-width: var(--ancho); margin: 0 auto; padding: 0 24px; }
 
+/* El alto del header, en un solo lugar: lo usan la barra, el padding del hero
+   y el `scroll-margin` de cada sección. */
+:root { --alto-nav: 68px; }
+@media (max-width: 860px) { :root { --alto-nav: 62px; } }
+
+/* Sin esto, cada link del menú deja el título justo debajo de la barra fija. */
+section[id], header[id] { scroll-margin-top: var(--alto-nav); }
+
 /* --- tipografía ---------------------------------------------------------- */
 
 .rotulo {
@@ -67,7 +75,9 @@ body {
 h1, h2, h3 { margin: 0; text-wrap: balance; }
 
 h1 {
-  font-size: clamp(38px, 7.6vw, 76px);
+  /* El `vh` en la fórmula es lo que evita que en una pantalla ancha y baja el
+     titular se coma el alto que necesitan los botones. */
+  font-size: clamp(34px, min(7.6vw, 9vh), 76px);
   font-weight: 300;
   line-height: 1.03;
   letter-spacing: -.035em;
@@ -125,7 +135,14 @@ section { padding: clamp(72px, 11vw, 128px) 0; }
   color: #EAF3EE;
   position: relative;
   overflow: hidden;
-  padding: clamp(84px, 12vw, 128px) 0 clamp(60px, 9vw, 104px);
+
+  /* Lo primero que se ve ocupa lo que se ve. `svh` y no `vh`: en el teléfono,
+     `vh` mide la ventana SIN las barras del navegador, así que el hero queda
+     más alto que la pantalla y corta justo lo de abajo — los botones. */
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex; align-items: center;
+  padding: calc(var(--alto-nav) + 24px) 0 32px;
 }
 
 /* Halo. Un solo gesto de luz, detrás del teléfono. */
@@ -138,27 +155,114 @@ section { padding: clamp(72px, 11vw, 128px) 0; }
   pointer-events: none;
 }
 
-.hero .env { position: relative; display: grid; gap: clamp(48px, 6vw, 72px); grid-template-columns: 1fr; align-items: center; }
+.hero .env { position: relative; display: grid; gap: clamp(28px, 5vh, 72px); grid-template-columns: 1fr; align-items: center; }
 @media (min-width: 900px) { .hero .env { grid-template-columns: 1.08fr .92fr; } }
 
+/* El teléfono se achica para entrar entero. El factor lo calcula el script
+   midiendo lo que sobra; la caja reserva el alto ya escalado, porque
+   `transform` no reflota el layout y si no, el hero seguiría midiendo lo que
+   medía sin escalar. */
+/* `flex-start` y no el `stretch` de fábrica: la caja tiene el alto YA escalado,
+   y estirar al teléfono hasta ese alto lo deja más bajo que su contenido — con
+   `overflow: hidden` eso se come el menú de abajo sin avisar. */
+.hero-tel { display: flex; justify-content: center; align-items: flex-start; }
+.hero-tel .tel { transform: scale(var(--esc, 1)); transform-origin: top center; }
+
 .hero .rotulo { color: var(--menta); }
-.hero h1 { color: #FFFFFF; margin: 18px 0 22px; }
+.hero h1 { color: #FFFFFF; margin: clamp(12px, 2vh, 18px) 0 clamp(14px, 2.4vh, 22px); }
 .hero .bajada { color: #9FB5AC; max-width: 46ch; }
 
-.marca-tope {
-  display: flex; align-items: center; gap: 11px;
-  position: absolute; top: 28px; left: 24px;
-  font-weight: 700; font-size: 17px; letter-spacing: -.01em; color: #FFFFFF;
+/* ==========================================================================
+   NAVEGACIÓN
+   ========================================================================== */
+
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+  /* Arranca invisible sobre el hero, que ya es oscuro, y se opaca al bajar:
+     una barra sólida encima del titular le come el aire al hero. */
+  background: transparent;
+  transition: background .25s ease, box-shadow .25s ease, backdrop-filter .25s ease;
 }
-.marca-tope i {
+.nav.pegada {
+  background: rgba(10, 20, 17, .82);
+  backdrop-filter: saturate(140%) blur(12px);
+  box-shadow: 0 1px 0 rgba(255,255,255,.07);
+}
+
+.nav-env {
+  display: flex; align-items: center; gap: 18px;
+  height: var(--alto-nav);
+}
+
+.marca {
+  display: flex; align-items: center; gap: 11px;
+  font-weight: 700; font-size: 17px; letter-spacing: -.01em;
+  color: #FFFFFF; text-decoration: none; flex: none;
+}
+.marca i {
   width: 26px; height: 26px; border-radius: 8px; flex: none;
   background: var(--menta); display: grid; place-items: center;
   color: var(--noche); font-size: 14px; font-weight: 700; font-style: normal;
 }
 
+.menu { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+.menu a {
+  color: #B9CCC4; text-decoration: none;
+  font-size: 14px; font-weight: 500;
+  padding: 9px 13px; border-radius: 9px;
+  transition: color .16s ease, background .16s ease;
+  white-space: nowrap;
+}
+.menu a:hover { color: #FFFFFF; background: rgba(255,255,255,.07); }
+.menu a.activo { color: #FFFFFF; }
+.menu a.cta {
+  margin-left: 8px;
+  background: var(--menta); color: var(--noche); font-weight: 600;
+}
+.menu a.cta:hover { background: #6FE0BB; }
+
+/* La hamburguesa: sólo en pantalla chica. */
+.hamb {
+  display: none;
+  margin-left: auto;
+  width: 42px; height: 42px;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 10px;
+  background: rgba(255,255,255,.06);
+  cursor: pointer;
+  padding: 12px 10px;
+  flex-direction: column; justify-content: space-between;
+}
+.hamb span { display: block; height: 2px; background: #EAF3EE; border-radius: 2px; transition: transform .2s ease, opacity .2s ease; }
+.hamb[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamb[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.hamb[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 860px) {
+  .hamb { display: flex; }
+  .menu {
+    position: absolute; left: 0; right: 0; top: var(--alto-nav);
+    flex-direction: column; align-items: stretch; gap: 2px;
+    background: rgba(10, 20, 17, .97);
+    backdrop-filter: saturate(140%) blur(12px);
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding: 10px 24px 18px;
+    /* Cerrado no ocupa lugar ni recibe foco: `visibility` y no sólo opacidad,
+       para que el tabulador no se meta en un menú que no se ve. */
+    visibility: hidden; opacity: 0; transform: translateY(-8px);
+    transition: opacity .2s ease, transform .2s ease, visibility .2s;
+  }
+  .menu.abierto { visibility: visible; opacity: 1; transform: none; }
+  .menu a { padding: 13px 12px; font-size: 16px; }
+  .menu a.cta { margin: 8px 0 0; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav, .menu, .hamb span { transition: none; }
+}
+
 /* --- botones de tienda --------------------------------------------------- */
 
-.tiendas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.tiendas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(20px, 3.5vh, 34px); }
 
 .tienda {
   display: inline-flex; align-items: center; gap: 11px;
@@ -270,6 +374,16 @@ section { padding: clamp(72px, 11vw, 128px) 0; }
 }
 .tel-menu span { flex: 1; text-align: center; color: rgba(255,255,255,.6); font-size: 9px; font-weight: 600; }
 .tel-menu span.on { color: #FFFFFF; }
+.tel-menu .centro {
+  width: 26px; height: 26px; border-radius: 999px; flex: none;
+  background: #FFFFFF; border: 2px solid var(--primary);
+  margin: -13px 6px 0;
+  position: relative;
+}
+.tel-menu .centro::before {
+  content: ""; position: absolute; inset: 7px 6px;
+  border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary);
+}
 
 /* entrada escalonada de las piezas del cockpit */
 .pieza { opacity: 0; transform: translateY(14px); }

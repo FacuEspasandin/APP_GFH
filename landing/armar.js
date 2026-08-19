@@ -64,4 +64,16 @@ const salida = path.join(AQUI, 'dist');
 fs.mkdirSync(salida, { recursive: true });
 fs.writeFileSync(path.join(salida, 'index.html'), html);
 
-console.log(`landing/dist/index.html · ${Math.round(Buffer.byteLength(html) / 1024)} KB`);
+/**
+ * La misma página, sin el esqueleto.
+ *
+ * Para publicarla como artifact y poder revisarla desde el teléfono: ese
+ * publicador envuelve lo que recibe en su propio `<!doctype>…<body>`, así que
+ * mandarle el documento entero anida un `<html>` adentro de otro.
+ */
+const paraArtifact = `<title>${TITULO}</title>\n\n<style>\n${fuentes}\n${estilos}\n</style>\n\n${cuerpo}\n`;
+fs.writeFileSync(path.join(salida, 'artifact.html'), paraArtifact);
+
+const kb = (s) => Math.round(Buffer.byteLength(s) / 1024);
+console.log(`landing/dist/index.html    · ${kb(html)} KB   (para servir)`);
+console.log(`landing/dist/artifact.html · ${kb(paraArtifact)} KB   (para revisar)`);
