@@ -1,0 +1,517 @@
+/* ============================================================================
+   GFH — landing. Propuesta v1.
+
+   El sistema visual sale del producto, no de un tema de landing: el verde
+   #1F5E4A, IBM Plex, y la escala de severidad tal cual la usa la app. Los
+   rojos y naranjas de esta página NO son decoración — significan lo mismo que
+   adentro del cockpit, y por eso no se usan para nada más.
+
+   Compromiso deliberado: una sola apariencia, no dos temas. Es una landing;
+   una marca elige una cara.
+   ========================================================================= */
+
+:root {
+  --noche: #08120F;
+  --noche-2: #0D1B16;
+  --papel: #F3F6F3;
+  --panel: #FFFFFF;
+  --tinta: #0E1F1A;
+  --tinta-suave: #55655D;
+  --tinta-tenue: #8399907;
+  --tinta-tenue: #839990;
+  --linea: #DCE5DF;
+  --verde: #1F5E4A;
+  --verde-hover: #17493A;
+  --verde-tenue: #E5EFE9;
+  --menta: #4FD1A5;
+  --menta-tenue: rgba(79, 209, 165, 0.14);
+
+  /* Escala clínica. Misma que la app: 0 contraindicado, 1 grave, 2 atención. */
+  --grave: #EF4444;
+  --media: #F59E0B;
+  --ok: #22C55E;
+  --neutro: #94A3B8;
+
+  --ancho: 1120px;
+  --curva: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.env { width: 100%; max-width: var(--ancho); margin: 0 auto; padding: 0 24px; }
+
+/* --- tipografía ---------------------------------------------------------- */
+
+.rotulo {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+
+h1 {
+  font-size: clamp(38px, 7.6vw, 76px);
+  font-weight: 300;
+  line-height: 1.03;
+  letter-spacing: -.035em;
+}
+/* La parte que importa del producto va en peso, no en color: el color acá
+   significa gravedad. */
+h1 b { font-weight: 700; }
+
+h2 {
+  font-size: clamp(28px, 4.6vw, 46px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -.03em;
+}
+h2 b { font-weight: 700; }
+
+.bajada {
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.6;
+  color: var(--tinta-suave);
+  max-width: 54ch;
+  margin: 0;
+}
+
+.num { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+/* --- secciones ----------------------------------------------------------- */
+
+section { padding: clamp(72px, 11vw, 128px) 0; }
+
+.cabecera-sec { display: flex; flex-direction: column; gap: 16px; margin-bottom: 44px; }
+.cabecera-sec .rotulo { color: var(--verde); }
+
+/* La espina: el borde de 4px que la app usa para marcar gravedad, acá marca
+   sección. Mismo lenguaje adentro y afuera. */
+.espina { padding-left: 20px; border-left: 4px solid var(--verde); }
+
+/* --- reveals ------------------------------------------------------------- */
+
+.sube { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.22,1,.36,1); }
+.sube.visible { opacity: 1; transform: none; }
+.sube.d1 { transition-delay: .08s; } .sube.d2 { transition-delay: .16s; }
+.sube.d3 { transition-delay: .24s; } .sube.d4 { transition-delay: .32s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sube { opacity: 1; transform: none; transition: none; }
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+.hero {
+  background: var(--noche);
+  color: #EAF3EE;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(84px, 12vw, 128px) 0 clamp(60px, 9vw, 104px);
+}
+
+/* Halo. Un solo gesto de luz, detrás del teléfono. */
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 900px; height: 900px;
+  right: -220px; top: -300px;
+  background: radial-gradient(circle, rgba(79,209,165,.13) 0%, rgba(79,209,165,0) 62%);
+  pointer-events: none;
+}
+
+.hero .env { position: relative; display: grid; gap: clamp(48px, 6vw, 72px); grid-template-columns: 1fr; align-items: center; }
+@media (min-width: 900px) { .hero .env { grid-template-columns: 1.08fr .92fr; } }
+
+.hero .rotulo { color: var(--menta); }
+.hero h1 { color: #FFFFFF; margin: 18px 0 22px; }
+.hero .bajada { color: #9FB5AC; max-width: 46ch; }
+
+.marca-tope {
+  display: flex; align-items: center; gap: 11px;
+  position: absolute; top: 28px; left: 24px;
+  font-weight: 700; font-size: 17px; letter-spacing: -.01em; color: #FFFFFF;
+}
+.marca-tope i {
+  width: 26px; height: 26px; border-radius: 8px; flex: none;
+  background: var(--menta); display: grid; place-items: center;
+  color: var(--noche); font-size: 14px; font-weight: 700; font-style: normal;
+}
+
+/* --- botones de tienda --------------------------------------------------- */
+
+.tiendas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+
+.tienda {
+  display: inline-flex; align-items: center; gap: 11px;
+  padding: 12px 20px 12px 16px;
+  border-radius: 12px;
+  background: #FFFFFF; color: var(--noche);
+  text-decoration: none;
+  transition: transform .18s ease, box-shadow .18s ease;
+  box-shadow: 0 10px 30px -14px rgba(0,0,0,.7);
+}
+.tienda:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -14px rgba(0,0,0,.8); }
+.tienda svg { width: 22px; height: 22px; flex: none; }
+.tienda span { display: block; font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; opacity: .62; font-family: "IBM Plex Mono", monospace; }
+.tienda b { display: block; font-size: 15px; font-weight: 600; line-height: 1.25; }
+
+.tienda.pendiente { background: rgba(255,255,255,.07); color: #EAF3EE; box-shadow: none; border: 1px solid rgba(255,255,255,.16); }
+.tienda.pendiente:hover { transform: none; background: rgba(255,255,255,.11); }
+
+.nota-tienda { margin: 14px 0 0; font-size: 13px; color: #7C918A; }
+
+/* ==========================================================================
+   TELÉFONO — la app dibujada, no capturada
+   ========================================================================== */
+
+.tel {
+  --ink: #122A23; --ink-suave: #5C6B64; --tenue: #8CA39A;
+  --paper: #F3F6F3; --line: #DDE5E0; --surface: #FFFFFF;
+  --primary: #1F5E4A; --primary-light: #E7F0EA;
+
+  width: 100%; max-width: 330px; margin: 0 auto;
+  background: var(--paper);
+  border-radius: 34px;
+  border: 9px solid #16211D;
+  box-shadow: 0 40px 90px -30px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.05);
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 13px; line-height: 18px;
+  position: relative;
+}
+
+.tel-barra {
+  background: linear-gradient(135deg, #24705A 0%, #1B5140 100%);
+  color: #FFFFFF; padding: 14px 14px 13px;
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 14.5px;
+}
+.tel-barra .mas {
+  margin-left: auto; width: 26px; height: 26px; border-radius: 999px; flex: none;
+  background: rgba(255,255,255,.2); display: grid; place-items: center; font-weight: 400; font-size: 17px;
+}
+.tel-barra .volver { width: 17px; height: 17px; flex: none; }
+
+.tel-cuerpo { padding: 12px 13px 16px; display: flex; flex-direction: column; gap: 11px; min-height: 430px; }
+
+/* veredicto */
+.vered { background: #FDECEC; border-radius: 12px; padding: 12px 13px; }
+.vered .t { font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.vered .t i { width: 8px; height: 8px; border-radius: 999px; background: var(--grave); flex: none; }
+.vered .d { font-size: 11.5px; line-height: 16px; color: var(--ink-suave); margin-top: 3px; }
+
+/* tarjeta del paciente */
+.ficha {
+  background: var(--surface); border-radius: 13px; padding: 13px;
+  box-shadow: 0 1px 2px rgba(18,42,35,.06), 0 10px 22px -14px rgba(18,42,35,.3);
+  position: relative;
+}
+.ficha .puntos { position: absolute; top: 9px; right: 9px; color: var(--tenue); letter-spacing: 1px; font-size: 15px; line-height: 1; }
+.ficha .fila { display: flex; align-items: center; gap: 13px; }
+
+.aro { position: relative; width: 84px; height: 84px; flex: none; }
+.aro svg { width: 84px; height: 84px; display: block; transform: rotate(-90deg); }
+.aro .arco { transition: stroke-dashoffset .55s cubic-bezier(.4,0,.2,1), stroke .35s ease; }
+.aro .mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.aro .cf { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 600; line-height: 1; letter-spacing: -.02em; }
+.aro .un { font-size: 8.5px; color: var(--ink-suave); margin-top: 1px; }
+.aro .kd { margin-top: 3px; font-family: "IBM Plex Mono", monospace; font-size: 8px; font-weight: 600; border-radius: 999px; padding: 1px 6px; }
+
+.ficha .datos { flex: 1; display: flex; flex-direction: column; gap: 8px; padding-right: 18px; }
+.ficha .datos .r { font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-suave); line-height: 11px; }
+.ficha .datos .v { font-family: "IBM Plex Mono", monospace; font-size: 13.5px; font-weight: 600; line-height: 17px; }
+
+.chips { margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 5px; }
+.chip-c { background: var(--primary-light); color: var(--primary); border-radius: 999px; padding: 3px 9px; font-size: 10.5px; font-weight: 600; }
+.chip-c.der { background: transparent; border: 1px solid var(--line); }
+
+.eyeb { font-size: 9.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; color: var(--ink-suave); margin-top: 2px; }
+
+/* tarjeta de hallazgo */
+.hall {
+  background: var(--surface); border-radius: 11px; padding: 11px 12px 11px 13px;
+  border-left: 4px solid var(--grave);
+  box-shadow: 0 1px 2px rgba(18,42,35,.05), 0 8px 18px -14px rgba(18,42,35,.3);
+}
+.hall.at { border-left-color: var(--media); }
+.hall .cab { display: flex; align-items: flex-start; gap: 8px; }
+.hall .nom { flex: 1; font-size: 12.5px; font-weight: 600; line-height: 16px; }
+.hall .sev {
+  font-family: "IBM Plex Mono", monospace; font-size: 8px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--grave);
+  white-space: nowrap; padding-top: 2px;
+}
+.hall.at .sev { color: #B45309; }
+.hall .txt { font-size: 11px; line-height: 15px; color: var(--ink-suave); margin-top: 4px; }
+
+/* la barra de abajo */
+.tel-menu {
+  background: #1F5E4A; height: 46px; display: flex; align-items: center;
+  padding: 0 6px; gap: 2px; margin-top: auto;
+}
+.tel-menu span { flex: 1; text-align: center; color: rgba(255,255,255,.6); font-size: 9px; font-weight: 600; }
+.tel-menu span.on { color: #FFFFFF; }
+
+/* entrada escalonada de las piezas del cockpit */
+.pieza { opacity: 0; transform: translateY(14px); }
+.tel.corriendo .pieza { animation: entra .5s cubic-bezier(.22,1,.36,1) forwards; }
+.tel.corriendo .p1 { animation-delay: .15s; }
+.tel.corriendo .p2 { animation-delay: .45s; }
+.tel.corriendo .p3 { animation-delay: 1.05s; }
+.tel.corriendo .p4 { animation-delay: 1.35s; }
+.tel.corriendo .p5 { animation-delay: 1.6s; }
+
+@keyframes entra { to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pieza { opacity: 1; transform: none; }
+  .tel.corriendo .pieza { animation: none; }
+}
+
+/* ==========================================================================
+   EL PROBLEMA — la red de pares
+   ========================================================================== */
+
+.problema { background: var(--noche-2); color: #E4EFE9; }
+.problema .bajada { color: #97ABA3; }
+.problema .rotulo { color: var(--menta); }
+.problema .espina { border-left-color: var(--menta); }
+
+.red-caja {
+  display: grid; gap: clamp(32px, 5vw, 56px); align-items: start;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 860px) { .red-caja { grid-template-columns: 1fr 1fr; } }
+
+.red { width: 100%; max-width: 380px; margin: 0 auto; display: block; }
+.red .lin { stroke: rgba(159,181,172,.28); stroke-width: 1; opacity: 0; }
+.red .lin.viva { stroke: var(--grave); stroke-width: 2.2; opacity: 1; }
+.red .nodo { fill: #16241E; stroke: rgba(159,181,172,.45); stroke-width: 1.5; }
+.red .nodo.viva { fill: var(--grave); stroke: var(--grave); }
+.red .et { font-family: "IBM Plex Mono", monospace; font-size: 9px; fill: #9FB5AC; }
+.red .et.viva { fill: #FFFFFF; }
+
+.visible .red .lin { animation: aparece .5s ease forwards; }
+@keyframes aparece { to { opacity: 1; } }
+
+/* El desglose de las 84. Va como cuenta a la vista y no como afirmación:
+   la columna del medio muestra de dónde sale cada número. Es la misma idea
+   que adentro de la app — todo tiene que poder rastrearse. */
+.desglose {
+  margin-top: 30px;
+  border-top: 1px solid rgba(159,181,172,.18);
+}
+
+.fila-d {
+  display: grid;
+  grid-template-columns: 1fr auto 46px;
+  gap: 8px 16px;
+  align-items: baseline;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(159,181,172,.14);
+}
+
+.fila-d .q { font-size: 14px; line-height: 1.4; color: #B7CAC2; }
+.fila-d .q em {
+  font-style: normal; display: block; font-size: 11.5px; color: #6C8078;
+  font-family: "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .02em; margin-top: 2px;
+}
+.fila-d .op { font-size: 12px; color: #6C8078; white-space: nowrap; }
+.fila-d .n { font-size: 17px; font-weight: 600; color: #E4EFE9; text-align: right; }
+
+.fila-d.total { border-bottom: 0; border-top: 1px solid rgba(159,181,172,.35); margin-top: 2px; padding-top: 14px; }
+.fila-d.total .q { color: #FFFFFF; font-weight: 600; font-size: 15px; }
+.fila-d.total .q em { color: var(--menta); }
+.fila-d.total .n { font-size: 30px; color: var(--menta); letter-spacing: -.02em; }
+
+/* En pantalla angosta la cuenta pasa abajo del renglón, no al costado:
+   tres columnas en 390 px dejan el texto en una palabra por línea. */
+@media (max-width: 560px) {
+  .fila-d { grid-template-columns: 1fr auto; gap: 3px 14px; }
+  .fila-d .q  { grid-column: 1; grid-row: 1; }
+  .fila-d .n  { grid-column: 2; grid-row: 1; }
+  .fila-d .op { grid-column: 1; grid-row: 2; font-size: 11px; }
+}
+
+.cuentas { display: flex; gap: 30px; flex-wrap: wrap; margin-top: 30px; }
+.cuenta b { display: block; font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-size: 40px; font-weight: 600; line-height: 1; letter-spacing: -.03em; }
+.cuenta.mal b { color: var(--grave); }
+.cuenta span { display: block; font-size: 12.5px; color: #8CA39A; margin-top: 7px; max-width: 17ch; line-height: 1.4; }
+
+/* ==========================================================================
+   LAS CINCO VERIFICACIONES
+   ========================================================================== */
+
+.cinco { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .cinco { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1000px) { .cinco { grid-template-columns: repeat(3, 1fr); } }
+
+.verif {
+  background: var(--panel); border: 1px solid var(--linea); border-radius: var(--curva);
+  padding: 24px 24px 26px; display: flex; flex-direction: column; gap: 11px;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.verif:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -26px rgba(14,31,26,.45); border-color: #C6D6CC; }
+
+.verif .ic {
+  width: 40px; height: 40px; border-radius: 11px; flex: none;
+  background: var(--verde-tenue); color: var(--verde);
+  display: grid; place-items: center;
+}
+.verif .ic svg { width: 20px; height: 20px; }
+.verif h3 { font-size: 18px; font-weight: 700; letter-spacing: -.015em; }
+.verif p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--tinta-suave); }
+.verif .dato {
+  margin-top: auto; padding-top: 13px; border-top: 1px solid var(--linea);
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--tinta-tenue);
+}
+
+.verif.destacada { grid-column: 1 / -1; background: var(--verde); border-color: var(--verde); color: #FFFFFF; }
+@media (min-width: 1000px) { .verif.destacada { grid-column: span 3; } }
+.verif.destacada h3 { font-size: 21px; }
+.verif.destacada p { color: #C6DED3; }
+.verif.destacada .ic { background: rgba(255,255,255,.15); color: #FFFFFF; }
+.verif.destacada .dato { border-top-color: rgba(255,255,255,.2); color: #9BC4B4; }
+
+/* ==========================================================================
+   DEMO — el slider de creatinina
+   ========================================================================== */
+
+.demo { background: var(--noche); color: #E4EFE9; }
+.demo .rotulo { color: var(--menta); }
+.demo .bajada { color: #97ABA3; }
+.demo .espina { border-left-color: var(--menta); }
+
+.demo-caja { display: grid; gap: clamp(30px, 5vw, 56px); grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 900px) { .demo-caja { grid-template-columns: 380px 1fr; } }
+
+.mando {
+  background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--curva); padding: 24px;
+}
+.mando .quien { font-size: 13.5px; color: #9FB5AC; margin: 0 0 20px; line-height: 1.5; }
+.mando .quien b { color: #FFFFFF; font-weight: 600; }
+
+.mando label { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.mando label span { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: #7C918A; }
+.mando label b { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 600; color: #FFFFFF; }
+
+input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 999px;
+  background: rgba(255,255,255,.18); outline: none; margin: 8px 0 4px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 26px; height: 26px; border-radius: 999px; cursor: grab;
+  background: var(--menta); border: 4px solid var(--noche);
+  box-shadow: 0 0 0 1px var(--menta), 0 4px 14px rgba(79,209,165,.5);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 26px; height: 26px; border-radius: 999px; cursor: grab; border: 4px solid var(--noche);
+  background: var(--menta); box-shadow: 0 0 0 1px var(--menta);
+}
+input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(79,209,165,.35); }
+
+.escala { display: flex; justify-content: space-between; font-family: "IBM Plex Mono", monospace; font-size: 10px; color: #6C8078; }
+
+.lectura { margin-top: 22px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-direction: column; gap: 12px; }
+.lectura .par { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+.lectura .par span { font-size: 13px; color: #8CA39A; }
+.lectura .par b { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-size: 17px; font-weight: 600; color: #FFFFFF; }
+.lectura .par b.g { color: var(--grave); }
+.lectura .par b.m { color: var(--media); }
+.lectura .par b.o { color: var(--ok); }
+
+.formula {
+  margin-top: 16px; font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+  line-height: 1.6; color: #6C8078; letter-spacing: .01em;
+}
+
+/* lista de hallazgos que aparece/desaparece */
+.salida { display: flex; flex-direction: column; gap: 10px; }
+
+.res {
+  background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1);
+  border-left: 4px solid var(--media); border-radius: 12px;
+  padding: 15px 17px;
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: baseline;
+  animation: entraRes .35s cubic-bezier(.22,1,.36,1);
+}
+.res.g { border-left-color: var(--grave); }
+.res.ok { border-left-color: var(--ok); }
+.res .n { font-size: 15px; font-weight: 600; color: #FFFFFF; }
+.res .s { font-family: "IBM Plex Mono", monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--media); }
+.res.g .s { color: var(--grave); }
+.res.ok .s { color: var(--ok); }
+.res .p { grid-column: 1 / -1; font-size: 13.5px; line-height: 1.5; color: #97ABA3; }
+
+@keyframes entraRes { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .res { animation: none; } }
+
+.vacio-res { font-size: 14px; color: #7C918A; padding: 15px 17px; border: 1px dashed rgba(255,255,255,.16); border-radius: 12px; }
+
+/* ==========================================================================
+   PRECIO
+   ========================================================================== */
+
+.planes { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .planes { grid-template-columns: 1fr 1fr; } }
+
+.plan {
+  border: 1px solid var(--linea); border-radius: var(--curva); padding: 30px;
+  background: var(--panel); display: flex; flex-direction: column; gap: 14px;
+}
+.plan.pago { background: var(--noche); border-color: var(--noche); color: #E4EFE9; }
+.plan h3 { font-size: 20px; font-weight: 700; }
+.plan .precio { font-family: "IBM Plex Mono", monospace; font-size: 40px; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+.plan .precio small { font-size: 14px; font-weight: 400; color: var(--tinta-tenue); letter-spacing: 0; }
+.plan.pago .precio small { color: #7C918A; }
+.plan ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.plan li { font-size: 14.5px; line-height: 1.5; display: grid; grid-template-columns: 18px 1fr; gap: 10px; color: var(--tinta-suave); }
+.plan.pago li { color: #9FB5AC; }
+.plan li i { color: var(--verde); font-style: normal; font-weight: 700; }
+.plan.pago li i { color: var(--menta); }
+
+/* ==========================================================================
+   CIERRE Y PIE
+   ========================================================================== */
+
+.cierre { background: var(--verde); color: #FFFFFF; text-align: center; }
+.cierre h2 { color: #FFFFFF; }
+.cierre .bajada { color: #C6DED3; margin: 18px auto 0; }
+.cierre .tiendas { justify-content: center; }
+
+.pie { background: var(--noche); color: #7C918A; padding: 48px 0 56px; font-size: 13.5px; }
+.pie .env { display: flex; flex-wrap: wrap; gap: 22px 40px; align-items: center; justify-content: space-between; }
+.pie a { color: #9FB5AC; text-decoration: none; }
+.pie a:hover { color: #FFFFFF; text-decoration: underline; }
+.pie nav { display: flex; flex-wrap: wrap; gap: 22px; }
+.pie .legal { width: 100%; font-size: 12px; line-height: 1.6; color: #5E7169; max-width: 70ch; }
+
+/* --- marcas de la maqueta (no van en la web real) ------------------------ */
+
+.aviso-maqueta {
+  background: #FEF3C7; color: #78350F; font-size: 13px; line-height: 1.55;
+  padding: 12px 24px; text-align: center; font-weight: 600;
+}
+.aviso-maqueta span { font-weight: 400; }
