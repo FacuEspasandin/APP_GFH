@@ -239,6 +239,15 @@ enum SeveridadAlergia {
 /// Solo RECHAZADO apaga contenido, y aun asi el ajuste renal/hepatico NUNCA se
 /// apaga: se sigue devolviendo marcado como no validado. Dejar al medico sin
 /// guia de dosis es peor que darle una guia observada.
+enum CondicionVenta {
+  VENTA_LIBRE
+  RECETA
+  RECETA_CONTROLADA
+  /// Lo que trae el proveedor cuando no lo declara. NO es «venta libre»:
+  /// suponerlo sería inventar un dato regulatorio (regla 5).
+  DESCONOCIDA
+}
+
 enum EstadoValidacion {
   PENDIENTE
   APROBADO
@@ -322,6 +331,30 @@ model ProductoComercial {
   /// existe y el generico si no. Este flag es lo que permite distinguirlos en
   /// la UI y, si algun dia se quiere, ocultarlos.
   esGenerico Boolean @default(false)
+
+  // --- datos comerciales que llegan de un catálogo externo -------------------
+
+  /// «Caja x 20 comprimidos». Va aparte de dosisTexto —que es la
+  /// concentración— porque son dos cosas: 500 mg es la dosis, el envase no.
+  presentacion String?
+
+  /// Cómo se dispensa. Sin dato queda DESCONOCIDA y no VENTA_LIBRE: es
+  /// información regulatoria y suponerla es inventarla.
+  condicionVenta CondicionVenta @default(DESCONOCIDA)
+
+  /// Si el producto sigue en el mercado.
+  ///
+  /// Arranca en true porque lo que ya está cargado se asume vigente; el
+  /// importador lo baja cuando el proveedor lo declara discontinuado. Un
+  /// fármaco que salió del mercado y sigue apareciendo en el buscador es un
+  /// error clínico esperando, no un problema de prolijidad.
+  vigente Boolean @default(true)
+
+  /// Cuándo lo tocó por última vez un importador, y cuál. Nulo = cargado a
+  /// mano o por el seed. Es lo que permite decir «según el catálogo del …» y
+  /// saber qué filas quedaron viejas.
+  importadoAt DateTime?
+  origenDato  String?
 
   principiosActivos ProductoComercialPrincipioActivo[]
   prescripciones    Prescripcion[]
