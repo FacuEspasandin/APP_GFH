@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import type { FilaPaciente, Inicio } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import { FilaAnimada } from '@/ui/animacion';
 import { Icono } from '@/ui/iconos';
 import { Estado, Eyebrow, Pantalla } from '@/ui/kit';
@@ -28,7 +28,7 @@ export default function DetalleGrupo() {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['inicio', ''],
-    queryFn: () => api.get<Inicio>('/inicio'),
+    queryFn: API.inicio,
   });
 
   const resumen = data?.grupos.find((g) => (sinGrupo ? g.id === null : g.id === id));

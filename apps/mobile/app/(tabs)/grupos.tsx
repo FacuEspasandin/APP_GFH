@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { Stack, useRouter } from 'expo-router';
 import { Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
 import { esDePago, rutaPaywall } from '@/dominio/plan-gratis';
 import type { Inicio, ResumenGrupo } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import { FilaAnimada } from '@/ui/animacion';
 import { Icono } from '@/ui/iconos';
 import { Estado, Pantalla } from '@/ui/kit';
@@ -42,7 +42,7 @@ export default function Grupos() {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['inicio', ''],
-    queryFn: () => api.get<Inicio>('/inicio'),
+    queryFn: API.inicio,
   });
 
   const grupos = data?.grupos ?? [];

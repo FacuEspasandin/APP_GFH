@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { Boton, CampoTexto, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
 
@@ -21,7 +21,7 @@ export default function CrearGrupo() {
     setEnviando(true);
     setError(null);
     try {
-      await api.post('/grupos', { nombre: nombre.trim() });
+      await API.crearGrupo(nombre.trim());
       await qc.invalidateQueries({ queryKey: ['inicio'] });
       router.back();
     } catch (e) {

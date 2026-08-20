@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { Icono } from '@/ui/iconos';
 import { hapticaExito } from '@/ui/haptica';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
@@ -60,7 +60,7 @@ export default function AceptarAlternativa() {
 
   const aceptar = useMutation({
     mutationFn: () =>
-      api.post(`/pacientes/${pacienteId}/alternativas-aceptadas`, {
+      API.aceptarAlternativa(pacienteId, {
         paOrigenId,
         paAlternativaId,
         ...(prescripcion ? { prescripcionOrigenId: prescripcion } : {}),

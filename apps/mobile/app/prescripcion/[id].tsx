@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { hapticaExito } from '@/ui/haptica';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { AvisoNeutro, Boton, CampoTexto, Chip, Eyebrow, Pantalla } from '@/ui/kit';
@@ -42,7 +42,7 @@ export default function EditarPrescripcion() {
 
   const guardar = useMutation({
     mutationFn: () =>
-      api.patch(`/prescripciones/${id}`, {
+      API.actualizarPrescripcion(id, {
         dosis: f.dosis.trim(),
         frecuencia: f.frecuencia.trim(),
         via: viaSel,
@@ -52,7 +52,7 @@ export default function EditarPrescripcion() {
   });
 
   const eliminar = useMutation({
-    mutationFn: () => api.delete(`/prescripciones/${id}`),
+    mutationFn: () => API.borrarPrescripcion(id),
     onSuccess: () => { hapticaExito(); return invalidar(); },
   });
 

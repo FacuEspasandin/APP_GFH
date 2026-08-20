@@ -5,6 +5,7 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } fro
 
 import { api, ErrorApi } from '@/api/cliente';
 import { POR_PRODUCTO, useIndiceProductos } from '@/api/catalogo';
+import * as API from '@/api/endpoints';
 import { buscar } from '@/dominio/busqueda';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { hapticaAdvertencia, hapticaBloqueo, hapticaExito } from '@/ui/haptica';
@@ -60,7 +61,7 @@ export default function AgregarFarmaco() {
 
   const crear = useMutation({
     mutationFn: (confirmar: boolean) =>
-      api.post(`/pacientes/${pacienteId}/prescripciones`, {
+      API.agregarPrescripcion(pacienteId, {
         ...(libre
           ? { esFarmacoLibre: true, nombreLibre: nombreLibre.trim() }
           : { productoComercialId: producto?.id }),

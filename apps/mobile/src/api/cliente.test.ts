@@ -249,6 +249,19 @@ describe('las dos respuestas que abren una pantalla entera', () => {
     expect(paywall).not.toHaveBeenCalled();
     expect(bloqueo).not.toHaveBeenCalled();
   });
+
+  it('un 429 dice que hay que esperar, no que algo salió mal', async () => {
+    // El backend lo devuelve con el código genérico, así que el mensaje útil lo
+    // pone el cliente. Sin esto la pantalla decía «no se pudo completar la
+    // operación», que invita a reintentar ya mismo — y volver a chocar.
+    fetchSimulado.mockResolvedValue(respuesta(falla('ERROR', 'Too Many Requests'), 429));
+
+    const e = (await api.get('/x').catch((x: unknown) => x)) as ErrorApi;
+
+    expect(e.codigo).toBe('DEMASIADOS_INTENTOS');
+    expect(e.esDemasiadosIntentos).toBe(true);
+    expect(e.message).toMatch(/esperá/i);
+  });
 });
 
 describe('aviso de sesión', () => {

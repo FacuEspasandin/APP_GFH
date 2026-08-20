@@ -2,8 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import type { Cockpit } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import {
   colorPorSeveridadAlergia,
   consecuenciaAlergia,
@@ -35,7 +35,7 @@ export default function CondicionesYAlergias() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['condiciones-alergias', pacienteId],
-    queryFn: () => api.get<Datos>(`/perfil/pacientes/${pacienteId}/condiciones-alergias`),
+    queryFn: () => API.condicionesYAlergias(pacienteId),
     enabled: Boolean(pacienteId),
   });
 
@@ -43,7 +43,7 @@ export default function CondicionesYAlergias() {
   // cuántos fármacos cruza cada condición, sin pedirle nada más al servidor.
   const { data: cockpit } = useQuery({
     queryKey: ['cockpit', pacienteId],
-    queryFn: () => api.get<Cockpit>(`/pacientes/${pacienteId}/cockpit`),
+    queryFn: () => API.cockpit(pacienteId),
     enabled: Boolean(pacienteId),
   });
 
@@ -59,12 +59,12 @@ export default function CondicionesYAlergias() {
 
   const quitarCondicion = useMutation({
     mutationFn: (condicionId: string) =>
-      api.delete(`/pacientes/${pacienteId}/condiciones/${condicionId}`),
+      API.quitarCondicion(pacienteId, condicionId),
     onSuccess: invalidar,
   });
 
   const quitarAlergia = useMutation({
-    mutationFn: (alergiaId: string) => api.delete(`/alergias/${alergiaId}`),
+    mutationFn: (alergiaId: string) => API.quitarAlergia(alergiaId),
     onSuccess: invalidar,
   });
 

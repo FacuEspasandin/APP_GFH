@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import {
   agruparAlternativas,
   conteoDeAlertas,
@@ -62,8 +62,11 @@ export default function Alternativas() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['alternativas', pacienteId, prescripcion],
-    queryFn: () =>
-      api.get<Respuesta>(`/pacientes/${pacienteId}/prescripciones/${prescripcion}/alternativas`),
+    // El `!` va con el `enabled` de abajo, que es lo que garantiza que estén.
+    // Antes los dos se interpolaban en la URL sin mirar: si `enabled` alguna
+    // vez se equivocaba, el pedido salía con «undefined» adentro de la ruta y
+    // el backend devolvía un 400 sin explicación.
+    queryFn: () => API.alternativasDe<Respuesta>(pacienteId!, prescripcion!),
     enabled: Boolean(pacienteId && prescripcion),
   });
 

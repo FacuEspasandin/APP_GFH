@@ -50,6 +50,19 @@ export class ErrorApi extends Error {
   get esLimiteDelPlanGratis(): boolean {
     return this.codigo === 'LIMITE_PLAN_GRATIS' || this.codigo === 'SIN_CONSULTAS_GRATIS';
   }
+
+  /**
+   * Se pasó del límite de pedidos por minuto.
+   *
+   * Se distingue porque la respuesta es «esperá y probá de nuevo», no «algo
+   * salió mal»: el médico no hizo nada malo y reintentar en un rato funciona.
+   * Sin esto llegaba como error genérico y la pantalla le decía «no se pudo
+   * completar la operación», que invita a reintentar YA — justo lo que vuelve a
+   * chocar contra el límite.
+   */
+  get esDemasiadosIntentos(): boolean {
+    return this.status === 429;
+  }
 }
 
 /** Los dos códigos que abren el paywall, con el motivo que le toca a cada uno.
@@ -206,6 +219,16 @@ async function pedir<T>(
     // desbloquea pagando. Por eso el paywall y no la pantalla de bloqueo.
     if (res.status === 403 && MOTIVO_POR_CODIGO[codigo]) {
       alLlegarAlLimite?.(MOTIVO_POR_CODIGO[codigo]!);
+    }
+
+    // El backend devuelve 429 con el código genérico, así que el mensaje útil
+    // lo pone el cliente: es el único lugar que sabe que fue por tasa.
+    if (res.status === 429) {
+      throw new ErrorApi(
+        'DEMASIADOS_INTENTOS',
+        'Demasiados intentos seguidos. Esperá un momento y probá de nuevo.',
+        429,
+      );
     }
 
     throw new ErrorApi(

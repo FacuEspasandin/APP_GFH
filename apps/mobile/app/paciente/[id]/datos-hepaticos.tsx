@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import {
   borradorDesde,
   cuerpoDeGuardado,
@@ -65,7 +65,7 @@ export default function DatosHepaticos() {
   // ensuciar el puerto del dominio con algo que sólo usa esta pantalla.
   const { data: paciente, isLoading } = useQuery({
     queryKey: ['paciente', pacienteId],
-    queryFn: () => api.get<PacienteHepatico>(`/pacientes/${pacienteId}`),
+    queryFn: () => API.pacienteHepatico(pacienteId),
     enabled: Boolean(pacienteId),
   });
 
@@ -73,7 +73,7 @@ export default function DatosHepaticos() {
 
   const guardar = useMutation({
     mutationFn: (b: Borrador) =>
-      api.patch(`/pacientes/${pacienteId}/datos-hepaticos`, cuerpoDeGuardado(b)),
+      API.guardarDatosHepaticos(pacienteId, cuerpoDeGuardado(b)),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       await qc.invalidateQueries({ queryKey: ['historial', pacienteId] });

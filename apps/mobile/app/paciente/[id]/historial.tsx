@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import {
   familiaDe,
   hora,
@@ -38,9 +38,7 @@ export default function HistorialPaciente() {
       // El cursor es la fecha del último evento que ya tenemos, no un número de
       // página: la lista crece por arriba y con `skip` se repetirían filas.
       queryFn: ({ pageParam }) =>
-        api.get<Historial>(
-          `/pacientes/${pacienteId}/historial${pageParam ? `?antesDe=${encodeURIComponent(pageParam)}` : ''}`,
-        ),
+        API.historial<Historial>(pacienteId, pageParam || undefined),
       initialPageParam: '' as string,
       getNextPageParam: (ultima) =>
         ultima.hayMas && ultima.eventos.length > 0

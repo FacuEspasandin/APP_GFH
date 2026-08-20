@@ -3,18 +3,10 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Boton, CampoTexto, Cargando, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
-
-interface Perfil {
-  email: string;
-  nombreUsuario: string;
-  nombre: string;
-  apellido: string;
-  rol: string;
-}
 
 /** Editar cuenta (6.2). El nombre de usuario no se cambia: es identificador de
  *  login y cambiarlo rompería sesiones y referencias. */
@@ -23,7 +15,7 @@ export default function Cuenta() {
 
   const router = useRouter();
   const qc = useQueryClient();
-  const { data, isLoading } = useQuery({ queryKey: ['perfil'], queryFn: () => api.get<Perfil>('/auth/yo') });
+  const { data, isLoading } = useQuery({ queryKey: ['perfil'], queryFn: API.yo });
 
   const [c, setC] = useState({ nombre: '', apellido: '', email: '' });
   const [cargado, setCargado] = useState(false);
@@ -37,7 +29,7 @@ export default function Cuenta() {
 
   const guardar = useMutation({
     mutationFn: () =>
-      api.patch('/perfil/datos', {
+      API.guardarDatosMedico({
         nombre: c.nombre.trim(),
         apellido: c.apellido.trim(),
         email: c.email.trim().toLowerCase(),

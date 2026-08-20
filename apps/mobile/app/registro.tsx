@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
 import { api, iniciarSesion } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Boton, CampoTexto } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -31,7 +32,7 @@ export default function Registro() {
 
     setEnviando(true);
     try {
-      await api.post('/auth/registro', {
+      await API.registrarse({
         nombre: c.nombre,
         apellido: c.apellido,
         nombreUsuario: c.nombreUsuario,

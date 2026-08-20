@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { Icono } from '@/ui/iconos';
 import { Boton } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
@@ -26,7 +26,7 @@ export default function DisclaimerPrimerIngreso() {
   const continuar = async () => {
     setEnviando(true);
     try {
-      await api.post('/auth/disclaimer', { version: VERSION_DISCLAIMER });
+      await API.aceptarDisclaimer(VERSION_DISCLAIMER);
       router.replace('/(tabs)');
     } finally {
       setEnviando(false);

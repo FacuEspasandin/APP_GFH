@@ -1,8 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
+import * as API from '@/api/endpoints';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Chip, Pantalla } from '@/ui/kit';
 import { useTema } from '@/ui/tema';
@@ -25,8 +25,7 @@ export default function Umbral() {
 
   const guardar = (n: number) => {
     setElegido(n);
-    void api
-      .patch('/perfil/configuracion', { umbralAdultoMayor: n })
+    void API.guardarConfiguracion({ umbralAdultoMayor: n })
       .then(() => qc.invalidateQueries({ queryKey: ['configuracion'] }));
   };
 

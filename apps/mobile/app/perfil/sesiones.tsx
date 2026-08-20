@@ -1,18 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Pressable, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { Icono } from '@/ui/iconos';
 import { AvisoNeutro, Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
-
-interface Sesion {
-  id: string;
-  dispositivoInfo: string | null;
-  creadaAt: string;
-  ultimoUsoAt: string | null;
-}
 
 /** Sesiones activas (6.8). Una fila por dispositivo con sesión viva. */
 export default function Sesiones() {
@@ -20,11 +13,11 @@ export default function Sesiones() {
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({
     queryKey: ['sesiones'],
-    queryFn: () => api.get<Sesion[]>('/auth/sesiones'),
+    queryFn: API.sesiones,
   });
 
   const revocar = useMutation({
-    mutationFn: (id: string) => api.delete(`/auth/sesiones/${id}`),
+    mutationFn: (id: string) => API.cerrarSesion(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['sesiones'] }),
   });
 

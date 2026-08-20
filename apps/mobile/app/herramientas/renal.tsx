@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
 import {
@@ -52,7 +52,7 @@ export default function HerramientaRenal() {
 
   const calcular = useMutation({
     mutationFn: () =>
-      api.post<Resultado>('/herramientas/ajuste-renal', {
+      API.herramientaAjusteRenal<Resultado>({
         principioActivoIds: seleccion.map((s) => s.id),
         ...(modo === 'directo'
           ? { clcrMlMin: num(clcr) }

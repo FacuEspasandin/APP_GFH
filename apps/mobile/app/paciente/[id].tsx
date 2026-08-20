@@ -3,8 +3,8 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import type { CategoriaHallazgo, Cockpit, PrescripcionCockpit } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import { Icono } from '@/ui/iconos';
 import { AnilloClcr } from '@/ui/anillo-clcr';
 import { etiquetaEmbarazo } from '@/dominio/gestacion';
@@ -66,7 +66,7 @@ export default function CockpitPaciente() {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['cockpit', id],
-    queryFn: () => api.get<Cockpit>(`/pacientes/${id}/cockpit`),
+    queryFn: () => API.cockpit(id),
     enabled: Boolean(id),
   });
 

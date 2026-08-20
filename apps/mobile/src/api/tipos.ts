@@ -1,4 +1,13 @@
-/** Formas que devuelve el backend. Espejo de los DTOs de `apps/backend`. */
+/**
+ * Formas que devuelve el backend. Espejo de los DTOs de `apps/backend`.
+ *
+ * Todo lo que la API devuelve se declara acá y en ningún otro lado. Las
+ * pantallas lo redeclaraban por su cuenta y las copias ya habían divergido: el
+ * mismo `GET /auth/yo` estaba escrito con `id` en una y sin `id` en otra, y
+ * `GET /perfil/suscripcion` con `productId` en una y sin él en la otra. Ninguna
+ * de las dos versiones estaba mal — estaban incompletas, que es peor, porque
+ * TypeScript no puede avisar de un campo que nadie declaró.
+ */
 
 export interface FilaPaciente {
   id: string;
@@ -94,4 +103,122 @@ export interface Cockpit {
   /** El paciente sintético que ve una cuenta sin suscripción. Se mira entero;
    *  no se toca. */
   esDemostracion?: boolean;
+}
+
+// --- perfil y sesión ---------------------------------------------------------
+
+export interface Medico {
+  id: string;
+  email: string;
+  nombreUsuario: string;
+  nombre: string;
+  apellido: string;
+  rol: string;
+  disclaimerAceptadoAt?: string | null;
+  disclaimerVersion?: string | null;
+}
+
+export type EstadoSuscripcionValor =
+  | 'SIN_SUSCRIPCION'
+  | 'ACTIVA'
+  | 'GRACIA'
+  | 'VENCIDA'
+  | 'CANCELADA';
+
+export interface EstadoSuscripcion {
+  estado: EstadoSuscripcionValor;
+  vigente: boolean;
+  productId?: string;
+  store?: string;
+  periodoActualFin?: string;
+}
+
+export interface Sesion {
+  id: string;
+  dispositivoInfo: string | null;
+  creadaAt: string;
+  ultimoUsoAt: string | null;
+}
+
+export type Tema = 'CLARO' | 'OSCURO' | 'SISTEMA';
+
+export interface Configuracion {
+  tema: Tema;
+  notificacionesPush: boolean;
+  umbralAdultoMayor: number;
+}
+
+// --- paciente ----------------------------------------------------------------
+
+export interface Paciente {
+  id: string;
+  nombre: string;
+  apellido: string;
+  documento: string | null;
+  fechaNacimiento: string;
+  sexo: 'M' | 'F' | 'OTRO';
+  alturaCm: number | null;
+  grupoId: string | null;
+}
+
+/**
+ * Los cinco criterios como los guarda el paciente.
+ *
+ * Los `*Puntos` pueden faltar en un paciente cargado antes de que la pantalla
+ * pasara a bandas; los valores exactos llegan como string o número porque
+ * Prisma serializa los decimales como texto.
+ */
+export interface PacienteHepatico {
+  bilirrubinaPuntos: number | null;
+  albuminaPuntos: number | null;
+  inrPuntos: number | null;
+  bilirrubinaMgDl: string | number | null;
+  albuminaGDl: string | number | null;
+  inr: string | number | null;
+  ascitis: string | null;
+  encefalopatia: string | null;
+  childPughClase: string | null;
+}
+
+export interface ResultadoChildPugh {
+  clase: 'A' | 'B' | 'C' | null;
+  puntos: number;
+  faltan: string[];
+}
+
+export interface CondicionesYAlergias {
+  condiciones: Array<{ id: string; codigo: string; nombre: string; observaciones: string | null }>;
+  alergias: Array<{
+    id: string;
+    tipo: string;
+    severidad: 'LEVE' | 'MODERADA' | 'GRAVE';
+    nombre: string;
+    grupo: string | null;
+    cruza: boolean;
+  }>;
+}
+
+// --- catálogo ----------------------------------------------------------------
+
+export interface Condicion {
+  id: string;
+  codigo: string;
+  nombre: string;
+  descripcion: string | null;
+}
+
+/**
+ * Los campos son los del `select` del backend, no los que alcanzaban para la
+ * pantalla que lo usaba.
+ *
+ * Estaba escrito con `id` y `nombre` nada más, y el compilador lo aceptó porque
+ * la pantalla afirmaba su propio tipo. Al centralizarlo saltó: el endpoint
+ * devuelve cinco campos.
+ */
+export interface GrupoAlergenico {
+  id: string;
+  codigo: string;
+  nombre: string;
+  nivelCruce: string;
+  sinonimos: string[];
 }

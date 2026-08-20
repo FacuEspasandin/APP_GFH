@@ -3,12 +3,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { buscar } from '@/dominio/busqueda';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
-
-interface Condicion { id: string; codigo: string; nombre: string; descripcion: string | null }
 
 /** Agregar condición clínica (3.4.1). */
 export default function AgregarCondicion() {
@@ -20,10 +18,10 @@ export default function AgregarCondicion() {
   // Sin pausa: la lista ya está en memoria y `buscar` normaliza sola.
   const filtro = texto.trim();
 
-  const { data } = useQuery({ queryKey: ['cond'], queryFn: () => api.get<Condicion[]>('/catalogo/condiciones') });
+  const { data } = useQuery({ queryKey: ['cond'], queryFn: API.condiciones });
 
   const agregar = useMutation({
-    mutationFn: () => api.post(`/pacientes/${pacienteId}/condiciones`, { condicionClinicaId: elegida }),
+    mutationFn: () => API.agregarCondicion(pacienteId, { condicionClinicaId: elegida }),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       router.back();

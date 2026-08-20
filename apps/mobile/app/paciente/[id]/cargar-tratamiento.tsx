@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import {
   elegidasSinPauta,
   elegirTodas,
@@ -62,7 +63,7 @@ export default function CargarTratamiento() {
     .filter((t) => t.length > 1);
 
   const matchear = useMutation({
-    mutationFn: () => api.post<Linea[]>(`/pacientes/${pacienteId}/lineas/matchear`, { textos }),
+    mutationFn: () => API.matchearLineas<Linea[]>(pacienteId, textos),
     onSuccess: (r) =>
       setLineas(
         r.map((l) => ({
@@ -76,14 +77,14 @@ export default function CargarTratamiento() {
   });
 
   const probarFoto = useMutation({
-    mutationFn: () => api.post(`/pacientes/${pacienteId}/foto`, { imagenBase64: '' }),
+    mutationFn: () => API.subirFoto(pacienteId, ''),
     onError: (e) => setErrorFoto(e instanceof ErrorApi ? e.message : 'No disponible.'),
   });
 
   const confirmar = useMutation({
     mutationFn: async () => {
       for (const l of listasParaCrear(lineas ?? [])) {
-        await api.post(`/pacientes/${pacienteId}/prescripciones`, {
+        await API.agregarPrescripcion(pacienteId, {
           productoComercialId: l.productoComercialIdSugerido,
           // Lo que el médico dejó escrito, no un literal. Antes, sin dosis
           // detectada, se creaba la prescripción con el texto "a confirmar"

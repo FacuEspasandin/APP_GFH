@@ -2,18 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { Text } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { AvisoNeutro, Boton, Cargando, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
-interface Estado {
-  estado: 'SIN_SUSCRIPCION' | 'ACTIVA' | 'GRACIA' | 'VENCIDA' | 'CANCELADA';
-  vigente: boolean;
-  productId?: string;
-  store?: string;
-  periodoActualFin?: string;
-}
+import type { EstadoSuscripcion as Estado } from '@/api/tipos';
 
 const TEXTO: Record<Estado['estado'], string> = {
   SIN_SUSCRIPCION: 'Sin suscripción',
@@ -28,7 +22,7 @@ export default function Suscripcion() {
   const router = useRouter();
   const { data, isLoading } = useQuery({
     queryKey: ['suscripcion'],
-    queryFn: () => api.get<Estado>('/perfil/suscripcion'),
+    queryFn: API.estadoSuscripcion,
   });
 
   if (isLoading) return <Cargando />;

@@ -3,23 +3,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import type { Inicio } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { aTexto, validarFecha } from '@/ui/fecha';
 import { AvisoNeutro, Boton, CampoTexto, Cargando, Chip, Eyebrow, Pantalla } from '@/ui/kit';
 import { OPCIONES_SEXO, type Sexo } from '@gfh/shared-types';
-
-interface Paciente {
-  id: string;
-  nombre: string;
-  apellido: string;
-  documento: string | null;
-  fechaNacimiento: string;
-  sexo: 'M' | 'F' | 'OTRO';
-  alturaCm: number | null;
-  grupoId: string | null;
-}
 
 /** Editar y eliminar paciente (2.9). */
 export default function EditarPaciente() {
@@ -29,10 +18,10 @@ export default function EditarPaciente() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['paciente', id],
-    queryFn: () => api.get<Paciente>(`/pacientes/${id}`),
+    queryFn: () => API.paciente(id),
     enabled: Boolean(id),
   });
-  const { data: inicio } = useQuery({ queryKey: ['inicio'], queryFn: () => api.get<Inicio>('/inicio') });
+  const { data: inicio } = useQuery({ queryKey: ['inicio'], queryFn: API.inicio });
 
   const [c, setC] = useState({ nombre: '', apellido: '', documento: '', alturaCm: '', fechaNacimiento: '' });
   const [sexo, setSexo] = useState<Sexo>('F');
@@ -55,7 +44,7 @@ export default function EditarPaciente() {
 
   const guardar = useMutation({
     mutationFn: () =>
-      api.patch(`/pacientes/${id}`, {
+      API.actualizarPaciente(id, {
         nombre: c.nombre.trim(),
         apellido: c.apellido.trim(),
         ...(c.documento.trim() ? { documento: c.documento.trim() } : {}),
@@ -72,7 +61,7 @@ export default function EditarPaciente() {
   });
 
   const eliminar = useMutation({
-    mutationFn: () => api.delete(`/pacientes/${id}`),
+    mutationFn: () => API.borrarPaciente(id),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['inicio'] });
       // Borrar libera cupo del plan gratis: sin invalidar esto, "Nuevo

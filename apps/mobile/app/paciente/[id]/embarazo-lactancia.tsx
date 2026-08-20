@@ -3,8 +3,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import type { Cockpit } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import {
   cuerpoDeGuardado,
   estadoEmbarazo,
@@ -34,7 +34,7 @@ export default function EmbarazoYLactancia() {
 
   const { data: cockpit, isLoading } = useQuery({
     queryKey: ['cockpit', pacienteId],
-    queryFn: () => api.get<Cockpit>(`/pacientes/${pacienteId}/cockpit`),
+    queryFn: () => API.cockpit(pacienteId),
     enabled: Boolean(pacienteId),
   });
 
@@ -44,8 +44,8 @@ export default function EmbarazoYLactancia() {
 
   const guardar = useMutation({
     mutationFn: () =>
-      api.patch(
-        `/pacientes/${pacienteId}`,
+      API.actualizarPaciente(
+        pacienteId,
         cuerpoDeGuardado(embarazoActual, numeroSemana, lactanciaActual),
       ),
     onSuccess: async () => {

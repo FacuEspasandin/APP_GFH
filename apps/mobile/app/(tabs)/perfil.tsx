@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { Text, View } from 'react-native';
 
 import { api, cerrarSesionLocal } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { Icono } from '@/ui/iconos';
 import { Eyebrow, Pantalla } from '@/ui/kit';
 import { GrupoOpciones, Opcion } from '@/ui/lista-opciones';
@@ -10,21 +11,7 @@ import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { useColores, useTema, type Tema } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
-interface Perfil {
-  id: string;
-  email: string;
-  nombreUsuario: string;
-  nombre: string;
-  apellido: string;
-  rol: string;
-}
-
-interface EstadoSuscripcion {
-  estado: 'SIN_SUSCRIPCION' | 'ACTIVA' | 'GRACIA' | 'VENCIDA' | 'CANCELADA';
-  vigente: boolean;
-  store?: string;
-  periodoActualFin?: string;
-}
+import type { EstadoSuscripcion, Medico as Perfil } from '@/api/tipos';
 
 const TEXTO_ESTADO: Record<EstadoSuscripcion['estado'], string> = {
   SIN_SUSCRIPCION: 'Plan gratis',
@@ -55,14 +42,14 @@ export default function PerfilPantalla() {
   const router = useRouter();
   const { tema, configuracion } = useTema();
 
-  const { data } = useQuery({ queryKey: ['perfil'], queryFn: () => api.get<Perfil>('/auth/yo') });
+  const { data } = useQuery({ queryKey: ['perfil'], queryFn: API.yo });
   const suscripcion = useQuery({
     queryKey: ['suscripcion'],
-    queryFn: () => api.get<EstadoSuscripcion>('/perfil/suscripcion'),
+    queryFn: API.estadoSuscripcion,
   });
   const sesiones = useQuery({
     queryKey: ['sesiones'],
-    queryFn: () => api.get<Array<{ id: string }>>('/auth/sesiones'),
+    queryFn: API.sesiones,
   });
 
   const nombreCompleto = data ? `${data.nombre} ${data.apellido}` : '—';

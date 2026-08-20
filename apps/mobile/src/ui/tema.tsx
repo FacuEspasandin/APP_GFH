@@ -3,15 +3,15 @@ import { useColorScheme } from 'nativewind';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 import { api, haySesionSincrona, suscribirseASesion } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { paleta, type Paleta } from './tokens';
 
-export type Tema = 'CLARO' | 'OSCURO' | 'SISTEMA';
+import type { Configuracion, Tema } from '@/api/tipos';
 
-interface Configuracion {
-  tema: Tema;
-  notificacionesPush: boolean;
-  umbralAdultoMayor: number;
-}
+/** Se re-exporta porque media app importa `Tema` desde acá. */
+export type { Tema };
+
+
 
 interface ContextoTema {
   tema: Tema;
@@ -55,7 +55,7 @@ export function ProveedorTema({ children }: { children: ReactNode }) {
 
   const { data } = useQuery({
     queryKey: ['configuracion'],
-    queryFn: () => api.get<Configuracion>('/perfil/configuracion'),
+    queryFn: API.configuracion,
     // Sin sesión no hay a quién pedirle la configuración.
     enabled: haySesion,
     staleTime: 5 * 60 * 1000,

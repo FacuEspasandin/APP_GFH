@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Text } from 'react-native';
 
 import { api, cerrarSesionLocal } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
@@ -24,7 +25,7 @@ export default function CambiarPassword() {
     if (nueva.length < 10) return setError('La contraseña necesita al menos 10 caracteres.');
     setEnviando(true);
     try {
-      await api.post('/auth/password', { actual, nueva });
+      await API.cambiarPassword({ actual, nueva });
       // El backend revoca todas las sesiones, así que hay que volver a entrar.
       await cerrarSesionLocal();
       router.replace('/login');

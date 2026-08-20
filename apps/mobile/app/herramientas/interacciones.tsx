@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { paresDe, textoParesLimpios, titularInteracciones } from '@/dominio/interacciones';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
@@ -36,9 +36,7 @@ export default function HerramientaInteracciones() {
 
   const calcular = useMutation({
     mutationFn: () =>
-      api.post<Resultado>('/herramientas/interacciones', {
-        principioActivoIds: seleccion.map((s) => s.id),
-      }),
+      API.herramientaInteracciones<Resultado>(seleccion.map((s) => s.id)),
     onSuccess: () => setEditando(false),
   });
 

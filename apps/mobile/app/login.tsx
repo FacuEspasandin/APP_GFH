@@ -15,6 +15,7 @@ import {
 import { z } from 'zod';
 
 import { api, iniciarSesion } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { BotonVolverFlotante } from '@/ui/boton-volver';
 import { Disclaimer } from '@/ui/disclaimer';
 import { useColores } from '@/ui/tema';
@@ -53,7 +54,7 @@ export default function Login() {
       // Si falla la consulta no se muestra nada: no vale trabar el ingreso por
       // un dato de facturación.
       try {
-        const plan = await api.get<{ vigente: boolean }>('/perfil/plan');
+        const plan = await API.plan();
         if (!plan.vigente) router.push('/paywall');
       } catch {
         /* silencio a propósito */

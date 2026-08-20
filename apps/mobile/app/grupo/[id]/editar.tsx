@@ -3,8 +3,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 
-import { api } from '@/api/cliente';
 import type { Inicio } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
 
 /**
@@ -19,7 +19,7 @@ export default function EditarGrupo() {
   const qc = useQueryClient();
   const [nombre, setNombre] = useState('');
 
-  const { data } = useQuery({ queryKey: ['inicio', ''], queryFn: () => api.get<Inicio>('/inicio') });
+  const { data } = useQuery({ queryKey: ['inicio', ''], queryFn: API.inicio });
   const grupo = data?.grupos.find((g) => g.id === id);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function EditarGrupo() {
   const invalidar = () => qc.invalidateQueries({ queryKey: ['inicio'] });
 
   const renombrar = useMutation({
-    mutationFn: () => api.patch(`/grupos/${id}`, { nombre: nombre.trim() }),
+    mutationFn: () => API.renombrarGrupo(id, nombre.trim()),
     onSuccess: async () => {
       await invalidar();
       router.back();
@@ -37,7 +37,7 @@ export default function EditarGrupo() {
   });
 
   const eliminar = useMutation({
-    mutationFn: () => api.delete(`/grupos/${id}`),
+    mutationFn: () => API.borrarGrupo(id),
     onSuccess: async () => {
       await invalidar();
       // Dos veces: se sale de esta pantalla y del detalle del grupo, que ya no

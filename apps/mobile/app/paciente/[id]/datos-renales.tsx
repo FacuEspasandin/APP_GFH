@@ -3,8 +3,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import type { Cockpit } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import {
   calcularSiSePuede,
   leyendaDelCambio,
@@ -36,7 +36,7 @@ export default function DatosRenales() {
 
   const { data: cockpit, isLoading } = useQuery({
     queryKey: ['cockpit', pacienteId],
-    queryFn: () => api.get<Cockpit>(`/pacientes/${pacienteId}/cockpit`),
+    queryFn: () => API.cockpit(pacienteId),
     enabled: Boolean(pacienteId),
   });
 
@@ -49,7 +49,7 @@ export default function DatosRenales() {
 
   const guardar = useMutation({
     mutationFn: () =>
-      api.patch(`/pacientes/${pacienteId}/datos-renales`, {
+      API.guardarDatosRenales(pacienteId, {
         ...(modo === 'manual'
           ? { clcrMlMin: num(clcr) }
           : { pesoKg: num(pesoKg), creatininaMgDl: num(creatinina) }),

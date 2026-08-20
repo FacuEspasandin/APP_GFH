@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
@@ -21,7 +21,7 @@ export default function AgregarAlergia() {
 
   const agregar = useMutation({
     mutationFn: () =>
-      api.post(`/pacientes/${pacienteId}/alergias`, {
+      API.agregarAlergia(pacienteId, {
         tipo,
         severidad,
         ...(tipo === 'FARMACOLOGICA' ? { principioActivoId: pa[0]?.id } : { descripcion: descripcion.trim() }),

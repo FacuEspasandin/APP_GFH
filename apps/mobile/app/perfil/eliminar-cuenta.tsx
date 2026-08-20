@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Alert, Text } from 'react-native';
 
 import { api, cerrarSesionLocal } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
 
@@ -23,7 +24,7 @@ export default function EliminarCuenta() {
   const [error, setError] = useState<string | null>(null);
 
   const eliminar = useMutation({
-    mutationFn: () => api.post('/perfil/eliminar-cuenta', { password }),
+    mutationFn: () => API.eliminarCuenta(password),
     onSuccess: async () => {
       await cerrarSesionLocal();
       router.replace('/bienvenida');

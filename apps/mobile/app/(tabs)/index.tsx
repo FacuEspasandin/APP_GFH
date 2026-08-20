@@ -3,11 +3,11 @@ import { Link, Stack, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
 import { buscar } from '@/dominio/busqueda';
 import { detalleDeAcceso, esDePago, rutaNuevoPaciente, rutaPaywall } from '@/dominio/plan-gratis';
 import type { FilaPaciente, Inicio as DatosInicio } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import { FilaAnimada } from '@/ui/animacion';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Icono } from '@/ui/iconos';
@@ -37,7 +37,7 @@ export default function Pacientes() {
   // no le esconde nada al médico y sale desde la primera letra.
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['inicio'],
-    queryFn: () => api.get<DatosInicio>('/inicio'),
+    queryFn: API.inicio,
   });
 
   // Con el plan gratis lleno, "Nuevo paciente" lleva al paywall directo. El

@@ -7,6 +7,7 @@ import { api, ErrorApi } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
 import { decidirEntrada } from '@/dominio/plan-gratis';
 import type { Inicio } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { Skeleton } from '@/ui/estados-sistema';
@@ -31,7 +32,7 @@ export default function CrearPaciente() {
 
   const router = useRouter();
   const qc = useQueryClient();
-  const { data: inicio } = useQuery({ queryKey: ['inicio'], queryFn: () => api.get<Inicio>('/inicio') });
+  const { data: inicio } = useQuery({ queryKey: ['inicio'], queryFn: API.inicio });
 
   /**
    * El muro va ANTES del formulario, no después de enviarlo.
@@ -78,7 +79,7 @@ export default function CrearPaciente() {
     }
     setEnviando(true);
     try {
-      await api.post('/pacientes', {
+      await API.crearPaciente({
         nombre: c.nombre.trim(),
         apellido: c.apellido.trim(),
         ...(c.documento.trim() ? { documento: c.documento.trim() } : {}),

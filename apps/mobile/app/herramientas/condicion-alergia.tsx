@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
+import * as API from '@/api/endpoints';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
 import {
@@ -43,16 +43,16 @@ export default function HerramientaCondicionAlergia() {
 
   const { data: catCond } = useQuery({
     queryKey: ['cond'],
-    queryFn: () => api.get<Opcion[]>('/catalogo/condiciones'),
+    queryFn: API.condiciones,
   });
   const { data: catGrupos } = useQuery({
     queryKey: ['grupos'],
-    queryFn: () => api.get<Opcion[]>('/catalogo/grupos-alergenicos'),
+    queryFn: API.gruposAlergenicos,
   });
 
   const calcular = useMutation({
     mutationFn: () =>
-      api.post<Resultado>('/herramientas/condicion-alergia', {
+      API.herramientaCondicionAlergia<Resultado>({
         principioActivoId: farmaco[0]!.id,
         condicionIds: condiciones,
         grupoAlergenicoIds: grupos,

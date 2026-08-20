@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
+import * as API from '@/api/endpoints';
 import { Switch, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Pantalla } from '@/ui/kit';
 import { useColores, useTema } from '@/ui/tema';
@@ -15,8 +15,7 @@ export default function Notificaciones() {
   const push = configuracion?.notificacionesPush ?? true;
 
   const guardar = (valor: boolean) => {
-    void api
-      .patch('/perfil/configuracion', { notificacionesPush: valor })
+    void API.guardarConfiguracion({ notificacionesPush: valor })
       .then(() => qc.invalidateQueries({ queryKey: ['configuracion'] }));
   };
 

@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
-import { api } from '@/api/cliente';
 import type { Cockpit, Hallazgo } from '@/api/tipos';
+import * as API from '@/api/endpoints';
 import {
   filtrarAvisos,
   filtrarHallazgos,
@@ -42,7 +42,7 @@ export default function Hallazgos() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['cockpit', id],
-    queryFn: () => api.get<Cockpit>(`/pacientes/${id}/cockpit`),
+    queryFn: () => API.cockpit(id),
     enabled: Boolean(id),
   });
 
