@@ -7,21 +7,35 @@
     "scheme": "gfh",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "primaryColor": "#1F5E4A",
+    "icon": "./assets/icon.png",
     "splash": {
+      "image": "./assets/splash-icon.png",
       "backgroundColor": "#1F5E4A",
       "resizeMode": "contain"
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "app.gfh.movil"
+      "bundleIdentifier": "app.gfh.movil",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleDisplayName": "GFH",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "app.gfh.movil",
-      "adaptiveIcon": { "backgroundColor": "#1F5E4A" }
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1F5E4A"
+      },
+      "permissions": []
     },
     "web": {
       "bundler": "metro",
-      "output": "single"
+      "output": "single",
+      "favicon": "./assets/favicon.png"
     },
     "plugins": ["expo-router", "expo-secure-store"],
     "experiments": { "typedRoutes": false }
