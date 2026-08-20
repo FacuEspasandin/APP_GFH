@@ -5,7 +5,7 @@ const aqui = (ruta: string) => path.resolve(__dirname, ruta);
 
 /**
  * Los tests corren en Node, no en el bundler de Expo, así que hay que decirle
- * dónde están dos cosas: el alias `@` que resuelve Babel en la app, y los dos
+ * dónde están dos cosas: el alias `@` que resuelve Babel en la app, y los
  * paquetes nativos que no existen fuera del teléfono.
  *
  * Los stubs son deliberadamente mínimos: no simulan React Native, sólo dejan
@@ -17,6 +17,8 @@ export default defineConfig({
       '@': aqui('src'),
       'react-native': aqui('test/stub-react-native.ts'),
       'expo-secure-store': aqui('test/stub-secure-store.ts'),
+      'expo-device': aqui('test/stub-expo-device.ts'),
+      'expo-application': aqui('test/stub-expo-application.ts'),
     },
   },
   test: {

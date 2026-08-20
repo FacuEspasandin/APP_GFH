@@ -156,3 +156,24 @@ export function edadDeFecha(texto: string, hoy = new Date()): number | null {
   if (!v.valida || !v.fecha) return null;
   return edadEnAnios(v.fecha, hoy);
 }
+
+/**
+ * «12 de agosto», y con el año si no es el actual.
+ *
+ * Para fechas que el médico lee, no que escribe: cuándo se abrió una sesión,
+ * de cuándo es un análisis. `toLocaleDateString` daba «12/8/2026», que en una
+ * lista de tres dispositivos obliga a decodificar tres veces.
+ *
+ * El año sólo aparece cuando aporta: dentro del año en curso es ruido, y de un
+ * año anterior es justo el dato que importa.
+ */
+export function fechaLarga(fecha: string | Date, hoy = new Date()): string {
+  const d = typeof fecha === 'string' ? new Date(fecha) : fecha;
+  if (Number.isNaN(d.getTime())) return '';
+
+  const dia = d.getDate();
+  const mes = MESES[d.getMonth()];
+  return d.getFullYear() === hoy.getFullYear()
+    ? `${dia} de ${mes}`
+    : `${dia} de ${mes} de ${d.getFullYear()}`;
+}

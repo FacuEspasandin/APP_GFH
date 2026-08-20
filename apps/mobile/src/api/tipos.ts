@@ -138,6 +138,14 @@ export interface Sesion {
   dispositivoInfo: string | null;
   creadaAt: string;
   ultimoUsoAt: string | null;
+  /**
+   * La sesión desde la que se está mirando la lista.
+   *
+   * Sale del `sid` del access token. Con un token emitido antes de que el
+   * payload lo incluyera viene `false` en todas: no se marca ninguna, que es
+   * mejor que marcar la equivocada, y se corrige solo al primer refresh.
+   */
+  esActual: boolean;
 }
 
 export type Tema = 'CLARO' | 'OSCURO' | 'SISTEMA';

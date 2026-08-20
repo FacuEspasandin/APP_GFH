@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 
 import type { MotivoPaywall } from '@/dominio/plan-gratis';
+import { infoDeSesion } from '@/ui/dispositivo';
 import { borrar, CLAVE_ACCESS, CLAVE_REFRESH, guardar, leer } from './almacen';
 
 /**
@@ -259,7 +260,10 @@ export async function iniciarSesion(identificador: string, password: string): Pr
     body: JSON.stringify({
       identificador,
       password,
-      dispositivoInfo: `${Platform.OS} · GFH ${Platform.Version ?? ''}`.trim(),
+      // El modelo y el sistema, no el nombre que el dueño le puso al teléfono:
+      // ver `infoDeSesion`. Antes iba `ios · GFH 18`, que con dos iPhones no
+      // le decía al médico cuál estaba cerrando.
+      dispositivoInfo: infoDeSesion(),
     }),
   });
 

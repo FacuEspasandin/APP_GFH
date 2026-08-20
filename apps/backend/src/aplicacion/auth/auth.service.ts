@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -132,17 +133,33 @@ export class AuthService {
     await this.auditar(medicoId, 'LOGOUT');
   }
 
-  /** Perfil > Sesiones activas. Una fila por dispositivo con sesión viva. */
-  async sesionesActivas(medicoId: string) {
+  /**
+   * Perfil > Sesiones activas. Una fila por dispositivo con sesión viva.
+   *
+   * `sesionActualId` llega del `sid` del token. Con un token viejo viene
+   * `undefined` y no se marca ninguna: es un estado transitorio que se corrige
+   * solo en el primer refresh, y no marcar es mejor que marcar la equivocada.
+   */
+  async sesionesActivas(medicoId: string, sesionActualId?: string) {
     const sesiones = await this.prisma.sesion.findMany({
       where: { medicoId, revocadaAt: null, expiraAt: { gt: new Date() } },
       orderBy: { creadaAt: 'desc' },
       select: { id: true, dispositivoInfo: true, creadaAt: true, ultimoUsoAt: true, expiraAt: true },
     });
-    return sesiones;
+    return sesiones.map((s) => ({ ...s, esActual: s.id === sesionActualId }));
   }
 
-  async revocarSesion(medicoId: string, sesionId: string): Promise<void> {
+  /**
+   * Cierra UNA sesión, y nunca la propia.
+   *
+   * Cerrar la propia desde esta lista deja al médico afuera de la app sin
+   * avisarle qué acaba de hacer, y con cara de error. Para eso está
+   * «Cerrar sesión» en el perfil, que sí lo dice.
+   */
+  async revocarSesion(medicoId: string, sesionId: string, sesionActualId?: string): Promise<void> {
+    if (sesionActualId && sesionId === sesionActualId) {
+      throw new BadRequestException('Para cerrar esta sesión, usá «Cerrar sesión» en el perfil.');
+    }
     await this.prisma.sesion.updateMany({
       where: { id: sesionId, medicoId, revocadaAt: null },
       data: { revocadaAt: new Date() },
@@ -194,7 +211,7 @@ export class AuthService {
     const refreshToken = this.hash.generarTokenOpaco();
     const expiraAt = new Date(Date.now() + DIAS_REFRESH * 24 * 60 * 60 * 1000);
 
-    await this.prisma.sesion.create({
+    const sesion = await this.prisma.sesion.create({
       data: {
         medicoId,
         refreshTokenHash: this.hash.hashearToken(refreshToken),
@@ -202,9 +219,20 @@ export class AuthService {
         expiraAt,
         ultimoUsoAt: new Date(),
       },
+      select: { id: true },
     });
 
-    const accessToken = await this.jwt.signAsync({ sub: medicoId });
+    /*
+     * `sid`: de qué sesión salió este token.
+     *
+     * Sirve para que la lista de sesiones pueda marcar «esta» y no ofrecer
+     * cerrarla — hoy el médico puede cerrar la suya propia desde ahí y queda
+     * afuera de la app sin que nada se lo avise.
+     *
+     * No identifica al dispositivo ni agrega nada sensible: es el id de una
+     * fila que el mismo médico ya puede listar.
+     */
+    const accessToken = await this.jwt.signAsync({ sub: medicoId, sid: sesion.id });
     return { accessToken, refreshToken, expiraEn: expiraAt.getTime() };
   }
 

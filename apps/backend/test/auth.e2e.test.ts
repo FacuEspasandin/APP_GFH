@@ -135,4 +135,29 @@ describe('autenticación', () => {
     expect(r.status).toBe(409);
     expect(r.cuerpo!.error!.message).toContain('ya está en uso');
   });
+
+    it('la marca en la lista y no la deja cerrar', async () => {
+      /*
+       * Cerrar la propia sesión desde esta lista deja al médico afuera de la app
+       * sin avisarle qué hizo, y con cara de error. El backend lo rechaza aunque
+       * la pantalla ya no lo ofrezca: la regla es del servidor, no del botón.
+       */
+      const medico = await crearMedico(api);
+      medicos.push(medico.id);
+
+      const lista = await api.get('/auth/sesiones', medico.token);
+      expect(lista.status).toBe(200);
+
+      const sesiones = lista.cuerpo!.data as Array<{ id: string; esActual: boolean }>;
+      const actuales = sesiones.filter((s) => s.esActual);
+      expect(actuales).toHaveLength(1);
+
+      const r = await api.delete(`/auth/sesiones/${actuales[0]!.id}`, medico.token);
+      expect(r.status).toBe(400);
+      expect(r.cuerpo!.error!.message).toMatch(/Cerrar sesión/i);
+
+      // Y sigue viva: el rechazo no la revocó a medias.
+      const despues = await api.get('/auth/sesiones', medico.token);
+      expect((despues.cuerpo!.data as unknown[]).length).toBe(sesiones.length);
+    });
 });

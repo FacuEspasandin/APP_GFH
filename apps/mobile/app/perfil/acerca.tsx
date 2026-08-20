@@ -1,10 +1,13 @@
 import { Text, View } from 'react-native';
 
+import { dondeCorre, versionApp } from '@/ui/dispositivo';
 import { Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 
 /** Acerca de GFH (6.13). */
 export default function Acerca() {
+  const donde = dondeCorre();
+
   return (
     <Pantalla>
       <View className="items-center py-6">
@@ -12,7 +15,11 @@ export default function Acerca() {
           <Text className="text-xl font-fuerte tracking-widest text-white">GFH</Text>
         </View>
         <Text className="mt-4 text-fila font-fuerte text-ink">Gestión Farmacológica Hospitalaria</Text>
-        <Text className="font-sans mt-1 text-meta text-ink-suave">Versión 0.0.1 · desarrollo</Text>
+        {/* La versión sale del paquete instalado y no de un texto acá: escrita
+            a mano se quedaba en 0.0.1 para siempre. Son los mismos números que
+            ve la tienda, así que un reporte se ata a un build exacto. */}
+        <Text className="font-mono mt-1.5 text-meta text-ink-suave">{versionApp()}</Text>
+        {donde ? <Text className="font-mono mt-0.5 text-eyebrow text-tenue">{donde}</Text> : null}
       </View>
 
       <Eyebrow>Contenido clínico</Eyebrow>

@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { aplicarMascara, aTexto, diasDelMes, diaSemanaLunes, validarFecha } from './fecha';
+import {
+  aplicarMascara,
+  aTexto,
+  diasDelMes,
+  diaSemanaLunes,
+  fechaLarga,
+  validarFecha,
+} from './fecha';
 
 const HOY = new Date(Date.UTC(2026, 7, 9)); // 9/8/2026
 
@@ -118,5 +125,28 @@ describe('grilla del calendario', () => {
     expect(diaSemanaLunes(new Date(Date.UTC(1948, 3, 1)))).toBe(3);
     // 9/8/2026 es domingo → 6.
     expect(diaSemanaLunes(new Date(Date.UTC(2026, 7, 9)))).toBe(6);
+  });
+});
+
+describe('fechaLarga', () => {
+  const hoy = new Date(2026, 7, 20); // 20 de agosto de 2026
+
+  it('sin año dentro del año en curso', () => {
+    expect(fechaLarga(new Date(2026, 7, 12), hoy)).toBe('12 de agosto');
+  });
+
+  it('con año cuando es de otro', () => {
+    // Es justo el dato que importa: una sesión abierta hace más de un año.
+    expect(fechaLarga(new Date(2025, 2, 3), hoy)).toBe('3 de marzo de 2025');
+  });
+
+  it('acepta el ISO que manda la API', () => {
+    expect(fechaLarga('2026-08-12T14:30:00.000Z', hoy)).toMatch(/de agosto$/);
+  });
+
+  it('una fecha ilegible no rompe la pantalla', () => {
+    // Llega de la API: si el día que venga mal la lista se cae entera, se
+    // pierde el resto de las sesiones por un dato de una.
+    expect(fechaLarga('no es una fecha', hoy)).toBe('');
   });
 });

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Pressable, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { fechaLarga } from '@/ui/fecha';
 import { Icono } from '@/ui/iconos';
 import { AvisoNeutro, Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -38,28 +39,49 @@ export default function Sesiones() {
           </View>
 
           <View className="flex-1 pr-2">
-            <Text className="text-body font-medio text-ink" numberOfLines={1}>
-              {s.dispositivoInfo ?? 'Dispositivo sin identificar'}
-            </Text>
+            <View className="flex-row items-center">
+              <Text className="text-body font-medio text-ink" numberOfLines={1}>
+                {s.dispositivoInfo ?? 'Dispositivo sin identificar'}
+              </Text>
+              {s.esActual ? (
+                <View
+                  className="ml-2 rounded-chip px-2 py-0.5"
+                  style={{ backgroundColor: col.primaryLight }}
+                >
+                  <Text
+                    className="font-fuerte text-eyebrow uppercase tracking-wider"
+                    style={{ color: col.primary }}
+                  >
+                    Este
+                  </Text>
+                </View>
+              ) : null}
+            </View>
             <Text className="font-sans text-meta text-ink-suave">
-              Desde {new Date(s.creadaAt).toLocaleDateString('es-UY')}
+              Desde {fechaLarga(s.creadaAt)}
             </Text>
           </View>
 
           {/* La acción va como texto y no como botón de ancho completo: con
               tres dispositivos eran tres barras verdes apiladas compitiendo
               entre sí y con lo que de verdad importa, el nombre. */}
-          <Pressable
-            onPress={() => revocar.mutate(s.id)}
-            disabled={revocar.isPending}
-            accessibilityRole="button"
-            accessibilityLabel={`Cerrar la sesión de ${s.dispositivoInfo ?? 'este dispositivo'}`}
-            className="rounded-chip border border-line px-2.5 py-1.5"
-          >
-            <Text className="font-medio text-meta" style={{ color: col.peligro }}>
-              Cerrar
-            </Text>
-          </Pressable>
+          {/* La actual no se ofrece cerrar: hacerlo desde acá deja al médico
+              afuera de la app sin avisarle qué hizo. Para eso está «Cerrar
+              sesión» en el perfil, que sí lo dice. El backend lo rechaza
+              igual — esto sólo evita ofrecer algo que va a fallar. */}
+          {s.esActual ? null : (
+            <Pressable
+              onPress={() => revocar.mutate(s.id)}
+              disabled={revocar.isPending}
+              accessibilityRole="button"
+              accessibilityLabel={`Cerrar la sesión de ${s.dispositivoInfo ?? 'este dispositivo'}`}
+              className="rounded-chip border border-line px-2.5 py-1.5"
+            >
+              <Text className="font-medio text-meta" style={{ color: col.peligro }}>
+                Cerrar
+              </Text>
+            </Pressable>
+          )}
         </Superficie>
       ))}
 

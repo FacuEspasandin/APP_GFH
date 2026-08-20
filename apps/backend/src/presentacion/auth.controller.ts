@@ -13,7 +13,7 @@ import { Throttle } from '@nestjs/throttler';
 
 import { AuthService } from '../aplicacion/auth/auth.service';
 import { Cuerpo } from './comun/cuerpo';
-import { JwtGuard, MedicoActual } from './comun/medico-actual';
+import { JwtGuard, MedicoActual, SesionActual } from './comun/medico-actual';
 import {
   AceptarDisclaimerDto,
   CambiarPasswordDto,
@@ -65,8 +65,8 @@ export class AuthController {
 
   @Get('sesiones')
   @UseGuards(JwtGuard)
-  sesiones(@MedicoActual() medicoId: string) {
-    return this.auth.sesionesActivas(medicoId);
+  sesiones(@MedicoActual() medicoId: string, @SesionActual() sesionId?: string) {
+    return this.auth.sesionesActivas(medicoId, sesionId);
   }
 
   @Delete('sesiones/:id')
@@ -75,8 +75,9 @@ export class AuthController {
   revocarSesion(
     @MedicoActual() medicoId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
+    @SesionActual() sesionId?: string,
   ) {
-    return this.auth.revocarSesion(medicoId, id);
+    return this.auth.revocarSesion(medicoId, id, sesionId);
   }
 
   @Post('password')
