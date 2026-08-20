@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Pressable, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { useAviso } from '@/ui/aviso';
 import { fechaLarga } from '@/ui/fecha';
 import { Icono } from '@/ui/iconos';
 import { AvisoNeutro, Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
@@ -12,6 +13,7 @@ import { useColores } from '@/ui/tema';
 export default function Sesiones() {
   const col = useColores();
   const qc = useQueryClient();
+  const { avisar } = useAviso();
   const { data, isLoading } = useQuery({
     queryKey: ['sesiones'],
     queryFn: API.sesiones,
@@ -19,7 +21,12 @@ export default function Sesiones() {
 
   const revocar = useMutation({
     mutationFn: (id: string) => API.cerrarSesion(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['sesiones'] }),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ['sesiones'] });
+      // La fila desaparece de la lista, que ya es una señal. El aviso es para
+      // el caso de tener varias: se ve que se fue una sin tener que contarlas.
+      avisar('Sesión cerrada');
+    },
   });
 
   if (isLoading) return <Cargando />;

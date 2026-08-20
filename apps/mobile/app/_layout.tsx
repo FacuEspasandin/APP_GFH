@@ -13,6 +13,7 @@ import {
   registrarManejadorSuscripcionVencida,
 } from '@/api/cliente';
 import { rutaPaywall } from '@/dominio/plan-gratis';
+import { ProveedorAviso } from '@/ui/aviso';
 import { BotonVolverHeader } from '@/ui/boton-volver';
 import { useFuentes } from '@/ui/fuentes';
 import { MenuInferior } from '@/ui/menu-inferior';
@@ -46,7 +47,11 @@ export default function LayoutRaiz() {
       <ProveedorTema>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <Navegacion />
+            {/* Adentro del área segura: el aviso se posiciona contra el borde
+                de arriba y necesita el inset del notch. */}
+            <ProveedorAviso>
+              <Navegacion />
+            </ProveedorAviso>
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </ProveedorTema>

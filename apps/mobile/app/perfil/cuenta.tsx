@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { useAviso } from '@/ui/aviso';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Boton, CampoTexto, Cargando, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
@@ -15,6 +16,7 @@ export default function Cuenta() {
 
   const router = useRouter();
   const qc = useQueryClient();
+  const { avisar } = useAviso();
   const { data, isLoading } = useQuery({ queryKey: ['perfil'], queryFn: API.yo });
 
   const [c, setC] = useState({ nombre: '', apellido: '', email: '' });
@@ -37,6 +39,7 @@ export default function Cuenta() {
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['perfil'] });
       router.back();
+      avisar('Datos guardados');
     },
     onError: (e) => setError(e instanceof Error ? e.message : 'No se pudo guardar.'),
   });

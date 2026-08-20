@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 
 import type { Inicio } from '@/api/tipos';
 import * as API from '@/api/endpoints';
+import { useAviso } from '@/ui/aviso';
 import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
 
 /**
@@ -17,6 +18,7 @@ export default function EditarGrupo() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
+  const { avisar } = useAviso();
   const [nombre, setNombre] = useState('');
 
   const { data } = useQuery({ queryKey: ['inicio', ''], queryFn: API.inicio });
@@ -33,6 +35,7 @@ export default function EditarGrupo() {
     onSuccess: async () => {
       await invalidar();
       router.back();
+      avisar('Grupo renombrado');
     },
   });
 
