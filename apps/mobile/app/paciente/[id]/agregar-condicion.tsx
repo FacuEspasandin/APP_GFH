@@ -5,6 +5,8 @@ import { Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { buscar } from '@/dominio/busqueda';
+import { CampoFecha } from '@/ui/campo-fecha';
+import { aISO, validarFecha } from '@/ui/fecha';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
 
@@ -15,13 +17,23 @@ export default function AgregarCondicion() {
   const qc = useQueryClient();
   const [elegida, setElegida] = useState<string | null>(null);
   const [texto, setTexto] = useState('');
+  /** Opcional y vacío por defecto: la mayoría de las condiciones se cargan sin
+   *  saber la fecha, y un campo obligatorio ahí frenaría el alta. */
+  const [fecha, setFecha] = useState('');
+
+  const vf = validarFecha(fecha);
+  const fechaDiagnostico = vf.valida && vf.fecha ? aISO(vf.fecha) : undefined;
   // Sin pausa: la lista ya está en memoria y `buscar` normaliza sola.
   const filtro = texto.trim();
 
   const { data } = useQuery({ queryKey: ['cond'], queryFn: API.condiciones });
 
   const agregar = useMutation({
-    mutationFn: () => API.agregarCondicion(pacienteId, { condicionClinicaId: elegida }),
+    mutationFn: () =>
+      API.agregarCondicion(pacienteId, {
+        condicionClinicaId: elegida,
+        ...(fechaDiagnostico ? { fechaDiagnostico } : {}),
+      }),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       router.back();
@@ -72,6 +84,20 @@ export default function AgregarCondicion() {
           </Text>
         ) : null}
       </BloqueFormulario>
+
+      {/* Aparece recién con una condición elegida: sin eso es un campo que no
+          se sabe de qué habla. */}
+      {elegida ? (
+        <BloqueFormulario titulo="Desde cuándo" etiqueta="Opcional">
+          <CampoFecha etiqueta="Fecha de diagnóstico" valor={fecha} onChange={setFecha} />
+          <Text className="font-sans -mt-2 text-meta leading-5 text-ink-suave">
+            {/* Que no entre en el motor hay que decirlo: si no, el médico puede
+                suponer que cargarla cambia lo que la app verifica. */}
+            No cambia las verificaciones — el motor sólo mira si la condición está.
+            Queda como contexto en la ficha.
+          </Text>
+        </BloqueFormulario>
+      ) : null}
 
       <BloqueFormulario titulo="Las que no se cargan">
         <Text className="font-sans text-meta leading-5 text-ink-suave">

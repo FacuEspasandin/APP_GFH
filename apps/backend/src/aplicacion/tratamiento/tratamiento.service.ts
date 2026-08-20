@@ -251,12 +251,19 @@ export class TratamientoService {
 
     const guardada = await this.prisma.condicionPaciente.upsert({
       where: { pacienteId_condicionClinicaId: { pacienteId, condicionClinicaId: dto.condicionClinicaId } },
-      update: { activo: true, observaciones: dto.observaciones ?? null },
+      update: {
+        activo: true,
+        observaciones: dto.observaciones ?? null,
+        // Sólo se pisa si viene: reactivar una condición sin mandar la fecha no
+        // tiene por qué borrar la que ya estaba escrita.
+        ...(dto.fechaDiagnostico ? { fechaDiagnostico: new Date(dto.fechaDiagnostico) } : {}),
+      },
       create: {
         medicoId,
         pacienteId,
         condicionClinicaId: dto.condicionClinicaId,
         observaciones: dto.observaciones ?? null,
+        fechaDiagnostico: dto.fechaDiagnostico ? new Date(dto.fechaDiagnostico) : null,
         activo: true,
       },
     });

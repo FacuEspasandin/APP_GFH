@@ -69,6 +69,15 @@ export class ActualizarPrescripcionDto {
 export class AgregarCondicionDto {
   @IsUUID() condicionClinicaId!: string;
   @IsOptional() @IsString() @Length(1, 200) observaciones?: string;
+
+  /**
+   * Desde cuándo tiene esta condición. Opcional.
+   *
+   * La columna existía en el esquema desde el principio y la app nunca la
+   * pidió. No entra en ninguna verificación —el motor sólo mira si la condición
+   * está o no— pero es contexto que el médico escribe una vez y lee muchas.
+   */
+  @IsOptional() @IsDateString() fechaDiagnostico?: string;
 }
 
 export class AgregarAlergiaDto {
