@@ -467,28 +467,54 @@ export class TratamientoService {
     const numero = (v: unknown) => (v === null || v === undefined ? undefined : Number(v));
     const punto = (v: number | null | undefined) => (v === null || v === undefined ? undefined : (v as 1 | 2 | 3));
 
-    /** La banda que vino, la que ya estaba, o la derivada del valor viejo. */
+    /**
+     * De dónde sale la banda de un criterio, en orden de preferencia.
+     *
+     *   1. La banda que llega en esta request — la pantalla del paciente manda
+     *      esto desde que Child-Pugh se contesta tocando.
+     *   2. El VALOR que llega en esta request, convertido a banda.
+     *   3. La banda que ya estaba guardada.
+     *   4. El valor que ya estaba guardado, convertido.
+     *
+     * El paso 2 faltaba, y era un bug con dientes: un PATCH que traía
+     * `bilirrubinaMgDl` guardaba el valor y NO lo usaba para clasificar en esa
+     * misma request —porque miraba `paciente.bilirrubinaMgDl`, que todavía era
+     * null—. Repitiendo el mismo PATCH clasificaba bien. Así, un cliente que
+     * mande valores en vez de bandas recibe «faltan criterios» sin motivo.
+     *
+     * El valor de esta request le gana a la banda guardada porque es
+     * información más nueva sobre el mismo criterio.
+     */
     const banda = (
-      llega: number | undefined,
+      llegaBanda: number | undefined,
+      llegaValor: number | undefined,
       guardada: number | null,
-      valor: unknown,
+      valorGuardado: unknown,
       desdeValor: (n: number) => 1 | 2 | 3,
     ) => {
-      if (llega !== undefined) return llega as 1 | 2 | 3;
+      if (llegaBanda !== undefined) return llegaBanda as 1 | 2 | 3;
+      if (llegaValor !== undefined) return desdeValor(llegaValor);
       if (guardada !== null) return punto(guardada);
-      const n = numero(valor);
+      const n = numero(valorGuardado);
       return n === undefined ? undefined : desdeValor(n);
     };
 
     const fusionado = {
       bilirrubina: banda(
         dto.bilirrubinaPuntos,
+        dto.bilirrubinaMgDl,
         paciente.bilirrubinaPuntos,
         paciente.bilirrubinaMgDl,
         puntosBilirrubina,
       ),
-      albumina: banda(dto.albuminaPuntos, paciente.albuminaPuntos, paciente.albuminaGDl, puntosAlbumina),
-      inr: banda(dto.inrPuntos, paciente.inrPuntos, paciente.inr, puntosInr),
+      albumina: banda(
+        dto.albuminaPuntos,
+        dto.albuminaGDl,
+        paciente.albuminaPuntos,
+        paciente.albuminaGDl,
+        puntosAlbumina,
+      ),
+      inr: banda(dto.inrPuntos, dto.inr, paciente.inrPuntos, paciente.inr, puntosInr),
       ascitis: dto.ascitis ?? paciente.ascitis ?? undefined,
       encefalopatia: dto.encefalopatia ?? paciente.encefalopatia ?? undefined,
     };

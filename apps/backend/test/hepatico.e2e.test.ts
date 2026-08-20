@@ -100,6 +100,28 @@ describe('datos hepáticos', () => {
     expect(Number(d.inr)).toBe(1.1);
   });
 
+  it('el valor que llega en la request se usa en ESA request, no en la siguiente', async () => {
+    /*
+     * La regresión que dejó cinco casos en rojo: la banda se derivaba del valor
+     * GUARDADO en el paciente y nunca del que venía en el cuerpo. Como el
+     * guardado todavía era null, el mismo PATCH almacenaba la bilirrubina y la
+     * ignoraba para clasificar — y repitiéndolo idéntico, clasificaba bien.
+     *
+     * Por eso se comprueba que el segundo PATCH no cambie nada: es lo que
+     * distinguía el bug de un simple «no clasifica».
+     */
+    const id = await crear();
+
+    const primero = await api.patch(`/pacientes/${id}/datos-hepaticos`, COMPLETO_A, medico.token);
+    expect(primero.cuerpo!.data.clase).toBe('A');
+    expect(primero.cuerpo!.data.puntos).toBe(5);
+    expect(primero.cuerpo!.data.faltan).toEqual([]);
+
+    const segundo = await api.patch(`/pacientes/${id}/datos-hepaticos`, COMPLETO_A, medico.token);
+    expect(segundo.cuerpo!.data.clase).toBe('A');
+    expect(segundo.cuerpo!.data.puntos).toBe(5);
+  });
+
   it('completar el criterio que faltaba cierra la clase', async () => {
     const id = await crear();
 
