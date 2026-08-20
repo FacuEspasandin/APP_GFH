@@ -177,3 +177,31 @@ export function fechaLarga(fecha: string | Date, hoy = new Date()): string {
     ? `${dia} de ${mes}`
     : `${dia} de ${mes} de ${d.getFullYear()}`;
 }
+
+/**
+ * «hoy», «hace 3 días», «hace 3 meses».
+ *
+ * Para poner al lado de un dato de laboratorio: la fecha sola —«3 de mayo»—
+ * obliga a hacer la cuenta mentalmente, y la cuenta es justo lo que decide si
+ * el valor todavía sirve.
+ *
+ * No dice si el dato está vencido, sólo cuánto tiempo pasó. No hay umbral
+ * clínico universal para «creatinina vieja»: depende del paciente y del
+ * fármaco, así que poner uno sería inventar una regla.
+ */
+export function antiguedad(fecha: string | Date, hoy = new Date()): string | null {
+  const d = typeof fecha === 'string' ? new Date(fecha) : fecha;
+  if (Number.isNaN(d.getTime())) return null;
+
+  const dias = Math.floor((hoy.getTime() - d.getTime()) / 86_400_000);
+  if (dias < 0) return null;
+  if (dias === 0) return 'hoy';
+  if (dias === 1) return 'ayer';
+  if (dias < 31) return `hace ${dias} días`;
+
+  const meses = Math.floor(dias / 30);
+  if (meses < 12) return `hace ${meses} ${meses === 1 ? 'mes' : 'meses'}`;
+
+  const anios = Math.floor(dias / 365);
+  return `hace ${anios} ${anios === 1 ? 'año' : 'años'}`;
+}

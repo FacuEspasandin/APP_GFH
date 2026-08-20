@@ -30,6 +30,25 @@ import {
  *
  * `medicoId` en el where de todo, incluidas las operaciones por id.
  */
+/**
+ * De cuándo es el análisis que se está cargando.
+ *
+ * Sin fecha se asume hoy, que es lo que se venía guardando siempre. Lo nuevo
+ * es poder decir otra cosa: una creatinina de hace tres meses registrada como
+ * de hoy hace que el cockpit muestre ese clearance sin ninguna señal de que
+ * está viejo, y el médico no tiene forma de saberlo.
+ *
+ * Una fecha futura se ignora y vale hoy. No se rechaza con un error: el dato
+ * clínico —la creatinina— es válido igual, y perder el guardado entero por un
+ * dedazo en el año sería peor que corregirlo en silencio.
+ */
+function fechaDelAnalisis(iso?: string, ahora = new Date()): Date {
+  if (!iso) return ahora;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime()) || d.getTime() > ahora.getTime()) return ahora;
+  return d;
+}
+
 @Injectable()
 export class TratamientoService {
   constructor(
@@ -396,7 +415,9 @@ export class TratamientoService {
         ...(dto.creatininaMgDl !== undefined ? { creatininaMgDl: dto.creatininaMgDl } : {}),
         clcrMlMin,
         clcrOrigen,
-        clcrMedidoAt: clcrMlMin !== null ? new Date() : null,
+        // La que mandó el médico, o hoy. Antes era hoy y punto, así que todo
+        // análisis quedaba registrado como de esta mañana.
+        clcrMedidoAt: clcrMlMin !== null ? fechaDelAnalisis(dto.medidoAt) : null,
       },
     });
 
@@ -534,7 +555,7 @@ export class TratamientoService {
         ...(dto.encefalopatia !== undefined ? { encefalopatia: dto.encefalopatia } : {}),
         childPughClase: r.clase,
         childPughOrigen: r.clase === null ? null : 'CALCULADO',
-        childPughMedidoAt: r.clase === null ? null : new Date(),
+        childPughMedidoAt: r.clase === null ? null : fechaDelAnalisis(dto.medidoAt),
       },
     });
 

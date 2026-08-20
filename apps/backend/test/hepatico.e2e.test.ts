@@ -209,6 +209,44 @@ describe('datos hepáticos', () => {
     expect(r.status).toBe(404);
   });
 
+
+  it('la fecha del análisis es la que manda el médico, no la de hoy', async () => {
+    /*
+     * El backend estampaba `new Date()` en cada guardado, así que un análisis
+     * de hace tres meses quedaba registrado como de esta mañana y el cockpit
+     * mostraba la clase sin ninguna señal de que el dato era viejo.
+     */
+    const id = await crear();
+    const hace90 = new Date(Date.now() - 90 * 86_400_000);
+
+    await api.patch(
+      `/pacientes/${id}/datos-hepaticos`,
+      { ...COMPLETO_A, medidoAt: hace90.toISOString() },
+      medico.token,
+    );
+
+    const d = await leer(id);
+    expect(d.childPughClase).toBe('A');
+    const guardada = new Date(d.childPughMedidoAt as string);
+    expect(Math.abs(guardada.getTime() - hace90.getTime())).toBeLessThan(2000);
+  });
+
+  it('una fecha futura se ignora y vale hoy', async () => {
+    // El dato clínico es válido igual: perder el guardado entero por un dedazo
+    // en el año sería peor que corregirlo en silencio.
+    const id = await crear();
+    const dentroDeUnAnio = new Date(Date.now() + 365 * 86_400_000);
+
+    await api.patch(
+      `/pacientes/${id}/datos-hepaticos`,
+      { ...COMPLETO_A, medidoAt: dentroDeUnAnio.toISOString() },
+      medico.token,
+    );
+
+    const d = await leer(id);
+    expect(d.childPughClase).toBe('A');
+    expect(new Date(d.childPughMedidoAt as string).getTime()).toBeLessThanOrEqual(Date.now() + 1000);
+  });
   describe('herramienta suelta', () => {
     it('calcula sin paciente y sin guardar', async () => {
       const r = await api.post('/herramientas/ajuste-hepatico', COMPLETO_A, medico.token);

@@ -11,6 +11,8 @@ import {
   procedenciaClcr,
 } from '@/dominio/funcion-renal';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { CampoFecha } from '@/ui/campo-fecha';
+import { aISO, validarFecha } from '@/ui/fecha';
 import { Cargando, Boton, CampoTexto, Chip } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
 import {
@@ -44,6 +46,14 @@ export default function DatosRenales() {
   const [pesoKg, setPesoKg] = useState('');
   const [creatinina, setCreatinina] = useState('');
   const [clcr, setClcr] = useState('');
+  /** Vacío = hoy. No se precarga con la fecha de hoy para que se vea que es
+   *  opcional: un campo ya lleno invita a dejarlo como está. */
+  const [fecha, setFecha] = useState('');
+
+  // El ISO sale del texto sólo cuando la fecha está completa y es válida: a
+  // medio escribir no se manda nada y el backend usa hoy.
+  const vf = validarFecha(fecha);
+  const medidoAt = vf.valida && vf.fecha ? aISO(vf.fecha) : undefined;
 
   const num = (v: string) => (v.trim() === '' ? undefined : Number(v.replace(',', '.')));
 
@@ -53,6 +63,7 @@ export default function DatosRenales() {
         ...(modo === 'manual'
           ? { clcrMlMin: num(clcr) }
           : { pesoKg: num(pesoKg), creatininaMgDl: num(creatinina) }),
+        ...(medidoAt ? { medidoAt } : {}),
       }),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
@@ -121,6 +132,16 @@ export default function DatosRenales() {
           )}
 
           <Delta antes={p.clcrMlMin} despues={nuevo} manual={modo === 'manual'} />
+        </BloqueFormulario>
+
+        <BloqueFormulario titulo="Fecha del análisis" etiqueta="Opcional">
+          <CampoFecha etiqueta="Cuándo se hizo" valor={fecha} onChange={setFecha} />
+          <Text className="font-sans -mt-2 text-meta leading-5 text-ink-suave">
+            {/* Sin fecha se guarda como de hoy, que es lo que hacía siempre. La
+                diferencia es que ahora se puede decir otra cosa: un análisis de
+                hace tres meses mostrado sin fecha parece de esta mañana. */}
+            Sin completar se guarda con la fecha de hoy.
+          </Text>
         </BloqueFormulario>
       </ScrollView>
 

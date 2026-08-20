@@ -11,7 +11,10 @@ import {
   sePuedeGuardar,
   type Borrador,
 } from '@/dominio/hepatico';
+import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { FormularioChildPugh, ResultadoChildPugh } from '@/ui/child-pugh';
+import { CampoFecha } from '@/ui/campo-fecha';
+import { aISO, validarFecha } from '@/ui/fecha';
 import { Boton, Cargando } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 
@@ -70,10 +73,20 @@ export default function DatosHepaticos() {
   });
 
   const [editado, setEditado] = useState<Borrador | null>(null);
+  /** Vacío = hoy. Ver `datos-renales`. */
+  const [fecha, setFecha] = useState('');
+
+  // El ISO sale del texto sólo cuando la fecha está completa y es válida: a
+  // medio escribir no se manda nada y el backend usa hoy.
+  const vf = validarFecha(fecha);
+  const medidoAt = vf.valida && vf.fecha ? aISO(vf.fecha) : undefined;
 
   const guardar = useMutation({
     mutationFn: (b: Borrador) =>
-      API.guardarDatosHepaticos(pacienteId, cuerpoDeGuardado(b)),
+      API.guardarDatosHepaticos(pacienteId, {
+        ...cuerpoDeGuardado(b),
+        ...(medidoAt ? { medidoAt } : {}),
+      }),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       await qc.invalidateQueries({ queryKey: ['historial', pacienteId] });
@@ -111,6 +124,16 @@ export default function DatosHepaticos() {
               : 'La clase queda en el paciente. La tabla de ajuste por fármaco todavía no existe: cuando esté, se aplica sola sobre el tratamiento que ya cargaste.'}
           </Text>
         </Superficie>
+
+        <BloqueFormulario titulo="Fecha del análisis" etiqueta="Opcional">
+          <CampoFecha etiqueta="Cuándo se hicieron" valor={fecha} onChange={setFecha} />
+          <Text className="font-sans -mt-2 text-meta leading-5 text-ink-suave">
+            {/* Sin fecha se guarda como de hoy, que es lo que hacía siempre. La
+                diferencia es que ahora se puede decir otra cosa: un análisis de
+                hace tres meses mostrado sin fecha parece de esta mañana. */}
+            Sin completar se guarda con la fecha de hoy.
+          </Text>
+        </BloqueFormulario>
       </ScrollView>
 
       <View className="border-t border-line bg-surface px-4 py-3">

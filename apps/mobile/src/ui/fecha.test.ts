@@ -5,6 +5,7 @@ import {
   aTexto,
   diasDelMes,
   diaSemanaLunes,
+  antiguedad,
   fechaLarga,
   validarFecha,
 } from './fecha';
@@ -148,5 +149,32 @@ describe('fechaLarga', () => {
     // Llega de la API: si el día que venga mal la lista se cae entera, se
     // pierde el resto de las sesiones por un dato de una.
     expect(fechaLarga('no es una fecha', hoy)).toBe('');
+  });
+});
+
+describe('antiguedad', () => {
+  const hoy = new Date(2026, 7, 20);
+  const hace = (dias: number) => new Date(hoy.getTime() - dias * 86_400_000);
+
+  it('los tramos', () => {
+    expect(antiguedad(hoy, hoy)).toBe('hoy');
+    expect(antiguedad(hace(1), hoy)).toBe('ayer');
+    expect(antiguedad(hace(12), hoy)).toBe('hace 12 días');
+    expect(antiguedad(hace(90), hoy)).toBe('hace 3 meses');
+    expect(antiguedad(hace(400), hoy)).toBe('hace 1 año');
+  });
+
+  it('el singular del mes', () => {
+    expect(antiguedad(hace(35), hoy)).toBe('hace 1 mes');
+  });
+
+  it('una fecha futura no dice nada', () => {
+    // Llega del servidor: si el reloj del teléfono está adelantado, «hace -2
+    // días» sería peor que no decir nada.
+    expect(antiguedad(new Date(hoy.getTime() + 86_400_000), hoy)).toBeNull();
+  });
+
+  it('una fecha ilegible tampoco', () => {
+    expect(antiguedad('cualquier cosa', hoy)).toBeNull();
   });
 });

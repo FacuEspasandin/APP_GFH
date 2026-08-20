@@ -5,6 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import type { CategoriaHallazgo, Cockpit, PrescripcionCockpit } from '@/api/tipos';
 import * as API from '@/api/endpoints';
+import { antiguedad } from '@/ui/fecha';
 import { Icono } from '@/ui/iconos';
 import { AnilloClcr } from '@/ui/anillo-clcr';
 import { etiquetaEmbarazo } from '@/dominio/gestacion';
@@ -165,7 +166,16 @@ export default function CockpitPaciente() {
                   "Masculino" también para OTRO, que es un tercer valor real de
                   la base y usa otro factor en Cockcroft-Gault. */}
               <Dato etiqueta="Sexo" valor={nombreSexo(p.sexo as Sexo)} />
-              <Dato etiqueta="Origen del Clcr" valor={etiquetaOrigen(p.clcrOrigen)} />
+              {/* La antigüedad al lado del origen. Un clearance calculado con
+                  una creatinina de hace tres meses se leía igual que uno de
+                  esta mañana: el backend estampaba la fecha de guardado, no la
+                  del análisis. La app dice cuánto pasó y no si está vencido —
+                  no hay umbral universal para eso. */}
+              <Dato
+                etiqueta="Origen del Clcr"
+                valor={etiquetaOrigen(p.clcrOrigen)}
+                nota={p.clcrMedidoAt ? (antiguedad(p.clcrMedidoAt) ?? undefined) : undefined}
+              />
             </View>
           </View>
 
@@ -415,11 +425,14 @@ function Dato({
   etiqueta,
   valor,
   sufijo,
+  nota,
   color,
 }: {
   etiqueta: string;
   valor: string;
   sufijo?: string;
+  /** Un renglón chico abajo. Hoy: cuánto hace del análisis. */
+  nota?: string;
   color?: string;
 }) {
   const col = useColores();
@@ -436,6 +449,9 @@ function Dato({
         {valor}
         {sufijo ? <Text className="font-sans text-meta text-ink-suave"> {sufijo}</Text> : null}
       </Text>
+      {nota ? (
+        <Text className="font-sans text-eyebrow text-tenue">{nota}</Text>
+      ) : null}
     </View>
   );
 }

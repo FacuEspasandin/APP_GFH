@@ -4,6 +4,7 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
+  IsDateString,
   IsEnum,
   IsInt,
   IsNumber,
@@ -89,6 +90,16 @@ export class DatosRenalesDto {
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.01) @Max(30) creatininaMgDl?: number;
   /** Si viene, pisa al calculado — el médico siempre puede sobreescribir. */
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(300) clcrMlMin?: number;
+
+  /**
+   * De cuándo es el análisis.
+   *
+   * Ausente = hoy, que es lo que se venía guardando siempre. La diferencia es
+   * que ahora se puede decir otra cosa: una creatinina de hace tres meses
+   * registrada como de hoy hace que el cockpit muestre ese clearance sin
+   * ninguna señal de que está viejo.
+   */
+  @IsOptional() @IsDateString() medidoAt?: string;
 }
 
 /**
@@ -117,6 +128,9 @@ export class DatosHepaticosDto {
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.5) @Max(20) inr?: number;
   @IsOptional() @IsEnum(['AUSENTE', 'LEVE', 'MODERADA_SEVERA']) ascitis?: 'AUSENTE' | 'LEVE' | 'MODERADA_SEVERA';
   @IsOptional() @IsEnum(['AUSENTE', 'GRADO_1_2', 'GRADO_3_4']) encefalopatia?: 'AUSENTE' | 'GRADO_1_2' | 'GRADO_3_4';
+
+  /** De cuándo son los valores. Ausente = hoy. Ver `DatosRenalesDto`. */
+  @IsOptional() @IsDateString() medidoAt?: string;
 }
 
 // --- herramientas standalone -------------------------------------------------
