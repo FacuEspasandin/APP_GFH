@@ -1,3 +1,5 @@
+import { viaLegible } from '@gfh/shared-types';
+
 import type { Cambio } from './eventos.service';
 
 /**
@@ -26,33 +28,12 @@ export function pauta(p: { dosis: string; frecuencia: string; via?: string | nul
   return partes.join(' · ');
 }
 
-/** Las claves son el enum `ViaAdministracion` tal cual está en el esquema. */
-const VIAS: Record<string, string> = {
-  ORAL: 'vía oral',
-  IV: 'vía intravenosa',
-  IM: 'vía intramuscular',
-  SC: 'vía subcutánea',
-  TOPICA: 'vía tópica',
-  INHALATORIA: 'vía inhalatoria',
-  INTRAOCULAR: 'vía intraocular',
-  OFTALMICA: 'vía oftálmica',
-  OTICA: 'vía ótica',
-  RECTAL: 'vía rectal',
-  VAGINAL: 'vía vaginal',
-  TRANSDERMICA: 'vía transdérmica',
-  SUBLINGUAL: 'vía sublingual',
-  NASAL: 'vía nasal',
-  OTRA: 'otra vía',
-};
-
 /**
- * NO_ESPECIFICADA no se escribe: decir «vía no especificada» ocupa una línea
- * para no informar nada. Se omite y listo.
+ * Se reexporta para no tocar a los que ya la importaban de acá. El mapa vive en
+ * `@gfh/shared-types`: el móvil lo necesita igual y una segunda copia con los
+ * mismos rótulos es la forma más barata de que en seis meses digan distinto.
  */
-export function viaLegible(via: string): string | null {
-  if (via === 'NO_ESPECIFICADA') return null;
-  return VIAS[via] ?? via.toLowerCase();
-}
+export { viaLegible };
 
 /**
  * Los campos que cambiaron, ya formateados.

@@ -115,6 +115,33 @@ async function main() {
     }
   }
 
+  /*
+   * La demo tiene que quedar del lado pago, siempre.
+   *
+   * Esto también lo hace `dev:cuentas`, pero quien corre sólo `dev:datos`
+   * —que es lo habitual: es el que carga el paciente— se quedaba con la cuenta
+   * del lado gratis, y el plan gratis permite cero pacientes propios. La demo
+   * dejaba de demostrar el producto justo cuando alguien la estaba mirando.
+   *
+   * `dev:cuentas` sigue existiendo para lo que esto no hace: la segunda cuenta,
+   * la gratuita, que es con la que se prueban el paywall y los contadores.
+   */
+  const dentroDeUnAnio = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+  const suscripcion = {
+    entitlementId: 'premium',
+    productId: 'gfh.mensual',
+    store: 'APP_STORE' as const,
+    estado: 'ACTIVA' as const,
+    periodoActualFin: dentroDeUnAnio,
+    ultimoEventoId: `dev-${medico.id}`,
+    ultimoEventoTipo: 'INITIAL_PURCHASE',
+  };
+  await prisma.suscripcion.upsert({
+    where: { medicoId: medico.id },
+    update: suscripcion,
+    create: { medicoId: medico.id, ...suscripcion },
+  });
+
   const grupo = await prisma.grupo.upsert({
     where: { medicoId_nombre: { medicoId: medico.id, nombre: 'Consultorio' } },
     update: {},

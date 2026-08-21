@@ -14,7 +14,7 @@ import {
 import { Cargando, Estado, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { ChipSeveridad, Espina } from '@/ui/severidad';
-import { COLOR_SEVERIDAD } from '@gfh/shared-types';
+import { COLOR_SEVERIDAD, viaLegible } from '@gfh/shared-types';
 
 /**
  * Detalle de hallazgos: todos, por categoría, por fármaco o los avisos.
@@ -76,8 +76,16 @@ export default function Hallazgos() {
         <View className="mb-4 rounded-card border border-line bg-surface px-3.5 py-3">
           <Text className="text-body font-medio text-ink">{prescripcionActual.nombre}</Text>
           <Text className="font-sans mt-0.5 text-meta text-ink-suave">
-            {prescripcionActual.dosis} · {prescripcionActual.frecuencia} ·{' '}
-            {prescripcionActual.via.toLowerCase()}
+            {[
+              prescripcionActual.dosis,
+              prescripcionActual.frecuencia,
+              /* `viaLegible` devuelve null en NO_ESPECIFICADA y el filtro la
+                 saca: antes salía «vía no_especificada», con guión bajo, que es
+                 el enum crudo pasado a minúsculas. */
+              viaLegible(prescripcionActual.via),
+            ]
+              .filter(Boolean)
+              .join(' · ')}
           </Text>
           <Pressable
             onPress={() =>

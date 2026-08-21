@@ -9,3 +9,4 @@ export * from './restricciones-ficha';
 export * from './severidad';
 export * from './sexo';
 export * from './texto';
+export * from './vias';

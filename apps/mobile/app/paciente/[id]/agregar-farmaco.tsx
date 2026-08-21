@@ -11,7 +11,7 @@ import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { hapticaAdvertencia, hapticaBloqueo, hapticaExito } from '@/ui/haptica';
 import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
-import { COLOR_SEVERIDAD } from '@gfh/shared-types';
+import { COLOR_SEVERIDAD, VIAS_OFRECIDAS } from '@gfh/shared-types';
 
 interface Producto {
   id: string;
@@ -22,7 +22,9 @@ interface Producto {
   principiosActivos: string[];
 }
 
-const VIAS = ['ORAL', 'IV', 'SC', 'IM', 'TOPICA', 'INHALATORIA', 'SUBLINGUAL', 'RECTAL'] as const;
+/** Las que se ofrecen salen de `shared-types`: estaban copiadas acá y en
+ *  Reemplazar fármaco, y dos listas de vocabulario clínico divergen solas. */
+const VIAS = VIAS_OFRECIDAS;
 
 /**
  * Agregar fármaco (3.2.x). Se busca y se prescribe por PRODUCTO COMERCIAL.

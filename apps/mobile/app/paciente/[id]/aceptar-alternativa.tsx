@@ -10,8 +10,11 @@ import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { VIAS_OFRECIDAS } from '@gfh/shared-types';
 
-const VIAS = ['ORAL', 'IV', 'SC', 'IM', 'TOPICA', 'INHALATORIA', 'SUBLINGUAL', 'RECTAL'] as const;
+/** Las que se ofrecen salen de `shared-types`: estaban copiadas acá y en
+ *  Reemplazar fármaco, y dos listas de vocabulario clínico divergen solas. */
+const VIAS = VIAS_OFRECIDAS;
 const VERSION_DISCLAIMER = '1.0';
 
 /**
