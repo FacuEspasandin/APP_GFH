@@ -14,11 +14,15 @@ import {
   cuantosContestados,
   puntajeMaximo,
   puntajeParcial,
+  opcionesDe,
+  rangoDe,
   textoDeFaltantes,
   tramoDe,
+  unidadDe,
   type Borrador,
   type Campo,
   type Molde,
+  type Unidades,
   type Tramo,
 } from '@gfh/shared-types';
 
@@ -41,18 +45,36 @@ import {
  */
 
 /**
+ * Una cifra calculada, o la explicación de por qué no salió.
+ *
+ * `null` se pinta gris, nunca cero: un cero se lee como un resultado y la regla
+ * 5 dice no inferir nada sin dato.
+ *
+ * `porQueNo` es lo que separa «todavía no escribiste» de «con estos datos la
+ * fórmula no aplica» —triglicéridos sobre 400, un HDL mayor que el colesterol
+ * total—. Los dos daban el mismo gris y son cosas distintas: uno se resuelve
+ * escribiendo y el otro corrigiendo. Sin esta línea el médico no sabe cuál de
+ * las dos le pasó.
+ */
+export interface Cifra {
+  valor: number | null;
+  porQueNo?: string;
+}
+
+/**
  * Lo que la calculadora sabe hacer con lo escrito.
  *
- * Devuelve las cifras por clave. `null` en una cifra es «con estos datos no
- * sale» —falta algo, o el valor rompe la fórmula— y se pinta gris, nunca cero:
- * un cero se lee como un resultado y la regla 5 dice no inferir nada sin dato.
+ * Recibe las unidades elegidas y no los valores ya convertidos: la conversión
+ * la hace la función pura, que ya sabe. Convertir en la pantalla sería una
+ * segunda implementación de algo que `lipidos.ts` y `child-pugh.ts` resuelven.
  *
  * Las de puntaje no la necesitan: el puntaje sale de los puntos declarados.
  */
-export type Calculo = (b: Borrador) => Record<string, number | null>;
+export type Calculo = (b: Borrador, unidades: Unidades) => Record<string, Cifra>;
 
 export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calculo }) {
   const [borrador, setBorrador] = useState<Borrador>({});
+  const [unidades, setUnidades] = useState<Unidades>({});
   /** La que el médico abrió para corregir. Gana sobre la primera sin contestar. */
   const [abiertaAMano, setAbiertaAMano] = useState<string | null>(null);
 
@@ -63,14 +85,22 @@ export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calc
     setAbiertaAMano(null);
   };
 
+  /* Cambiar de unidad no toca lo contestado. En las bandas es la misma banda
+     con otro rótulo, y en los números el valor escrito sigue siendo el que el
+     médico leyó del análisis — reinterpretarlo solo sería cambiarle el dato. */
+  const cambiarUnidad = (clave: string, unidad: string) =>
+    setUnidades((p) => ({ ...p, [clave]: unidad }));
+
   const cuerpo =
     molde.modo === 'cascada' ? (
       <EnCascada
         molde={molde}
         borrador={borrador}
+        unidades={unidades}
         abiertaAMano={abiertaAMano}
         onAbrir={setAbiertaAMano}
         onResponder={responder}
+        onUnidad={cambiarUnidad}
       />
     ) : (
       <BloqueFormulario titulo="Datos" exigencia="Obligatorio">
@@ -79,7 +109,9 @@ export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calc
             key={c.clave}
             campo={c}
             valor={borrador[c.clave]}
+            unidades={unidades}
             onChange={(v) => responder(c.clave, v)}
+            onUnidad={(u) => cambiarUnidad(c.clave, u)}
           />
         ))}
       </BloqueFormulario>
@@ -93,7 +125,7 @@ export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calc
       <ScrollView contentContainerClassName="px-4 pb-8 pt-3" keyboardShouldPersistTaps="handled">
         {cuerpo}
 
-        <Resultado molde={molde} borrador={borrador} calcular={calcular} />
+        <Resultado molde={molde} borrador={borrador} unidades={unidades} calcular={calcular} />
 
         {/* Obligatorio en el molde: es la línea que hoy cada calculadora escribe
             a su manera o no escribe. */}
@@ -132,15 +164,19 @@ export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calc
 function EnCascada({
   molde,
   borrador,
+  unidades,
   abiertaAMano,
   onAbrir,
   onResponder,
+  onUnidad,
 }: {
   molde: Molde;
   borrador: Borrador;
+  unidades: Unidades;
   abiertaAMano: string | null;
   onAbrir: (clave: string) => void;
   onResponder: (clave: string, valor: string) => void;
+  onUnidad: (clave: string, unidad: string) => void;
 }) {
   const col = useColores();
   const sinContestar = molde.campos.find((c) => !contestado(borrador, c.clave));
@@ -201,7 +237,9 @@ function EnCascada({
                 <CampoDelMolde
                   campo={campo}
                   valor={borrador[campo.clave]}
+                  unidades={unidades}
                   onChange={(v) => onResponder(campo.clave, v)}
+                  onUnidad={(u) => onUnidad(campo.clave, u)}
                   sinRotulo
                 />
               </View>
@@ -216,6 +254,7 @@ function EnCascada({
             key={campo.clave}
             campo={campo}
             valor={borrador[campo.clave]!}
+            unidades={unidades}
             onPress={() => onAbrir(campo.clave)}
           />
         );
@@ -234,17 +273,22 @@ function EnCascada({
 function Plegado({
   campo,
   valor,
+  unidades,
   onPress,
 }: {
   campo: Campo;
   valor: string;
+  unidades: Unidades;
   onPress: () => void;
 }) {
   const col = useColores();
+  // La etiqueta sale de la unidad activa —«2 – 3» o «34 – 50»— pero los puntos
+  // salen siempre de `opciones`: la banda vale lo mismo se escriba como se
+  // escriba.
   const etiqueta =
     campo.tipo === 'opcion'
-      ? (campo.opciones.find((o) => o.valor === valor)?.etiqueta ?? valor)
-      : `${valor} ${campo.unidad}`;
+      ? (opcionesDe(campo, unidades).find((o) => o.valor === valor)?.etiqueta ?? valor)
+      : `${valor} ${unidadDe(campo, unidades)}`;
   const puntos =
     campo.tipo === 'opcion'
       ? campo.opciones.find((o) => o.valor === valor)?.puntos
@@ -277,25 +321,50 @@ function Plegado({
 function CampoDelMolde({
   campo,
   valor,
+  unidades,
   onChange,
+  onUnidad,
   sinRotulo = false,
 }: {
   campo: Campo;
   valor: string | undefined;
+  unidades: Unidades;
   onChange: (v: string) => void;
+  onUnidad: (u: string) => void;
   sinRotulo?: boolean;
 }) {
+  const activa = unidadDe(campo, unidades);
+
+  /* El selector de unidad va arriba del campo y no adentro: adentro compite con
+     el valor por el mismo renglón, y con la letra del sistema agrandada el
+     número deja de entrar. */
+  const selector = campo.unidades ? (
+    <View className="mb-2 flex-row gap-2">
+      {campo.unidades.map((u) => (
+        <Chip
+          key={u.valor}
+          texto={u.etiqueta}
+          activo={activa === u.valor}
+          onPress={() => onUnidad(u.valor)}
+        />
+      ))}
+    </View>
+  ) : null;
+
   if (campo.tipo === 'numero') {
     return (
-      <CampoTexto
-        etiqueta={sinRotulo ? '' : campo.rotulo}
-        value={valor ?? ''}
-        onChangeText={onChange}
-        keyboardType="numeric"
-        placeholder={campo.unidad}
-        rango={campo.rango}
-        valor={numero(valor)}
-      />
+      <View>
+        {selector}
+        <CampoTexto
+          etiqueta={sinRotulo ? '' : campo.rotulo}
+          value={valor ?? ''}
+          onChangeText={onChange}
+          keyboardType="numeric"
+          placeholder={activa}
+          rango={rangoDe(campo, unidades)}
+          valor={numero(valor)}
+        />
+      </View>
     );
   }
 
@@ -306,8 +375,9 @@ function CampoDelMolde({
           {campo.rotulo}
         </Text>
       )}
+      {selector}
       <View className="mb-3 flex-row flex-wrap gap-2">
-        {campo.opciones.map((o) => (
+        {opcionesDe(campo, unidades).map((o) => (
           <Chip
             key={o.valor}
             texto={o.etiqueta}
@@ -327,16 +397,28 @@ function CampoDelMolde({
 function Resultado({
   molde,
   borrador,
+  unidades,
   calcular,
 }: {
   molde: Molde;
   borrador: Borrador;
+  unidades: Unidades;
   calcular?: Calculo;
 }) {
   const r = molde.resultado;
   const todo = completo(molde.campos, borrador);
   const falta = textoDeFaltantes(molde.campos, borrador);
-  const cifras = calcular?.(borrador) ?? {};
+  const cifras = calcular?.(borrador, unidades) ?? {};
+
+  /**
+   * Qué decir cuando no hay número.
+   *
+   * El motivo gana sobre «falta tal cosa»: si la fórmula no aplica, decirle al
+   * médico que complete un campo lo manda a hacer algo que no va a arreglar
+   * nada. Un valor rechazado y un campo vacío daban el mismo gris.
+   */
+  const porQueNoHay = (c: Cifra | undefined): string =>
+    c?.porQueNo ?? falta ?? 'con estos datos no sale';
 
   /**
    * El tramo se muestra sólo con todo contestado.
@@ -387,7 +469,8 @@ function Resultado({
   }
 
   if (r.tipo === 'anillo') {
-    const valor = cifras.valor ?? null;
+    const cifra = cifras.valor;
+    const valor = cifra?.valor ?? null;
     const tramo = tramoDeValor(valor);
     return (
       <Superficie elevacion="plana" className="mb-3.5 items-center px-3.5 py-4">
@@ -400,7 +483,7 @@ function Resultado({
           tamano={132}
         />
         <Text className="font-sans mt-2.5 text-center text-meta leading-5 text-ink-suave">
-          {valor === null ? (falta ?? 'con estos datos no sale') : molde.formula}
+          {valor === null ? porQueNoHay(cifra) : molde.formula}
         </Text>
       </Superficie>
     );
@@ -409,27 +492,36 @@ function Resultado({
   return (
     <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3.5">
       {r.cifras.map((c, i) => {
-        const v = cifras[c.clave] ?? null;
+        const cifra = cifras[c.clave];
+        const v = cifra?.valor ?? null;
         return (
           <View
             key={c.clave}
-            className={`flex-row items-baseline ${i > 0 ? 'mt-2.5 border-t border-line pt-2.5' : ''}`}
+            className={i > 0 ? 'mt-2.5 border-t border-line pt-2.5' : ''}
           >
-            <Text
-              className="font-mono-fuerte text-titulo"
-              style={{ fontVariant: ['tabular-nums'] }}
-            >
-              {v ?? '—'}
-            </Text>
-            <Text className="font-sans ml-3 flex-1 text-meta text-ink-suave">
-              {c.rotulo} · {c.unidad}
-            </Text>
+            <View className="flex-row items-baseline">
+              <Text
+                className="font-mono-fuerte text-titulo"
+                style={{ fontVariant: ['tabular-nums'] }}
+              >
+                {v ?? '—'}
+              </Text>
+              <Text className="font-sans ml-3 flex-1 text-meta text-ink-suave">
+                {c.rotulo} · {c.unidad}
+              </Text>
+            </View>
+            {/* El motivo va por cifra y no al pie: con dos resultados, una puede
+                salir y la otra no —el no-HDL no necesita triglicéridos y el LDL
+                sí— y un solo renglón abajo no diría de cuál habla. */}
+            {v === null ? (
+              <Text className="font-sans mt-1 text-meta leading-5 text-ink-suave">
+                {porQueNoHay(cifra)}
+              </Text>
+            ) : null}
           </View>
         );
       })}
-      <Text className="font-sans mt-2 text-eyebrow text-ink-suave">
-        {falta ?? molde.formula}
-      </Text>
+      <Text className="font-sans mt-2.5 text-eyebrow text-ink-suave">{molde.formula}</Text>
     </Superficie>
   );
 }

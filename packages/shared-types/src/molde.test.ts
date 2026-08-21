@@ -7,8 +7,13 @@ import {
   puntajeMaximo,
   puntajeParcial,
   textoDeFaltantes,
+  opcionesDe,
+  rangoDe,
   tramoDe,
+  unidadDe,
   type Campo,
+  type CampoNumero,
+  type CampoOpcion,
   type Tramo,
 } from './molde';
 
@@ -133,5 +138,81 @@ describe('textoDeFaltantes', () => {
 
   it('vacío del todo lo dice distinto: no empezó, no le falta el final', () => {
     expect(textoDeFaltantes(CAMPOS, {})).toBe('faltan los 3 datos');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Unidades
+// ---------------------------------------------------------------------------
+
+/** Bilirrubina: la misma banda escrita en dos escalas. Los `valor` coinciden. */
+const BILIRRUBINA = {
+  tipo: 'opcion',
+  clave: 'bilirrubina',
+  rotulo: 'Bilirrubina total',
+  opciones: [
+    { valor: 'baja', etiqueta: '< 2', puntos: 1 },
+    { valor: 'media', etiqueta: '2 – 3', puntos: 2 },
+    { valor: 'alta', etiqueta: '> 3', puntos: 3 },
+  ],
+  unidades: [
+    {
+      valor: 'mg/dL',
+      etiqueta: 'mg/dL',
+      opciones: [
+        { valor: 'baja', etiqueta: '< 2', puntos: 1 },
+        { valor: 'media', etiqueta: '2 – 3', puntos: 2 },
+        { valor: 'alta', etiqueta: '> 3', puntos: 3 },
+      ],
+    },
+    {
+      valor: 'umol/L',
+      etiqueta: 'µmol/L',
+      opciones: [
+        { valor: 'baja', etiqueta: '< 34', puntos: 1 },
+        { valor: 'media', etiqueta: '34 – 50', puntos: 2 },
+        { valor: 'alta', etiqueta: '> 50', puntos: 3 },
+      ],
+    },
+  ],
+} as const satisfies CampoOpcion;
+
+const PESO = {
+  tipo: 'numero',
+  clave: 'peso',
+  rotulo: 'Peso',
+  unidad: 'kg',
+  rango: { min: 1, max: 400, decimales: 1 },
+  unidades: [
+    { valor: 'kg', etiqueta: 'kg', rango: { min: 1, max: 400, decimales: 1 } },
+    { valor: 'lb', etiqueta: 'lb', rango: { min: 2, max: 880, decimales: 1 } },
+  ],
+} as const satisfies CampoNumero;
+
+describe('unidades', () => {
+  it('sin elegir, la de arranque: la primera declarada', () => {
+    expect(unidadDe(BILIRRUBINA, {})).toBe('mg/dL');
+  });
+
+  it('un campo numérico arranca en su unidad, aunque no tenga alternativas', () => {
+    expect(unidadDe({ ...PESO, unidades: undefined }, {})).toBe('kg');
+  });
+
+  it('las bandas se reescriben en la unidad elegida', () => {
+    expect(opcionesDe(BILIRRUBINA, { bilirrubina: 'umol/L' })[1]?.etiqueta).toBe('34 – 50');
+  });
+
+  it('cambiar de unidad no cambia los puntos: es la misma banda con otro rótulo', () => {
+    const enUmol = { bilirrubina: 'media' };
+    expect(puntajeParcial([BILIRRUBINA], enUmol)).toBe(2);
+  });
+
+  it('una unidad que ya no está en la declaración cae a las de base, no deja el campo vacío', () => {
+    expect(opcionesDe(BILIRRUBINA, { bilirrubina: 'mEq/L' })).toEqual(BILIRRUBINA.opciones);
+  });
+
+  it('el rango es el de la unidad activa: uno escrito para kg rechazaría libras normales', () => {
+    expect(rangoDe(PESO, { peso: 'lb' }).max).toBe(880);
+    expect(rangoDe(PESO, {}).max).toBe(400);
   });
 });

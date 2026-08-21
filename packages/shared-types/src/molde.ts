@@ -41,6 +41,22 @@ interface CampoBase {
 }
 
 /**
+ * Una escala alternativa para el mismo dato.
+ *
+ * No es un lujo: los tres calculadores que existen la necesitan. El laboratorio
+ * uruguayo informa bilirrubina en mg/dL y el europeo en µmol/L, y obligar a
+ * convertir a mano antes de escribir es pedirle al médico que haga la cuenta
+ * que la app existe para hacer.
+ *
+ * `valor` es la clave interna; `etiqueta` es cómo se escribe — el enum dice
+ * `umol/L` y el médico lee «µmol/L».
+ */
+export interface Unidad {
+  valor: string;
+  etiqueta: string;
+}
+
+/**
  * Un número escrito.
  *
  * El `rango` no es decoración: de ahí sale el rótulo de qué acepta, la
@@ -49,8 +65,21 @@ interface CampoBase {
  */
 export interface CampoNumero extends CampoBase {
   tipo: 'numero';
+  /** La de arranque, y la única si no hay `unidades`. */
   unidad: string;
   rango: Rango;
+  /**
+   * Las alternativas, cada una con su propio rango.
+   *
+   * El rango **no se puede compartir** entre unidades: 2 mg/dL y 34 µmol/L son
+   * el mismo valor, y un límite escrito para una rechazaría valores normales en
+   * la otra.
+   *
+   * La conversión no la hace el molde: se le pasa la unidad elegida a la
+   * función pura, que ya sabe convertir. Convertir acá sería una segunda
+   * implementación de algo que `lipidos.ts` y `child-pugh.ts` ya resuelven.
+   */
+  unidades?: readonly (Unidad & { rango: Rango })[];
 }
 
 /**
@@ -63,12 +92,25 @@ export interface CampoNumero extends CampoBase {
 export interface CampoOpcion extends CampoBase {
   tipo: 'opcion';
   opciones: readonly OpcionCampo[];
+  /**
+   * Las mismas bandas, reescritas en otra unidad: «< 2 mg/dL» pasa a
+   * «< 34 µmol/L».
+   *
+   * **Los `valor` tienen que ser los mismos en todas las unidades.** Es la
+   * misma banda con otro rótulo, y cambiar de unidad no puede borrar lo que el
+   * médico ya contestó. Los `puntos` salen siempre de `opciones` por el mismo
+   * motivo: una banda vale lo mismo se escriba como se escriba.
+   */
+  unidades?: readonly (Unidad & { opciones: readonly OpcionCampo[] })[];
 }
 
 export type Campo = CampoNumero | CampoOpcion;
 
 /** Lo que el médico lleva escrito. `undefined` = sin contestar, nunca 0. */
 export type Borrador = Readonly<Record<string, string | undefined>>;
+
+/** Qué unidad eligió para cada campo. Sin entrada, la de arranque. */
+export type Unidades = Readonly<Record<string, string | undefined>>;
 
 // ---------------------------------------------------------------------------
 // 2. El resultado
@@ -165,6 +207,39 @@ export interface Molde {
 export function contestado(b: Borrador, clave: string): boolean {
   const v = b[clave];
   return v !== undefined && v.trim() !== '';
+}
+
+/**
+ * La unidad activa de un campo: la elegida, o la de arranque.
+ *
+ * La de arranque de un campo de opciones es la primera declarada; la de uno
+ * numérico es su `unidad`, que existe aunque no haya alternativas.
+ */
+export function unidadDe(campo: Campo, unidades: Unidades): string {
+  const elegida = unidades[campo.clave];
+  if (elegida !== undefined) return elegida;
+  if (campo.tipo === 'numero') return campo.unidad;
+  return campo.unidades?.[0]?.valor ?? '';
+}
+
+/**
+ * Las opciones a mostrar, en la unidad activa.
+ *
+ * Cae a las de base si la unidad no existe. Es defensivo a propósito: una
+ * unidad guardada que después se saca de la declaración no puede dejar el campo
+ * sin opciones, que en pantalla sería un criterio imposible de contestar.
+ */
+export function opcionesDe(campo: CampoOpcion, unidades: Unidades): readonly OpcionCampo[] {
+  const elegida = unidades[campo.clave];
+  if (elegida === undefined || campo.unidades === undefined) return campo.opciones;
+  return campo.unidades.find((u) => u.valor === elegida)?.opciones ?? campo.opciones;
+}
+
+/** El rango de la unidad activa. Mismo criterio defensivo que `opcionesDe`. */
+export function rangoDe(campo: CampoNumero, unidades: Unidades): Rango {
+  const elegida = unidades[campo.clave];
+  if (elegida === undefined || campo.unidades === undefined) return campo.rango;
+  return campo.unidades.find((u) => u.valor === elegida)?.rango ?? campo.rango;
 }
 
 /** Cuántos campos contestados, para el «3 de 7» y su barra. */
