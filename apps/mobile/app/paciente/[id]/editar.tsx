@@ -51,7 +51,10 @@ export default function EditarPaciente() {
         fechaNacimiento: validarFecha(c.fechaNacimiento).fecha!.toISOString(),
         sexo,
         ...(grupoId ? { grupoId } : {}),
-        ...(c.alturaCm.trim() ? { alturaCm: Number(c.alturaCm) } : {}),
+        // Con coma: el teclado numérico de un teléfono en español la ofrece, y
+        // «1,70» sin esto sale NaN, viaja como `null` y el backend lo rechaza.
+        // Crear paciente ya lo hacía; editar había quedado atrás.
+        ...(c.alturaCm.trim() ? { alturaCm: Number(c.alturaCm.replace(',', '.')) } : {}),
       }),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['inicio'] });
