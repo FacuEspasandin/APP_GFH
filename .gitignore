@@ -35,3 +35,4 @@ Thumbs.db
 
 # Capturas de `pnpm capturas` — se regeneran, no se versionan
 .capturas/
+/android/
