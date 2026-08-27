@@ -45,5 +45,23 @@ export class PurgaSesionesService implements OnModuleInit, OnModuleDestroy {
       // Que falle la purga no puede tumbar la app: es mantenimiento.
       this.logger.error(`No se pudo purgar sesiones: ${String(e)}`);
     }
+
+    /*
+     * Las cuentas dadas de baja cuyos siete días vencieron.
+     *
+     * Va en su propio `try`: si falla la purga de sesiones, las cuentas se
+     * purgan igual, y al revés. Son dos mantenimientos independientes, y
+     * encadenarlos haría que un error en el barato frene al caro.
+     *
+     * Se loguea como advertencia y no como info, aunque borre una sola: es la
+     * única operación de la app que destruye historia clínica, y tiene que
+     * dejar rastro en el log además del `AuditLog`.
+     */
+    try {
+      const cuentas = await this.perfil.purgarCuentasVencidas();
+      if (cuentas > 0) this.logger.warn(`Cuentas purgadas definitivamente: ${cuentas}`);
+    } catch (e) {
+      this.logger.error(`No se pudieron purgar cuentas vencidas: ${String(e)}`);
+    }
   }
 }

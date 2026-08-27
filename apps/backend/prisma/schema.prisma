@@ -670,6 +670,10 @@ model Medico {
   rol    RolMedico    @default(USER)
   estado EstadoMedico @default(ACTIVO)
 
+  /// Cuándo se pidió la baja. Null = la cuenta no está dada de baja.
+  /// Los siete días de gracia se cuentan desde acá; pasados, se purga.
+  eliminadaAt DateTime?
+
   /// DECISION: campos agregados (no estan en modelo-datos). La regla no
   /// negociable 7 exige un modal de disclaimer con checkbox obligatorio en el
   /// primer ingreso (pantalla 1.8); sin persistir version + fecha no hay forma
@@ -695,6 +699,7 @@ model Medico {
   updatedAt DateTime @updatedAt
 
   @@map("medico")
+  @@index([eliminadaAt])
 }
 
 /// Rotacion: cada refresh emite una Sesion NUEVA y marca `revocadaAt` en la

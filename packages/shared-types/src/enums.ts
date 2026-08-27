@@ -56,3 +56,14 @@ export const CATEGORIA_HALLAZGO = [
   'AJUSTE_HEPATICO',
 ] as const;
 export type CategoriaHallazgo = (typeof CATEGORIA_HALLAZGO)[number];
+
+/**
+ * Días para arrepentirse de una baja de cuenta.
+ *
+ * Vive acá y no en el servicio porque lo usan tres lugares: el login, que
+ * revive la cuenta si todavía está en gracia; la purga, que borra pasado el
+ * plazo; y la pantalla de la app, que tiene que decir el número — «tenés siete
+ * días» escrito a mano en el texto se despega del código en cuanto alguien
+ * cambia el plazo.
+ */
+export const DIAS_DE_GRACIA_BAJA = 7;

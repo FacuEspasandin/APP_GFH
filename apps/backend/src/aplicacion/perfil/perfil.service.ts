@@ -1,4 +1,5 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { DIAS_DE_GRACIA_BAJA } from '@gfh/shared-types';
 
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 
@@ -77,14 +78,46 @@ export class PerfilService {
    * Cancelar el cobro sigue siendo responsabilidad de la tienda: borrar la
    * cuenta acá no detiene un cobro recurrente, y la pantalla lo dice.
    */
+/**
+   * Baja de cuenta, con siete días para arrepentirse.
+   *
+   * No borra nada todavía: marca la cuenta y anota cuándo. Entrar dentro de
+   * los siete días la revive —ver `AuthService`— y recién pasados se purga.
+   *
+   * **No se puede dar de baja con la suscripción vigente.** Nosotros no
+   * cobramos ni reembolsamos: eso pasa entero por Apple y Google, así que una
+   * cuenta borrada con una suscripción viva dejaría al médico pagando por algo
+   * a lo que no puede entrar, y sin nada que podamos hacer desde acá. Primero
+   * se cancela en la tienda.
+   */
   async eliminarCuenta(medicoId: string, password: string, verificar: (hash: string) => Promise<boolean>) {
     const medico = await this.prisma.medico.findUniqueOrThrow({ where: { id: medicoId } });
     if (!(await verificar(medico.passwordHash))) {
       throw new ConflictException('La contraseña no es correcta.');
     }
 
+    const suscripcion = await this.prisma.suscripcion.findUnique({ where: { medicoId } });
+    const vigente =
+      suscripcion !== null &&
+      (suscripcion.estado === 'ACTIVA' ||
+        suscripcion.estado === 'GRACIA' ||
+        suscripcion.estado === 'CANCELADA') &&
+      suscripcion.periodoActualFin > new Date();
+
+    if (vigente) {
+      throw new ConflictException({
+        codigo: 'SUSCRIPCION_ACTIVA',
+        mensaje:
+          'Cancelá la suscripción en App Store o Google Play antes de eliminar la cuenta. ' +
+          'Desde acá no podemos cancelarla ni devolver lo pagado.',
+      });
+    }
+
     await this.prisma.$transaction([
-      this.prisma.medico.update({ where: { id: medicoId }, data: { estado: 'ELIMINADO' } }),
+      this.prisma.medico.update({
+        where: { id: medicoId },
+        data: { estado: 'ELIMINADO', eliminadaAt: new Date() },
+      }),
       this.prisma.sesion.updateMany({
         where: { medicoId, revocadaAt: null },
         data: { revocadaAt: new Date() },
@@ -94,6 +127,47 @@ export class PerfilService {
       }),
     ]);
   }
+
+  /**
+   * Purga las cuentas cuyos siete días vencieron.
+   *
+   * Borra el médico; el resto cae por las relaciones del esquema. Es la única
+   * operación de la app que destruye historia clínica, así que:
+   *
+   *   · Sólo toca cuentas con `eliminadaAt` puesto. Las que quedaron en
+   *     `ELIMINADO` sin fecha —antes de que existiera la columna— no se
+   *     purgan: no se puede saber cuándo se pidió la baja, y adivinar sería
+   *     borrar historia clínica por un cálculo inventado.
+   *
+   *   · Deja constancia antes de borrar, porque después no hay a quién
+   *     preguntarle.
+   *
+   * Cuánto se purga y qué se conserva es la parte que todavía espera el bloque
+   * legal: hoy borra todo. Si mañana la respuesta es anonimizar en vez de
+   * borrar, se cambia acá y en un solo lugar.
+   */
+  async purgarCuentasVencidas(diasDeGracia = DIAS_DE_GRACIA_BAJA): Promise<number> {
+    const corte = new Date(Date.now() - diasDeGracia * 24 * 60 * 60 * 1000);
+
+    const vencidas = await this.prisma.medico.findMany({
+      where: { estado: 'ELIMINADO', eliminadaAt: { not: null, lt: corte } },
+      select: { id: true, eliminadaAt: true },
+    });
+
+    for (const m of vencidas) {
+      await this.prisma.auditLog.create({
+        data: {
+          medicoId: m.id,
+          accion: 'ADMIN_ACTION',
+          detalle: `purga definitiva; baja pedida el ${m.eliminadaAt?.toISOString()}`,
+        },
+      });
+      await this.prisma.medico.delete({ where: { id: m.id } });
+    }
+
+    return vencidas.length;
+  }
+
 
   /**
    * Purga de sesiones. La rotación crea una fila por cada refresh, así que la

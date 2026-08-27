@@ -7,14 +7,24 @@ import { api, cerrarSesionLocal } from '@/api/cliente';
 import * as API from '@/api/endpoints';
 import { AvisoNeutro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
+import { DIAS_DE_GRACIA_BAJA } from '@gfh/shared-types';
 
 /**
  * Eliminar cuenta (6.14).
  *
- * Baja diferida: la cuenta queda inhabilitada y se cierran las sesiones. El
- * borrado físico espera al período de gracia, que todavía no está definido
- * (funcional §9.4). Marcar es reversible; borrar no, y no se toma esa decisión
- * por defecto.
+ * Baja con período de gracia: la cuenta queda inhabilitada, se cierran las
+ * sesiones y el médico tiene siete días para arrepentirse. Recuperarla es
+ * volver a entrar — no hay un flujo aparte, porque el gesto de arrepentirse ya
+ * es exactamente ése.
+ *
+ * Pasados los siete días se purga de verdad, y eso sí no tiene vuelta. La
+ * pantalla lo dice con el número, no con «un tiempo».
+ *
+ * **No se puede dar de baja con la suscripción vigente.** El backend lo
+ * rechaza y acá se explica antes de que el médico lo intente: nosotros no
+ * cobramos ni reembolsamos —eso pasa por Apple y Google— así que una cuenta
+ * borrada con una suscripción viva lo dejaría pagando por algo a lo que no
+ * puede entrar.
  */
 export default function EliminarCuenta() {
   const col = useColores();
@@ -39,14 +49,25 @@ export default function EliminarCuenta() {
         accesibles.
       </Text>
 
+      {/* El número y no «un tiempo»: es lo que decide si el médico se anima. */}
       <Text className="font-sans mt-3 text-body leading-6 text-ink">
-        La suscripción se cancela desde la tienda: borrar la cuenta acá no detiene un cobro
-        recurrente.
+        Tenés <Text className="font-medio">{DIAS_DE_GRACIA_BAJA} días</Text> para volver atrás:
+        entrá de nuevo con tu email y contraseña y la cuenta se reactiva con todo adentro.
       </Text>
 
       <AvisoNeutro>
-        El borrado definitivo de los datos espera un período de gracia que todavía no está definido.
+        Pasados los {DIAS_DE_GRACIA_BAJA} días se borra todo de forma definitiva — pacientes,
+        tratamientos e historial. Eso no se puede deshacer.
       </AvisoNeutro>
+
+      {/* Antes de la contraseña y no después: si tiene suscripción activa, el
+          backend va a rechazar la baja, y enterarse recién al tocar el botón
+          rojo es hacerle escribir la contraseña para nada. */}
+      <Text className="font-sans mt-3 text-body leading-6 text-ink">
+        Si tenés una suscripción activa, primero cancelala en App Store o Google Play. Desde acá no
+        podemos cancelarla ni devolver lo pagado, así que la cuenta no se puede eliminar hasta que
+        no esté cancelada.
+      </Text>
 
       <CampoTexto
         etiqueta="Confirmá con tu contraseña"
@@ -66,7 +87,10 @@ export default function EliminarCuenta() {
         cargando={eliminar.isPending}
         deshabilitado={password.length === 0}
         onPress={() =>
-          Alert.alert('Eliminar cuenta', 'No vas a poder volver a entrar.', [
+          Alert.alert(
+            'Eliminar cuenta',
+            `Tenés ${DIAS_DE_GRACIA_BAJA} días para recuperarla entrando de nuevo. Después se borra todo.`,
+            [
             { text: 'Cancelar', style: 'cancel' },
             {
               text: 'Eliminar',
@@ -76,7 +100,8 @@ export default function EliminarCuenta() {
                 eliminar.mutate();
               },
             },
-          ])
+            ],
+          )
         }
       >
         Eliminar mi cuenta

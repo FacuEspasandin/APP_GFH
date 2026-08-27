@@ -6,6 +6,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
+import { DIAS_DE_GRACIA_BAJA } from '@gfh/shared-types';
 import { JwtService } from '@nestjs/jwt';
 
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
@@ -84,7 +85,41 @@ export class AuthService {
     if (!medico || !passwordOk) {
       throw new UnauthorizedException('Email o contraseña incorrectos.');
     }
-    if (medico.estado !== 'ACTIVO') {
+    /*
+     * Entrar es la forma de recuperar una cuenta dada de baja.
+     *
+     * Dentro de los siete días de gracia, el login la revive en vez de
+     * rechazarla: el gesto de arrepentirse ya es exactamente «volver a
+     * entrar», y un flujo aparte —un enlace por correo, una pantalla de
+     * restaurar— sería más trabajo para el médico y más código para nosotros.
+     *
+     * La contraseña ya se verificó arriba, así que revivirla acá no abre
+     * ninguna puerta que no estuviera abierta.
+     */
+    if (medico.estado === 'ELIMINADO') {
+      const vence =
+        medico.eliminadaAt === null
+          ? 0
+          : medico.eliminadaAt.getTime() + DIAS_DE_GRACIA_BAJA * 24 * 60 * 60 * 1000;
+
+      if (Date.now() > vence) {
+        throw new UnauthorizedException('La cuenta no está activa.');
+      }
+
+      await this.prisma.$transaction([
+        this.prisma.medico.update({
+          where: { id: medico.id },
+          data: { estado: 'ACTIVO', eliminadaAt: null },
+        }),
+        this.prisma.auditLog.create({
+          data: {
+            medicoId: medico.id,
+            accion: 'ADMIN_ACTION',
+            detalle: 'cuenta recuperada dentro de la gracia',
+          },
+        }),
+      ]);
+    } else if (medico.estado !== 'ACTIVO') {
       throw new UnauthorizedException('La cuenta no está activa.');
     }
 
