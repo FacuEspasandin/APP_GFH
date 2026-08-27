@@ -91,8 +91,18 @@ export const borrarGrupo = (id: string) => api.delete<void>(`/grupos/${id}`);
 
 export const cockpit = (pacienteId: string) => api.get<Cockpit>(`/pacientes/${pacienteId}/cockpit`);
 
-export const historial = <T>(pacienteId: string, antesDe?: string) =>
-  api.get<T>(`/pacientes/${pacienteId}/historial${antesDe ? `?antesDe=${antesDe}` : ''}`);
+export const historial = <T>(
+  pacienteId: string,
+  filtros: { antesDe?: string; grupo?: string; periodo?: string } = {},
+) => {
+  const q = new URLSearchParams();
+  if (filtros.antesDe) q.set('antesDe', filtros.antesDe);
+  if (filtros.grupo) q.set('grupo', filtros.grupo);
+  // 'todo' es el valor por defecto del backend: mandarlo sería ruido en la URL.
+  if (filtros.periodo && filtros.periodo !== 'todo') q.set('periodo', filtros.periodo);
+  const cola = q.toString();
+  return api.get<T>(`/pacientes/${pacienteId}/historial${cola ? `?${cola}` : ''}`);
+};
 
 // --- 7. tratamiento ----------------------------------------------------------
 

@@ -47,8 +47,10 @@ export class PacientesController {
     @MedicoActual() medicoId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
     @Query('antesDe') antesDe?: string,
+    @Query('grupo') grupo?: string,
+    @Query('periodo') periodo?: string,
   ) {
-    return this.eventos.listar(medicoId, id, { antesDe });
+    return this.eventos.listar(medicoId, id, { antesDe, grupo, periodo });
   }
 
   /** Pantalla de Inicio: grupos con sus pacientes + los que no tienen grupo. */

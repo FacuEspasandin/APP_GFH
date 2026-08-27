@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import type { TipoEventoPaciente } from '@prisma/client';
 
+import { desdeCuando, esGrupoDeEvento, esPeriodo, tiposDelGrupo } from '@gfh/shared-types';
+
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 
 /** Un antes/después que la pantalla muestra tachado → nuevo. */
@@ -71,16 +73,40 @@ export class EventosService {
   async listar(
     medicoId: string,
     pacienteId: string,
-    opciones: { antesDe?: string; limite?: number } = {},
+    opciones: { antesDe?: string; limite?: number; grupo?: string; periodo?: string } = {},
   ) {
     const limite = Math.min(opciones.limite ?? 50, 200);
     const antesDe = opciones.antesDe ? new Date(opciones.antesDe) : undefined;
+
+    /*
+     * Los filtros se aplican acá y no en el cliente. La lista se pagina de a
+     * 50: filtrar lo ya bajado diría «no hay nada» cuando lo que hay está en
+     * una página que todavía no se pidió, y el médico concluiría que a ese
+     * paciente no se le tocó la medicación.
+     *
+     * Un grupo o un período que no se reconoce se ignora en vez de rechazarse:
+     * un filtro raro en la URL no puede dejar al médico sin historial. Los
+     * validadores viven en `shared-types`, junto al agrupado, para que el
+     * backend y la app no puedan discrepar sobre qué tipo cae en qué grupo.
+     */
+    const tipos = esGrupoDeEvento(opciones.grupo)
+      ? [...tiposDelGrupo(opciones.grupo)]
+      : undefined;
+
+    const desde = esPeriodo(opciones.periodo) ? desdeCuando(opciones.periodo) : null;
+
+    /* El corte por página y el del período se combinan: el más reciente de los
+       dos manda, porque los dos son cotas por `createdAt`. */
+    const porFecha: { lt?: Date; gte?: Date } = {};
+    if (antesDe && !Number.isNaN(antesDe.getTime())) porFecha.lt = antesDe;
+    if (desde) porFecha.gte = desde;
 
     const eventos = await this.prisma.eventoPaciente.findMany({
       where: {
         medicoId,
         pacienteId,
-        ...(antesDe && !Number.isNaN(antesDe.getTime()) ? { createdAt: { lt: antesDe } } : {}),
+        ...(tipos ? { tipo: { in: tipos as never } } : {}),
+        ...(Object.keys(porFecha).length > 0 ? { createdAt: porFecha } : {}),
       },
       orderBy: { createdAt: 'desc' },
       take: limite + 1, // uno de más: así sabemos si hay otra página sin contar todo

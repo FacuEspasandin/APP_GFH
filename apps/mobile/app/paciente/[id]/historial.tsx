@@ -1,7 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { FlashList } from '@shopify/flash-list';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import {
@@ -16,7 +17,15 @@ import {
   type Historial,
 } from '@/dominio/historial';
 import { SkeletonLista } from '@/ui/estados-sistema';
-import { Estado, Pantalla } from '@/ui/kit';
+import { Chip, Estado, Pantalla } from '@/ui/kit';
+import {
+  NOMBRE_GRUPO,
+  ORDEN_GRUPOS,
+  ORDEN_PERIODOS,
+  PERIODOS,
+  type GrupoDeEvento,
+  type Periodo,
+} from '@gfh/shared-types';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
@@ -34,13 +43,28 @@ import { useColores } from '@/ui/tema';
 export default function HistorialPaciente() {
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
 
+  /**
+   * `null` = sin filtrar. Es el estado de arranque a propósito: el historial se
+   * abre para ver qué pasó, no para buscar algo puntual, y arrancar con un
+   * filtro puesto escondería cosas sin que nadie lo haya pedido.
+   */
+  const [grupo, setGrupo] = useState<GrupoDeEvento | null>(null);
+  const [periodo, setPeriodo] = useState<Periodo>('todo');
+
   const { data, isLoading, error, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['historial', pacienteId],
+      // Los filtros van en la clave: cambiarlos es otra consulta, no la misma
+      // filtrada. Sin esto react-query serviría las páginas del filtro anterior
+      // mientras llega la primera del nuevo.
+      queryKey: ['historial', pacienteId, grupo, periodo],
       // El cursor es la fecha del último evento que ya tenemos, no un número de
       // página: la lista crece por arriba y con `skip` se repetirían filas.
       queryFn: ({ pageParam }) =>
-        API.historial<Historial>(pacienteId, pageParam || undefined),
+        API.historial<Historial>(pacienteId, {
+          antesDe: pageParam || undefined,
+          grupo: grupo ?? undefined,
+          periodo,
+        }),
       initialPageParam: '' as string,
       getNextPageParam: (ultima) =>
         ultima.hayMas && ultima.eventos.length > 0
@@ -101,6 +125,13 @@ export default function HistorialPaciente() {
     // Mismo padding que `Pantalla`: la barra inferior ocupa su propio espacio
     // en el layout raíz, no flota encima, así que no hay que reservarle nada.
     <View className="flex-1 bg-paper">
+      <Filtros
+        grupo={grupo}
+        periodo={periodo}
+        onGrupo={setGrupo}
+        onPeriodo={setPeriodo}
+      />
+
       <FlashList
         data={filas}
         keyExtractor={(f) => f.clave}
@@ -173,6 +204,72 @@ const ALTO_HASTA_EL_TITULO = 13;
  * familia es el hecho — y NO es la escala de gravedad, que en esta app
  * significa otra cosa.
  */
+/**
+ * Los filtros: qué pasó y desde cuándo.
+ *
+ * Dos filas y no un panel que se despliega: son seis chips en total, y
+ * esconderlos detrás de un botón «filtrar» agrega un toque para llegar a algo
+ * que entra en pantalla.
+ *
+ * **No hay filtro por fármaco**, que era la tercera idea. El evento guarda el
+ * texto escrito en el momento y no una referencia al fármaco —a propósito, para
+ * que borrar uno no deje la línea en blanco— así que filtrar por fármaco sería
+ * buscar por texto, y eso falla raro: «Ibuprofeno 400» no encontraría la línea
+ * que dice «Ibuprofeno». Prometer una búsqueda que a veces no encuentra lo que
+ * está es peor que no ofrecerla.
+ */
+function Filtros({
+  grupo,
+  periodo,
+  onGrupo,
+  onPeriodo,
+}: {
+  grupo: GrupoDeEvento | null;
+  periodo: Periodo;
+  onGrupo: (g: GrupoDeEvento | null) => void;
+  onPeriodo: (p: Periodo) => void;
+}) {
+  return (
+    <View className="flex-none border-b border-line bg-surface">
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerClassName="gap-2 px-4 pt-3 pb-2"
+      >
+        {/* «Todo» primero y activo por defecto: el historial se abre para ver
+            qué pasó, no para buscar algo puntual. */}
+        <Chip texto="Todo" activo={grupo === null} onPress={() => onGrupo(null)} />
+        {ORDEN_GRUPOS.map((g) => (
+          <Chip
+            key={g}
+            texto={NOMBRE_GRUPO[g]}
+            activo={grupo === g}
+            // Tocar el que ya está puesto lo saca. Sin esto haría falta ir a
+            // «Todo» para volver, que es un toque de más por una idea que el
+            // médico ya descartó.
+            onPress={() => onGrupo(grupo === g ? null : g)}
+          />
+        ))}
+      </ScrollView>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerClassName="gap-2 px-4 pb-3"
+      >
+        {ORDEN_PERIODOS.map((p) => (
+          <Chip
+            key={p}
+            texto={PERIODOS[p].nombre}
+            activo={periodo === p}
+            onPress={() => onPeriodo(p)}
+          />
+        ))}
+      </ScrollView>
+    </View>
+  );
+}
+
 function Linea({
   evento,
   primero,
