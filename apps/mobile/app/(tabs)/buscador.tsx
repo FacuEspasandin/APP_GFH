@@ -6,7 +6,7 @@ import { Pressable, Text, View } from 'react-native';
 import { ErrorApi } from '@/api/cliente';
 import { POR_PRODUCTO, useIndiceProductos, type ProductoResumen } from '@/api/catalogo';
 import { buscar, contar } from '@/dominio/busqueda';
-import { cambiaDeLetra, inicialDe, textoConteo, TOPE_BUSQUEDA } from '@/dominio/catalogo';
+import { cambiaDeLetra, inicialDe, textoConteo } from '@/dominio/catalogo';
 import { ErrorGenerico, SinConexion, Skeleton } from '@/ui/estados-sistema';
 import { CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { MarcadoresAjuste } from '@/ui/marcadores-ajuste';
@@ -56,7 +56,11 @@ export default function Buscador() {
   // pero `FlashList` remonta las filas si el array cambia de identidad, y eso
   // sí se nota.
   const lista = useMemo(
-    () => buscar(todos, texto, POR_PRODUCTO, { tope: TOPE_BUSQUEDA }),
+    // Sin tope: el catálogo ya se filtra entero en el teléfono, así que se
+    // conocen todas las coincidencias, y `FlashList` recicla las filas —
+    // dibujar 542 cuesta lo mismo que dibujar 30. El corte existía de cuando
+    // lo hacía el servidor y no tenía por qué sobrevivirlo.
+    () => buscar(todos, texto, POR_PRODUCTO),
     [todos, texto],
   );
   const coincidencias = useMemo(() => contar(todos, texto, POR_PRODUCTO), [todos, texto]);

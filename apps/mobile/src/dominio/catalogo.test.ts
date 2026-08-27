@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { cambiaDeLetra, inicialDe, textoConteo, TOPE_BUSQUEDA } from './catalogo';
+import { cambiaDeLetra, inicialDe, textoConteo } from './catalogo';
 
 describe('letra de índice del catálogo', () => {
   it('es la inicial en mayúscula', () => {
@@ -34,14 +34,10 @@ describe('conteo de lo que se está mirando', () => {
     expect(textoConteo(true, 7)).toBe('7');
   });
 
-  it('si hay más de las que se dibujan, dice cuántas hay', () => {
-    // «30 resultados» haría creer que no hay más y que no vale la pena afinar.
-    // Desde que se busca en el teléfono se conoce el total, así que se dice.
-    expect(textoConteo(true, 542)).toBe('30 de 542');
-  });
-
-  it('justo en el tope no aclara nada: están todas a la vista', () => {
-    expect(textoConteo(true, TOPE_BUSQUEDA)).toBe('30');
+  it('muchas coincidencias se cuentan todas: ya no hay tope de render', () => {
+    // Antes decía «30 de 542», porque sólo se dibujaban 30. Ahora se dibujan
+    // las 542 —`FlashList` recicla— así que el número es el número.
+    expect(textoConteo(true, 542)).toBe('542');
   });
 
   it('sin resultados no muestra un cero suelto', () => {
