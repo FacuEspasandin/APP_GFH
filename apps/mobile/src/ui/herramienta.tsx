@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -34,7 +33,7 @@ export function Consulta({
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-paper"
-      behavior="padding"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
         {children}

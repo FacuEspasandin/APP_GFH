@@ -1,7 +1,6 @@
 import { Stack } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { CampoTexto } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -80,7 +79,7 @@ export default function CalculadoraLdl() {
       <Stack.Screen options={{ title: 'Colesterol LDL' }} />
       <KeyboardAvoidingView
         className="flex-1 bg-paper"
-        behavior="padding"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView contentContainerClassName="px-4 pb-8 pt-3" keyboardShouldPersistTaps="handled">
           <Superficie elevacion="plana" className="mb-3 px-3.5 py-3.5">

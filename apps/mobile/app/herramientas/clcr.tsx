@@ -1,7 +1,6 @@
 import { Stack } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
 import { AnilloClcr } from '@/ui/anillo-clcr';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
@@ -65,7 +64,7 @@ export default function CalculadoraClcr() {
       <Stack.Screen options={{ title: 'Clearance de creatinina' }} />
       <KeyboardAvoidingView
         className="flex-1 bg-paper"
-        behavior="padding"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView
           contentContainerClassName="px-4 pb-8 pt-3"

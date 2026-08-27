@@ -1,24 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { Text } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { cuerpoDeGuardado, evaluar, sePuedeGuardar, borradorDesde } from '@/dominio/hepatico';
 import {
-  borradorDesde,
-  cuerpoDeGuardado,
-  evaluar,
-  sePuedeGuardar,
-  type Borrador,
-} from '@/dominio/hepatico';
-import { SkeletonFormulario } from '@/ui/estados-sistema';
+  aBorradorDelMolde,
+  desdeBorradorDelMolde,
+  moldeChildPugh,
+} from '@/dominio/molde-child-pugh';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
-import { FormularioChildPugh, ResultadoChildPugh } from '@/ui/child-pugh';
+import { Calculadora } from '@/ui/calculadora';
 import { CampoFecha } from '@/ui/campo-fecha';
+import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { aISO, validarFecha } from '@/ui/fecha';
-import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
+import type { Borrador, Unidades } from '@gfh/shared-types';
 
 /**
  * Lo que hace falta de `GET /pacientes/:id`. Los tres primeros son `Decimal` en
@@ -52,13 +50,18 @@ const aNumeros = (p: PacienteHepatico) => ({
 /**
  * Función hepática del paciente (3.1.4).
  *
- * Reemplaza la pantalla que sólo explicaba por qué no se podía evaluar. Ahora
- * calcula y guarda la clase de Child-Pugh, que es lo que va a consumir el
- * ajuste hepático el día que exista la tabla por fármaco.
+ * Dibujada desde el molde, igual que la herramienta suelta — que es el punto:
+ * antes eran dos pantallas compartiendo un formulario de 524 líneas escrito a
+ * mano, y ahora son la misma declaración con `conValorExacto` distinto.
  *
- * Esa tabla sigue sin existir, y la pantalla lo dice arriba del botón en vez de
- * esconderlo: guardar sirve igual —la clase es un dato del paciente— pero
- * prometer un ajuste que no va a aparecer sería mentir.
+ * La diferencia real entre las dos está en tres props: acá se arranca con lo
+ * que ya estaba guardado, se pide el valor exacto —el historial quiere poder
+ * decir el número— y hay botón de guardar en vez del aviso de que no se guarda
+ * nada.
+ *
+ * La tabla de ajuste hepático por fármaco sigue sin existir, y el molde lo dice
+ * en su `limite` en vez de esconderlo: guardar sirve igual —la clase es un dato
+ * del paciente— pero prometer un ajuste que no va a aparecer sería mentir.
  */
 export default function DatosHepaticos() {
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
@@ -74,7 +77,8 @@ export default function DatosHepaticos() {
     enabled: Boolean(pacienteId),
   });
 
-  const [editado, setEditado] = useState<Borrador | null>(null);
+  /** Lo que el médico va tocando, en el formato del molde. `null` = sin tocar. */
+  const [tocado, setTocado] = useState<{ borrador: Borrador; unidades: Unidades } | null>(null);
   /** Vacío = hoy. Ver `datos-renales`. */
   const [fecha, setFecha] = useState('');
 
@@ -84,11 +88,16 @@ export default function DatosHepaticos() {
   const medidoAt = vf.valida && vf.fecha ? aISO(vf.fecha) : undefined;
 
   const guardar = useMutation({
-    mutationFn: (b: Borrador) =>
-      API.guardarDatosHepaticos(pacienteId, {
-        ...cuerpoDeGuardado(b),
+    mutationFn: () => {
+      // Se recalcula acá y no se toma de una const de arriba: aquélla se
+      // define después del `return` de carga, y capturarla en el cierre
+      // dependería de en qué render se armó la mutación.
+      const base = tocado ?? aBorradorDelMolde(borradorDesde(aNumeros(paciente!)));
+      return API.guardarDatosHepaticos(pacienteId, {
+        ...cuerpoDeGuardado(desdeBorradorDelMolde(base.borrador, base.unidades)),
         ...(medidoAt ? { medidoAt } : {}),
-      }),
+      });
+    },
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       await qc.invalidateQueries({ queryKey: ['historial', pacienteId] });
@@ -100,53 +109,44 @@ export default function DatosHepaticos() {
   if (isLoading || !paciente) return <SkeletonFormulario campos={5} />;
 
   // Lo guardado es el punto de partida; lo que el médico toca lo pisa.
-  const borrador = editado ?? borradorDesde(aNumeros(paciente));
+  const guardado = aBorradorDelMolde(borradorDesde(aNumeros(paciente)));
+  const actual = tocado ?? guardado;
+  const enDominio = desdeBorradorDelMolde(actual.borrador, actual.unidades);
+  const r = evaluar(enDominio);
   const yaTenia = paciente.childPughClase !== null;
-  const r = evaluar(borrador);
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-paper"
-      behavior="padding"
-    >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
-        {/* El resultado va arriba: es la respuesta, y dejarlo al final obliga a
-            scrollear cada vez que se corrige un criterio para ver qué pasó. */}
-        <ResultadoChildPugh valor={borrador} />
+    <Calculadora
+      molde={moldeChildPugh(true)}
+      inicial={guardado.borrador}
+      onCambio={(borrador, unidades) => setTocado({ borrador, unidades })}
+      guardar={{
+        rotulo: yaTenia ? 'Actualizar' : 'Guardar y recalcular',
+        onGuardar: () => guardar.mutate(),
+        guardando: guardar.isPending,
+        listo: sePuedeGuardar(enDominio),
+      }}
+      extra={
+        <>
+          <Superficie elevacion="plana" className="mb-3.5 mt-3.5 px-3.5 py-3">
+            <Text className="font-sans text-meta leading-5 text-ink-suave">
+              {r.clase === null
+                ? 'La clase se guarda cuando estén los cinco criterios. Mientras tanto, lo que cargues queda igual.'
+                : 'La clase queda en el paciente. La tabla de ajuste por fármaco todavía no existe: cuando esté, se aplica sola sobre el tratamiento que ya cargaste.'}
+            </Text>
+          </Superficie>
 
-        {/* Con el valor exacto: acá el número se guarda y el historial puede
-            decir «2,4 → 3,1 mg/dL». No decide el puntaje — eso lo decide la
-            banda. */}
-        <FormularioChildPugh valor={borrador} onCambio={setEditado} conValorExacto />
-
-        <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
-          <Text className="font-sans text-meta leading-5 text-ink-suave">
-            {r.clase === null
-              ? 'La clase se guarda cuando estén los cinco criterios. Mientras tanto, lo que cargues queda igual.'
-              : 'La clase queda en el paciente. La tabla de ajuste por fármaco todavía no existe: cuando esté, se aplica sola sobre el tratamiento que ya cargaste.'}
-          </Text>
-        </Superficie>
-
-        <BloqueFormulario titulo="Fecha del análisis" etiqueta="Opcional">
-          <CampoFecha etiqueta="Cuándo se hicieron" valor={fecha} onChange={setFecha} />
-          <Text className="font-sans -mt-2 text-meta leading-5 text-ink-suave">
-            {/* Sin fecha se guarda como de hoy, que es lo que hacía siempre. La
-                diferencia es que ahora se puede decir otra cosa: un análisis de
-                hace tres meses mostrado sin fecha parece de esta mañana. */}
-            Sin completar se guarda con la fecha de hoy.
-          </Text>
-        </BloqueFormulario>
-      </ScrollView>
-
-      <View className="border-t border-line bg-surface px-4 py-3">
-        <Boton
-          onPress={() => guardar.mutate(borrador)}
-          cargando={guardar.isPending}
-          deshabilitado={!sePuedeGuardar(borrador)}
-        >
-          {yaTenia ? 'Actualizar' : 'Guardar y recalcular'}
-        </Boton>
-      </View>
-    </KeyboardAvoidingView>
+          <BloqueFormulario titulo="Fecha del análisis" etiqueta="Opcional">
+            <CampoFecha etiqueta="Cuándo se hicieron" valor={fecha} onChange={setFecha} />
+            <Text className="font-sans -mt-2 text-meta leading-5 text-ink-suave">
+              {/* Sin fecha se guarda como de hoy, que es lo que hacía siempre. La
+                  diferencia es que ahora se puede decir otra cosa: un análisis de
+                  hace tres meses mostrado sin fecha parece de esta mañana. */}
+              Sin completar se guarda con la fecha de hoy.
+            </Text>
+          </BloqueFormulario>
+        </>
+      }
+    />
   );
 }

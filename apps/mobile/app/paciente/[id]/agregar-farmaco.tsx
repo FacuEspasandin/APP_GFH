@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
 import { POR_PRODUCTO, useIndiceProductos } from '@/api/catalogo';
@@ -100,7 +99,7 @@ export default function AgregarFarmaco() {
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-paper"
-      behavior="padding"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
         <BloqueFormulario titulo="Producto" exigencia="Obligatorio">

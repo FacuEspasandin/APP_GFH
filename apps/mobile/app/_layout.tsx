@@ -7,7 +7,6 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import {
@@ -62,15 +61,11 @@ export default function LayoutRaiz() {
       <ProveedorTema>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            {/* Envuelve todo: mide el teclado una vez y lo comparte, en vez de
-                que cada pantalla lo escuche por su cuenta. */}
-            <KeyboardProvider>
               {/* Adentro del área segura: el aviso se posiciona contra el borde
                   de arriba y necesita el inset del notch. */}
               <ProveedorAviso>
                 <Navegacion />
               </ProveedorAviso>
-            </KeyboardProvider>
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </ProveedorTema>

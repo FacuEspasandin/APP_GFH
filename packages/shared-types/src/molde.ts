@@ -102,6 +102,24 @@ export interface CampoOpcion extends CampoBase {
    * motivo: una banda vale lo mismo se escriba como se escriba.
    */
   unidades?: readonly (Unidad & { opciones: readonly OpcionCampo[] })[];
+
+  /**
+   * Un número exacto al lado de la banda, opcional.
+   *
+   * La banda es la que decide —la escala de Child-Pugh no distingue una
+   * bilirrubina de 2,4 de una de 2,9, las dos son «2 – 3»— así que pedir el
+   * número para clasificarlo sería pedir un dato más fino del que el cálculo
+   * usa. Pero cuando el resultado se guarda, el historial quiere poder decir
+   * el número, y el médico ya lo tiene en el análisis delante.
+   *
+   * Nunca cambia el puntaje. Si está y no se completa, no pasa nada.
+   */
+  valorExacto?: {
+    rotulo: string;
+    rango: Rango;
+    /** Por unidad, cuando el campo tiene escalas: 2 mg/dL no es 34 µmol/L. */
+    rangoPorUnidad?: Readonly<Record<string, Rango>>;
+  };
 }
 
 export type Campo = CampoNumero | CampoOpcion;

@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { Anillo } from '@/ui/anillo';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Icono } from '@/ui/iconos';
-import { CampoTexto, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import {
@@ -73,14 +72,52 @@ export interface Cifra {
  */
 export type Calculo = (b: Borrador, unidades: Unidades) => Record<string, Cifra>;
 
-export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calculo }) {
-  const [borrador, setBorrador] = useState<Borrador>({});
+export function Calculadora({
+  molde,
+  calcular,
+  inicial,
+  onCambio,
+  guardar,
+  extra,
+}: {
+  molde: Molde;
+  calcular?: Calculo;
+  /** Con qué arranca. La pantalla del paciente trae lo que ya estaba guardado. */
+  inicial?: Borrador;
+  /**
+   * Avisa hacia afuera en cada cambio, para que la pantalla pueda guardar.
+   *
+   * Entrega también las unidades elegidas: sin ellas el valor exacto no se
+   * puede convertir, porque 2 no significa lo mismo en mg/dL que en µmol/L.
+   */
+  onCambio?: (b: Borrador, u: Unidades) => void;
+  /**
+   * Cuando existe, la calculadora guarda: el pie cambia de «no se guarda nada»
+   * a un botón. Sin esto es descartable, que es lo que son las herramientas
+   * sueltas.
+   */
+  guardar?: { rotulo: string; onGuardar: () => void; guardando?: boolean; listo?: boolean };
+  /**
+   * Lo que la pantalla necesita y el molde no declara: la fecha del análisis,
+   * una nota de contexto. Va entre el límite y el pie.
+   *
+   * Existe para que el molde no crezca con campos que sirven a una sola
+   * calculadora. Si algo de acá aparece en la tercera, ahí sí conviene
+   * declararlo.
+   */
+  extra?: ReactNode;
+}) {
+  const [borrador, setBorrador] = useState<Borrador>(inicial ?? {});
   const [unidades, setUnidades] = useState<Unidades>({});
   /** La que el médico abrió para corregir. Gana sobre la primera sin contestar. */
   const [abiertaAMano, setAbiertaAMano] = useState<string | null>(null);
 
   const responder = (clave: string, valor: string) => {
-    setBorrador((p) => ({ ...p, [clave]: valor }));
+    setBorrador((p) => {
+      const siguiente = { ...p, [clave]: valor };
+      onCambio?.(siguiente, unidades);
+      return siguiente;
+    });
     // Contestar la que se estaba corrigiendo la cierra; si no, quedaría abierta
     // para siempre y la cascada dejaría de avanzar.
     setAbiertaAMano(null);
@@ -89,8 +126,25 @@ export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calc
   /* Cambiar de unidad no toca lo contestado. En las bandas es la misma banda
      con otro rótulo, y en los números el valor escrito sigue siendo el que el
      médico leyó del análisis — reinterpretarlo solo sería cambiarle el dato. */
+  /* El valor exacto vive en el mismo borrador, con la clave del campo más
+     `:exacto`, y no en un estado aparte: así `onCambio` entrega todo junto y
+     la pantalla que guarda no tiene que juntar dos piezas. `puntajeParcial`
+     nunca lo mira, porque sólo suma campos declarados. */
+  const responderExacto = (clave: string, valor: string) =>
+    setBorrador((p) => {
+      const siguiente = { ...p, [clave + ':exacto']: valor };
+      onCambio?.(siguiente, unidades);
+      return siguiente;
+    });
+
   const cambiarUnidad = (clave: string, unidad: string) =>
-    setUnidades((p) => ({ ...p, [clave]: unidad }));
+    setUnidades((p) => {
+      const siguiente = { ...p, [clave]: unidad };
+      // También avisa: cambiar de unidad no toca lo contestado, pero sí cambia
+      // cómo se interpreta el valor exacto que ya esté escrito.
+      onCambio?.(borrador, siguiente);
+      return siguiente;
+    });
 
   const cuerpo =
     molde.modo === 'cascada' ? (
@@ -102,6 +156,7 @@ export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calc
         onAbrir={setAbiertaAMano}
         onResponder={responder}
         onUnidad={cambiarUnidad}
+        onValorExacto={responderExacto}
       />
     ) : (
       <BloqueFormulario titulo="Datos" exigencia="Obligatorio">
@@ -110,19 +165,18 @@ export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calc
             key={c.clave}
             campo={c}
             valor={borrador[c.clave]}
+            valorExacto={borrador[c.clave + ':exacto']}
             unidades={unidades}
             onChange={(v) => responder(c.clave, v)}
             onUnidad={(u) => cambiarUnidad(c.clave, u)}
+            onValorExacto={(v) => responderExacto(c.clave, v)}
           />
         ))}
       </BloqueFormulario>
     );
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-paper"
-      behavior="padding"
-    >
+    <View className="flex-1 bg-paper">
       <ScrollView contentContainerClassName="px-4 pb-8 pt-3" keyboardShouldPersistTaps="handled">
         {cuerpo}
 
@@ -137,11 +191,27 @@ export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calc
           </Text>
         </Superficie>
 
-        <Text className="font-sans mt-3 px-1 text-eyebrow leading-4 text-ink-suave">
-          No se guarda nada. Al salir de la herramienta, estos valores se pierden.
-        </Text>
+        {extra}
+
+        {/* Guardar o descartar: no hay un tercer caso, y decir las dos cosas
+            —un botón Y un cartel de que no se guarda— sería contradecirse. */}
+        {guardar ? (
+          <View className="mt-4">
+            <Boton
+              onPress={guardar.onGuardar}
+              cargando={guardar.guardando}
+              deshabilitado={guardar.listo === false}
+            >
+              {guardar.rotulo}
+            </Boton>
+          </View>
+        ) : (
+          <Text className="font-sans mt-3 px-1 text-eyebrow leading-4 text-ink-suave">
+            No se guarda nada. Al salir de la herramienta, estos valores se pierden.
+          </Text>
+        )}
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -170,6 +240,7 @@ function EnCascada({
   onAbrir,
   onResponder,
   onUnidad,
+  onValorExacto,
 }: {
   molde: Molde;
   borrador: Borrador;
@@ -178,6 +249,7 @@ function EnCascada({
   onAbrir: (clave: string) => void;
   onResponder: (clave: string, valor: string) => void;
   onUnidad: (clave: string, unidad: string) => void;
+  onValorExacto: (clave: string, valor: string) => void;
 }) {
   const col = useColores();
   const sinContestar = molde.campos.find((c) => !contestado(borrador, c.clave));
@@ -238,9 +310,11 @@ function EnCascada({
                 <CampoDelMolde
                   campo={campo}
                   valor={borrador[campo.clave]}
+                  valorExacto={borrador[campo.clave + ':exacto']}
                   unidades={unidades}
                   onChange={(v) => onResponder(campo.clave, v)}
                   onUnidad={(u) => onUnidad(campo.clave, u)}
+                  onValorExacto={(v) => onValorExacto(campo.clave, v)}
                   sinRotulo
                 />
               </View>
@@ -322,16 +396,20 @@ function Plegado({
 function CampoDelMolde({
   campo,
   valor,
+  valorExacto,
   unidades,
   onChange,
   onUnidad,
+  onValorExacto,
   sinRotulo = false,
 }: {
   campo: Campo;
   valor: string | undefined;
+  valorExacto?: string | undefined;
   unidades: Unidades;
   onChange: (v: string) => void;
   onUnidad: (u: string) => void;
+  onValorExacto?: (v: string) => void;
   sinRotulo?: boolean;
 }) {
   const activa = unidadDe(campo, unidades);
@@ -387,6 +465,28 @@ function CampoDelMolde({
           />
         ))}
       </View>
+
+      {/* El número exacto, si el molde lo pide. Va DEBAJO de las bandas y no
+          arriba: la banda es la que decide, y ponerlo primero invitaría a
+          escribir el número esperando que clasifique solo — que es justo lo
+          que esta pantalla dejó de hacer. */}
+      {campo.valorExacto ? (
+        <View className="mb-1">
+          <CampoTexto
+            etiqueta={campo.valorExacto.rotulo}
+            value={valorExacto ?? ''}
+            onChangeText={(v) => onValorExacto?.(v)}
+            keyboardType="numeric"
+            placeholder="opcional"
+            rango={campo.valorExacto.rangoPorUnidad?.[activa] ?? campo.valorExacto.rango}
+            valor={numero(valorExacto)}
+          />
+          <Text className="font-sans -mt-2 mb-3 px-1 text-eyebrow leading-4 text-ink-suave">
+            No cambia el puntaje — la banda de arriba es la que cuenta. Queda
+            anotado para el historial.
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -434,6 +534,15 @@ function Resultado({
 
   if (r.tipo === 'puntaje') {
     const puntos = puntajeParcial(molde.campos, borrador);
+    /*
+     * Sin nada contestado no se muestra un cero.
+     *
+     * El parcial de un puntaje vacío da 0, y en escalas cuyo piso no es cero
+     * —Child-Pugh arranca en 5, porque cada criterio suma al menos uno— un 0
+     * es un valor que no existe. Se lee como un resultado y no lo es. Con al
+     * menos un criterio contestado el parcial ya significa algo.
+     */
+    const empezado = cuantosContestados(molde.campos, borrador) > 0;
     const max = r.maximo || puntajeMaximo(molde.campos);
     const tramo = tramoDeValor(puntos);
     const color = tramo?.color ? COLOR_SEVERIDAD[tramo.color] : COLOR_SEVERIDAD.neutro;
@@ -447,9 +556,12 @@ function Resultado({
         <View className="flex-row items-baseline">
           <Text
             className="font-mono-fuerte text-titulo"
-            style={{ color: todo ? color : undefined, fontVariant: ['tabular-nums'] }}
+            style={{
+              color: todo ? color : empezado ? undefined : COLOR_SEVERIDAD.neutro,
+              fontVariant: ['tabular-nums'],
+            }}
           >
-            {puntos}
+            {empezado ? puntos : '—'}
           </Text>
           <Text className="font-mono ml-3 text-meta text-ink-suave">de {max} puntos</Text>
         </View>

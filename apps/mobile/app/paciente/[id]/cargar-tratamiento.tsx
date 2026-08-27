@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { api, ErrorApi } from '@/api/cliente';
 import * as API from '@/api/endpoints';
@@ -110,7 +109,7 @@ export default function CargarTratamiento() {
     return (
       <KeyboardAvoidingView
         className="flex-1 bg-paper"
-        behavior="padding"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
           <BloqueFormulario titulo="Pegá o escribí el listado" etiqueta="Una por línea">
@@ -168,7 +167,7 @@ export default function CargarTratamiento() {
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-paper"
-      behavior="padding"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ConsultaPlegada
         titulo={`${lineas.length} ${lineas.length === 1 ? 'línea pegada' : 'líneas pegadas'}`}

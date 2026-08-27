@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { Icono } from '@/ui/iconos';
@@ -88,7 +87,7 @@ export default function AceptarAlternativa() {
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-paper"
-      behavior="padding"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
         {/* Sale → entra, en una línea. Dos renglones apilados no comunican que
