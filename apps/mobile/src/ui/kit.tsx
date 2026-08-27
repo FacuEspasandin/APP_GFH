@@ -2,6 +2,7 @@ import { forwardRef, type ReactNode } from 'react';
 import {
   ActivityIndicator,
   Pressable,
+  RefreshControl,
   ScrollView,
   Text,
   TextInput,
@@ -33,14 +34,39 @@ import { COLOR_SEVERIDAD, etiquetaRango, evaluarValor, type Rango } from '@gfh/s
 export function Pantalla({
   children,
   scroll = true,
+  onRefrescar,
+  refrescando = false,
 }: {
   children: ReactNode;
   scroll?: boolean;
+  /**
+   * Deslizar hacia abajo vuelve a pedir los datos.
+   *
+   * Sólo donde el dato puede cambiar por fuera de lo que hace el médico en esa
+   * pantalla: la lista de pacientes y el cockpit. En un formulario el gesto no
+   * tendría nada que refrescar y ofrecerlo sería prometer algo que no pasa.
+   */
+  onRefrescar?: () => void;
+  refrescando?: boolean;
 }) {
+  const col = useColores();
+
   const contenido = scroll ? (
     <ScrollView
       contentContainerClassName="px-4 pb-6 pt-3"
       keyboardShouldPersistTaps="handled"
+      refreshControl={
+        onRefrescar ? (
+          <RefreshControl
+            refreshing={refrescando}
+            onRefresh={onRefrescar}
+            // El color del indicador es el de marca y no el de severidad: esto
+            // es cromo de la app, no información clínica.
+            tintColor={col.primary}
+            colors={[col.primary]}
+          />
+        ) : undefined
+      }
     >
       {children}
     </ScrollView>

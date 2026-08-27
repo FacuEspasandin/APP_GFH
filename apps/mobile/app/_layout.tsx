@@ -1,17 +1,20 @@
 import '../global.css';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import {
   registrarManejadorLimitePlan,
   registrarManejadorSuscripcionVencida,
 } from '@/api/cliente';
+import { MS_MAXIMO, opcionesDeshidratado, persistidor } from '@/api/persistencia';
 import { rutaPaywall } from '@/dominio/plan-gratis';
 import { ProveedorAviso } from '@/ui/aviso';
 import { BotonVolverHeader } from '@/ui/boton-volver';
@@ -43,19 +46,35 @@ export default function LayoutRaiz() {
   if (!fuentesListas) return null;
 
   return (
-    <QueryClientProvider client={cliente}>
+    /*
+     * Persistente, pero sólo el catálogo: ver `api/persistencia.ts`. Lo que
+     * cuelga de un paciente sigue viviendo en memoria, porque un cockpit
+     * servido de disco sería una verificación de ayer con cara de hoy.
+     */
+    <PersistQueryClientProvider
+      client={cliente}
+      persistOptions={{
+        persister: persistidor,
+        maxAge: MS_MAXIMO,
+        dehydrateOptions: opcionesDeshidratado,
+      }}
+    >
       <ProveedorTema>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            {/* Adentro del área segura: el aviso se posiciona contra el borde
-                de arriba y necesita el inset del notch. */}
-            <ProveedorAviso>
-              <Navegacion />
-            </ProveedorAviso>
+            {/* Envuelve todo: mide el teclado una vez y lo comparte, en vez de
+                que cada pantalla lo escuche por su cuenta. */}
+            <KeyboardProvider>
+              {/* Adentro del área segura: el aviso se posiciona contra el borde
+                  de arriba y necesita el inset del notch. */}
+              <ProveedorAviso>
+                <Navegacion />
+              </ProveedorAviso>
+            </KeyboardProvider>
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </ProveedorTema>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
 

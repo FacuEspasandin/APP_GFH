@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { Anillo } from '@/ui/anillo';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
@@ -120,7 +121,7 @@ export function Calculadora({ molde, calcular }: { molde: Molde; calcular?: Calc
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior="padding"
     >
       <ScrollView contentContainerClassName="px-4 pb-8 pt-3" keyboardShouldPersistTaps="handled">
         {cuerpo}

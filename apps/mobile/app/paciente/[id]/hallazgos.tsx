@@ -14,7 +14,8 @@ import {
   tituloDeVista,
   vistaDesdeParams,
 } from '@/dominio/hallazgos';
-import { Cargando, Estado, Pantalla } from '@/ui/kit';
+import { SkeletonLista } from '@/ui/estados-sistema';
+import { Estado, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { ChipSeveridad, Espina } from '@/ui/severidad';
 import {
@@ -57,7 +58,7 @@ export default function Hallazgos() {
     enabled: Boolean(id),
   });
 
-  if (isLoading) return <Cargando />;
+  if (isLoading) return <SkeletonLista filas={4} />;
   if (error || !data) {
     return (
       <Pantalla>

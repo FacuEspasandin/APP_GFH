@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { ActivityIndicator, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import {
@@ -14,7 +15,8 @@ import {
   type FamiliaEvento,
   type Historial,
 } from '@/dominio/historial';
-import { Cargando, Estado, Pantalla } from '@/ui/kit';
+import { SkeletonLista } from '@/ui/estados-sistema';
+import { Estado, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
@@ -47,7 +49,7 @@ export default function HistorialPaciente() {
       enabled: Boolean(pacienteId),
     });
 
-  if (isLoading) return <Cargando />;
+  if (isLoading) return <SkeletonLista filas={6} />;
 
   if (error || !data) {
     return (
@@ -65,6 +67,28 @@ export default function HistorialPaciente() {
   const eventos = data.pages.flatMap((p) => p.eventos);
   const dias = porDia(eventos, new Date());
 
+  /*
+   * Los días agrupados se aplanan a una sola lista de filas.
+   *
+   * `FlashList` recicla filas, y para eso necesita una lista plana: con
+   * `map` anidados se montaría todo el historial en memoria, que es
+   * justamente lo que hay que evitar cuando son cientos de eventos.
+   *
+   * El encabezado del día viaja como una fila más, con su propio tipo. Así el
+   * reciclador sabe que no es intercambiable con un evento y no reusa la vista
+   * equivocada.
+   */
+  const filas: Fila[] = dias.flatMap((dia) => [
+    { tipo: 'dia' as const, clave: dia.clave, titulo: dia.titulo },
+    ...dia.eventos.map((e, i) => ({
+      tipo: 'evento' as const,
+      clave: e.id,
+      evento: e,
+      primero: i === 0,
+      ultimo: i === dia.eventos.length - 1 && dia === dias[dias.length - 1],
+    })),
+  ]);
+
   if (eventos.length === 0) {
     return (
       <Pantalla>
@@ -76,44 +100,63 @@ export default function HistorialPaciente() {
   return (
     // Mismo padding que `Pantalla`: la barra inferior ocupa su propio espacio
     // en el layout raíz, no flota encima, así que no hay que reservarle nada.
-    <ScrollView className="flex-1 bg-paper" contentContainerClassName="px-4 pb-6 pt-3">
-      {dias.map((dia) => (
-        <View key={dia.clave} className="mb-1">
-          <Text className="font-mono-fuerte mb-1 mt-3 text-eyebrow uppercase tracking-wider text-ink-suave">
-            {dia.titulo}
-          </Text>
-          {dia.eventos.map((e, i) => (
-            <Linea
-              key={e.id}
-              evento={e}
-              primero={i === 0}
-              ultimo={i === dia.eventos.length - 1 && dia === dias[dias.length - 1]}
-            />
-          ))}
-        </View>
-      ))}
-
-      {hasNextPage ? (
-        <Pressable
-          onPress={() => void fetchNextPage()}
-          disabled={isFetchingNextPage}
-          accessibilityRole="button"
-          className="mt-4 items-center rounded-card border border-line bg-surface py-3.5"
-        >
-          {isFetchingNextPage ? (
-            <ActivityIndicator />
+    <View className="flex-1 bg-paper">
+      <FlashList
+        data={filas}
+        keyExtractor={(f) => f.clave}
+        getItemType={(f) => f.tipo}
+        contentContainerClassName="px-4 pb-6 pt-3"
+        /*
+         * Pide la página siguiente al acercarse al final, en vez del botón
+         * «Ver lo anterior». Un historial se recorre hacia atrás de corrido:
+         * tener que tocar cada cincuenta líneas interrumpe justo lo que se
+         * estaba haciendo.
+         */
+        onEndReached={() => {
+          if (hasNextPage && !isFetchingNextPage) void fetchNextPage();
+        }}
+        onEndReachedThreshold={0.6}
+        renderItem={({ item }) =>
+          item.tipo === 'dia' ? (
+            <Text className="font-mono-fuerte mb-1 mt-3 text-eyebrow uppercase tracking-wider text-ink-suave">
+              {item.titulo}
+            </Text>
           ) : (
-            <Text className="text-meta font-medio text-accent">Ver lo anterior</Text>
-          )}
-        </Pressable>
-      ) : (
-        <Text className="font-sans mt-5 text-center text-eyebrow text-tenue">
-          Es todo lo que hay registrado.
-        </Text>
-      )}
-    </ScrollView>
+            <Linea evento={item.evento} primero={item.primero} ultimo={item.ultimo} />
+          )
+        }
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <View className="py-5">
+              <ActivityIndicator />
+            </View>
+          ) : hasNextPage ? null : (
+            <Text className="font-sans mt-5 text-center text-eyebrow text-tenue">
+              Es todo lo que hay registrado.
+            </Text>
+          )
+        }
+      />
+    </View>
   );
 }
+
+/**
+ * Una fila de la lista aplanada.
+ *
+ * El encabezado de día y el evento son tipos distintos a propósito: se lo
+ * decimos a `FlashList` con `getItemType` para que no recicle una vista de
+ * título como si fuera un evento.
+ */
+type Fila =
+  | { tipo: 'dia'; clave: string; titulo: string }
+  | {
+      tipo: 'evento';
+      clave: string;
+      evento: Parameters<typeof Linea>[0]['evento'];
+      primero: boolean;
+      ultimo: boolean;
+    };
 
 /**
  * Dónde cae el punto: el `pt-2` de la entrada más media línea del título. Es un

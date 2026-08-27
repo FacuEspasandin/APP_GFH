@@ -35,7 +35,7 @@ export default function Pacientes() {
   // Una sola consulta, sin `q`: `/inicio` ya trae la lista entera con el motor
   // corrido —es de donde salen los hallazgos de cada fila— así que filtrar acá
   // no le esconde nada al médico y sale desde la primera letra.
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error, refetch, isRefetching } = useQuery({
     queryKey: ['inicio'],
     queryFn: API.inicio,
   });
@@ -82,7 +82,7 @@ export default function Pacientes() {
         }}
       />
 
-      <Pantalla>
+      <Pantalla onRefrescar={() => void refetch()} refrescando={isRefetching}>
         <CampoTexto
           value={consulta}
           onChangeText={setConsulta}

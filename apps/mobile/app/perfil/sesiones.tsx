@@ -2,10 +2,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Pressable, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { SkeletonLista } from '@/ui/estados-sistema';
 import { useAviso } from '@/ui/aviso';
 import { fechaLarga } from '@/ui/fecha';
 import { Icono } from '@/ui/iconos';
-import { AvisoNeutro, Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { AvisoNeutro, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
@@ -29,7 +30,7 @@ export default function Sesiones() {
     },
   });
 
-  if (isLoading) return <Cargando />;
+  if (isLoading) return <SkeletonLista filas={3} />;
 
   return (
     <Pantalla>

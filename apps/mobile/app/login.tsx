@@ -2,16 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { z } from 'zod';
 
 import { api, iniciarSesion } from '@/api/cliente';
@@ -67,7 +59,7 @@ export default function Login() {
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior="padding"
     >
       {/* Login no tiene header —el logo centrado es la pantalla entera—, así
           que la salida se dibuja flotando encima. */}

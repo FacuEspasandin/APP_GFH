@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import * as API from '@/api/endpoints';
 import {
@@ -11,11 +12,12 @@ import {
   sePuedeGuardar,
   type Borrador,
 } from '@/dominio/hepatico';
+import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { FormularioChildPugh, ResultadoChildPugh } from '@/ui/child-pugh';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { aISO, validarFecha } from '@/ui/fecha';
-import { Boton, Cargando } from '@/ui/kit';
+import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 
 /**
@@ -95,7 +97,7 @@ export default function DatosHepaticos() {
     },
   });
 
-  if (isLoading || !paciente) return <Cargando />;
+  if (isLoading || !paciente) return <SkeletonFormulario campos={5} />;
 
   // Lo guardado es el punto de partida; lo que el médico toca lo pisa.
   const borrador = editado ?? borradorDesde(aNumeros(paciente));
@@ -105,7 +107,7 @@ export default function DatosHepaticos() {
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior="padding"
     >
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
         {/* El resultado va arriba: es la respuesta, y dejarlo al final obliga a

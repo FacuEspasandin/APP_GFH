@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { BORRADOR_VACIO, evaluar, type Borrador } from '@/dominio/hepatico';
 import { FormularioChildPugh, ResultadoChildPugh } from '@/ui/child-pugh';
@@ -24,7 +25,7 @@ export default function HerramientaHepatica() {
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior="padding"
     >
       <ScrollView contentContainerClassName="px-4 pb-8 pt-3" keyboardShouldPersistTaps="handled">
         {/* El resultado arriba, como en la del paciente: es la respuesta. */}

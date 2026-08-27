@@ -10,7 +10,8 @@ import {
   crucesPorCondicion,
   textoCruces,
 } from '@/dominio/condiciones-alergias';
-import { Boton, Cargando, Estado, Eyebrow } from '@/ui/kit';
+import { SkeletonLista } from '@/ui/estados-sistema';
+import { Boton, Estado, Eyebrow } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
@@ -74,7 +75,7 @@ export default function CondicionesYAlergias() {
       { text: 'Quitar', style: 'destructive', onPress: accion },
     ]);
 
-  if (isLoading) return <Cargando />;
+  if (isLoading) return <SkeletonLista filas={4} />;
 
   const condiciones = data?.condiciones ?? [];
   const alergias = data?.alergias ?? [];

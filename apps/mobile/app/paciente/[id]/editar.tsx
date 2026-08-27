@@ -5,9 +5,10 @@ import { Alert, Text, View } from 'react-native';
 
 import type { Inicio } from '@/api/tipos';
 import * as API from '@/api/endpoints';
+import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { aTexto, validarFecha } from '@/ui/fecha';
-import { AvisoNeutro, Boton, CampoTexto, Cargando, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { AvisoNeutro, Boton, CampoTexto, Chip, Eyebrow, Pantalla } from '@/ui/kit';
 import { OPCIONES_SEXO, type Sexo } from '@gfh/shared-types';
 
 /** Editar y eliminar paciente (2.9). */
@@ -75,7 +76,7 @@ export default function EditarPaciente() {
     },
   });
 
-  if (isLoading || !data) return <Cargando />;
+  if (isLoading || !data) return <SkeletonFormulario campos={5} />;
 
   const campo = (k: keyof typeof c) => (v: string) => setC((p) => ({ ...p, [k]: v }));
 

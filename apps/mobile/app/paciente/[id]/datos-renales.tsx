@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import type { Cockpit } from '@/api/tipos';
 import * as API from '@/api/endpoints';
@@ -10,10 +11,11 @@ import {
   leyendaDelCambio,
   procedenciaClcr,
 } from '@/dominio/funcion-renal';
+import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { aISO, validarFecha } from '@/ui/fecha';
-import { Cargando, Boton, CampoTexto, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
 import {
   calcularClcr,
@@ -72,7 +74,7 @@ export default function DatosRenales() {
     },
   });
 
-  if (isLoading || !cockpit) return <Cargando />;
+  if (isLoading || !cockpit) return <SkeletonFormulario campos={3} />;
 
   const p = cockpit.paciente;
 
@@ -88,7 +90,7 @@ export default function DatosRenales() {
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior="padding"
     >
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
         <BloqueFormulario titulo="Ahora" etiqueta={p.clcrMlMin !== null ? 'Vigente' : undefined}>

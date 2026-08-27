@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { useAviso } from '@/ui/aviso';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
-import { Boton, CampoTexto, Cargando, Pantalla } from '@/ui/kit';
+import { Boton, CampoTexto, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
 
 /** Editar cuenta (6.2). El nombre de usuario no se cambia: es identificador de
@@ -44,7 +45,7 @@ export default function Cuenta() {
     onError: (e) => setError(e instanceof Error ? e.message : 'No se pudo guardar.'),
   });
 
-  if (isLoading) return <Cargando />;
+  if (isLoading) return <SkeletonFormulario campos={4} />;
 
   const campo = (k: keyof typeof c) => (v: string) => setC((p) => ({ ...p, [k]: v }));
 

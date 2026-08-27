@@ -3,7 +3,8 @@ import { useRouter } from 'expo-router';
 import { Text } from 'react-native';
 
 import * as API from '@/api/endpoints';
-import { AvisoNeutro, Boton, Cargando, Eyebrow, Pantalla } from '@/ui/kit';
+import { SkeletonLista } from '@/ui/estados-sistema';
+import { AvisoNeutro, Boton, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
@@ -25,7 +26,7 @@ export default function Suscripcion() {
     queryFn: API.estadoSuscripcion,
   });
 
-  if (isLoading) return <Cargando />;
+  if (isLoading) return <SkeletonLista filas={2} />;
 
   const color = data?.vigente
     ? COLOR_SEVERIDAD.ok

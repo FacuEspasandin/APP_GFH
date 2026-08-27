@@ -10,8 +10,9 @@ import {
   problemasDeAlternativa,
   resumenAlternativas,
 } from '@/dominio/alternativas';
+import { SkeletonLista } from '@/ui/estados-sistema';
 import { ConsultaPlegada, GrupoGravedad } from '@/ui/herramienta';
-import { Boton, Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { Boton, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { COLOR_SEVERIDAD, colorEspina, type RangoGravedad } from '@gfh/shared-types';
 
@@ -84,7 +85,7 @@ export default function Alternativas() {
     );
   }
 
-  if (isLoading) return <Cargando />;
+  if (isLoading) return <SkeletonLista filas={3} />;
   if (error || !data) {
     return (
       <Pantalla>

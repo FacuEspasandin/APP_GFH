@@ -5,6 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import type { CategoriaHallazgo, Cockpit, PrescripcionCockpit } from '@/api/tipos';
 import * as API from '@/api/endpoints';
+import { Skeleton } from '@/ui/estados-sistema';
 import { antiguedad } from '@/ui/fecha';
 import { Icono } from '@/ui/iconos';
 import { AnilloClcr } from '@/ui/anillo-clcr';
@@ -14,7 +15,7 @@ import { esSintetica, nombreCondicion } from '@/ui/condiciones';
 import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { FilaAnimada } from '@/ui/animacion';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
-import { Cargando, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import {
   destacados as hallazgosDestacados,
   detalleCockpit,
@@ -65,13 +66,13 @@ export default function CockpitPaciente() {
   // que es justo lo que no hace.
   const [menu, setMenu] = useState<'ninguno' | 'agregar' | 'paciente'>('ninguno');
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error, refetch, isRefetching } = useQuery({
     queryKey: ['cockpit', id],
     queryFn: () => API.cockpit(id),
     enabled: Boolean(id),
   });
 
-  if (isLoading) return <Cargando />;
+  if (isLoading) return <Skeleton />;
   if (error || !data) {
     return (
       <Pantalla>
@@ -128,7 +129,10 @@ export default function CockpitPaciente() {
         }}
       />
 
-      <Pantalla>
+      {/* Deslizar para refrescar: el cockpit lo puede cambiar otra pantalla
+          —cargar un análisis, aceptar una alternativa— y sin esto la única
+          forma de volver a calcular era salir y entrar. */}
+      <Pantalla onRefrescar={() => void refetch()} refrescando={isRefetching}>
         {/* ---------- 0. Veredicto ---------- */}
         <Veredicto
           rango={peor}
