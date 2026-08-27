@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
-import { Modal, Pressable, Text, View } from 'react-native';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
+import { useCallback, useEffect, useRef, type ReactNode } from 'react';
+import { Pressable, Text, View } from 'react-native';
 
 import { hapticaSeleccion } from './haptica';
 import { Icono, type NombreIcono } from './iconos';
@@ -8,14 +9,23 @@ import { useColores } from './tema';
 /**
  * Hoja inferior: el menú que abren el botón `+` y el de herramientas.
  *
- * Está hecha con `Modal` y no con `@gorhom/bottom-sheet`, aunque la librería dé
- * una hoja arrastrable que se ve mejor. El motivo es concreto: se probó y en el
- * teléfono **no llegaba a presentarse** — el botón no abría nada. No se puede
- * depurar a ciegas, y entre una hoja vistosa que no abre y un modal que
- * funciona, va el que funciona. Se puede reintentar cuando haya un build de
- * desarrollo donde probarlo en el dispositivo.
+ * Estuvo hecha con `Modal` durante un tiempo. `@gorhom/bottom-sheet` se había
+ * intentado antes y no llegaba a presentarse —el botón no abría nada— y quedó
+ * escrito que se reintentara cuando hubiera un build de desarrollo donde
+ * poder verlo. Ahora lo hay.
+ *
+ * Lo que gana: se arrastra de verdad, con inercia y con un fondo que se
+ * oscurece de a poco en vez de aparecer de golpe. El tirador dejó de ser un
+ * dibujo que decía «esto se cierra hacia abajo» para ser algo que se puede
+ * agarrar.
+ *
+ * La API no cambió —`visible` y `onCerrar`— así que ninguna de las pantallas
+ * que la usan se tocó.
  */
 
+/** Sin `snapPoints` fijos: la hoja mide su contenido. El menú del `+` tiene tres
+ *  opciones y el de herramientas seis, y una altura fija dejaría a uno con un
+ *  hueco abajo o al otro cortado. */
 export function HojaInferior({
   visible,
   onCerrar,
@@ -27,28 +37,51 @@ export function HojaInferior({
   titulo?: string;
   children: ReactNode;
 }) {
+  const hoja = useRef<BottomSheet>(null);
+
+  /* `visible` es la fuente de verdad y viene de la pantalla; la hoja se comanda
+     desde ese estado. Al revés —dejar que la hoja mande— se desincroniza
+     apenas alguien la cierra arrastrando. */
+  useEffect(() => {
+    if (visible) hoja.current?.expand();
+    else hoja.current?.close();
+  }, [visible]);
+
+  const fondo = useCallback(
+    (props: React.ComponentProps<typeof BottomSheetBackdrop>) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        opacity={0.45}
+        pressBehavior="close"
+      />
+    ),
+    [],
+  );
+
+  if (!visible) return null;
+
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onCerrar}>
-      {/* Tocar fuera cierra. El Pressable interno frena la propagación para que
-          tocar la hoja no la cierre. */}
-      <Pressable
-        className="flex-1 justify-end"
-        style={{ backgroundColor: 'rgba(18,42,35,0.45)' }}
-        onPress={onCerrar}
-        accessibilityLabel="Cerrar"
-      >
-        <Pressable onPress={() => {}} className="rounded-t-sheet bg-surface px-4 pb-9 pt-3">
-          {/* El tirador: no arrastra, pero dice "esto se cierra hacia abajo". */}
-          <View className="mb-3 h-1 w-10 self-center rounded-full bg-line" />
-          {titulo ? (
-            <Text className="mb-1 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
-              {titulo}
-            </Text>
-          ) : null}
-          {children}
-        </Pressable>
-      </Pressable>
-    </Modal>
+    <BottomSheet
+      ref={hoja}
+      index={0}
+      enablePanDownToClose
+      enableDynamicSizing
+      onClose={onCerrar}
+      backdropComponent={fondo}
+      backgroundStyle={{ borderTopLeftRadius: 22, borderTopRightRadius: 22 }}
+      handleIndicatorStyle={{ width: 40, height: 4 }}
+    >
+      <BottomSheetView className="px-4 pb-9 pt-1">
+        {titulo ? (
+          <Text className="mb-1 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+            {titulo}
+          </Text>
+        ) : null}
+        {children}
+      </BottomSheetView>
+    </BottomSheet>
   );
 }
 

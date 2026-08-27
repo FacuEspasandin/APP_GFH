@@ -1,3 +1,4 @@
+import { limpiarCache } from './persistencia';
 import { Platform } from 'react-native';
 
 import type { MotivoPaywall } from '@/dominio/plan-gratis';
@@ -288,6 +289,11 @@ export async function iniciarSesion(identificador: string, password: string): Pr
 export async function cerrarSesionLocal(): Promise<void> {
   await borrar(CLAVE_ACCESS);
   await borrar(CLAVE_REFRESH);
+  // El catálogo que quedó en disco es del médico que lo bajó. No es
+  // información de paciente —eso nunca se persiste— pero es lo que estamos
+  // vendiendo, y dejarlo para el siguiente que entre en este teléfono no
+  // tiene ningún sentido.
+  await limpiarCache();
   marcarSesion(false);
 }
 
