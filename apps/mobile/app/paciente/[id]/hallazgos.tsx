@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import PagerView from 'react-native-pager-view';
 
 import type { Cockpit, Hallazgo } from '@/api/tipos';
 import * as API from '@/api/endpoints';
@@ -8,13 +10,22 @@ import {
   filtrarAvisos,
   filtrarHallazgos,
   mensajeVacio,
+  TITULO_CATEGORIA,
   tituloDeVista,
   vistaDesdeParams,
 } from '@/dominio/hallazgos';
 import { Cargando, Estado, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { ChipSeveridad, Espina } from '@/ui/severidad';
-import { COLOR_SEVERIDAD, viaLegible } from '@gfh/shared-types';
+import {
+  CATEGORIA_HALLAZGO,
+  claveColorPorRango,
+  COLOR_SEVERIDAD,
+  viaLegible,
+  type CategoriaHallazgo,
+  type RangoGravedad,
+} from '@gfh/shared-types';
+import { useColores } from '@/ui/tema';
 
 /**
  * Detalle de hallazgos: todos, por categoría, por fármaco o los avisos.
@@ -67,6 +78,30 @@ export default function Hallazgos() {
     vista.tipo === 'prescripcion'
       ? (data.prescripciones.find((x) => x.id === vista.prescripcionId) ?? null)
       : null;
+
+  /*
+   * Entrando por una categoría, las cuatro se pueden deslizar.
+   *
+   * Antes, ver otra verificación del mismo paciente era volver al cockpit y
+   * tocar otra tarjeta. Comparar interacciones contra ajuste renal —que es lo
+   * que se hace cuando algo no cierra— eran cuatro toques.
+   *
+   * Sólo en esta vista. Por fármaco, por avisos y en «todos» no hay entre qué
+   * deslizar, y un gesto que a veces hace algo y a veces no se siente roto.
+   */
+  if (vista.tipo === 'categoria') {
+    return (
+      <PorCategoria
+        pacienteId={id!}
+        inicial={vista.categoria}
+        data={data}
+        nombres={nombres}
+        onAlternativas={(pid) =>
+          router.push(`/paciente/${id}/alternativas?prescripcion=${pid}` as never)
+        }
+      />
+    );
+  }
 
   return (
     <Pantalla>
@@ -141,6 +176,139 @@ export default function Hallazgos() {
         </View>
       ))}
     </Pantalla>
+  );
+}
+
+/**
+ * Las cuatro verificaciones, deslizables.
+ *
+ * Los chips de arriba no son decoración: sin ellos el gesto es invisible.
+ * Además llevan el conteo y el color del peor hallazgo de cada categoría, que
+ * es lo que decide a cuál moverse — y esa es información que en el cockpit ya
+ * está, así que repetirla acá no obliga a volver para saberlo.
+ */
+function PorCategoria({
+  pacienteId,
+  inicial,
+  data,
+  nombres,
+  onAlternativas,
+}: {
+  pacienteId: string;
+  inicial: CategoriaHallazgo;
+  data: Cockpit;
+  nombres: Map<string, string>;
+  onAlternativas: (pid: string) => void;
+}) {
+  const col = useColores();
+  const pager = useRef<PagerView>(null);
+  const arranque = Math.max(0, CATEGORIA_HALLAZGO.indexOf(inicial));
+  const [actual, setActual] = useState(arranque);
+
+  const categoria = CATEGORIA_HALLAZGO[actual]!;
+
+  return (
+    <View className="flex-1 bg-paper">
+      <Stack.Screen options={{ title: TITULO_CATEGORIA[categoria] }} />
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerClassName="gap-2 px-4 py-3"
+        className="flex-none border-b border-line bg-surface"
+      >
+        {CATEGORIA_HALLAZGO.map((cat, i) => {
+          const suyos = data.hallazgos.filter((h) => h.categoria === cat);
+          const peor = suyos.reduce<RangoGravedad | null>(
+            (p, h) => (p === null || h.rango < p ? h.rango : p),
+            null,
+          );
+          const activo = i === actual;
+          const color = peor !== null ? COLOR_SEVERIDAD[claveColorPorRango(peor)] : null;
+
+          return (
+            <Pressable
+              key={cat}
+              // `setPage` y no `setState`: mover el pager dispara
+              // `onPageSelected`, así el chip y la página nunca se
+              // desincronizan. Actualizar los dos por separado sí puede.
+              onPress={() => pager.current?.setPage(i)}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: activo }}
+              accessibilityLabel={`${TITULO_CATEGORIA[cat]}, ${suyos.length} hallazgos`}
+              className="flex-row items-center rounded-chip border px-3 py-1.5"
+              style={{
+                borderColor: activo ? col.primary : col.line,
+                backgroundColor: activo ? col.primaryLight : 'transparent',
+                ...(color ? { borderLeftWidth: 3, borderLeftColor: color } : {}),
+              }}
+            >
+              <Text
+                className={activo ? 'text-meta font-medio' : 'font-sans text-meta'}
+                style={{ color: activo ? col.primary : col.inkSuave }}
+              >
+                {TITULO_CATEGORIA[cat]}
+              </Text>
+              {suyos.length > 0 ? (
+                <Text
+                  className="font-mono-fuerte ml-1.5 text-eyebrow"
+                  style={{ color: activo ? col.primary : col.inkSuave }}
+                >
+                  {suyos.length}
+                </Text>
+              ) : null}
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
+      <PagerView
+        ref={pager}
+        style={{ flex: 1 }}
+        initialPage={arranque}
+        onPageSelected={(e) => setActual(e.nativeEvent.position)}
+      >
+        {CATEGORIA_HALLAZGO.map((cat) => {
+          const suVista = { tipo: 'categoria', categoria: cat } as const;
+          const lista = filtrarHallazgos(suVista, data.hallazgos);
+          const avisos = filtrarAvisos(suVista, data.avisos);
+
+          return (
+            <View key={cat} collapsable={false}>
+              <ScrollView contentContainerClassName="px-4 pb-6 pt-3">
+                {lista.length === 0 && avisos.length === 0 ? (
+                  <View
+                    className="rounded-card border border-line bg-surface px-3.5 py-3"
+                    style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.ok }}
+                  >
+                    <Text className="font-sans text-meta text-ink">{mensajeVacio(suVista)}</Text>
+                  </View>
+                ) : null}
+
+                {lista.map((h) => (
+                  <Tarjeta
+                    key={h.clave}
+                    hallazgo={h}
+                    nombres={nombres}
+                    onAlternativas={onAlternativas}
+                  />
+                ))}
+
+                {avisos.map((a) => (
+                  <View
+                    key={a.codigo + (a.prescripcionId ?? '')}
+                    className="mb-2 rounded-card border border-line bg-surface px-3.5 py-3"
+                    style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}
+                  >
+                    <Text className="font-sans text-meta leading-5 text-ink">{a.detalle}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+          );
+        })}
+      </PagerView>
+    </View>
   );
 }
 

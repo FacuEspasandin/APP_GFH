@@ -89,7 +89,7 @@ const CODIGOS_POR_CATEGORIA: Record<CategoriaHallazgo, readonly string[]> = {
   INTERACCION: [],
 };
 
-const TITULO_CATEGORIA: Record<CategoriaHallazgo, string> = {
+export const TITULO_CATEGORIA: Record<CategoriaHallazgo, string> = {
   INTERACCION: 'Interacciones',
   CONDICION: 'Condiciones y alergias',
   AJUSTE_RENAL: 'Ajuste renal',
