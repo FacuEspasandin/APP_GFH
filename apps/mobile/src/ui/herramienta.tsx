@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-import { Platform, Pressable, ScrollView, Text, View } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';

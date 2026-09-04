@@ -7,7 +7,6 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import {
@@ -65,25 +64,35 @@ export default function LayoutRaiz() {
       <ProveedorTema>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            {/* El teclado, para las dos plataformas.
-
-                El `KeyboardAvoidingView` de React Native sólo hace algo en
-                iOS: la rama `Platform.OS === 'ios' ? 'padding' : undefined`
-                que había en once pantallas dejaba a Android sin nada, a merced
-                de `adjustResize`. El de esta librería se comporta igual en los
-                dos lados, que es lo que la app necesita porque sale para
-                ambos.
-
-                Este es el SEGUNDO intento. El primero se revirtió culpando a
-                la librería de que el contenido quedara recortado arriba; no
-                era suya, era `headerBackground` en el native-stack. */}
-            <KeyboardProvider>
-              {/* Adentro del área segura: el aviso se posiciona contra el borde
-                  de arriba y necesita el inset del notch. */}
-              <ProveedorAviso>
-                <Navegacion />
-              </ProveedorAviso>
-            </KeyboardProvider>
+            {/*
+             * Sin `KeyboardProvider` de `react-native-keyboard-controller` a
+             * propósito — tercera vuelta con esa librería, y la saco.
+             *
+             * Historia: un recorte del header se le atribuyó una vez y no era
+             * suya (era `headerBackground` del native-stack), así que se
+             * reinstaló para que Android tuviera el mismo comportamiento que
+             * iOS. Pero las 12 pantallas que la usan se quedaron con
+             * `Platform.OS === 'ios' ? 'padding' : undefined` de antes, así
+             * que en Android nunca hizo nada — el segundo intento tampoco se
+             * completó. El 4/9/2026, con la app corriendo en el emulador de
+             * Android Studio (AVD con `hw.keyboard=no`, correctamente
+             * configurado), tocar un campo de texto a veces no desplegaba el
+             * teclado, en varias pantallas sin patrón de una sola. Es la
+             * única pieza de código nativo que sigue tocando activamente el
+             * foco/teclado en toda la app, corriendo sobre Reanimated 4 con
+             * la New Architecture — una combinación que la librería declara
+             * compatible sólo de forma laxa (`>=3.0.0`).
+             *
+             * Se reemplazó por el `KeyboardAvoidingView` de React Native en
+             * las 12 pantallas — mismo `behavior` que ya tenían, así que en
+             * Android es un cambio neutro. Se reabre si alguien puede
+             * verificar en un dispositivo que el problema no era ésta.
+             */}
+            {/* Adentro del área segura: el aviso se posiciona contra el borde
+                de arriba y necesita el inset del notch. */}
+            <ProveedorAviso>
+              <Navegacion />
+            </ProveedorAviso>
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </ProveedorTema>
