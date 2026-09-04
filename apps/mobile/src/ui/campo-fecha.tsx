@@ -48,7 +48,7 @@ export function CampoFecha({
 
   return (
     <View className="mb-3.5">
-      <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+      <Text className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
         {etiqueta}
       </Text>
 
@@ -176,7 +176,7 @@ function Calendario({
                   >
                     <Text
                       className="font-sans text-body"
-                      style={{ color: a === anio ? col.primary : col.ink, fontFamily: a === anio ? 'IBMPlexSans_700Bold' : 'IBMPlexSans_400Regular' }}
+                      style={{ color: a === anio ? col.primary : col.ink, fontFamily: a === anio ? 'Inter_700Bold' : 'Inter_400Regular' }}
                     >
                       {a}
                     </Text>
@@ -248,7 +248,7 @@ function GrillaDias({
         {DIAS_SEMANA.map((d, i) => (
           <Text
             key={i}
-            className="w-[14.28%] text-center text-eyebrow font-medio uppercase text-ink-suave"
+            className="w-[14.28%] text-center text-eyebrow font-fuerte uppercase text-ink-suave"
           >
             {d}
           </Text>
@@ -285,7 +285,7 @@ function GrillaDias({
                   className="font-sans text-body"
                   style={{
                     color: activa ? '#FFFFFF' : futura ? col.tenue : col.ink,
-                    fontFamily: activa ? 'IBMPlexSans_700Bold' : 'IBMPlexSans_400Regular',
+                    fontFamily: activa ? 'Inter_700Bold' : 'Inter_400Regular',
                   }}
                 >
                   {d}

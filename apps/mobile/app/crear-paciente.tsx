@@ -1,7 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { api, ErrorApi } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
@@ -10,8 +11,10 @@ import type { Inicio } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { CampoFecha } from '@/ui/campo-fecha';
+import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { Skeleton } from '@/ui/estados-sistema';
 import { edadDeFecha, validarFecha } from '@/ui/fecha';
+import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
 import { ResultadoClcr } from '@/ui/resultado-clcr';
 import { useColores } from '@/ui/tema';
@@ -119,21 +122,36 @@ export default function CrearPaciente() {
   // que no llegó sería inventar un muro que quizá no existe.
   if (entrada !== 'formulario') {
     return (
-      <Pantalla>
-        <Skeleton filas={4} />
-      </Pantalla>
+      <View className="flex-1 bg-paper">
+        <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
+        <Pantalla>
+          <Skeleton filas={4} />
+        </Pantalla>
+      </View>
     );
   }
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <View className="flex-1 bg-paper">
+      <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
+      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView
         contentContainerClassName="px-4 pb-4 pt-3"
         keyboardShouldPersistTaps="handled"
       >
+        <View className="mb-4 flex-row items-center gap-2">
+          <Pressable
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Volver"
+            hitSlop={8}
+            className="h-9 w-9 items-center justify-center rounded-full"
+          >
+            <Icono nombre="atras" tamano={18} color={col.ink} />
+          </Pressable>
+          <Text className="text-[28px] font-fuerte text-ink">Crear Paciente</Text>
+        </View>
+
         <BloqueFormulario titulo="Datos del paciente" exigencia="Obligatorio">
           {/* Nombre y apellido comparten fila: son cortos y se completan
               juntos. Apilados gastaban el doble de alto para nada. */}
@@ -154,7 +172,7 @@ export default function CrearPaciente() {
             onChange={campo('fechaNacimiento')}
           />
 
-          <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+          <Text className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
             Sexo
           </Text>
           <View className="mb-4 flex-row gap-2">
@@ -267,6 +285,7 @@ export default function CrearPaciente() {
           Crear paciente
         </Boton>
       </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }

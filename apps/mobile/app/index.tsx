@@ -14,8 +14,8 @@ export default function Entrada() {
 
   if (estado === 'cargando') {
     return (
-      <View className="flex-1 items-center justify-center bg-primary">
-        <View className="h-20 w-20 items-center justify-center rounded-card bg-white/10">
+      <View className="flex-1 items-center justify-center" style={{ backgroundColor: '#006D37' }}>
+        <View className="h-20 w-20 items-center justify-center rounded-lg bg-white/10">
           <Text className="text-xl font-fuerte tracking-widest text-white">GFH</Text>
         </View>
         <ActivityIndicator color="#FFFFFF" className="mt-8" />

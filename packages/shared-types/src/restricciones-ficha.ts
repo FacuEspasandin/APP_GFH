@@ -81,11 +81,24 @@ export function estadoDeAlertas(alertas: readonly AlertaFicha[]): EstadoRestricc
  * Cuánta dosis queda en el peor tramo, como texto.
  *
  * Es lo que hace que la tarjeta diga algo: «baja hasta el 25 %» informa, «tiene
- * tabla» no. Si los rangos no vienen en porcentaje se cae al conteo de tramos.
+ * tabla» no.
+ *
+ * El `tipo` del tramo se mira ANTES que el porcentaje, y no al revés. Cuando
+ * sólo se miraba el porcentaje, un fármaco contraindicado por debajo de 30
+ * mL/min podía anunciarse como «Sin ajuste en ningún tramo»: el único tramo
+ * con número era el de arriba —«100 %»— y los de abajo decían «Contraindicada»
+ * o «Dosis máxima 1 g/día», que no tienen porcentaje que parsear. Es el peor
+ * error posible en esta tarjeta, porque dice justo lo contrario de lo que pasa.
  */
 export function glosaRenal(tablas: readonly TablaRenalFicha[]): string {
   const rangos = tablas.flatMap((t) => t.rangos);
   if (rangos.length === 0) return 'Sin tabla';
+
+  const prohibido = rangos.find((r) => r.tipo === 'CONTRAINDICADO');
+  if (prohibido) return `Contraindicado ${prohibido.rangoTexto}`;
+
+  const aEvitar = rangos.find((r) => r.tipo === 'EVITAR');
+  if (aEvitar) return `Evitar ${aEvitar.rangoTexto}`;
 
   const minimos = rangos
     .map((r) => menorPorcentaje(r.textoRecomendacion))

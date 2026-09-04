@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { cuerpoDeGuardado, evaluar, sePuedeGuardar, borradorDesde } from '@/dominio/hepatico';
@@ -13,6 +13,7 @@ import {
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Calculadora } from '@/ui/calculadora';
 import { CampoFecha } from '@/ui/campo-fecha';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { aISO, validarFecha } from '@/ui/fecha';
 import { Superficie } from '@/ui/superficie';
@@ -106,7 +107,14 @@ export default function DatosHepaticos() {
     },
   });
 
-  if (isLoading || !paciente) return <SkeletonFormulario campos={5} />;
+  if (isLoading || !paciente) {
+    return (
+      <View className="flex-1 bg-paper">
+        <EncabezadoConTitulo titulo="Función Hepática" cierra />
+        <SkeletonFormulario campos={5} />
+      </View>
+    );
+  }
 
   // Lo guardado es el punto de partida; lo que el médico toca lo pisa.
   const guardado = aBorradorDelMolde(borradorDesde(aNumeros(paciente)));
@@ -116,37 +124,37 @@ export default function DatosHepaticos() {
   const yaTenia = paciente.childPughClase !== null;
 
   return (
-    <Calculadora
-      molde={moldeChildPugh(true)}
-      inicial={guardado.borrador}
-      onCambio={(borrador, unidades) => setTocado({ borrador, unidades })}
-      guardar={{
-        rotulo: yaTenia ? 'Actualizar' : 'Guardar y recalcular',
-        onGuardar: () => guardar.mutate(),
-        guardando: guardar.isPending,
-        listo: sePuedeGuardar(enDominio),
-      }}
-      extra={
-        <>
-          <Superficie elevacion="plana" className="mb-3.5 mt-3.5 px-3.5 py-3">
-            <Text className="font-sans text-meta leading-5 text-ink-suave">
-              {r.clase === null
-                ? 'La clase se guarda cuando estén los cinco criterios. Mientras tanto, lo que cargues queda igual.'
-                : 'La clase queda en el paciente. La tabla de ajuste por fármaco todavía no existe: cuando esté, se aplica sola sobre el tratamiento que ya cargaste.'}
-            </Text>
-          </Superficie>
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Función Hepática" cierra />
+      <Calculadora
+        molde={moldeChildPugh(true)}
+        inicial={guardado.borrador}
+        onCambio={(borrador, unidades) => setTocado({ borrador, unidades })}
+        guardar={{
+          rotulo: yaTenia ? 'Actualizar' : 'Guardar y recalcular',
+          onGuardar: () => guardar.mutate(),
+          guardando: guardar.isPending,
+          listo: sePuedeGuardar(enDominio),
+        }}
+        extra={
+          <>
+            <Superficie elevacion="plana" className="mb-3.5 mt-3.5 px-3.5 py-3">
+              <Text className="font-sans text-meta leading-5 text-ink-suave">
+                {r.clase === null
+                  ? 'La clase se guarda cuando estén los cinco criterios. Mientras tanto, lo que cargues queda igual.'
+                  : 'La clase queda en el paciente. La tabla de ajuste por fármaco todavía no existe: cuando esté, se aplica sola sobre el tratamiento que ya cargaste.'}
+              </Text>
+            </Superficie>
 
-          <BloqueFormulario titulo="Fecha del análisis" etiqueta="Opcional">
-            <CampoFecha etiqueta="Cuándo se hicieron" valor={fecha} onChange={setFecha} />
-            <Text className="font-sans -mt-2 text-meta leading-5 text-ink-suave">
-              {/* Sin fecha se guarda como de hoy, que es lo que hacía siempre. La
-                  diferencia es que ahora se puede decir otra cosa: un análisis de
-                  hace tres meses mostrado sin fecha parece de esta mañana. */}
-              Sin completar se guarda con la fecha de hoy.
-            </Text>
-          </BloqueFormulario>
-        </>
-      }
-    />
+            <BloqueFormulario titulo="Fecha del análisis" etiqueta="Opcional">
+              <CampoFecha etiqueta="Cuándo se hicieron" valor={fecha} onChange={setFecha} />
+              <Text className="font-sans -mt-2 text-meta leading-5 text-ink-suave">
+                Sin completar se guarda con la fecha de hoy.
+              </Text>
+            </BloqueFormulario>
+          </>
+        }
+      />
+    </View>
   );
 }

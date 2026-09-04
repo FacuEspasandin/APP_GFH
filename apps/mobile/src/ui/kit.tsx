@@ -83,15 +83,9 @@ export function Pantalla({
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <Text className="mb-2 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+    <Text className="mb-2 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
       {children}
     </Text>
-  );
-}
-
-export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return (
-    <View className={`rounded-card border border-line bg-surface ${className}`}>{children}</View>
   );
 }
 
@@ -219,7 +213,7 @@ export const CampoTexto = forwardRef<
   return (
     <View className="mb-3.5">
       {etiqueta ? (
-        <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+        <Text className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
           {etiqueta}
         </Text>
       ) : null}

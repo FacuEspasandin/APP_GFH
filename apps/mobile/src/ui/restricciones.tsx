@@ -103,31 +103,21 @@ function TarjetaRestriccion({ r, onPress }: { r: Restriccion; onPress: () => voi
       accessibilityLabel={`${r.titulo}: ${ETIQUETA[r.estado]}. ${r.glosa}`}
       // 48% y no la mitad exacta: con `gap: 8` dos tarjetas al 50% no entran.
       style={{ width: '48%', flexGrow: 1 }}
-      className="rounded-card border border-line bg-surface px-3 py-3"
+      className="items-center rounded-card border border-line bg-surface px-3 py-4"
     >
-      <View className="flex-row items-center">
-        <View
-          className="mr-2.5 items-center justify-center rounded-input"
-          style={{ width: 32, height: 32, backgroundColor: c.fondo }}
-        >
-          <Icono nombre={ICONO[r.clave]} tamano={18} color={c.frente} />
-        </View>
-        <Text
-          className="flex-1 text-meta font-medio"
-          style={{ color: apagada ? col.inkSuave : col.ink }}
-        >
-          {r.titulo}
-        </Text>
-        <Icono nombre="chevron" tamano={14} color={col.tenue} />
-      </View>
-
+      <Icono nombre={ICONO[r.clave]} tamano={20} color={c.frente} />
       <Text
-        className="font-mono mt-2 text-eyebrow uppercase tracking-wider"
-        style={{ color: c.frente }}
+        className="mt-1.5 font-fuerte text-[11px] uppercase tracking-wider"
+        style={{ color: apagada ? col.tenue : col.inkSuave }}
+      >
+        {r.titulo}
+      </Text>
+      <Text
+        className="mt-0.5 text-meta font-medio"
+        style={{ color: apagada ? col.tenue : col.ink }}
       >
         {ETIQUETA[r.estado]}
       </Text>
-      <Text className="font-sans mt-0.5 text-eyebrow leading-4 text-ink-suave">{r.glosa}</Text>
     </Pressable>
   );
 }
@@ -181,54 +171,44 @@ export function EscalaRenal({ tramos }: { tramos: readonly TramoRenal[] }) {
   const col = useColores();
 
   return (
-    <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3.5">
-      <View className="mb-3 flex-row justify-between">
-        <Text className="font-mono text-eyebrow uppercase tracking-wider text-tenue">
-          Clearance
-        </Text>
-        <Text className="font-mono text-eyebrow uppercase tracking-wider text-tenue">
-          Dosis que queda
-        </Text>
-      </View>
-
-      {tramos.map((t, i) => {
+    <View className="mb-3.5 gap-3">
+      {tramos.map((t) => {
         const c = coloresDe(t.estado, col);
-        const ultimo = i === tramos.length - 1;
 
         return (
-          <View key={t.rango} className="flex-row" style={{ paddingBottom: ultimo ? 0 : 14 }}>
-            {/* El eje: la regla numérica y el hilo que une los tramos. Es un eje
-                continuo, no una lista de ítems sueltos. */}
-            {/* 88 y no 74: «Hemodiálisis» no entraba y se partía en dos
-                renglones con la sílaba cortada. */}
-            <View style={{ width: 88 }}>
-              <Text className="font-mono text-right text-meta text-ink-suave">{t.rango}</Text>
-            </View>
-
-            <View className="items-center" style={{ width: 16 }}>
+          <View
+            key={t.rango}
+            className="rounded-xl border bg-surface p-4"
+            style={{ borderColor: col.line, borderLeftWidth: 4, borderLeftColor: c.relleno }}
+          >
+            <View className="mb-3 flex-row items-center justify-between gap-2">
+              <Text
+                className="flex-1 font-fuerte text-[11px] uppercase tracking-wider text-ink-suave"
+                numberOfLines={1}
+              >
+                {t.rango}
+              </Text>
               <View
-                className="rounded-full"
-                style={{ width: 8, height: 8, marginTop: 5, backgroundColor: c.relleno }}
-              />
-              {!ultimo ? (
-                <View className="w-px flex-1" style={{ backgroundColor: col.line, marginTop: 2 }} />
-              ) : null}
+                className="flex-row items-center gap-1 rounded-full px-2 py-1"
+                style={{ backgroundColor: col.paper }}
+              >
+                <View className="rounded-full" style={{ width: 8, height: 8, backgroundColor: c.relleno }} />
+                <Text className="font-fuerte text-[11px] uppercase tracking-wider" style={{ color: c.frente }}>
+                  {ETIQUETA[t.estado]}
+                </Text>
+              </View>
             </View>
 
-            <View className="flex-1 pl-2">
-              <Barra tramo={t} color={c.relleno} />
-              {/* Sólo lo que la barra no dice: el porcentaje ya está adentro. */}
-              {t.nota ? (
-                <Text className="font-sans mt-1.5 text-meta leading-5 text-ink-suave">
-                  {t.nota}
-                </Text>
-              ) : null}
-            </View>
+            <Barra tramo={t} color={c.relleno} />
+            {/* Sólo lo que la barra no dice: el porcentaje ya está adentro. */}
+            {t.nota ? (
+              <Text className="font-sans mt-2 text-meta leading-5 text-ink-suave">{t.nota}</Text>
+            ) : null}
           </View>
         );
       })}
 
-      <View className="mt-3 flex-row items-center border-t border-line pt-3">
+      <View className="flex-row items-center px-1">
         <View
           className="mr-2 rounded"
           style={{ width: 24, height: 8, backgroundColor: COLOR_SEVERIDAD.media, opacity: 0.45 }}
@@ -237,7 +217,7 @@ export function EscalaRenal({ tramos }: { tramos: readonly TramoRenal[] }) {
           La parte clara es el resto del rango: el catálogo da un intervalo, no un número.
         </Text>
       </View>
-    </Superficie>
+    </View>
   );
 }
 

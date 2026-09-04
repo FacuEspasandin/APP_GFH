@@ -6,6 +6,7 @@ import { Text, View } from 'react-native';
 import * as API from '@/api/endpoints';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
 
 /** Agregar alergia (3.4.2 farmacológica / 3.4.3 texto libre). */
@@ -35,7 +36,9 @@ export default function AgregarAlergia() {
   const listo = tipo === 'FARMACOLOGICA' ? pa.length > 0 : descripcion.trim().length >= 2;
 
   return (
-    <Pantalla>
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Agregar Alergia" cierra />
+      <Pantalla>
       <BloqueFormulario titulo="A qué" exigencia="Obligatorio">
         <View className="mb-3.5 flex-row gap-2">
           <Chip
@@ -94,6 +97,7 @@ export default function AgregarAlergia() {
       <Boton onPress={() => agregar.mutate()} cargando={agregar.isPending} deshabilitado={!listo}>
         Agregar alergia
       </Boton>
-    </Pantalla>
+      </Pantalla>
+    </View>
   );
 }

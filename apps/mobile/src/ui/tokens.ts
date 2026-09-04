@@ -53,9 +53,10 @@ const CLARO: Paleta = {
   paper: '#F3F6F3',
   line: '#DDE5E0',
   surface: '#FFFFFF',
-  primary: '#1F5E4A',
-  primaryHover: '#184A3B',
-  primaryLight: '#E7F0EA',
+  // Verde del rediseño de Figma, no el de marca original de GFH web.
+  primary: '#005228',
+  primaryHover: '#003D1E',
+  primaryLight: '#E6EFEA',
   accent: '#0D7068',
   accentLight: '#E1F1EE',
   peligro: '#991B1B',
@@ -68,11 +69,11 @@ const OSCURO: Paleta = {
   paper: '#0C1613',
   line: '#2B3C35',
   surface: '#14211C',
-  // La marca se ACLARA en oscuro: #1F5E4A sobre fondo oscuro no llega al
+  // La marca se ACLARA en oscuro: #005228 sobre fondo oscuro no llega al
   // contraste mínimo AA.
-  primary: '#5CB092',
-  primaryHover: '#7AC5A8',
-  primaryLight: '#1B332B',
+  primary: '#54B683',
+  primaryHover: '#70C298',
+  primaryLight: '#1B3327',
   accent: '#52B7AC',
   accentLight: '#16302E',
   // Mismo motivo que el primary: el rojo oscuro sobre fondo oscuro no se lee.

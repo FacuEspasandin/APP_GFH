@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { api, ErrorApi } from '@/api/cliente';
 import * as API from '@/api/endpoints';
@@ -18,6 +20,32 @@ import { Boton, CampoTexto } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
+
+/** Cerrar + título, blanco — flujo lineal, sin la marca "GFH" ni la barra
+ *  inferior (ver `SIN_MENU_SUBRUTA_PACIENTE` en `menu-inferior.tsx`). */
+function EncabezadoTransaccional({ titulo }: { titulo: string }) {
+  const col = useColores();
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View
+      className="flex-row items-center gap-2 border-b px-2"
+      style={{ paddingTop: insets.top, backgroundColor: col.surface, borderColor: col.line }}
+    >
+      <Pressable
+        onPress={() => router.back()}
+        accessibilityRole="button"
+        accessibilityLabel="Cerrar"
+        hitSlop={8}
+        className="h-16 w-12 items-center justify-center"
+      >
+        <Icono nombre="cerrar" tamano={16} color={col.ink} />
+      </Pressable>
+      <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
+    </View>
+  );
+}
 
 interface Linea {
   textoOriginal: string;
@@ -107,12 +135,16 @@ export default function CargarTratamiento() {
   // --- paso 1: pegar -------------------------------------------------------
   if (!lineas) {
     return (
-      <KeyboardAvoidingView
-        className="flex-1 bg-paper"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
-          <BloqueFormulario titulo="Pegá o escribí el listado" etiqueta="Una por línea">
+      <View className="flex-1 bg-paper">
+        <EncabezadoTransaccional titulo="Cargar Tratamiento" />
+        <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
+          <PasoNumerado n={1} titulo="Pegar lista de medicamentos" />
+          <Text className="font-sans -mt-2 mb-3 text-meta leading-5 text-ink-suave">
+            Copiá y pegá la lista desde la historia clínica o receta digital.
+          </Text>
+
+          <View className="mb-1">
             <TextInput
               value={crudo}
               onChangeText={setCrudo}
@@ -120,10 +152,22 @@ export default function CargarTratamiento() {
               placeholder={'Eliquis 5 mg cada 12 h\nIbupirac 600 mg cada 8 h'}
               placeholderTextColor={col.tenue}
               accessibilityLabel="Listado de medicación"
-              className="min-h-[120px] rounded-chip border border-line bg-surface px-3.5 py-3 text-body text-ink"
+              className="min-h-[140px] rounded-xl border border-line bg-surface px-4 py-4 text-body text-ink"
               style={{ textAlignVertical: 'top' }}
             />
-          </BloqueFormulario>
+            <Pressable
+              onPress={() => probarFoto.mutate()}
+              accessibilityRole="button"
+              accessibilityLabel="Desde una foto — todavía no disponible"
+              className="absolute bottom-3 right-3 flex-row items-center gap-1.5 rounded-full px-3.5 py-2"
+              style={{ backgroundColor: col.paper, borderWidth: 1, borderColor: col.line }}
+            >
+              <Icono nombre="camara" tamano={16} color="#005228" />
+              <Text className="font-fuerte text-[11px] uppercase tracking-wider" style={{ color: '#005228' }}>
+                Desde una foto
+              </Text>
+            </Pressable>
+          </View>
 
           {/* Apagado y con el motivo a la vista, no después de tocarlo. */}
           <BloqueFormulario titulo="Desde una foto" etiqueta="No disponible">
@@ -152,7 +196,8 @@ export default function CargarTratamiento() {
               : `Buscar ${textos.length} ${textos.length === 1 ? 'línea' : 'líneas'} en el catálogo`}
           </Boton>
         </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </View>
     );
   }
 
@@ -165,10 +210,9 @@ export default function CargarTratamiento() {
   const faltaPauta = elegidasSinPauta(lineas);
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <View className="flex-1 bg-paper">
+      <EncabezadoTransaccional titulo="Cargar Tratamiento" />
+      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ConsultaPlegada
         titulo={`${lineas.length} ${lineas.length === 1 ? 'línea pegada' : 'líneas pegadas'}`}
         detalle={
@@ -179,7 +223,8 @@ export default function CargarTratamiento() {
         onCambiar={() => setLineas(null)}
       />
 
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
+        <PasoNumerado n={2} titulo="Revisar y completar" />
         <Veredicto
           rango={null}
           titulo="Nada se carga hasta que confirmes"
@@ -232,7 +277,8 @@ export default function CargarTratamiento() {
             : `Agregar ${listas.length} al tratamiento`}
         </Boton>
       </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -324,5 +370,19 @@ function FilaLinea({
         )}
       </View>
     </Superficie>
+  );
+}
+
+/** El numerito de paso — cada pantalla muestra el suyo, siempre "activo": no
+ *  hay una vista combinada de los dos pasos, así que no hace falta el estado
+ *  "pendiente" que sí tiene sentido en un mock estático de Figma. */
+function PasoNumerado({ n, titulo }: { n: number; titulo: string }) {
+  return (
+    <View className="mb-2 flex-row items-center gap-2">
+      <View className="h-6 w-6 items-center justify-center rounded-full" style={{ backgroundColor: '#005228' }}>
+        <Text className="font-medio text-eyebrow text-white">{n}</Text>
+      </View>
+      <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
+    </View>
   );
 }

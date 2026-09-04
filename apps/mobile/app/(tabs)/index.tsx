@@ -9,12 +9,19 @@ import { detalleDeAcceso, esDePago, rutaNuevoPaciente, rutaPaywall } from '@/dom
 import type { FilaPaciente, Inicio as DatosInicio } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import { FilaAnimada } from '@/ui/animacion';
+import { EncabezadoApp } from '@/ui/encabezado-app';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Icono } from '@/ui/iconos';
 import { CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { Superficie } from '@/ui/superficie';
-import { claveColorPorClcr, colorEspina, COLOR_SEVERIDAD, type RangoGravedad } from '@gfh/shared-types';
+import {
+  claveColorPorClcr,
+  colorEspina,
+  COLOR_SEVERIDAD,
+  RANGO_ETIQUETA,
+  type RangoGravedad,
+} from '@gfh/shared-types';
 
 /**
  * Pacientes (2.x). Lista PLANA, no agrupada.
@@ -65,24 +72,25 @@ export default function Pacientes() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: 'Pacientes',
-          headerRight: () => (
-            <Pressable
-              onPress={() => setMenuAbierto(true)}
-              accessibilityRole="button"
-              accessibilityLabel="Crear"
-              className="mr-3 h-8 w-8 items-center justify-center rounded-full"
-              style={{ backgroundColor: 'rgba(255,255,255,0.18)' }}
-            >
-              <Icono nombre="mas" tamano={18} color="#FFFFFF" />
-            </Pressable>
-          ),
-        }}
-      />
+      <Stack.Screen options={{ headerShown: false }} />
+      <EncabezadoApp ocultarVolver />
 
       <Pantalla onRefrescar={() => void refetch()} refrescando={isRefetching}>
+        <View className="mb-3 flex-row items-center justify-between">
+          <Text className="text-[32px] font-fuerte" style={{ color: '#005228' }}>
+            Pacientes
+          </Text>
+          <Pressable
+            onPress={() => setMenuAbierto(true)}
+            accessibilityRole="button"
+            accessibilityLabel="Crear"
+            className="h-12 w-12 items-center justify-center rounded-full"
+            style={{ backgroundColor: '#005228' }}
+          >
+            <Icono nombre="mas" tamano={18} color="#FFFFFF" />
+          </Pressable>
+        </View>
+
         <CampoTexto
           value={consulta}
           onChangeText={setConsulta}
@@ -195,9 +203,21 @@ function Fila({ paciente }: { paciente: FilaPaciente }) {
           <View style={{ width: 4, backgroundColor: color }} />
           <View className="flex-1 flex-row items-center px-3.5 py-3.5">
             <View className="flex-1">
-              <Text className="text-fila font-medio text-ink">
-                {paciente.apellido}, {paciente.nombre}
-              </Text>
+              <View className="flex-row flex-wrap items-center gap-2">
+                <Text className="text-fila font-medio text-ink">
+                  {paciente.apellido}, {paciente.nombre}
+                </Text>
+                {paciente.peorRango !== null ? (
+                  <View
+                    className="rounded-full px-2 py-0.5"
+                    style={{ backgroundColor: color }}
+                  >
+                    <Text className="font-fuerte text-[10px] uppercase tracking-wider text-white">
+                      {RANGO_ETIQUETA[paciente.peorRango as RangoGravedad]}
+                    </Text>
+                  </View>
+                ) : null}
+              </View>
               <Text className="font-sans mt-1 text-meta text-ink-suave">
                 {paciente.edadAnios} años
                 {paciente.grupoNombre ? ` · ${paciente.grupoNombre}` : ''}
@@ -206,7 +226,7 @@ function Fila({ paciente }: { paciente: FilaPaciente }) {
 
             {/* El Clcr en su propio bloque a la derecha: en una lista es la
                 columna que se recorre de arriba abajo. */}
-            <View className="items-end">
+            <View className="items-end pl-2">
               <Text
                 className="font-mono-fuerte text-fila"
                 style={{ color: colorClcr, fontVariant: ['tabular-nums'] }}
@@ -217,47 +237,9 @@ function Fila({ paciente }: { paciente: FilaPaciente }) {
                 {paciente.clcrMlMin !== null ? 'mL/min' : 'sin dato'}
               </Text>
             </View>
-
-            {paciente.conteoHallazgos > 0 ? (
-              <View className="ml-2.5">
-                <BadgeHallazgos n={paciente.conteoHallazgos} rango={paciente.peorRango} />
-              </View>
-            ) : null}
           </View>
         </Superficie>
       </Pressable>
     </Link>
   );
-}
-
-/**
- * Cuántos hallazgos tiene, teñido por el PEOR de ellos.
- *
- * Distinto del badge del cockpit, que mide cantidad en una escala propia: acá
- * el color viene de la gravedad porque es lo que decide si hay que entrar.
- */
-function BadgeHallazgos({ n, rango }: { n: number; rango: number | null }) {
-  const color = colorEspina((rango ?? 3) as RangoGravedad);
-
-  return (
-    <View
-      className="h-6 min-w-[24px] items-center justify-center rounded-chip px-1"
-      style={{ backgroundColor: `${color}1F`, borderWidth: 1, borderColor: `${color}55` }}
-    >
-      <Text className="text-eyebrow font-fuerte" style={{ color: oscurecer(color) }}>
-        {n}
-      </Text>
-    </View>
-  );
-}
-
-/** El texto sobre el fondo translúcido necesita más contraste que el hex puro. */
-function oscurecer(hex: string): string {
-  const mapa: Record<string, string> = {
-    [COLOR_SEVERIDAD.grave]: '#991B1B',
-    [COLOR_SEVERIDAD.media]: '#92400E',
-    [COLOR_SEVERIDAD.ok]: '#166534',
-    [COLOR_SEVERIDAD.neutro]: '#44544C',
-  };
-  return mapa[hex] ?? hex;
 }

@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import * as API from '@/api/endpoints';
 import { Icono } from '@/ui/iconos';
 import { hapticaExito } from '@/ui/haptica';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
@@ -44,6 +46,7 @@ export default function AceptarAlternativa() {
     prescripcion,
     origen,
     alternativa,
+    productoComercialId,
   } = useLocalSearchParams<{
     id: string;
     paOrigenId: string;
@@ -51,6 +54,9 @@ export default function AceptarAlternativa() {
     prescripcion?: string;
     origen?: string;
     alternativa?: string;
+    /** Viene de "Selección de medicamento" (paso 2). Sin esto —llegada
+     *  directa, o flujos viejos— el backend cae al genérico. */
+    productoComercialId?: string;
   }>();
 
   const router = useRouter();
@@ -68,7 +74,12 @@ export default function AceptarAlternativa() {
         paAlternativaId,
         ...(prescripcion ? { prescripcionOrigenId: prescripcion } : {}),
         disclaimerVersion: VERSION_DISCLAIMER,
-        reemplazo: { dosis: f.dosis.trim(), frecuencia: f.frecuencia.trim(), via },
+        reemplazo: {
+          dosis: f.dosis.trim(),
+          frecuencia: f.frecuencia.trim(),
+          via,
+          ...(productoComercialId ? { productoComercialId } : {}),
+        },
       }),
     onSuccess: async () => {
       hapticaExito();
@@ -85,11 +96,13 @@ export default function AceptarAlternativa() {
   const listo = f.dosis.trim().length > 0 && f.frecuencia.trim().length > 0 && confirmado;
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Reemplazar Fármaco" cierra />
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
         {/* Sale → entra, en una línea. Dos renglones apilados no comunican que
             uno reemplaza al otro: parecían dos datos sueltos. */}
         <Superficie elevacion="plana" className="mb-3.5 flex-row items-center px-3.5 py-3.5">
@@ -137,7 +150,7 @@ export default function AceptarAlternativa() {
             </View>
           </View>
 
-          <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+          <Text className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
             Vía
           </Text>
           <View className="flex-row flex-wrap gap-2">
@@ -205,6 +218,7 @@ export default function AceptarAlternativa() {
           Aplicar cambio
         </Boton>
       </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }

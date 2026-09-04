@@ -4,6 +4,7 @@ import { Pressable, Text, View } from 'react-native';
 import * as API from '@/api/endpoints';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { useAviso } from '@/ui/aviso';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { fechaLarga } from '@/ui/fecha';
 import { Icono } from '@/ui/iconos';
 import { AvisoNeutro, Estado, Eyebrow, Pantalla } from '@/ui/kit';
@@ -30,10 +31,19 @@ export default function Sesiones() {
     },
   });
 
-  if (isLoading) return <SkeletonLista filas={3} />;
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-paper">
+        <EncabezadoConTitulo titulo="Sesiones Activas" />
+        <SkeletonLista filas={3} />
+      </View>
+    );
+  }
 
   return (
-    <Pantalla>
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Sesiones Activas" />
+      <Pantalla>
       <Eyebrow>Dispositivos con sesión abierta</Eyebrow>
 
       {(data?.length ?? 0) === 0 ? (
@@ -97,6 +107,7 @@ export default function Sesiones() {
         Si ves un dispositivo que no reconocés, cerralo y cambiá la contraseña. Cambiarla cierra
         todas las sesiones de una vez.
       </AvisoNeutro>
-    </Pantalla>
+      </Pantalla>
+    </View>
   );
 }

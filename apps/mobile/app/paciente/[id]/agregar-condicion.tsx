@@ -8,6 +8,7 @@ import { buscar } from '@/dominio/busqueda';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { aISO, validarFecha } from '@/ui/fecha';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
 
 /** Agregar condición clínica (3.4.1). */
@@ -56,7 +57,9 @@ export default function AgregarCondicion() {
   });
 
   return (
-    <Pantalla>
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Agregar Condición" cierra />
+      <Pantalla>
       <BloqueFormulario titulo="Condición" exigencia="Obligatorio">
         {cargables.length > 10 ? (
           <CampoTexto
@@ -109,6 +112,7 @@ export default function AgregarCondicion() {
       <Boton onPress={() => agregar.mutate()} cargando={agregar.isPending} deshabilitado={!elegida}>
         Agregar condición
       </Boton>
-    </Pantalla>
+      </Pantalla>
+    </View>
   );
 }

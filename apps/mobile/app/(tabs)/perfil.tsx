@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
-import { Text, View } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
+import { Pressable, Text, View } from 'react-native';
 
 import { api, cerrarSesionLocal } from '@/api/cliente';
 import * as API from '@/api/endpoints';
+import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Eyebrow, Pantalla } from '@/ui/kit';
 import { GrupoOpciones, Opcion } from '@/ui/lista-opciones';
@@ -55,8 +56,16 @@ export default function PerfilPantalla() {
   const nombreCompleto = data ? `${data.nombre} ${data.apellido}` : '—';
 
   return (
-    <Pantalla>
-      <Identidad nombre={nombreCompleto} email={data?.email ?? ''} suscripcion={suscripcion.data} />
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <EncabezadoApp ocultarVolver />
+      <Pantalla>
+      <Identidad
+        nombre={nombreCompleto}
+        email={data?.email ?? ''}
+        suscripcion={suscripcion.data}
+        onEditar={() => router.push('/perfil/cuenta')}
+      />
 
       <TarjetaPlan
         estado={suscripcion.data}
@@ -121,26 +130,32 @@ export default function PerfilPantalla() {
         <Opcion icono="info" titulo="Acerca de GFH" onPress={() => router.push('/perfil/acerca')} />
       </GrupoOpciones>
 
-      <GrupoOpciones>
-        <Opcion
-          primera
-          icono="salir"
-          titulo="Cerrar sesión"
-          onPress={async () => {
-            await cerrarSesionLocal();
-            router.replace('/login');
-          }}
-        />
-        <Opcion
-          icono="basura"
-          titulo="Eliminar cuenta"
-          destructiva
-          onPress={() => router.push('/perfil/eliminar-cuenta')}
-        />
-      </GrupoOpciones>
+      <Pressable
+        onPress={async () => {
+          await cerrarSesionLocal();
+          router.replace('/login');
+        }}
+        accessibilityRole="button"
+        className="mt-4 flex-row items-center justify-center gap-2 rounded-full border px-6 py-3.5"
+        style={{ borderColor: '#6F7A6F' }}
+      >
+        <Icono nombre="salir" tamano={18} color="#191C20" />
+        <Text className="text-body font-medio text-ink">Cerrar sesión</Text>
+      </Pressable>
 
-      <Text className="font-mono mb-2 text-center text-eyebrow text-tenue">GFH Móvil 0.0.1</Text>
-    </Pantalla>
+      <Pressable
+        onPress={() => router.push('/perfil/eliminar-cuenta')}
+        accessibilityRole="button"
+        className="mt-3.5 items-center py-1"
+      >
+        <Text className="text-meta font-medio" style={{ color: '#991B1B' }}>
+          Eliminar cuenta
+        </Text>
+      </Pressable>
+
+      <Text className="mb-2 mt-4 font-mono text-center text-eyebrow text-tenue">GFH Móvil 0.0.1</Text>
+      </Pantalla>
+    </>
   );
 }
 
@@ -154,49 +169,67 @@ function Identidad({
   nombre,
   email,
   suscripcion,
+  onEditar,
 }: {
   nombre: string;
   email: string;
   suscripcion?: EstadoSuscripcion;
+  onEditar: () => void;
 }) {
   const col = useColores();
 
   return (
-    <Superficie elevacion="plana" className="mb-3.5 flex-row items-center px-3.5 py-3.5">
+    <Superficie elevacion="media" className="mb-3.5 items-center px-5 py-6">
+      <View className="absolute bottom-0 left-0 top-0" style={{ width: 4, backgroundColor: col.tenue }} />
+
       <View
-        className="mr-3 items-center justify-center rounded-full bg-primary"
-        style={{ width: 46, height: 46 }}
+        className="mb-3 items-center justify-center rounded-full"
+        style={{ width: 80, height: 80, backgroundColor: '#005228' }}
       >
-        <Text className="font-fuerte text-white" style={{ fontSize: 16 }}>
+        <Text className="font-fuerte text-white" style={{ fontSize: 26 }}>
           {iniciales(nombre)}
         </Text>
       </View>
 
-      <View className="flex-1">
-        <Text className="text-fila font-fuerte text-ink" numberOfLines={1}>
-          {nombre}
-        </Text>
-        <Text className="font-sans text-meta text-ink-suave" numberOfLines={1}>
-          {email}
-        </Text>
-      </View>
+      <Text className="text-fila font-fuerte text-ink" numberOfLines={1}>
+        {nombre}
+      </Text>
+      <Text className="mt-0.5 font-sans text-meta text-ink-suave" numberOfLines={1}>
+        {email}
+      </Text>
 
       {/* Acá iba el rol ("MEDICO"), que es vocabulario del sistema y además el
           único rol con pantallas en v1. El lugar más visible de la pantalla lo
           ocupa ahora el dato que cambia lo que la app deja hacer. */}
       {suscripcion ? (
         <View
-          className="rounded-full px-2 py-0.5"
-          style={{ backgroundColor: suscripcion.vigente ? '#DCFCE7' : col.line }}
+          className="mt-2.5 flex-row items-center gap-1.5 rounded-full px-3 py-1"
+          style={{ backgroundColor: col.paper, borderWidth: 1, borderColor: col.line }}
         >
-          <Text
-            className="font-fuerte text-eyebrow uppercase tracking-wider"
-            style={{ color: suscripcion.vigente ? '#166534' : col.inkSuave }}
-          >
-            {suscripcion.vigente ? 'Activa' : 'Gratis'}
+          <View
+            className="rounded-full"
+            style={{
+              width: 8,
+              height: 8,
+              backgroundColor: suscripcion.vigente ? '#22C55E' : col.tenue,
+            }}
+          />
+          <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+            {suscripcion.vigente ? 'Suscripción activa' : 'Plan gratis'}
           </Text>
         </View>
       ) : null}
+
+      <Pressable
+        onPress={onEditar}
+        accessibilityRole="button"
+        className="mt-4 rounded-full border px-5 py-2"
+        style={{ borderColor: '#6F7A6F' }}
+      >
+        <Text className="text-meta font-medio" style={{ color: '#005228' }}>
+          Editar perfil
+        </Text>
+      </Pressable>
     </Superficie>
   );
 }

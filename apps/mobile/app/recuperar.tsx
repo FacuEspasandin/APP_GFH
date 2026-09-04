@@ -1,9 +1,10 @@
 import * as Linking from 'expo-linking';
 import { Text, View } from 'react-native';
 
-import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
 /** A dónde escribir mientras el restablecimiento sea manual. */
@@ -22,41 +23,52 @@ const SOPORTE = 'info@gfh.com';
  * sí funciona.
  */
 export default function Recuperar() {
+  const col = useColores();
+
   const escribir = () => {
     const asunto = encodeURIComponent('Restablecer contraseña de GFH');
     void Linking.openURL(`mailto:${SOPORTE}?subject=${asunto}`);
   };
 
   return (
-    <Pantalla>
-      <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3.5">
-        <View className="flex-row items-center">
-          <View
-            className="mr-2.5 rounded-full"
-            style={{ width: 10, height: 10, backgroundColor: COLOR_SEVERIDAD.neutro }}
-          />
-          <Text className="flex-1 text-fila font-fuerte text-ink">Todavía no es automático</Text>
-        </View>
-        <Text className="font-sans mt-1.5 text-meta leading-5 text-ink-suave">
-          El envío de emails no está conectado: falta el proveedor y el token de un solo uso. No hay
-          forma de mandarte un enlace todavía.
-        </Text>
-      </Superficie>
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Recuperar Contraseña" />
+      <Pantalla>
+        <Superficie elevacion="media" className="mb-4 px-3.5 py-3.5">
+          <View className="flex-row items-center">
+            <View
+              className="mr-2.5 rounded-full"
+              style={{ width: 10, height: 10, backgroundColor: COLOR_SEVERIDAD.neutro }}
+            />
+            <Text className="flex-1 text-fila font-fuerte text-ink">Todavía no es automático</Text>
+          </View>
+          <Text className="font-sans mt-1.5 text-meta leading-5 text-ink-suave">
+            El envío de emails no está conectado: falta el proveedor y el token de un solo uso. No hay
+            forma de mandarte un enlace todavía.
+          </Text>
+        </Superficie>
 
-      <BloqueFormulario titulo="Mientras tanto">
-        <Text className="font-sans text-meta leading-5 text-ink-suave">
-          Escribinos desde el email de tu cuenta y te la restablecemos a mano.
-        </Text>
-        <Text className="font-mono-fuerte mt-2.5 text-body text-ink">{SOPORTE}</Text>
-      </BloqueFormulario>
+        <Superficie elevacion="plana" className="mb-3 border p-4" style={{ borderColor: col.line }}>
+          <Text className="mb-1.5 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+            Mientras tanto
+          </Text>
+          <Text className="font-sans text-meta leading-5 text-ink-suave">
+            Escribinos desde el email de tu cuenta y te la restablecemos a mano.
+          </Text>
+          <Text className="font-mono-fuerte mt-2.5 text-body text-ink">{SOPORTE}</Text>
+        </Superficie>
 
-      <BloqueFormulario titulo="Cuando esté conectado">
-        <Text className="font-sans text-meta leading-5 text-ink-suave">
-          Esta pantalla va a pedirte el email y mandarte un enlace de un solo uso.
-        </Text>
-      </BloqueFormulario>
+        <Superficie elevacion="plana" className="mb-4 border p-4" style={{ borderColor: col.line }}>
+          <Text className="mb-1.5 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+            Cuando esté conectado
+          </Text>
+          <Text className="font-sans text-meta leading-5 text-ink-suave">
+            Esta pantalla va a pedirte el email y mandarte un enlace de un solo uso.
+          </Text>
+        </Superficie>
 
-      <Boton onPress={escribir}>Escribir a soporte</Boton>
-    </Pantalla>
+        <Boton onPress={escribir}>Escribir a soporte</Boton>
+      </Pantalla>
+    </View>
   );
 }

@@ -32,11 +32,13 @@ export function MarcadoresAjuste({ renal, hepatico }: { renal: boolean; hepatico
 function Marcador({ letra, activo }: { letra: string; activo: boolean }) {
   return (
     <View
-      className="items-center justify-center rounded"
+      className="items-center justify-center rounded-full"
       style={{
-        width: 22,
-        height: 22,
+        width: 24,
+        height: 24,
         backgroundColor: activo ? CELESTE_FONDO : 'transparent',
+        borderWidth: activo ? 1 : 0,
+        borderColor: 'rgba(14,165,233,0.3)',
       }}
     >
       {activo ? (

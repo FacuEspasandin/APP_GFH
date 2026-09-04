@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Boton } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
 const VERSION_DISCLAIMER = '1.0';
@@ -34,23 +36,30 @@ export default function DisclaimerPrimerIngreso() {
   };
 
   return (
-    <View className="flex-1 bg-paper pt-16">
-      <Text className="px-6 text-grande font-fuerte text-ink">Antes de empezar</Text>
+    <View className="flex-1 bg-paper">
+      <EncabezadoApp ocultarVolver />
 
-      <ScrollView className="mt-4 flex-1" contentContainerClassName="px-6 pb-4">
-        <Text className="font-sans text-body leading-6 text-ink">
-          GFH es una <Text className="font-fuerte">herramienta de apoyo a la decisión clínica</Text>.
-          Las recomendaciones que muestra no sustituyen el juicio del médico tratante.
-        </Text>
-        <Text className="font-sans mt-3 text-body leading-6 text-ink">
-          Verificá siempre las dosis contra la ficha técnica del medicamento y considerá las
-          características individuales del paciente: función hepática, edad, comorbilidades y
-          terapia concomitante.
-        </Text>
-        <Text className="font-sans mt-3 text-body leading-6 text-ink">
-          El contenido clínico está en revisión profesional. Las fichas marcadas como borrador no
-          fueron validadas por un farmacéutico.
-        </Text>
+      <ScrollView className="flex-1" contentContainerClassName="px-5 py-6">
+        <Superficie elevacion="media" className="p-6">
+          <Text className="border-b border-line pb-4 text-center text-[28px] font-fuerte" style={{ color: '#005228' }}>
+            Antes de empezar
+          </Text>
+          <View className="gap-4 pt-4">
+            <Text className="font-sans text-body leading-7 text-ink-suave">
+              GFH es una <Text className="font-fuerte text-ink">herramienta de apoyo a la decisión clínica</Text>.
+              Las recomendaciones que muestra no sustituyen el juicio del médico tratante.
+            </Text>
+            <Text className="font-sans text-body leading-7 text-ink-suave">
+              Verificá siempre las dosis contra la ficha técnica del medicamento y considerá las
+              características individuales del paciente: función hepática, edad, comorbilidades y
+              terapia concomitante.
+            </Text>
+            <Text className="font-sans text-body leading-7 text-ink-suave">
+              El contenido clínico está en revisión profesional. Las fichas marcadas como borrador
+              no fueron validadas por un farmacéutico.
+            </Text>
+          </View>
+        </Superficie>
       </ScrollView>
 
       <View className="border-t border-line bg-surface px-6 pb-8 pt-4">

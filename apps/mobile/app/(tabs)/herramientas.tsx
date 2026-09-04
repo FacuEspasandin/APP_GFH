@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
@@ -17,6 +17,7 @@ import {
 } from '@/dominio/herramientas';
 import { esDePago, rutaHerramienta } from '@/dominio/plan-gratis';
 import { mostrarRecientes, recientesVigentes } from '@/dominio/recientes';
+import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { CampoTexto, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -72,7 +73,10 @@ export default function Herramientas() {
   };
 
   return (
-    <Pantalla>
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <EncabezadoApp ocultarVolver />
+      <Pantalla>
       <CampoTexto
         value={consulta}
         onChangeText={setConsulta}
@@ -148,6 +152,7 @@ export default function Herramientas() {
         </Text>
       ) : null}
     </Pantalla>
+    </>
   );
 }
 
@@ -202,11 +207,11 @@ function ChipFiltro({
       onPress={onPress}
       accessibilityRole="button"
       accessibilityState={{ selected: activo }}
-      className="rounded-chip px-3 py-1.5"
+      className="rounded-chip px-3.5 py-2"
       style={{
-        backgroundColor: activo ? col.primary : col.surface,
+        backgroundColor: activo ? '#005228' : col.surface,
         borderWidth: 1,
-        borderColor: activo ? col.primary : col.line,
+        borderColor: activo ? '#005228' : col.line,
       }}
     >
       <Text
@@ -231,7 +236,7 @@ function Grupo({
   onAbrir: (h: Herramienta) => void;
 }) {
   return (
-    <Superficie elevacion="plana">
+    <Superficie elevacion="media">
       {herramientas.map((h, i) => (
         <Fila
           key={h.clave}

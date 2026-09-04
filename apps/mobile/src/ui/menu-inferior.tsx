@@ -57,6 +57,18 @@ const SIN_MENU = new Set([
 ]);
 
 /**
+ * Subrutas de `paciente/[id]/…` sin menú — el propio Cockpit (`paciente/[id]`
+ * a secas) sí lo lleva, así que no alcanza con `SIN_MENU` por segmento raíz.
+ * Cargar tratamiento es un flujo lineal ("Hidden Nav Shell" en Figma): mientras
+ * se está completando la lista no hay razón para ofrecer saltar a otra sección.
+ */
+const SIN_MENU_SUBRUTA_PACIENTE = new Set(['cargar-tratamiento']);
+
+/** Igual que arriba, para `grupo/[id]/…`: editar es una tarea puntual, no un
+ *  lugar del que colgar la navegación principal. */
+const SIN_MENU_SUBRUTA_GRUPO = new Set(['editar']);
+
+/**
  * Qué sección resaltar. Los detalles heredan la sección de la que cuelgan: un
  * paciente y todo lo suyo pertenecen a Pacientes, la ficha de un fármaco al
  * Buscador. Sin esto el menú se apagaría entero al entrar a cualquier lado.
@@ -76,6 +88,15 @@ function seccionActiva(segmentos: string[]): string {
   return 'index';
 }
 
+/**
+ * El verde de esta barra es fijo y no sigue el tema (a diferencia del resto
+ * del chrome, que aclara en oscuro). Viene del rediseño de Figma
+ * ("Modernización de visual app"): ahí la barra inferior es parte de la
+ * identidad de marca, no del chrome que se adapta al tema — igual que un logo
+ * no cambia de color en modo oscuro.
+ */
+const VERDE_BARRA = '#006D37';
+
 export function MenuInferior() {
   const segmentos = useSegments() as string[];
   const router = useRouter();
@@ -84,6 +105,8 @@ export function MenuInferior() {
   const c = coloresChrome(oscuro);
 
   if (SIN_MENU.has(segmentos[0] ?? '')) return null;
+  if (segmentos[0] === 'paciente' && SIN_MENU_SUBRUTA_PACIENTE.has(segmentos[2] ?? '')) return null;
+  if (segmentos[0] === 'grupo' && SIN_MENU_SUBRUTA_GRUPO.has(segmentos[2] ?? '')) return null;
 
   /**
    * El área segura del teléfono, recortada.
@@ -145,7 +168,9 @@ export function MenuInferior() {
             style={{
               height: ALTO_CONTENIDO + respiro,
               paddingBottom: respiro,
-              backgroundColor: c.fondoHeader,
+              backgroundColor: VERDE_BARRA,
+              borderTopLeftRadius: 12,
+              borderTopRightRadius: 12,
               shadowColor: '#122A23',
               shadowOpacity: 0.18,
               shadowOffset: { width: 0, height: -3 },
@@ -182,13 +207,9 @@ export function MenuInferior() {
                 // Estando ahí se rellena de verde, como los rótulos de los
                 // costados se ponen blancos: es el mismo idioma para decir
                 // «acá estás».
-                backgroundColor: enHerramientas
-                  ? c.fondoHeader
-                  : oscuro
-                    ? c.fondoHeader
-                    : '#FFFFFF',
-                borderWidth: 5,
-                borderColor: oscuro ? '#0C1613' : '#F3F6F3',
+                backgroundColor: enHerramientas ? VERDE_BARRA : '#FFFFFF',
+                borderWidth: 4,
+                borderColor: VERDE_BARRA,
                 shadowColor: '#122A23',
                 shadowOpacity: 0.25,
                 shadowOffset: { width: 0, height: 5 },
@@ -196,11 +217,7 @@ export function MenuInferior() {
                 elevation: 14,
               }}
             >
-              <Icono
-                nombre="barras"
-                tamano={23}
-                color={enHerramientas || oscuro ? '#FFFFFF' : c.fondoHeader}
-              />
+              <Icono nombre="barras" tamano={23} color={enHerramientas ? '#FFFFFF' : VERDE_BARRA} />
             </Pressable>
           </View>
         </View>

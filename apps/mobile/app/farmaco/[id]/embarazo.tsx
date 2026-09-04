@@ -1,7 +1,9 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { Text, View } from 'react-native';
 
 import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { estadoDeAlertas, porTrimestre } from '@/dominio/restricciones';
+import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import {
@@ -27,9 +29,11 @@ export default function RestriccionEmbarazo() {
   const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'embarazo');
 
   return (
-    <>
-      <Stack.Screen options={{ title: 'Embarazo' }} />
+    <View className="flex-1 bg-paper">
+      <EncabezadoApp />
       <Pantalla>
+        <Text className="mb-4 text-[28px] font-fuerte text-ink">Embarazo</Text>
+
         <ResultadoConsulta
           cargando={isLoading}
           error={error}
@@ -39,7 +43,7 @@ export default function RestriccionEmbarazo() {
           {data ? <Contenido f={data} /> : null}
         </ResultadoConsulta>
       </Pantalla>
-    </>
+    </View>
   );
 }
 

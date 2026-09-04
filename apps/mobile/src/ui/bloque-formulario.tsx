@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
 import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 
 /**
  * Un grupo de campos con título y su exigencia declarada.
@@ -34,13 +35,18 @@ export function BloqueFormulario({
   children: ReactNode;
 }) {
   const derecha = exigencia ?? etiqueta;
+  const col = useColores();
 
   return (
-    <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3.5">
+    <Superficie
+      elevacion="plana"
+      className="mb-3.5 border px-3.5 py-3.5"
+      style={{ borderColor: col.line }}
+    >
       <View className="mb-3 flex-row items-baseline justify-between">
         <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
         {derecha ? (
-          <Text className="font-medio text-eyebrow uppercase tracking-wider text-tenue">
+          <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-tenue">
             {derecha}
           </Text>
         ) : null}

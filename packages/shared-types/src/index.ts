@@ -4,6 +4,7 @@ export * from './enums';
 export * from './historial-filtros';
 export * from './lipidos';
 export * from './molde';
+export * from './monografia';
 export * from './orden-tratamiento';
 export * from './rangos';
 export * from './restricciones-ficha';

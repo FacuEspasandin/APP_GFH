@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import {
@@ -16,11 +17,9 @@ import {
 import { MS_MAXIMO, opcionesDeshidratado, persistidor } from '@/api/persistencia';
 import { rutaPaywall } from '@/dominio/plan-gratis';
 import { ProveedorAviso } from '@/ui/aviso';
-import { BotonVolverHeader } from '@/ui/boton-volver';
 import { useFuentes } from '@/ui/fuentes';
 import { MenuInferior } from '@/ui/menu-inferior';
 import { activarPantallaCompletaWeb } from '@/ui/pantalla-completa-web';
-import { FondoHeader } from '@/ui/fondo-header';
 import { coloresChrome, ProveedorTema, useTema } from '@/ui/tema';
 
 export default function LayoutRaiz() {
@@ -61,11 +60,25 @@ export default function LayoutRaiz() {
       <ProveedorTema>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
+            {/* El teclado, para las dos plataformas.
+
+                El `KeyboardAvoidingView` de React Native sólo hace algo en
+                iOS: la rama `Platform.OS === 'ios' ? 'padding' : undefined`
+                que había en once pantallas dejaba a Android sin nada, a merced
+                de `adjustResize`. El de esta librería se comporta igual en los
+                dos lados, que es lo que la app necesita porque sale para
+                ambos.
+
+                Este es el SEGUNDO intento. El primero se revirtió culpando a
+                la librería de que el contenido quedara recortado arriba; no
+                era suya, era `headerBackground` en el native-stack. */}
+            <KeyboardProvider>
               {/* Adentro del área segura: el aviso se posiciona contra el borde
                   de arriba y necesita el inset del notch. */}
               <ProveedorAviso>
                 <Navegacion />
               </ProveedorAviso>
+            </KeyboardProvider>
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </ProveedorTema>
@@ -98,11 +111,21 @@ function Navegacion() {
       <StatusBar style="light" />
       <Stack
         screenOptions={{
-          headerBackground: () => <FondoHeader />,
+          // SIN `headerBackground`. Ponerlo hace que el native-stack dibuje
+          // la pantalla desde y=0 de la ventana y el header encima: los
+          // primeros ~108px de CADA pantalla con header quedaban tapados, y no
+          // se llegaba a ellos ni scrolleando porque el ScrollView creía estar
+          // en el tope. Costó una tapa de sección entera antes de encontrarlo.
+          //
+          // Lo que se pierde es un degradado que el propio comentario original
+          // describía como imperceptible. El verde sigue saliendo de
+          // `headerStyle`. Si alguna vez se quiere el degradado de vuelta, hay
+          // que compensar el offset con `useHeaderHeight()` en TODAS las
+          // pantallas — no sólo en `Pantalla`— o el recorte vuelve.
           headerStyle: { backgroundColor: c.fondoHeader },
           headerTintColor: c.textoHeader,
           // Familia y no peso: con fuentes estáticas la negrita es otra familia.
-          headerTitleStyle: { fontFamily: 'IBMPlexSans_700Bold', fontSize: 16 },
+          headerTitleStyle: { fontFamily: 'Inter_700Bold', fontSize: 16 },
           headerBackTitle: 'Atrás',
           contentStyle: { backgroundColor: c.fondoPantalla },
         }}
@@ -114,61 +137,112 @@ function Navegacion() {
             llegar sin nada atrás —desde un enlace, o tras cerrar sesión— y en
             ese caso el Stack no dibuja ninguna, dejando la pantalla sin
             salida. Éste siempre vuelve a Bienvenida. */}
-        <Stack.Screen
-          name="registro"
-          options={{ title: 'Crear cuenta', headerLeft: () => <BotonVolverHeader /> }}
-        />
-        <Stack.Screen name="recuperar" options={{ title: 'Recuperar contraseña' }} />
-        <Stack.Screen name="paywall" options={{ title: 'Suscripción' }} />
+        {/* Cabecera propia (rediseño de Figma): blanca, con el título de la
+            pantalla en vez de la marca — ver el header inline en `registro.tsx`. */}
+        <Stack.Screen name="registro" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="recuperar" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño de Figma): blanca, "GFH" chico + cerrar —
+            ver el header inline en `paywall.tsx`. */}
+        <Stack.Screen name="paywall" options={{ headerShown: false }} />
         <Stack.Screen name="disclaimer" options={{ headerShown: false }} />
         <Stack.Screen name="suscripcion-vencida" options={{ headerShown: false }} />
 
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        <Stack.Screen name="crear-paciente" options={{ title: 'Nuevo paciente' }} />
-        <Stack.Screen name="crear-grupo" options={{ title: 'Nuevo grupo' }} />
-        <Stack.Screen name="grupo/[id]" options={{ title: 'Grupo' }} />
-        <Stack.Screen name="grupo/[id]/editar" options={{ title: 'Editar grupo' }} />
+        <Stack.Screen name="crear-paciente" options={{ headerShown: false }} />
+        <Stack.Screen name="crear-grupo" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño de Figma) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="grupo/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="grupo/[id]/editar" options={{ headerShown: false }} />
 
-        <Stack.Screen name="paciente/[id]" options={{ title: 'Paciente' }} />
-        <Stack.Screen name="paciente/[id]/editar" options={{ title: 'Editar paciente' }} />
-        <Stack.Screen name="paciente/[id]/agregar-farmaco" options={{ title: 'Agregar fármaco' }} />
-        <Stack.Screen name="paciente/[id]/agregar-condicion" options={{ title: 'Agregar condición' }} />
-        <Stack.Screen name="paciente/[id]/agregar-alergia" options={{ title: 'Agregar alergia' }} />
-        <Stack.Screen name="paciente/[id]/condiciones-alergias" options={{ title: 'Condiciones y alergias' }} />
-        <Stack.Screen name="paciente/[id]/datos-renales" options={{ title: 'Función renal' }} />
-        <Stack.Screen name="paciente/[id]/datos-hepaticos" options={{ title: 'Función hepática' }} />
-        <Stack.Screen name="paciente/[id]/embarazo-lactancia" options={{ title: 'Embarazo y lactancia' }} />
-        <Stack.Screen name="paciente/[id]/historial" options={{ title: 'Historial' }} />
-        <Stack.Screen name="paciente/[id]/alternativas" options={{ title: "Alternativas" }} />
-        <Stack.Screen name="paciente/[id]/aceptar-alternativa" options={{ title: "Reemplazar fármaco" }} />
-        <Stack.Screen name="paciente/[id]/cargar-tratamiento" options={{ title: 'Cargar tratamiento' }} />
-        <Stack.Screen name="paciente/[id]/hallazgos" options={{ title: 'Hallazgo' }} />
-        <Stack.Screen name="prescripcion/[id]" options={{ title: 'Fármaco' }} />
+        {/* Cabecera propia (rediseño de Figma) en vez del header nativo — ver
+            `EncabezadoApp` en `src/ui/encabezado-app.tsx`. */}
+        <Stack.Screen name="paciente/[id]" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="paciente/[id]/editar" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="paciente/[id]/agregar-farmaco" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="paciente/[id]/agregar-condicion" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="paciente/[id]/agregar-alergia" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="paciente/[id]/condiciones-alergias" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="paciente/[id]/datos-renales" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="paciente/[id]/datos-hepaticos" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="paciente/[id]/embarazo-lactancia" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño de Figma) — ver `EncabezadoApp`. Quedó
+            pendiente desde que se portó el contenido; recién se corrigió en
+            la auditoría de coherencia. */}
+        <Stack.Screen name="paciente/[id]/historial" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`/`ConsultaPlegada`. */}
+        <Stack.Screen name="paciente/[id]/alternativas" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="paciente/[id]/elegir-producto-alternativa" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="paciente/[id]/aceptar-alternativa" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño de Figma): blanca, cerrar + título — ver
+            el header inline en `cargar-tratamiento.tsx`. Es un flujo lineal,
+            por eso el frame de Figma la llama "Hidden Nav Shell": tampoco
+            lleva la barra inferior (ver `SIN_MENU_SUBRUTA` en `menu-inferior.tsx`). */}
+        <Stack.Screen name="paciente/[id]/cargar-tratamiento" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño de Figma) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="paciente/[id]/hallazgos" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño de Figma) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="prescripcion/[id]" options={{ headerShown: false }} />
 
-        <Stack.Screen name="herramientas/interacciones" options={{ title: 'Interacciones' }} />
-        <Stack.Screen name="herramientas/condicion-alergia" options={{ title: 'Condición y alergia' }} />
-        <Stack.Screen name="herramientas/renal" options={{ title: 'Ajuste renal' }} />
-        <Stack.Screen name="herramientas/hepatico" options={{ title: 'Ajuste hepático' }} />
+        <Stack.Screen name="herramientas/interacciones" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="herramientas/condicion-alergia" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="herramientas/renal" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="herramientas/hepatico" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="herramientas/ajuste-hepatico" options={{ headerShown: false }} />
 
-        <Stack.Screen name="farmaco/[id]" options={{ title: 'Ficha' }} />
-        <Stack.Screen name="farmaco/[id]/renal" options={{ title: 'Función renal' }} />
-        <Stack.Screen name="farmaco/[id]/hepatico" options={{ title: 'Función hepática' }} />
-        <Stack.Screen name="farmaco/[id]/embarazo" options={{ title: 'Embarazo' }} />
-        <Stack.Screen name="farmaco/[id]/lactancia" options={{ title: 'Lactancia' }} />
-        <Stack.Screen name="farmaco/[id]/interacciones" options={{ title: 'Interacciones' }} />
+        <Stack.Screen name="farmaco/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="farmaco/[id]/renal" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="farmaco/[id]/hepatico" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="farmaco/[id]/embarazo" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="farmaco/[id]/lactancia" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. */}
+        <Stack.Screen name="farmaco/[id]/interacciones" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="farmaco/[id]/monografia/[seccion]" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoApp`. OJO: acá el `id`
+            de la ruta es un PrincipioActivo.id, no un ProductoComercial —
+            ver el comentario en similares.tsx. */}
+        <Stack.Screen name="farmaco/[id]/similares" options={{ headerShown: false }} />
 
-        <Stack.Screen name="perfil/cuenta" options={{ title: 'Datos personales' }} />
-        <Stack.Screen name="perfil/password" options={{ title: 'Contraseña' }} />
-        <Stack.Screen name="perfil/sesiones" options={{ title: 'Sesiones activas' }} />
-        <Stack.Screen name="perfil/tema" options={{ title: 'Tema' }} />
-        <Stack.Screen name="perfil/notificaciones" options={{ title: 'Notificaciones' }} />
-        <Stack.Screen name="perfil/umbral" options={{ title: 'Umbral de adulto mayor' }} />
-        <Stack.Screen name="perfil/suscripcion" options={{ title: 'Suscripción' }} />
-        <Stack.Screen name="perfil/ayuda" options={{ title: 'Ayuda y soporte' }} />
-        <Stack.Screen name="perfil/legales" options={{ title: 'Términos y privacidad' }} />
-        <Stack.Screen name="perfil/acerca" options={{ title: 'Acerca de GFH' }} />
-        <Stack.Screen name="perfil/eliminar-cuenta" options={{ title: 'Eliminar cuenta' }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/cuenta" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/password" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/sesiones" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/tema" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/notificaciones" options={{ headerShown: false }} />
+        <Stack.Screen name="perfil/umbral" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/suscripcion" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/ayuda" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/legales" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/acerca" options={{ headerShown: false }} />
+        {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
+        <Stack.Screen name="perfil/eliminar-cuenta" options={{ headerShown: false }} />
       </Stack>
 
       {/* Fuera del Stack a propósito: así sobrevive a cualquier navegación. */}

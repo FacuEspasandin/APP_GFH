@@ -109,7 +109,7 @@ export const useTema = () => useContext(Ctx);
  * La paleta del tema activo, para lo que se pinta por `style` y no por clase.
  *
  * Usarlo en vez de escribir el hex resuelve dos cosas de una: cambiar la marca
- * pasa a ser un archivo, y el color acompaña al tema — antes un `#1F5E4A` fijo
+ * pasa a ser un archivo, y el color acompaña al tema — antes un `#005228` fijo
  * se quedaba en el verde claro sobre fondo oscuro y perdía contraste.
  */
 export function useColores(): Paleta {

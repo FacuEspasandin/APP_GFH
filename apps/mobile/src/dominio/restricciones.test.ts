@@ -119,6 +119,33 @@ describe('restricciones del fármaco', () => {
       ).toBe('Sin ajuste en ningún tramo');
     });
 
+    it('un tramo contraindicado manda sobre los porcentajes', () => {
+      // Metformina como la trae la monografía: el único tramo con número es el
+      // de arriba, y los de abajo dicen «Dosis máxima 1 g/día» o
+      // «Contraindicada». Mirando sólo porcentajes daba «Sin ajuste en ningún
+      // tramo» para un fármaco contraindicado por debajo de 30 mL/min.
+      const t = {
+        ...TABLA_LITIO,
+        rangos: [
+          { rangoTexto: '≥90 mL/min', textoRecomendacion: '100 %', tipo: 'SIN_AJUSTE' },
+          { rangoTexto: '30-44 mL/min', textoRecomendacion: 'Dosis máxima 1 g/día', tipo: 'REDUCIR_DOSIS' },
+          { rangoTexto: '<30 mL/min', textoRecomendacion: 'Contraindicada', tipo: 'CONTRAINDICADO' },
+        ],
+      };
+      expect(glosaRenal([t])).toBe('Contraindicado <30 mL/min');
+    });
+
+    it('si no hay contraindicado pero sí un tramo a evitar, también manda', () => {
+      const t = {
+        ...TABLA_LITIO,
+        rangos: [
+          { rangoTexto: '100-50', textoRecomendacion: '100 %', tipo: 'SIN_AJUSTE' },
+          { rangoTexto: '<10', textoRecomendacion: 'Evitar', tipo: 'EVITAR' },
+        ],
+      };
+      expect(glosaRenal([t])).toBe('Evitar <10');
+    });
+
     it('con rangos sin porcentaje cae al conteo de tramos', () => {
       const t = { ...TABLA_LITIO, rangos: [{ rangoTexto: 'x', textoRecomendacion: 'Cada 18 h', tipo: 'P' }] };
       expect(glosaRenal([t])).toBe('1 tramo de Clcr');
@@ -166,6 +193,22 @@ describe('restricciones del fármaco', () => {
       expect(t[0]!.nota).toBe('Cada 18 h');
     });
 
+    it('un tramo prohibido se pinta en rojo aunque no traiga porcentaje', () => {
+      // «Contraindicada» y «Evitar» no tienen número, así que mirando sólo el
+      // porcentaje caían en ámbar — más suave de lo que el catálogo dice.
+      const t = tramosRenales({
+        ...TABLA_LITIO,
+        suplementoHd: null,
+        rangos: [
+          { rangoTexto: '≥90', textoRecomendacion: '100 %', tipo: 'SIN_AJUSTE' },
+          { rangoTexto: '30-44', textoRecomendacion: 'Dosis máxima 1 g/día', tipo: 'REDUCIR_DOSIS' },
+          { rangoTexto: '<30', textoRecomendacion: 'Contraindicada', tipo: 'CONTRAINDICADO' },
+          { rangoTexto: '<10', textoRecomendacion: 'Evitar', tipo: 'EVITAR' },
+        ],
+      });
+      expect(t.map((x) => x.estado)).toEqual(['ok', 'precaucion', 'evitar', 'evitar']);
+    });
+
     it('sin suplemento de diálisis no inventa el tramo', () => {
       expect(tramosRenales({ ...TABLA_LITIO, suplementoHd: null })).toHaveLength(3);
     });
@@ -203,6 +246,22 @@ describe('restricciones del fármaco', () => {
       expect(t[0]!.texto).toBe('fuerte');
     });
 
+    it('CONTRAINDICADO gana sobre EVITAR, que es el error que ya se cometió', () => {
+      // Warfarina real: una alerta curada dice EVITAR desde la semana 13 y otra
+      // dice CONTRAINDICADO sin rango. El texto que se mostraba era el de
+      // EVITAR —la recomendación más suave— porque el desempate sólo miraba
+      // ese nivel y CONTRAINDICADO ni se consideraba.
+      const t = porTrimestre([
+        alerta({ severidad: 'EVITAR', texto: 'Preferir heparina.' }),
+        alerta({ severidad: 'CONTRAINDICADO', texto: 'Contraindicado en el embarazo.' }),
+      ]);
+      expect(t.map((x) => x.texto)).toEqual([
+        'Contraindicado en el embarazo.',
+        'Contraindicado en el embarazo.',
+        'Contraindicado en el embarazo.',
+      ]);
+    });
+
     it('las semanas de cada trimestre no se pisan ni dejan huecos', () => {
       const t = porTrimestre([]);
       expect(t.map((x) => [x.desde, x.hasta])).toEqual([[1, 13], [14, 27], [28, 40]]);
@@ -223,6 +282,18 @@ describe('restricciones del fármaco', () => {
         { clase: 'C', texto: 'No recomendado.', severidad: 'EVITAR' },
       ]);
       expect(p.map((x) => x.estado)).toEqual(['ok', 'precaucion', 'evitar']);
+    });
+
+    it('CONTRAINDICADO no se pinta verde, y un valor desconocido tampoco', () => {
+      // El mapeo miraba EVITAR y PRECAUCION y mandaba TODO lo demás a 'ok'.
+      // O sea que el nivel más duro del enum salía en verde, y cualquier
+      // valor nuevo también.
+      const p = peldanosHepaticos([
+        { clase: 'A', texto: 'Prohibido.', severidad: 'CONTRAINDICADO' },
+        { clase: 'B', texto: 'Algo nuevo.', severidad: 'UN_NIVEL_QUE_NO_EXISTE' },
+        { clase: 'C', texto: 'Sin ajuste.', severidad: 'NINGUNA' },
+      ]);
+      expect(p.map((x) => x.estado)).toEqual(['evitar', 'precaucion', 'ok']);
     });
 
     it('una clase que falta en la tabla queda sin dato, no en verde', () => {

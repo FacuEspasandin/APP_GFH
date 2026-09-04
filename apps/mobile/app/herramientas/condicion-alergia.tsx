@@ -1,18 +1,21 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
-import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
+import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import {
   AvisoDescartable,
-  Consulta,
   ConsultaPlegada,
   FilaResultado,
   Veredicto,
 } from '@/ui/herramienta';
+import { Icono } from '@/ui/iconos';
 import { CampoTexto, Chip, Estado } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 import {
   peorRango,
   RANGO_POR_SEVERIDAD_ALERTA,
@@ -35,6 +38,8 @@ interface Resultado {
 
 /** Herramienta 2 (4.4 / 4.5): un candidato contra condiciones y alergias sueltas. */
 export default function HerramientaCondicionAlergia() {
+  const router = useRouter();
+  const col = useColores();
   const [farmaco, setFarmaco] = useState<PaSugerido[]>([]);
   const [condiciones, setCondiciones] = useState<string[]>([]);
   const [grupos, setGrupos] = useState<string[]>([]);
@@ -66,74 +71,114 @@ export default function HerramientaCondicionAlergia() {
 
   if (editando || !calcular.data) {
     return (
-      <Consulta
-        accion={farmaco.length === 0 ? 'Elegí un fármaco' : `Analizar ${farmaco[0]!.nombre}`}
-        onAccion={() => calcular.mutate()}
-        cargando={calcular.isPending}
-        deshabilitado={farmaco.length === 0}
-      >
-        <BloqueFormulario titulo="Fármaco candidato" exigencia="Obligatorio">
-          <BuscadorPrincipioActivo
-            unico
-            seleccionados={farmaco}
-            onAgregar={(pa) => setFarmaco([pa])}
-            onQuitar={() => setFarmaco([])}
-          />
-        </BloqueFormulario>
+      <View className="flex-1 bg-paper">
+        <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
+        <ScrollView contentContainerClassName="px-4 pb-6 pt-4" keyboardShouldPersistTaps="handled">
+          <Text className="mb-1 text-fila font-fuerte text-ink">Condición y Alergia</Text>
+          <Text className="mb-4 font-sans text-meta leading-5 text-ink-suave">
+            Evalúe la interacción de un fármaco candidato con condiciones clínicas y alergias del
+            paciente.
+          </Text>
 
-        <BloqueFormulario titulo="Condiciones del paciente" exigencia="Opcional">
-          <SelectorFiltrable
-            catalogo={catCond ?? []}
-            elegidos={condiciones}
-            onAlternar={(id) => alternar(condiciones, setCondiciones, id)}
-            placeholder="Buscar condición"
-            vacio="Sin condiciones seleccionadas."
-          />
-        </BloqueFormulario>
+          <Superficie elevacion="media" className="mb-4 p-5">
+            <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+              Fármaco candidato
+            </Text>
+            <BuscadorPrincipioActivo
+              unico
+              seleccionados={farmaco}
+              onAgregar={(pa) => setFarmaco([pa])}
+              onQuitar={() => setFarmaco([])}
+            />
+          </Superficie>
 
-        <BloqueFormulario titulo="Alergias" exigencia="Opcional">
-          <SelectorFiltrable
-            catalogo={catGrupos ?? []}
-            elegidos={grupos}
-            onAlternar={(id) => alternar(grupos, setGrupos, id)}
-            placeholder="Buscar familia alergénica"
-            vacio="Sin alergias seleccionadas."
-          />
+          <Superficie elevacion="media" className="mb-4 p-5">
+            <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+              Condiciones del paciente
+            </Text>
+            <SelectorFiltrable
+              catalogo={catCond ?? []}
+              elegidos={condiciones}
+              onAlternar={(id) => alternar(condiciones, setCondiciones, id)}
+              placeholder="Buscar condición"
+              vacio="Sin condiciones seleccionadas."
+            />
+          </Superficie>
 
-          {grupos.length > 0 ? (
-            <View className="mt-3.5">
-              <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
-                Severidad de la alergia
-              </Text>
-              <View className="flex-row gap-2">
-                {(['LEVE', 'MODERADA', 'GRAVE'] as const).map((s) => (
-                  <Chip
-                    key={s}
-                    texto={s.charAt(0) + s.slice(1).toLowerCase()}
-                    activo={severidad === s}
-                    onPress={() => setSeveridad(s)}
-                  />
-                ))}
+          <Superficie elevacion="media" className="mb-4 p-5">
+            <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+              Alergias
+            </Text>
+            <SelectorFiltrable
+              catalogo={catGrupos ?? []}
+              elegidos={grupos}
+              onAlternar={(id) => alternar(grupos, setGrupos, id)}
+              placeholder="Buscar familia alergénica"
+              vacio="Sin alergias seleccionadas."
+            />
+
+            {grupos.length > 0 ? (
+              <View className="mt-3.5">
+                <Text className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
+                  Severidad de la alergia
+                </Text>
+                <View className="flex-row gap-2">
+                  {(['LEVE', 'MODERADA', 'GRAVE'] as const).map((s) => (
+                    <Chip
+                      key={s}
+                      texto={s.charAt(0) + s.slice(1).toLowerCase()}
+                      activo={severidad === s}
+                      onPress={() => setSeveridad(s)}
+                    />
+                  ))}
+                </View>
+                {/* Regla 4: sólo la coincidencia exacta con grave bloquea. Decirlo
+                    acá evita que el médico crea que marcar "grave" prohíbe todo. */}
+                <Text className="font-sans mt-2 text-meta leading-4 text-ink-suave">
+                  Sólo la coincidencia exacta con alergia grave impide prescribir. El cruce por
+                  familia nunca bloquea: pide confirmación.
+                </Text>
               </View>
-              {/* Regla 4: sólo la coincidencia exacta con grave bloquea. Decirlo
-                  acá evita que el médico crea que marcar "grave" prohíbe todo. */}
-              <Text className="font-sans mt-2 text-meta leading-4 text-ink-suave">
-                Sólo la coincidencia exacta con alergia grave impide prescribir. El cruce por
-                familia nunca bloquea: pide confirmación.
-              </Text>
+            ) : null}
+          </Superficie>
+
+          {calcular.isError ? (
+            <View className="mb-4">
+              <Estado
+                titulo="No se pudo calcular"
+                detalle={String((calcular.error as Error)?.message ?? '')}
+              />
             </View>
           ) : null}
-        </BloqueFormulario>
 
-        <AvisoDescartable />
-
-        {calcular.isError ? (
-          <Estado
-            titulo="No se pudo calcular"
-            detalle={String((calcular.error as Error)?.message ?? '')}
-          />
-        ) : null}
-      </Consulta>
+          <View className="mt-2 items-center border-t pt-6" style={{ borderColor: col.line }}>
+            <Pressable
+              onPress={() => calcular.mutate()}
+              disabled={farmaco.length === 0 || calcular.isPending}
+              accessibilityRole="button"
+              className="h-[60px] w-full flex-row items-center justify-center gap-3 rounded-full"
+              style={{
+                backgroundColor: '#005228',
+                opacity: farmaco.length === 0 || calcular.isPending ? 0.5 : 1,
+              }}
+            >
+              {calcular.isPending ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <>
+                  <Icono nombre="alerta" tamano={18} color="#FFFFFF" />
+                  <Text className="text-fila font-fuerte text-white">
+                    {farmaco.length === 0 ? 'Elegí un fármaco' : `Analizar ${farmaco[0]!.nombre}`}
+                  </Text>
+                </>
+              )}
+            </Pressable>
+            <Text className="mt-2 text-center text-meta leading-5 text-ink-suave">
+              Esta herramienta no guarda nada: al salir se pierde.
+            </Text>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 

@@ -294,7 +294,7 @@ function EnCascada({
             >
               {abiertaAMano === campo.clave ? (
                 <Text
-                  className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider"
+                  className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider"
                   style={{ color: col.primary }}
                 >
                   Corrigiendo
@@ -450,7 +450,7 @@ function CampoDelMolde({
   return (
     <View>
       {sinRotulo ? null : (
-        <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+        <Text className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
           {campo.rotulo}
         </Text>
       )}

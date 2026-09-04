@@ -1,12 +1,43 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { MotivoPaywall } from '@/dominio/plan-gratis';
 import { Icono } from '@/ui/iconos';
 import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+
+/** Cierra este flujo lineal: "GFH" chico centrado + una X, sin volver — sale
+ *  por acá o por "Ahora no" del pie, nunca por un back que reabra el motivo
+ *  que trajo al médico hasta el paywall. */
+function EncabezadoPaywall({ onCerrar }: { onCerrar: () => void }) {
+  const col = useColores();
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View
+      className="flex-row items-center justify-center border-b px-5"
+      style={{ paddingTop: insets.top, backgroundColor: col.surface, borderColor: col.line }}
+    >
+      <View className="h-16 flex-1 items-center justify-center">
+        <Text className="text-fila font-fuerte" style={{ color: '#005228' }}>
+          GFH
+        </Text>
+      </View>
+      <Pressable
+        onPress={onCerrar}
+        accessibilityRole="button"
+        accessibilityLabel="Cerrar"
+        hitSlop={8}
+        className="absolute right-3 h-10 w-10 items-center justify-center rounded-full"
+      >
+        <Icono nombre="cerrar" tamano={16} color={col.ink} />
+      </Pressable>
+    </View>
+  );
+}
 
 type Plan = 'mensual' | 'anual';
 
@@ -84,17 +115,21 @@ export default function Paywall() {
 
   return (
     <View className="flex-1 bg-paper">
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
-        <Text className="text-grande font-fuerte text-ink">{cabecera.titulo}</Text>
-        <Text className="font-sans mt-1.5 text-meta leading-5 text-ink-suave">
+      <EncabezadoPaywall onCerrar={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-5">
+        <Text className="text-center text-[28px] leading-9 font-fuerte text-ink">
+          {cabecera.titulo}
+        </Text>
+        <Text className="font-sans mt-2 text-center text-body leading-6 text-ink-suave">
           {cabecera.texto}
         </Text>
 
         {/* Qué se lleva, en concreto. Un paywall que sólo muestra precios
             obliga al médico a recordar por qué llegó hasta acá. */}
-        <Superficie elevacion="plana" className="mb-4 mt-3.5">
-          {INCLUYE.map((linea, i) => (
-            <Incluye key={linea} texto={linea} primera={i === 0} />
+        <Superficie elevacion="media" className="mb-4 mt-5 p-5">
+          <Text className="mb-3 text-fila font-fuerte text-ink">Qué incluye</Text>
+          {INCLUYE.map((linea) => (
+            <Incluye key={linea} texto={linea} />
           ))}
         </Superficie>
 
@@ -141,18 +176,11 @@ export default function Paywall() {
   );
 }
 
-function Incluye({ texto, primera }: { texto: string; primera: boolean }) {
-  const col = useColores();
-
+function Incluye({ texto }: { texto: string }) {
   return (
-    <View className={`flex-row items-center px-3.5 py-3 ${primera ? '' : 'border-t border-line'}`}>
-      <View
-        className="mr-3 items-center justify-center rounded"
-        style={{ width: 26, height: 26, backgroundColor: col.primaryLight }}
-      >
-        <Icono nombre="check" tamano={15} color={col.primary} />
-      </View>
-      <Text className="font-sans flex-1 text-meta leading-5 text-ink">{texto}</Text>
+    <View className="mb-3 flex-row items-start gap-3">
+      <Icono nombre="check" tamano={18} color="#22C55E" />
+      <Text className="font-sans flex-1 text-body leading-6 text-ink">{texto}</Text>
     </View>
   );
 }
@@ -168,25 +196,50 @@ function OpcionPlan({
 }) {
   const col = useColores();
   const p = PRECIO[plan];
+  const destacado = plan === 'anual';
 
   return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="radio"
-      accessibilityState={{ selected: activo }}
-      className="mb-2.5 flex-row items-center rounded-card bg-surface px-3.5 py-3.5"
-      style={{ borderColor: activo ? col.primary : col.line, borderWidth: activo ? 2 : 1 }}
-    >
-      <View className="flex-1">
-        <Text className="text-fila font-fuerte text-ink">{p.titulo}</Text>
-        <Text className="font-sans mt-0.5 text-meta text-ink-suave">{p.detalle}</Text>
-      </View>
-      <Text
-        className="font-mono-fuerte text-fila"
-        style={{ color: activo ? col.primary : col.inkSuave, fontVariant: ['tabular-nums'] }}
+    <View className="mb-3">
+      {destacado ? (
+        <View
+          className="absolute -top-3 right-4 z-10 rounded-full px-2.5 py-1"
+          style={{ backgroundColor: '#005228' }}
+        >
+          <Text className="font-fuerte text-[10px] uppercase tracking-wider text-white">
+            Mejor valor
+          </Text>
+        </View>
+      ) : null}
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="radio"
+        accessibilityState={{ selected: activo }}
+        className="flex-row items-center justify-between rounded-xl px-4 py-4"
+        style={{
+          backgroundColor: activo && destacado ? '#E6F1EC' : col.surface,
+          borderColor: activo ? '#005228' : col.line,
+          borderWidth: activo ? 2 : 1,
+        }}
       >
-        {p.precio}
-      </Text>
-    </Pressable>
+        <View className="flex-row items-center gap-3">
+          <View
+            className="h-5 w-5 items-center justify-center rounded-full border-2"
+            style={{ borderColor: activo ? '#005228' : col.tenue }}
+          >
+            {activo ? <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#005228' }} /> : null}
+          </View>
+          <View>
+            <Text className="text-fila font-fuerte text-ink">{p.titulo}</Text>
+            <Text className="font-sans mt-0.5 text-meta text-ink-suave">{p.detalle}</Text>
+          </View>
+        </View>
+        <Text
+          className="font-mono-fuerte text-fila"
+          style={{ color: activo ? '#005228' : col.inkSuave, fontVariant: ['tabular-nums'] }}
+        >
+          {p.precio}
+        </Text>
+      </Pressable>
+    </View>
   );
 }

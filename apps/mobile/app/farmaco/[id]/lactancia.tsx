@@ -1,8 +1,9 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';
 
 import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { estadoDeAlertas } from '@/dominio/restricciones';
+import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
@@ -23,9 +24,11 @@ export default function RestriccionLactancia() {
   const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'lactancia');
 
   return (
-    <>
-      <Stack.Screen options={{ title: 'Lactancia' }} />
+    <View className="flex-1 bg-paper">
+      <EncabezadoApp />
       <Pantalla>
+        <Text className="mb-4 text-[28px] font-fuerte text-ink">Lactancia</Text>
+
         <ResultadoConsulta
           cargando={isLoading}
           error={error}
@@ -35,7 +38,7 @@ export default function RestriccionLactancia() {
           {data ? <Contenido f={data} /> : null}
         </ResultadoConsulta>
       </Pantalla>
-    </>
+    </View>
   );
 }
 

@@ -77,9 +77,42 @@ function alcanza(a: AlertaFicha, desde: number, hasta: number): boolean {
   return min <= hasta && max >= desde;
 }
 
+/**
+ * Orden de gravedad del enum, de peor a menos peor.
+ *
+ * Vive acá y no en cada `find` porque el error de mirar sólo `EVITAR` ya se
+ * cometió dos veces: `estadoDeAlertas` lo arrastró un tiempo y los peldaños
+ * hepáticos lo tenían todavía. Con una sola lista, agregar un nivel al enum
+ * rompe en un lugar en vez de fallar callado en tres.
+ */
+const GRAVEDAD = ['CONTRAINDICADO', 'EVITAR', 'PRECAUCION', 'INFO'] as const;
+
 function peorTexto(alertas: readonly AlertaFicha[]): string {
-  const grave = alertas.find((a) => a.severidad === 'EVITAR');
-  return (grave ?? alertas[0]!).texto;
+  for (const nivel of GRAVEDAD) {
+    const encontrada = alertas.find((a) => a.severidad === nivel);
+    if (encontrada) return encontrada.texto;
+  }
+  return alertas[0]!.texto;
+}
+
+/**
+ * El estado de UNA severidad.
+ *
+ * Dos cosas que este mapeo tiene que respetar, y que la versión anterior no:
+ * `CONTRAINDICADO` es más duro que `EVITAR`, no menos —caía en el `else` y se
+ * pintaba VERDE—; y el default NUNCA puede ser `ok`. Sólo `NINGUNA` enciende
+ * el verde, porque es lo único que AFIRMA que no hay que ajustar. Un valor
+ * que no conocemos cae en precaución: molesta, pero no miente.
+ */
+/** Un tramo que el catálogo prohíbe, no importa qué diga el porcentaje. */
+function esProhibido(tipo: string | undefined): boolean {
+  return tipo === 'CONTRAINDICADO' || tipo === 'EVITAR';
+}
+
+function estadoDeSeveridad(severidad: string | undefined): EstadoRestriccion {
+  if (severidad === 'CONTRAINDICADO' || severidad === 'EVITAR') return 'evitar';
+  if (severidad === 'NINGUNA') return 'ok';
+  return 'precaucion';
 }
 
 // --- renal: los tramos de la escala ------------------------------------------
@@ -121,9 +154,18 @@ export function tramosRenales(tabla: TablaRenalFicha): TramoRenal[] {
       nota: notaDe(r.textoRecomendacion, nums.length > 0),
       minimo,
       maximo,
+      // El tipo manda sobre el porcentaje. Un tramo CONTRAINDICADO o EVITAR
+      // se pintaba ámbar porque acá sólo se miraba el número, y esos tramos
+      // no traen porcentaje — «Contraindicada», «Evitar»—. Son 243 tramos en
+      // el catálogo actual saliendo más suaves de lo que son.
+      //
       // Sin ajuste es lo único que se pinta verde, y sólo cuando el catálogo lo
       // afirma con un 100 %. La ausencia de dato nunca es verde.
-      estado: minimo !== null && minimo >= 100 ? 'ok' : 'precaucion',
+      estado: esProhibido(r.tipo)
+        ? 'evitar'
+        : minimo !== null && minimo >= 100
+          ? 'ok'
+          : 'precaucion',
     };
   });
 
@@ -198,12 +240,7 @@ export function peldanosHepaticos(
       clase,
       nombre: NOMBRES[clase],
       texto: fila.texto,
-      estado:
-        fila.severidad === 'EVITAR'
-          ? ('evitar' as const)
-          : fila.severidad === 'PRECAUCION'
-            ? ('precaucion' as const)
-            : ('ok' as const),
+      estado: estadoDeSeveridad(fila.severidad),
     };
   });
 }

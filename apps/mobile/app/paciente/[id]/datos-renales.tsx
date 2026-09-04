@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+import { Platform, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import type { Cockpit } from '@/api/tipos';
 import * as API from '@/api/endpoints';
@@ -13,6 +14,7 @@ import {
 import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { CampoFecha } from '@/ui/campo-fecha';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { aISO, validarFecha } from '@/ui/fecha';
 import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
@@ -73,7 +75,14 @@ export default function DatosRenales() {
     },
   });
 
-  if (isLoading || !cockpit) return <SkeletonFormulario campos={3} />;
+  if (isLoading || !cockpit) {
+    return (
+      <View className="flex-1 bg-paper">
+        <EncabezadoConTitulo titulo="Función Renal" cierra />
+        <SkeletonFormulario campos={3} />
+      </View>
+    );
+  }
 
   const p = cockpit.paciente;
 
@@ -87,11 +96,13 @@ export default function DatosRenales() {
   const listo = modo === 'manual' ? num(clcr) !== undefined : nuevo !== null;
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Función Renal" cierra />
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
         <BloqueFormulario titulo="Ahora" etiqueta={p.clcrMlMin !== null ? 'Vigente' : undefined}>
           <ClcrVigente paciente={p} />
         </BloqueFormulario>
@@ -153,7 +164,8 @@ export default function DatosRenales() {
           Guardar y recalcular
         </Boton>
       </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 

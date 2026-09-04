@@ -1,18 +1,21 @@
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
-import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
+import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import {
   AvisoDescartable,
-  Consulta,
   ConsultaPlegada,
   FilaResultado,
   Veredicto,
 } from '@/ui/herramienta';
+import { Icono } from '@/ui/iconos';
 import { CampoTexto, Chip, Estado } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 import {
   COLOR_SEVERIDAD,
   nombreSexo,
@@ -41,6 +44,8 @@ interface Resultado {
 
 /** Herramienta 3 (4.6 / 4.7): N fármacos contra un Clcr directo o calculado. */
 export default function HerramientaRenal() {
+  const router = useRouter();
+  const col = useColores();
   const [seleccion, setSeleccion] = useState<PaSugerido[]>([]);
   const [modo, setModo] = useState<'directo' | 'calcular'>('directo');
   const [clcr, setClcr] = useState('');
@@ -76,113 +81,144 @@ export default function HerramientaRenal() {
 
   if (editando || !calcular.data) {
     return (
-      <Consulta
-        accion={
-          seleccion.length === 0
-            ? 'Agregá al menos un fármaco'
-            : `Calcular ajuste de ${seleccion.length}`
-        }
-        onAccion={() => calcular.mutate()}
-        cargando={calcular.isPending}
-        deshabilitado={!listo}
-      >
-        <BloqueFormulario titulo="Fármacos" exigencia="Obligatorio">
-          <BuscadorPrincipioActivo
-            seleccionados={seleccion}
-            onAgregar={(pa) => setSeleccion((s) => (s.some((x) => x.id === pa.id) ? s : [...s, pa]))}
-            onQuitar={(id) => setSeleccion((s) => s.filter((x) => x.id !== id))}
-          />
-        </BloqueFormulario>
+      <View className="flex-1 bg-paper">
+        <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
+        <ScrollView contentContainerClassName="px-4 pb-6 pt-4" keyboardShouldPersistTaps="handled">
+          <Text className="mb-1 text-fila font-fuerte text-ink">Ajuste Renal</Text>
+          <Text className="mb-4 font-sans text-meta leading-5 text-ink-suave">
+            Evaluá el ajuste de dosis de varios fármacos según la función renal del paciente.
+          </Text>
 
-        <BloqueFormulario titulo="Función renal" exigencia="Obligatorio">
-          <View className="mb-3.5 flex-row gap-2">
-            <Chip
-              texto="Tengo el Clcr"
-              activo={modo === 'directo'}
-              onPress={() => setModo('directo')}
+          <Superficie elevacion="media" className="mb-4 p-5">
+            <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+              Fármacos
+            </Text>
+            <BuscadorPrincipioActivo
+              seleccionados={seleccion}
+              onAgregar={(pa) => setSeleccion((s) => (s.some((x) => x.id === pa.id) ? s : [...s, pa]))}
+              onQuitar={(id) => setSeleccion((s) => s.filter((x) => x.id !== id))}
             />
-            <Chip
-              texto="Calcularlo"
-              activo={modo === 'calcular'}
-              onPress={() => setModo('calcular')}
-            />
+          </Superficie>
+
+          <Superficie elevacion="media" className="mb-4 p-5">
+            <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+              Función renal
+            </Text>
+            <View className="mb-3.5 flex-row gap-2">
+              <Chip
+                texto="Tengo el Clcr"
+                activo={modo === 'directo'}
+                onPress={() => setModo('directo')}
+              />
+              <Chip
+                texto="Calcularlo"
+                activo={modo === 'calcular'}
+                onPress={() => setModo('calcular')}
+              />
+            </View>
+
+            {modo === 'directo' ? (
+              <CampoTexto
+                etiqueta="Clcr (mL/min)"
+                value={clcr}
+                onChangeText={setClcr}
+                keyboardType="numeric"
+                rango={RANGOS.clcrMlMin}
+                valor={num(clcr)}
+              />
+            ) : (
+              <>
+                {/* Los tres en una fila, igual que en Crear paciente: son números
+                    cortos que alimentan una sola fórmula. */}
+                <View className="flex-row gap-2">
+                  <View className="flex-1">
+                    <CampoTexto
+                      etiqueta="Edad"
+                      value={d.edadAnios}
+                      onChangeText={(v) => setD((p) => ({ ...p, edadAnios: v }))}
+                      keyboardType="numeric"
+                      placeholder="años"
+                      rango={RANGOS.edadAnios}
+                      valor={num(d.edadAnios)}
+                    />
+                  </View>
+                  <View className="flex-1">
+                    <CampoTexto
+                      etiqueta="Peso"
+                      value={d.pesoKg}
+                      onChangeText={(v) => setD((p) => ({ ...p, pesoKg: v }))}
+                      keyboardType="numeric"
+                      placeholder="kg"
+                      rango={RANGOS.pesoKg}
+                      valor={num(d.pesoKg)}
+                    />
+                  </View>
+                  <View className="flex-1">
+                    <CampoTexto
+                      etiqueta="Creatinina"
+                      value={d.creatininaMgDl}
+                      onChangeText={(v) => setD((p) => ({ ...p, creatininaMgDl: v }))}
+                      keyboardType="numeric"
+                      placeholder="mg/dL"
+                      rango={RANGOS.creatininaMgDl}
+                      valor={num(d.creatininaMgDl)}
+                    />
+                  </View>
+                </View>
+
+                <Text className="mb-1.5 mt-1 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
+                  Sexo
+                </Text>
+                <View className="flex-row gap-2">
+                  {OPCIONES_SEXO.map((o) => (
+                    <Chip
+                      key={o.valor}
+                      texto={o.sigla}
+                      activo={sexo === o.valor}
+                      onPress={() => setSexo(o.valor)}
+                    />
+                  ))}
+                </View>
+              </>
+            )}
+          </Superficie>
+
+          {calcular.isError ? (
+            <View className="mb-4">
+              <Estado
+                titulo="No se pudo calcular"
+                detalle={String((calcular.error as Error)?.message ?? '')}
+              />
+            </View>
+          ) : null}
+
+          <View className="mt-2 items-center border-t pt-6" style={{ borderColor: col.line }}>
+            <Pressable
+              onPress={() => calcular.mutate()}
+              disabled={!listo || calcular.isPending}
+              accessibilityRole="button"
+              className="h-[60px] w-full flex-row items-center justify-center gap-3 rounded-full"
+              style={{ backgroundColor: '#005228', opacity: !listo || calcular.isPending ? 0.5 : 1 }}
+            >
+              {calcular.isPending ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <>
+                  <Icono nombre="gota" tamano={18} color="#FFFFFF" />
+                  <Text className="text-fila font-fuerte text-white">
+                    {seleccion.length === 0
+                      ? 'Agregá al menos un fármaco'
+                      : `Calcular ajuste de ${seleccion.length}`}
+                  </Text>
+                </>
+              )}
+            </Pressable>
+            <Text className="mt-2 text-center text-meta leading-5 text-ink-suave">
+              Esta herramienta no guarda nada: al salir se pierde.
+            </Text>
           </View>
-
-          {modo === 'directo' ? (
-            <CampoTexto
-              etiqueta="Clcr (mL/min)"
-              value={clcr}
-              onChangeText={setClcr}
-              keyboardType="numeric"
-              rango={RANGOS.clcrMlMin}
-              valor={num(clcr)}
-            />
-          ) : (
-            <>
-              {/* Los tres en una fila, igual que en Crear paciente: son números
-                  cortos que alimentan una sola fórmula. */}
-              <View className="flex-row gap-2">
-                <View className="flex-1">
-                  <CampoTexto
-                    etiqueta="Edad"
-                    value={d.edadAnios}
-                    onChangeText={(v) => setD((p) => ({ ...p, edadAnios: v }))}
-                    keyboardType="numeric"
-                    placeholder="años"
-                    rango={RANGOS.edadAnios}
-                    valor={num(d.edadAnios)}
-                  />
-                </View>
-                <View className="flex-1">
-                  <CampoTexto
-                    etiqueta="Peso"
-                    value={d.pesoKg}
-                    onChangeText={(v) => setD((p) => ({ ...p, pesoKg: v }))}
-                    keyboardType="numeric"
-                    placeholder="kg"
-                    rango={RANGOS.pesoKg}
-                    valor={num(d.pesoKg)}
-                  />
-                </View>
-                <View className="flex-1">
-                  <CampoTexto
-                    etiqueta="Creatinina"
-                    value={d.creatininaMgDl}
-                    onChangeText={(v) => setD((p) => ({ ...p, creatininaMgDl: v }))}
-                    keyboardType="numeric"
-                    placeholder="mg/dL"
-                    rango={RANGOS.creatininaMgDl}
-                    valor={num(d.creatininaMgDl)}
-                  />
-                </View>
-              </View>
-
-              <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
-                Sexo
-              </Text>
-              <View className="flex-row gap-2">
-                {OPCIONES_SEXO.map((o) => (
-                  <Chip
-                    key={o.valor}
-                    texto={o.sigla}
-                    activo={sexo === o.valor}
-                    onPress={() => setSexo(o.valor)}
-                  />
-                ))}
-              </View>
-            </>
-          )}
-        </BloqueFormulario>
-
-        <AvisoDescartable />
-
-        {calcular.isError ? (
-          <Estado
-            titulo="No se pudo calcular"
-            detalle={String((calcular.error as Error)?.message ?? '')}
-          />
-        ) : null}
-      </Consulta>
+        </ScrollView>
+      </View>
     );
   }
 

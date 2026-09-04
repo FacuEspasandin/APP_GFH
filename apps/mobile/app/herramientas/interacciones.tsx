@@ -1,20 +1,17 @@
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { paresDe, textoParesLimpios, titularInteracciones } from '@/dominio/interacciones';
-import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
-import {
-  AvisoDescartable,
-  Consulta,
-  ConsultaPlegada,
-  FilaResultado,
-  GrupoGravedad,
-  Veredicto,
-} from '@/ui/herramienta';
+import { EncabezadoApp, BotonAvatar } from '@/ui/encabezado-app';
+import { Icono } from '@/ui/iconos';
+import { AvisoDescartable, ConsultaPlegada, FilaResultado, GrupoGravedad, Veredicto } from '@/ui/herramienta';
 import { Estado } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 import {
   peorRango,
   RANGO_POR_SEVERIDAD_INTERACCION,
@@ -31,6 +28,8 @@ interface Resultado {
 
 /** Herramienta 1 (4.2 / 4.3): N fármacos, todos los pares. */
 export default function HerramientaInteracciones() {
+  const col = useColores();
+  const router = useRouter();
   const [seleccion, setSeleccion] = useState<PaSugerido[]>([]);
   const [editando, setEditando] = useState(true);
 
@@ -44,35 +43,61 @@ export default function HerramientaInteracciones() {
 
   if (editando || !calcular.data) {
     return (
-      <Consulta
-        accion={seleccion.length < 2 ? 'Agregá al menos 2 fármacos' : `Analizar ${pares} pares`}
-        onAccion={() => calcular.mutate()}
-        cargando={calcular.isPending}
-        deshabilitado={seleccion.length < 2}
-      >
-        <BloqueFormulario titulo="Fármacos a cruzar" exigencia="Obligatorio">
-          <BuscadorPrincipioActivo
-            seleccionados={seleccion}
-            onAgregar={(pa) => setSeleccion((s) => (s.some((x) => x.id === pa.id) ? s : [...s, pa]))}
-            onQuitar={(id) => setSeleccion((s) => s.filter((x) => x.id !== id))}
-          />
-        </BloqueFormulario>
+      <View className="flex-1 bg-paper">
+        <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
+        <ScrollView contentContainerClassName="px-4 pb-6 pt-4" keyboardShouldPersistTaps="handled">
+          <Text className="mb-1 text-fila font-fuerte text-ink">Análisis de Interacciones</Text>
+          <Text className="mb-4 font-sans text-meta leading-5 text-ink-suave">
+            Seleccione los principios activos para analizar posibles interacciones cruzadas.
+          </Text>
 
-        <AvisoDescartable
-          extra={
-            seleccion.length >= 2
-              ? `Se cruzan todos contra todos: con ${seleccion.length} fármacos son ${pares} pares.`
-              : 'Se cruzan todos contra todos.'
-          }
-        />
+          <Superficie elevacion="media" className="p-5">
+            <BuscadorPrincipioActivo
+              seleccionados={seleccion}
+              onAgregar={(pa) => setSeleccion((s) => (s.some((x) => x.id === pa.id) ? s : [...s, pa]))}
+              onQuitar={(id) => setSeleccion((s) => s.filter((x) => x.id !== id))}
+            />
+          </Superficie>
 
-        {calcular.isError ? (
-          <Estado
-            titulo="No se pudo calcular"
-            detalle={String((calcular.error as Error)?.message ?? '')}
-          />
-        ) : null}
-      </Consulta>
+          {calcular.isError ? (
+            <View className="mt-3">
+              <Estado
+                titulo="No se pudo calcular"
+                detalle={String((calcular.error as Error)?.message ?? '')}
+              />
+            </View>
+          ) : null}
+
+          <View className="mt-6 items-center border-t pt-6" style={{ borderColor: col.line }}>
+            <Pressable
+              onPress={() => calcular.mutate()}
+              disabled={seleccion.length < 2 || calcular.isPending}
+              accessibilityRole="button"
+              className="h-[60px] w-full flex-row items-center justify-center gap-3 rounded-full"
+              style={{
+                backgroundColor: '#005228',
+                opacity: seleccion.length < 2 || calcular.isPending ? 0.5 : 1,
+              }}
+            >
+              {calcular.isPending ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <>
+                  <Icono nombre="interacciones" tamano={18} color="#FFFFFF" />
+                  <Text className="text-fila font-fuerte text-white">
+                    {seleccion.length < 2 ? 'Agregá al menos 2 fármacos' : `Analizar ${pares} pares`}
+                  </Text>
+                </>
+              )}
+            </Pressable>
+            <Text className="mt-2 text-center text-meta leading-5 text-ink-suave">
+              {seleccion.length >= 2
+                ? `Se cruzan todos contra todos: con ${seleccion.length} fármacos son ${pares} pares. No se guarda nada.`
+                : 'Se cruzan todos contra todos. No se guarda nada.'}
+            </Text>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 

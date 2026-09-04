@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { AvisoNeutro, Boton, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -26,7 +27,14 @@ export default function Suscripcion() {
     queryFn: API.estadoSuscripcion,
   });
 
-  if (isLoading) return <SkeletonLista filas={2} />;
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-paper">
+        <EncabezadoConTitulo titulo="Suscripción" />
+        <SkeletonLista filas={2} />
+      </View>
+    );
+  }
 
   const color = data?.vigente
     ? COLOR_SEVERIDAD.ok
@@ -35,31 +43,34 @@ export default function Suscripcion() {
       : COLOR_SEVERIDAD.neutro;
 
   return (
-    <Pantalla>
-      <Eyebrow>Estado</Eyebrow>
-      <Superficie elevacion="plana" className="mb-4 px-3.5 py-3.5">
-        <Text className="text-fila font-fuerte" style={{ color }}>
-          {TEXTO[data?.estado ?? 'SIN_SUSCRIPCION']}
-        </Text>
-        {data?.periodoActualFin ? (
-          <Text className="font-sans mt-1 text-meta text-ink-suave">
-            {data.vigente ? 'Vigente hasta' : 'Venció el'}{' '}
-            {new Date(data.periodoActualFin).toLocaleDateString('es-UY')}
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Suscripción" />
+      <Pantalla>
+        <Eyebrow>Estado</Eyebrow>
+        <Superficie elevacion="media" className="mb-4 px-3.5 py-3.5" style={{ borderLeftWidth: 4, borderLeftColor: color }}>
+          <Text className="text-fila font-fuerte" style={{ color }}>
+            {TEXTO[data?.estado ?? 'SIN_SUSCRIPCION']}
           </Text>
-        ) : null}
-        {data?.store ? (
-          <Text className="font-sans mt-0.5 text-meta text-ink-suave">
-            {data.store === 'APP_STORE' ? 'App Store' : 'Google Play'}
-          </Text>
-        ) : null}
-      </Superficie>
+          {data?.periodoActualFin ? (
+            <Text className="font-sans mt-1 text-meta text-ink-suave">
+              {data.vigente ? 'Vigente hasta' : 'Venció el'}{' '}
+              {new Date(data.periodoActualFin).toLocaleDateString('es-UY')}
+            </Text>
+          ) : null}
+          {data?.store ? (
+            <Text className="font-sans mt-0.5 text-meta text-ink-suave">
+              {data.store === 'APP_STORE' ? 'App Store' : 'Google Play'}
+            </Text>
+          ) : null}
+        </Superficie>
 
-      {!data?.vigente ? <Boton onPress={() => router.push('/paywall')}>Ver planes</Boton> : null}
+        {!data?.vigente ? <Boton onPress={() => router.push('/paywall')}>Ver planes</Boton> : null}
 
-      <AvisoNeutro>
-        El estado lo define la tienda. Cancelar o cambiar de plan se hace desde App Store o Google
-        Play; puede tardar unos minutos en reflejarse acá.
-      </AvisoNeutro>
-    </Pantalla>
+        <AvisoNeutro>
+          El estado lo define la tienda. Cancelar o cambiar de plan se hace desde App Store o Google
+          Play; puede tardar unos minutos en reflejarse acá.
+        </AvisoNeutro>
+      </Pantalla>
+    </View>
   );
 }

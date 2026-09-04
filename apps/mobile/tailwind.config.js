@@ -34,7 +34,9 @@ module.exports = {
         peligro: token('peligro'),
       },
       /**
-       * IBM Plex, según §2 de los design tokens.
+       * Inter, la tipografía del rediseño de Figma ("Modernización de visual
+       * app") — reemplaza a IBM Plex Sans en toda la app, vieja y nueva por
+       * igual: es un token de Tailwind, no algo pantalla por pantalla.
        *
        * Son familias y no pesos a propósito. Las fuentes estáticas registran
        * una familia por peso: `fontWeight: 700` sobre una familia que sólo
@@ -47,11 +49,12 @@ module.exports = {
        * Tailwind creyendo que hace lo mismo.
        */
       fontFamily: {
-        sans: ['IBMPlexSans_400Regular'],
-        medio: ['IBMPlexSans_600SemiBold'],
-        fuerte: ['IBMPlexSans_700Bold'],
-        // Todo dato clínico numérico va en mono con cifras de ancho fijo, así
-        // no bailan las columnas al cambiar de valor.
+        sans: ['Inter_400Regular'],
+        medio: ['Inter_600SemiBold'],
+        fuerte: ['Inter_700Bold'],
+        // Mono se mantiene en IBM Plex: Figma no define una fuente
+        // monoespaciada, y el ancho fijo de cifra clínica no es un gusto
+        // visual — es lo que evita que una columna baile al cambiar de valor.
         mono: ['IBMPlexMono_400Regular'],
         'mono-fuerte': ['IBMPlexMono_600SemiBold'],
       },

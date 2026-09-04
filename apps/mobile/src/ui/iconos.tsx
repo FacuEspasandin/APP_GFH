@@ -60,7 +60,10 @@ export type NombreIcono =
   | 'documento'
   | 'salir'
   | 'basura'
-  | 'ayuda';
+  | 'ayuda'
+  | 'ojo'
+  | 'ojoCerrado'
+  | 'correo';
 
 interface Props {
   nombre: NombreIcono;
@@ -398,6 +401,28 @@ function trazos(nombre: NombreIcono, c: Comun) {
           <Circle cx="12" cy="12" r="9" {...c} />
           <Path d="M9.2 9.3a3 3 0 0 1 5.8 1c0 2-2.9 2.6-2.9 4" {...c} />
           <Path d="M12 17.3h.01" {...c} />
+        </>
+      );
+    case 'ojo':
+      return (
+        <>
+          <Path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" {...c} />
+          <Circle cx="12" cy="12" r="3" {...c} />
+        </>
+      );
+    case 'ojoCerrado':
+      return (
+        <>
+          <Path d="M3 3l18 18" {...c} />
+          <Path d="M10.6 5.2A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.3 17.3 0 0 1-3.4 4.3M6.5 6.5C3.8 8.3 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8" {...c} />
+          <Path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" {...c} />
+        </>
+      );
+    case 'correo':
+      return (
+        <>
+          <Rect x="2" y="4" width="20" height="16" rx="2" {...c} />
+          <Polyline points="2 6 12 13 22 6" {...c} />
         </>
       );
   }

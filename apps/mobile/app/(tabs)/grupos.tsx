@@ -7,13 +7,13 @@ import { esDePago, rutaPaywall } from '@/dominio/plan-gratis';
 import type { Inicio, ResumenGrupo } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import { FilaAnimada } from '@/ui/animacion';
+import { BotonMas, EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Estado, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { SuperficieTocable } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
-import { Pressable } from 'react-native';
 
 /**
  * Grupos: un resumen por ámbito de trabajo, no otra lista de pacientes.
@@ -50,24 +50,15 @@ export default function Grupos() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: 'Grupos',
-          headerRight: () => (
-            <Pressable
-              onPress={() => abrir('/crear-grupo')}
-              accessibilityRole="button"
-              accessibilityLabel="Crear grupo"
-              className="mr-3 h-8 w-8 items-center justify-center rounded-full"
-              style={{ backgroundColor: 'rgba(255,255,255,0.18)' }}
-            >
-              <Icono nombre="mas" tamano={18} color="#FFFFFF" />
-            </Pressable>
-          ),
-        }}
+      <Stack.Screen options={{ headerShown: false }} />
+      <EncabezadoApp
+        ocultarVolver
+        derecha={<BotonMas onPress={() => abrir('/crear-grupo')} etiqueta="Crear grupo" />}
       />
 
       <Pantalla>
+        <Text className="mb-4 text-fila font-fuerte text-ink">Mis Grupos</Text>
+
         <ResultadoConsulta
           cargando={isLoading}
           error={error}
@@ -174,12 +165,9 @@ function BarraComposicion({ grupo }: { grupo: ResumenGrupo }) {
   ].filter((t) => t.n > 0);
 
   return (
-    <View className="mt-3 flex-row" style={{ gap: 3 }}>
+    <View className="mt-3 flex-row overflow-hidden rounded-full" style={{ height: 8 }}>
       {tramos.map((t) => (
-        <View
-          key={t.clave}
-          style={{ flex: t.n, height: 6, borderRadius: 3, backgroundColor: t.color }}
-        />
+        <View key={t.clave} style={{ flex: t.n, backgroundColor: t.color }} />
       ))}
     </View>
   );

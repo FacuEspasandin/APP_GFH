@@ -1,16 +1,32 @@
 import { FlashList } from '@shopify/flash-list';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { ErrorApi } from '@/api/cliente';
-import { POR_PRODUCTO, useIndiceProductos, type ProductoResumen } from '@/api/catalogo';
+import {
+  POR_PRINCIPIO_ACTIVO,
+  POR_PRODUCTO,
+  useIndicePrincipiosActivos,
+  useIndiceProductos,
+  type PrincipioActivoResumen,
+  type ProductoResumen,
+} from '@/api/catalogo';
 import { buscar, contar } from '@/dominio/busqueda';
 import { cambiaDeLetra, inicialDe, textoConteo } from '@/dominio/catalogo';
+import { EncabezadoApp } from '@/ui/encabezado-app';
 import { ErrorGenerico, SinConexion, Skeleton } from '@/ui/estados-sistema';
-import { CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { Icono } from '@/ui/iconos';
+import { CampoTexto, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { MarcadoresAjuste } from '@/ui/marcadores-ajuste';
 import { Superficie } from '@/ui/superficie';
+
+type Pestana = 'Todos' | 'Medicamentos' | 'ATC';
+const PESTANAS: Pestana[] = ['Todos', 'Medicamentos', 'ATC'];
+
+type Fila =
+  | { tipo: 'producto'; item: ProductoResumen }
+  | { tipo: 'farmaco'; item: PrincipioActivoResumen };
 
 /**
  * Buscador a nivel de PRODUCTO COMERCIAL (regla no negociable 10).
@@ -45,9 +61,15 @@ export default function Buscador() {
   // sabemos qué estaba buscando.
   const { q } = useLocalSearchParams<{ q?: string }>();
   const [consulta, setConsulta] = useState(q ?? '');
+  // "Todos" mezcla medicamento + fármaco, como buscaba siempre el buscador.
+  // "Medicamentos"/"ATC" cortan a un solo tipo — ATC busca por fármaco, no
+  // por el código en sí (eso vive en la ficha, no acá).
+  const [pestana, setPestana] = useState<Pestana>('Todos');
 
   const catalogo = useIndiceProductos();
   const todos = useMemo(() => catalogo.data ?? [], [catalogo.data]);
+  const farmacos = useIndicePrincipiosActivos();
+  const todosFarmacos = useMemo(() => farmacos.data ?? [], [farmacos.data]);
 
   const texto = consulta.trim();
   const buscando = texto.length >= 1;
@@ -55,7 +77,7 @@ export default function Buscador() {
   // `useMemo` y no cálculo suelto: recorrer 638 productos por tecla no se nota,
   // pero `FlashList` remonta las filas si el array cambia de identidad, y eso
   // sí se nota.
-  const lista = useMemo(
+  const listaProductos = useMemo(
     // Sin tope: el catálogo ya se filtra entero en el teléfono, así que se
     // conocen todas las coincidencias, y `FlashList` recicla las filas —
     // dibujar 542 cuesta lo mismo que dibujar 30. El corte existía de cuando
@@ -63,11 +85,47 @@ export default function Buscador() {
     () => buscar(todos, texto, POR_PRODUCTO),
     [todos, texto],
   );
-  const coincidencias = useMemo(() => contar(todos, texto, POR_PRODUCTO), [todos, texto]);
+  const coincidenciasProductos = useMemo(
+    () => contar(todos, texto, POR_PRODUCTO),
+    [todos, texto],
+  );
+
+  // Los fármacos sólo se buscan con algo escrito: sin consulta, volcar los 631
+  // sueltos no orienta a nadie — para eso ya está el catálogo de productos A-Z.
+  const listaFarmacos = useMemo(
+    () => (buscando ? buscar(todosFarmacos, texto, POR_PRINCIPIO_ACTIVO) : []),
+    [todosFarmacos, texto, buscando],
+  );
+
+  const coincidencias =
+    pestana === 'ATC' ? contar(todosFarmacos, texto, POR_PRINCIPIO_ACTIVO) : coincidenciasProductos;
+
+  /** Tocar un fármaco no abre una ficha suelta (regla no negociable 8: el
+   *  buscador siempre resuelve a producto comercial) — cambia a la pestaña de
+   *  medicamentos con ese nombre, que es donde están las marcas que lo
+   *  contienen. */
+  function irAMedicamentosDe(nombreFarmaco: string) {
+    setPestana('Medicamentos');
+    setConsulta(nombreFarmaco);
+  }
+
+  // Una sola lista para el FlashList, tageada por tipo: "Todos" mezcla las dos
+  // fuentes (fármacos sólo cuando hay algo escrito — sueltos y sin consulta no
+  // orientan), "Medicamentos"/"ATC" cortan a una.
+  const filas = useMemo((): Fila[] => {
+    const productos: Fila[] = listaProductos.map((item) => ({ tipo: 'producto', item }));
+    const farmacosFilas: Fila[] = listaFarmacos.map((item) => ({ tipo: 'farmaco', item }));
+    if (pestana === 'Medicamentos') return productos;
+    if (pestana === 'ATC') return farmacosFilas;
+    return buscando ? [...productos, ...farmacosFilas] : productos;
+  }, [pestana, listaProductos, listaFarmacos, buscando]);
 
 
   return (
-    <Pantalla scroll={false}>
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <EncabezadoApp ocultarVolver />
+      <Pantalla scroll={false}>
       {/* Fijos: sobreviven a cualquier estado de carga o error de la lista. */}
       <CampoTexto
         value={consulta}
@@ -77,6 +135,15 @@ export default function Buscador() {
         autoCorrect={false}
         etiqueta="Buscar"
       />
+
+      {/* Qué tipo de cosa busca el médico: mezclado como siempre, o cortado a
+          una marca comercial (Medicamentos) o a un fármaco (ATC — busca por
+          principio activo, no por el código en sí). */}
+      <View className="mb-2.5 flex-row gap-2">
+        {PESTANAS.map((p) => (
+          <Chip key={p} texto={p} activo={pestana === p} onPress={() => setPestana(p)} />
+        ))}
+      </View>
 
       {/* Los tres atajos a herramientas salieron de acá: desde que existe el
           botón central del menú son el segundo camino a lo mismo, y ocupaban
@@ -103,8 +170,8 @@ export default function Buscador() {
         <Skeleton filas={5} />
       ) : (
         <FlashList
-          data={lista}
-          keyExtractor={(p) => p.id}
+          data={filas}
+          keyExtractor={(f) => `${f.tipo}:${f.item.id}`}
           // Tocar un resultado no cierra el teclado antes de registrar el
           // toque: sin esto el primer tap sólo baja el teclado y hay que
           // volver a tocar.
@@ -113,26 +180,38 @@ export default function Buscador() {
             buscando ? (
               <Estado
                 titulo="Sin resultados"
-                detalle={`Ningún producto coincide con «${texto}».`}
+                detalle={`Nada coincide con «${texto}» en ${pestana === 'ATC' ? 'los fármacos' : 'esta categoría'}.`}
               />
             ) : null
           }
-          renderItem={({ item: p, index }) => (
-            <>
-              {/* La letra sólo al recorrer el catálogo completo: en una lista
-                  de resultados no hay nada que indexar, y sobre 638 productos
-                  alfabéticos saber en qué letra vas es lo único que orienta. */}
-              {!buscando && cambiaDeLetra(p.nombreComercial, lista[index - 1]?.nombreComercial) ? (
-                <Text className="font-mono px-1 pb-1 pt-3 text-eyebrow tracking-wider text-tenue">
-                  {inicialDe(p.nombreComercial)}
-                </Text>
-              ) : null}
-              <FilaProducto producto={p} onPress={() => router.push(`/farmaco/${p.id}`)} />
-            </>
-          )}
+          renderItem={({ item: f, index }) => {
+            if (f.tipo === 'farmaco') {
+              return <FilaFarmaco farmaco={f.item} onPress={() => irAMedicamentosDe(f.item.nombre)} />;
+            }
+            const p = f.item;
+            const anterior = filas[index - 1];
+            return (
+              <>
+                {/* La letra sólo al recorrer el catálogo completo: en una lista
+                    de resultados no hay nada que indexar, y sobre 638 productos
+                    alfabéticos saber en qué letra vas es lo único que orienta. */}
+                {!buscando &&
+                cambiaDeLetra(
+                  p.nombreComercial,
+                  anterior?.tipo === 'producto' ? anterior.item.nombreComercial : undefined,
+                ) ? (
+                  <Text className="font-mono px-1 pb-1 pt-3 text-eyebrow tracking-wider text-tenue">
+                    {inicialDe(p.nombreComercial)}
+                  </Text>
+                ) : null}
+                <FilaProducto producto={p} onPress={() => router.push(`/farmaco/${p.id}`)} />
+              </>
+            );
+          }}
         />
       )}
     </Pantalla>
+    </>
   );
 }
 
@@ -172,6 +251,43 @@ function FilaProducto({
           </Text>
         </View>
         <MarcadoresAjuste renal={p.tieneAjusteRenal} hepatico={p.tieneAjusteHepatico} />
+      </Superficie>
+    </Pressable>
+  );
+}
+
+/**
+ * Una fila de fármaco (pestaña ATC): mismo alto y el mismo tipo de tarjeta que
+ * `FilaProducto`, para que alternar pestañas no reacomode la mirada. Tocarla
+ * no abre nada propio — lleva a sus medicamentos, ver `irAMedicamentosDe`.
+ */
+function FilaFarmaco({
+  farmaco: f,
+  onPress,
+}: {
+  farmaco: PrincipioActivoResumen;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${f.nombre}, ver medicamentos`}
+      className="mb-2"
+    >
+      <Superficie elevacion="plana" className="flex-row items-center px-3.5 py-2.5">
+        <View className="mr-3 h-8 w-8 items-center justify-center rounded-full bg-primary-light">
+          <Icono nombre="capsula" tamano={16} color="#1F5E4A" />
+        </View>
+        <View className="flex-1 pr-2">
+          <Text className="text-fila font-medio text-ink" numberOfLines={1}>
+            {f.nombre}
+          </Text>
+          <Text className="font-sans mt-0.5 text-meta text-ink-suave" numberOfLines={1}>
+            {[f.grupoTerapeutico, f.codigoATC].filter(Boolean).join(' · ') || 'Principio activo'}
+          </Text>
+        </View>
+        <Icono nombre="chevron" tamano={15} color="#8CA39A" />
       </Superficie>
     </Pressable>
   );

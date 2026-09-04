@@ -1,9 +1,4 @@
-import {
-  peorRango,
-  RANGO_ETIQUETA,
-  type CategoriaHallazgo,
-  type RangoGravedad,
-} from '@gfh/shared-types';
+import { type CategoriaHallazgo, type RangoGravedad } from '@gfh/shared-types';
 
 /**
  * Lo que el cockpit dice de un paciente, sin React de por medio.
@@ -17,64 +12,6 @@ import {
 export interface HallazgoResumible {
   categoria: CategoriaHallazgo;
   rango: RangoGravedad;
-}
-
-/** Sustantivo por categoría, para que el titular diga de qué se trata. */
-const SUSTANTIVO: Record<CategoriaHallazgo, [string, string]> = {
-  INTERACCION: ['interacción', 'interacciones'],
-  CONDICION: ['alerta', 'alertas'],
-  AJUSTE_RENAL: ['ajuste renal', 'ajustes renales'],
-  AJUSTE_HEPATICO: ['ajuste hepático', 'ajustes hepáticos'],
-};
-
-/**
- * Femenino: concuerda con "interacción" y "alerta", que son las dos categorías
- * que aparecen como lo peor casi siempre. `RANGO_ETIQUETA` es masculino porque
- * describe un hallazgo, y "1 interacción contraindicado" no es español.
- */
-const ADJETIVO: Record<RangoGravedad, [string, string]> = {
-  0: ['contraindicada', 'contraindicadas'],
-  1: ['grave', 'graves'],
-  2: ['de atención', 'de atención'],
-  3: ['informativa', 'informativas'],
-};
-
-/** El titular: la peor gravedad y cuántos hallazgos hay de ésa. */
-export function titularCockpit(hallazgos: readonly HallazgoResumible[]): string {
-  const peor = peorRango(hallazgos.map((h) => h.rango));
-  if (peor === null) return 'Sin hallazgos';
-
-  const deEsaGravedad = hallazgos.filter((h) => h.rango === peor);
-  const n = deEsaGravedad.length;
-  const [singular, plural] = SUSTANTIVO[deEsaGravedad[0]!.categoria];
-  const [adjSingular, adjPlural] = ADJETIVO[peor];
-
-  return n === 1 ? `1 ${singular} ${adjSingular}` : `${n} ${plural} ${adjPlural}`;
-}
-
-/**
- * El desglose, para no perder lo que las tarjetas de categoría ya no repiten.
- *
- * Sin hallazgos dice explícitamente que el silencio no es seguridad: es la
- * regla 5 aplicada a la frase que más se lee de la app.
- */
-export function detalleCockpit(hallazgos: readonly HallazgoResumible[]): string {
-  if (hallazgos.length === 0) {
-    return 'Ningún fármaco del tratamiento dispara alertas con los datos cargados. No es lo mismo que decir que sea seguro.';
-  }
-
-  const partes = ([0, 1, 2, 3] as RangoGravedad[])
-    .map((r) => ({ r, n: hallazgos.filter((h) => h.rango === r).length }))
-    .filter((x) => x.n > 0)
-    // Rango 2 se lee "de atención": "5 atención" no es español.
-    .map((x) =>
-      x.r === 2
-        ? `${x.n} de atención`
-        : `${x.n} ${RANGO_ETIQUETA[x.r].toLowerCase()}${x.n > 1 ? 's' : ''}`,
-    );
-
-  const total = hallazgos.length;
-  return `${total} ${total === 1 ? 'hallazgo' : 'hallazgos'} en total: ${partes.join(', ')}.`;
 }
 
 /**

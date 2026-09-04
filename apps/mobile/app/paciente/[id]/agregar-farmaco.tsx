@@ -1,13 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { api, ErrorApi } from '@/api/cliente';
 import { POR_PRODUCTO, useIndiceProductos } from '@/api/catalogo';
 import * as API from '@/api/endpoints';
 import { buscar } from '@/dominio/busqueda';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { hapticaAdvertencia, hapticaBloqueo, hapticaExito } from '@/ui/haptica';
 import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -97,11 +99,13 @@ export default function AgregarFarmaco() {
   const pideConfirmacion = conflicto !== null && !bloqueado;
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Agregar Fármaco" cierra />
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
         <BloqueFormulario titulo="Producto" exigencia="Obligatorio">
           <View className="mb-3.5 flex-row gap-2">
             <Chip texto="Del catálogo" activo={!libre} onPress={() => setLibre(false)} />
@@ -186,7 +190,7 @@ export default function AgregarFarmaco() {
             </View>
           </View>
 
-          <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+          <Text className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
             Vía
           </Text>
           <View className="flex-row flex-wrap gap-2">
@@ -239,6 +243,7 @@ export default function AgregarFarmaco() {
           {pideConfirmacion ? 'Confirmar y agregar' : 'Agregar al tratamiento'}
         </Boton>
       </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }

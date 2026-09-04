@@ -10,6 +10,7 @@ import {
   crucesPorCondicion,
   textoCruces,
 } from '@/dominio/condiciones-alergias';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { Boton, Estado, Eyebrow } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -75,7 +76,14 @@ export default function CondicionesYAlergias() {
       { text: 'Quitar', style: 'destructive', onPress: accion },
     ]);
 
-  if (isLoading) return <SkeletonLista filas={4} />;
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-paper">
+        <EncabezadoConTitulo titulo="Condiciones y Alergias" />
+        <SkeletonLista filas={4} />
+      </View>
+    );
+  }
 
   const condiciones = data?.condiciones ?? [];
   const alergias = data?.alergias ?? [];
@@ -83,7 +91,8 @@ export default function CondicionesYAlergias() {
 
   return (
     <View className="flex-1 bg-paper">
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
+      <EncabezadoConTitulo titulo="Condiciones y Alergias" />
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-4">
         {sinNada ? (
           <Estado
             titulo="Sin condiciones ni alergias"

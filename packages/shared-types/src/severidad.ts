@@ -47,6 +47,43 @@ export const RANGO_ETIQUETA: Record<RangoGravedad, string> = {
   3: 'Informativo',
 };
 
+/**
+ * Mecanismo clínico de una interacción — para agrupar en el cockpit, no para
+ * calcular severidad (eso lo sigue haciendo `RANGO_POR_SEVERIDAD_INTERACCION`).
+ * Cerrado a propósito: una interacción sin mecanismo claro no entra a la
+ * lista a la fuerza, se le suma un valor nuevo cuando aparezca.
+ */
+export const TIPOS_RIESGO_INTERACCION = [
+  'SANGRADO',
+  'MIOPATIA_RABDOMIOLISIS',
+  'MIELOSUPRESION',
+  'SINDROME_SEROTONINERGICO',
+  'HIPERPOTASEMIA',
+  'NEFROTOXICIDAD',
+  'TOXICIDAD_DIGITALICA',
+  'TOXICIDAD_LITIO',
+  'HIPOGLUCEMIA',
+  'EFICACIA_REDUCIDA',
+  'QT_PROLONGADO',
+  'ABSORCION_REDUCIDA',
+] as const;
+export type TipoRiesgoInteraccion = (typeof TIPOS_RIESGO_INTERACCION)[number];
+
+export const TIPO_RIESGO_ETIQUETA: Record<TipoRiesgoInteraccion, string> = {
+  SANGRADO: 'Riesgo de sangrado',
+  MIOPATIA_RABDOMIOLISIS: 'Miopatía / rabdomiólisis',
+  MIELOSUPRESION: 'Mielosupresión',
+  SINDROME_SEROTONINERGICO: 'Síndrome serotoninérgico',
+  HIPERPOTASEMIA: 'Hiperpotasemia',
+  NEFROTOXICIDAD: 'Nefrotoxicidad',
+  TOXICIDAD_DIGITALICA: 'Toxicidad digitálica',
+  TOXICIDAD_LITIO: 'Toxicidad por litio',
+  HIPOGLUCEMIA: 'Hipoglucemia',
+  EFICACIA_REDUCIDA: 'Eficacia reducida',
+  QT_PROLONGADO: 'QT prolongado',
+  ABSORCION_REDUCIDA: 'Absorción reducida',
+};
+
 export function esGrave(rango: RangoGravedad): boolean {
   return rango <= 1;
 }

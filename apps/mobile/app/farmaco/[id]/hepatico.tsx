@@ -1,7 +1,10 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Pressable, Text, View } from 'react-native';
 
 import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { peldanosHepaticos } from '@/dominio/restricciones';
+import { EncabezadoApp } from '@/ui/encabezado-app';
+import { Icono } from '@/ui/iconos';
 import { Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { PeldanosHepaticos, PieContexto, TapaRestriccion } from '@/ui/restricciones';
@@ -20,12 +23,15 @@ import { PeldanosHepaticos, PieContexto, TapaRestriccion } from '@/ui/restriccio
  */
 export default function RestriccionHepatica() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'hepatico');
 
   return (
-    <>
-      <Stack.Screen options={{ title: 'Función hepática' }} />
+    <View className="flex-1 bg-paper">
+      <EncabezadoApp />
       <Pantalla>
+        <EncabezadoAjusteHepatico />
+
         <ResultadoConsulta
           cargando={isLoading}
           error={error}
@@ -34,8 +40,34 @@ export default function RestriccionHepatica() {
         >
           {data ? <Contenido f={data} /> : null}
         </ResultadoConsulta>
+
+        <View className="mt-2 flex-row justify-end">
+          <Pressable
+            onPress={() => router.push('/herramientas/hepatico')}
+            accessibilityRole="button"
+            className="flex-row items-center gap-2 rounded-full px-6 py-2.5"
+            style={{ backgroundColor: '#005228' }}
+          >
+            <Icono nombre="calculadora" tamano={16} color="#FFFFFF" />
+            <Text className="text-meta font-medio text-white">Calcular Child-Pugh</Text>
+          </Pressable>
+        </View>
       </Pantalla>
-    </>
+    </View>
+  );
+}
+
+function EncabezadoAjusteHepatico() {
+  return (
+    <View className="mb-4">
+      <View className="mb-2 flex-row items-center gap-2">
+        <Icono nombre="higado" tamano={20} color="#B45309" />
+        <Text className="text-[28px] font-fuerte text-ink">Ajuste Hepático</Text>
+      </View>
+      <Text className="text-body leading-6 text-ink-suave">
+        Ajuste de dosis según la clase de Child-Pugh del paciente.
+      </Text>
+    </View>
   );
 }
 

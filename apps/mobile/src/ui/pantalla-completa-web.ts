@@ -32,7 +32,7 @@ export function activarPantallaCompletaWeb(): void {
   meta('apple-mobile-web-app-capable', 'yes');
   meta('apple-mobile-web-app-status-bar-style', 'black-translucent');
   meta('apple-mobile-web-app-title', 'GFH');
-  meta('theme-color', '#1F5E4A');
+  meta('theme-color', '#005228');
 
   document.documentElement.lang = 'es';
   document.title = 'GFH';

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -7,7 +7,8 @@ import type { CategoriaHallazgo, Cockpit, PrescripcionCockpit } from '@/api/tipo
 import * as API from '@/api/endpoints';
 import { Skeleton } from '@/ui/estados-sistema';
 import { antiguedad } from '@/ui/fecha';
-import { Icono } from '@/ui/iconos';
+import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
+import { Icono, type NombreIcono } from '@/ui/iconos';
 import { AnilloClcr } from '@/ui/anillo-clcr';
 import { etiquetaEmbarazo } from '@/dominio/gestacion';
 import { rutaPaywall } from '@/dominio/plan-gratis';
@@ -18,22 +19,17 @@ import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import {
   destacados as hallazgosDestacados,
-  detalleCockpit,
   hepaticoSinEvaluar,
   opcionesDelPaciente,
   peoresPorCategoria,
-  titularCockpit,
 } from '@/dominio/cockpit';
-import { Veredicto } from '@/ui/herramienta';
-import { BadgeConteo, Espina } from '@/ui/severidad';
+import { Espina } from '@/ui/severidad';
 import {
+  claveColorPorClcr,
   claveColorPorRango,
   COLOR_SEVERIDAD,
-  nombreSexo,
-  peorRango,
   RANGO_ETIQUETA,
   type RangoGravedad,
-  type Sexo,
 } from '@gfh/shared-types';
 import { useColores } from '@/ui/tema';
 
@@ -42,6 +38,13 @@ const NOMBRE_CATEGORIA: Record<CategoriaHallazgo, string> = {
   CONDICION: 'Condiciones',
   AJUSTE_RENAL: 'Ajuste renal',
   AJUSTE_HEPATICO: 'Ajuste hepático',
+};
+
+const ICONO_CATEGORIA: Record<CategoriaHallazgo, NombreIcono> = {
+  INTERACCION: 'interacciones',
+  CONDICION: 'alerta',
+  AJUSTE_RENAL: 'gota',
+  AJUSTE_HEPATICO: 'higado',
 };
 
 /**
@@ -72,17 +75,30 @@ export default function CockpitPaciente() {
     enabled: Boolean(id),
   });
 
-  if (isLoading) return <Skeleton />;
+  // La cabecera va afuera del `if`: antes vivía en `Stack.Screen`, que se
+  // pinta sin importar el estado de la consulta. Devolverla recién en el
+  // `return` final la hacía aparecer de golpe cuando el esqueleto terminaba.
+  if (isLoading) {
+    return (
+      <View className="flex-1" style={{ backgroundColor: col.paper }}>
+        <EncabezadoApp />
+        <Skeleton />
+      </View>
+    );
+  }
   if (error || !data) {
     return (
-      <Pantalla>
-        <Estado
-          titulo="No se pudo cargar"
-          detalle={error instanceof Error ? error.message : 'Error desconocido.'}
-          accion="Reintentar"
-          onAccion={() => void refetch()}
-        />
-      </Pantalla>
+      <View className="flex-1" style={{ backgroundColor: col.paper }}>
+        <EncabezadoApp />
+        <Pantalla>
+          <Estado
+            titulo="No se pudo cargar"
+            detalle={error instanceof Error ? error.message : 'Error desconocido.'}
+            accion="Reintentar"
+            onAccion={() => void refetch()}
+          />
+        </Pantalla>
+      </View>
     );
   }
 
@@ -103,83 +119,114 @@ export default function CockpitPaciente() {
   const abrir = (ruta: string) =>
     router.push((data.esDemostracion ? rutaPaywall('paciente') : ruta) as never);
 
-  const peor = peorRango(data.hallazgos.map((h) => h.rango));
-
   const destacados = hallazgosDestacados(data.hallazgos);
 
   const hepaticoNoEvaluable = hepaticoSinEvaluar(data.avisos);
   const peorPorCategoria = peoresPorCategoria(data.hallazgos);
 
   return (
-    <>
-      <Stack.Screen
-        options={{
-          title: `${p.apellido}, ${p.nombre}`,
-          headerRight: () => (
-            <Pressable
-              onPress={() => setMenu('agregar')}
-              accessibilityRole="button"
-              accessibilityLabel="Agregar"
-              className="mr-3 h-8 w-8 items-center justify-center rounded-full"
-              style={{ backgroundColor: 'rgba(255,255,255,0.18)' }}
-            >
-              <Icono nombre="mas" tamano={18} color="#FFFFFF" />
-            </Pressable>
-          ),
-        }}
-      />
+    <View className="flex-1" style={{ backgroundColor: col.paper }}>
+      <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
 
       {/* Deslizar para refrescar: el cockpit lo puede cambiar otra pantalla
           —cargar un análisis, aceptar una alternativa— y sin esto la única
           forma de volver a calcular era salir y entrar. */}
       <Pantalla onRefrescar={() => void refetch()} refrescando={isRefetching}>
-        {/* ---------- 0. Veredicto ---------- */}
-        <Veredicto
-          rango={peor}
-          titulo={titularCockpit(data.hallazgos)}
-          detalle={detalleCockpit(data.hallazgos)}
-        />
+        {/* ---------- Encabezado: nombre + agregar ---------- */}
+        <View className="mb-4 flex-row items-start justify-between">
+          <View className="flex-1 pr-3">
+            <Text className="text-[32px] font-fuerte leading-10 text-ink">
+              {p.nombre} {p.apellido}
+            </Text>
+            <Text className="mt-0.5 text-body text-ink-suave">{p.edadAnios} años</Text>
+          </View>
+          <Pressable
+            onPress={() => setMenu('agregar')}
+            accessibilityRole="button"
+            accessibilityLabel="Agregar"
+            className="h-11 w-11 items-center justify-center rounded-full"
+            style={{ backgroundColor: '#005228' }}
+          >
+            <Icono nombre="mas" tamano={18} color="#FFFFFF" />
+          </Pressable>
+        </View>
 
         {/* ---------- 1. Datos del paciente ---------- */}
         {/* La única superficie con elevación alta de la pantalla: es el sujeto
             de todo lo demás, y la jerarquía la marca la profundidad y no el
             color —el color acá significa gravedad y no se gasta en decorar. */}
-        <Superficie elevacion="alta" className="mb-5 p-4">
+        <Superficie elevacion="alta" className="mb-5 p-4" style={{ position: 'relative' }}>
           {/* Los ··· van DENTRO de la tarjeta y no en la barra: lo que abren es
               de este paciente, y estando acá no hace falta rotularlo. Quedan
               cerca del + del header, así que se distinguen por peso — el + es
               un círculo relleno sobre el verde, esto es gris sobre el blanco
-              de la tarjeta. */}
+              de la tarjeta.
+
+              Flotan sobre la esquina en vez de compartir renglón con el
+              anillo: así el anillo arranca en el borde de arriba de la
+              tarjeta, sin un renglón vacío empujándolo hacia abajo. */}
           <Pressable
             onPress={() => setMenu('paciente')}
             accessibilityRole="button"
             accessibilityLabel="Opciones del paciente"
             hitSlop={10}
-            className="absolute right-2 top-2 h-9 w-9 items-center justify-center rounded-full"
+            className="h-9 w-9 items-center justify-center rounded-full"
+            style={{ position: 'absolute', top: 4, right: 4, zIndex: 10 }}
           >
             <Icono nombre="mas-opciones" tamano={20} color={col.tenue} />
           </Pressable>
 
-          <View className="flex-row items-center pr-7">
+          <View className="flex-row items-center">
             {/* El Clcr manda: es el dato que condiciona casi todas las
                 verificaciones, y en el anillo se ubica solo contra la escala. */}
-            <AnilloClcr clcrMlMin={p.clcrMlMin} gradoKdigo={p.gradoKdigo} />
-            <View className="ml-4 flex-1 gap-y-3">
-              <Dato etiqueta="Edad" valor={`${p.edadAnios} años`} />
-              {/* `nombreSexo` y no un ternario: el anterior mostraba
-                  "Masculino" también para OTRO, que es un tercer valor real de
-                  la base y usa otro factor en Cockcroft-Gault. */}
-              <Dato etiqueta="Sexo" valor={nombreSexo(p.sexo as Sexo)} />
+            <AnilloClcr clcrMlMin={p.clcrMlMin} gradoKdigo={p.gradoKdigo} tamano={92} />
+            <View className="ml-5 flex-1 gap-y-1.5 pr-8">
+              <View className="flex-row items-center gap-1.5">
+                <Icono
+                  nombre="gota"
+                  tamano={14}
+                  color={p.clcrMlMin !== null ? COLOR_SEVERIDAD[claveColorPorClcr(p.clcrMlMin)] : col.tenue}
+                />
+                <Text
+                  className="font-medio text-body"
+                  style={{
+                    color: p.clcrMlMin !== null ? COLOR_SEVERIDAD[claveColorPorClcr(p.clcrMlMin)] : col.ink,
+                  }}
+                >
+                  Clcr Est.
+                </Text>
+              </View>
+              {p.gradoKdigo ? (
+                <View
+                  className="self-start rounded-sm px-2 py-0.5"
+                  style={{
+                    backgroundColor:
+                      p.clcrMlMin !== null
+                        ? `${COLOR_SEVERIDAD[claveColorPorClcr(p.clcrMlMin)]}22`
+                        : col.paper,
+                  }}
+                >
+                  <Text
+                    className="font-fuerte text-eyebrow uppercase tracking-wider"
+                    style={{
+                      color: p.clcrMlMin !== null ? COLOR_SEVERIDAD[claveColorPorClcr(p.clcrMlMin)] : col.tenue,
+                    }}
+                  >
+                    KDIGO {p.gradoKdigo}
+                  </Text>
+                </View>
+              ) : null}
               {/* La antigüedad al lado del origen. Un clearance calculado con
                   una creatinina de hace tres meses se leía igual que uno de
                   esta mañana: el backend estampaba la fecha de guardado, no la
                   del análisis. La app dice cuánto pasó y no si está vencido —
-                  no hay umbral universal para eso. */}
-              <Dato
-                etiqueta="Origen del Clcr"
-                valor={etiquetaOrigen(p.clcrOrigen)}
-                nota={p.clcrMedidoAt ? (antiguedad(p.clcrMedidoAt) ?? undefined) : undefined}
-              />
+                  no hay umbral universal para eso. Este dato no está en el
+                  render de Figma, pero es una decisión clínica de una pantalla
+                  anterior que no correspondía perder por prolijidad visual. */}
+              <Text className="text-eyebrow text-tenue">
+                {etiquetaOrigen(p.clcrOrigen)}
+                {p.clcrMedidoAt ? ` · ${antiguedad(p.clcrMedidoAt)}` : ''}
+              </Text>
             </View>
           </View>
 
@@ -188,8 +235,12 @@ export default function CockpitPaciente() {
               onPress={() => abrir(`/paciente/${id}/condiciones-alergias`)}
               accessibilityRole="button"
               accessibilityLabel="Ver condiciones y alergias"
-              className="mt-4 flex-row flex-wrap gap-1.5 border-t border-line pt-3.5"
+              className="mt-4 border-t border-line pt-3.5"
             >
+              <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+                Condiciones Activas
+              </Text>
+              <View className="flex-row flex-wrap gap-1.5">
               {data.condicionesEfectivas.map((c) => (
                 <View
                   key={c}
@@ -210,6 +261,7 @@ export default function CockpitPaciente() {
                   </Text>
                 </View>
               ))}
+              </View>
             </Pressable>
           ) : null}
 
@@ -221,28 +273,27 @@ export default function CockpitPaciente() {
             <Eyebrow>Lo más grave</Eyebrow>
             <View className="mb-2 mt-1">
               {destacados.map((h) => (
-                <Superficie
+                <SuperficieTocable
                   key={h.clave}
                   elevacion="plana"
-                  className="mb-2 px-3.5 py-3"
+                  onPress={() => abrir(`/paciente/${id}/hallazgos?categoria=${h.categoria}`)}
+                  accesibilidad={`${h.titulo}, ${RANGO_ETIQUETA[h.rango]}`}
+                  className="mb-2 flex-row items-center gap-3 py-3 pl-4 pr-3"
                   style={{
                     borderLeftWidth: 4,
                     borderLeftColor: COLOR_SEVERIDAD[claveColorPorRango(h.rango)],
+                    borderTopLeftRadius: 0,
+                    borderBottomLeftRadius: 0,
                   }}
                 >
-                  <View className="flex-row items-baseline">
-                    <Text className="flex-1 pr-2 text-body font-medio text-ink">{h.titulo}</Text>
-                    <Text
-                      className="font-fuerte text-eyebrow uppercase tracking-wider"
-                      style={{ color: COLOR_SEVERIDAD[claveColorPorRango(h.rango)] }}
-                    >
-                      {RANGO_ETIQUETA[h.rango]}
+                  <View className="flex-1">
+                    <Text className="text-body font-medio text-ink">{h.titulo}</Text>
+                    <Text className="font-sans mt-1 text-meta leading-5 text-ink-suave">
+                      {h.detalle}
                     </Text>
                   </View>
-                  <Text className="font-sans mt-1 text-meta leading-5 text-ink-suave">
-                    {h.detalle}
-                  </Text>
-                </Superficie>
+                  <Icono nombre="chevron" tamano={16} color={col.tenue} />
+                </SuperficieTocable>
               ))}
 
               {data.hallazgos.length > destacados.length ? (
@@ -303,26 +354,30 @@ export default function CockpitPaciente() {
                       }`
                 }
               >
-                <View className="flex-row items-center justify-between">
-                  <Text className="mr-2 flex-1 text-meta font-medio text-ink">
-                    {NOMBRE_CATEGORIA[cat]}
-                  </Text>
+                <View className="mb-2 flex-row items-center justify-between">
+                  <Icono nombre={ICONO_CATEGORIA[cat]} tamano={18} color={color ?? col.tenue} />
                   {/* El número toma el color de la GRAVEDAD, no el del
                       conteo. Con la franja ya teñida por gravedad, un badge que
                       colorea por cantidad pintaba la misma tarjeta de dos
                       colores distintos: ajuste renal salía con franja naranja y
                       número rojo. Son dos escalas y no pueden convivir acá. */}
-                  {sinEvaluar ? (
-                    <Text className="font-mono-fuerte text-fila text-tenue">—</Text>
-                  ) : (
-                    <Text
-                      className="font-mono-fuerte text-fila"
-                      style={{ color: color ?? col.tenue, fontVariant: ['tabular-nums'] }}
-                    >
-                      {n}
-                    </Text>
-                  )}
+                  <View
+                    className="h-6 w-6 items-center justify-center rounded-full"
+                    style={{ backgroundColor: color ?? col.line }}
+                  >
+                    {sinEvaluar ? (
+                      <Text className="font-fuerte text-eyebrow text-tenue">—</Text>
+                    ) : (
+                      <Text
+                        className="font-medio text-eyebrow text-white"
+                        style={{ fontVariant: ['tabular-nums'] }}
+                      >
+                        {n}
+                      </Text>
+                    )}
+                  </View>
                 </View>
+                <Text className="text-meta font-medio text-ink">{NOMBRE_CATEGORIA[cat]}</Text>
               </SuperficieTocable>
             );
           })}
@@ -410,7 +465,7 @@ export default function CockpitPaciente() {
           />
         ))}
       </HojaInferior>
-    </>
+    </View>
   );
 }
 
@@ -425,41 +480,6 @@ function etiquetaOrigen(origen: string | null): string {
   return 'Sin dato';
 }
 
-function Dato({
-  etiqueta,
-  valor,
-  sufijo,
-  nota,
-  color,
-}: {
-  etiqueta: string;
-  valor: string;
-  sufijo?: string;
-  /** Un renglón chico abajo. Hoy: cuánto hace del análisis. */
-  nota?: string;
-  color?: string;
-}) {
-  const col = useColores();
-
-  return (
-    <View>
-      <Text className="font-sans text-eyebrow uppercase tracking-wider text-ink-suave">{etiqueta}</Text>
-      {/* El valor va en mono: es dato clínico, y con cifras de ancho fijo la
-          columna no se corre cuando el Clcr pasa de 9 a 10. */}
-      <Text
-        className="text-fila font-mono-fuerte"
-        style={{ color: color ?? col.ink, fontVariant: ['tabular-nums'] }}
-      >
-        {valor}
-        {sufijo ? <Text className="font-sans text-meta text-ink-suave"> {sufijo}</Text> : null}
-      </Text>
-      {nota ? (
-        <Text className="font-sans text-eyebrow text-tenue">{nota}</Text>
-      ) : null}
-    </View>
-  );
-}
-
 function FilaTratamiento({
   prescripcion,
   onPress,
@@ -467,9 +487,13 @@ function FilaTratamiento({
   prescripcion: PrescripcionCockpit;
   onPress: () => void;
 }) {
+  const col = useColores();
   // Con hallazgos se eleva, sin hallazgos queda plano. El fármaco tranquilo no
   // tiene que competir por atención con el que tiene una interacción grave.
   const conHallazgos = prescripcion.conteoHallazgos > 0;
+
+  const rango = prescripcion.espina as RangoGravedad | null;
+  const color = rango !== null ? COLOR_SEVERIDAD[claveColorPorRango(rango)] : null;
 
   return (
     <SuperficieTocable
@@ -478,10 +502,25 @@ function FilaTratamiento({
       className="mb-2.5 flex-row items-stretch"
       accesibilidad={`${prescripcion.nombre}, ${prescripcion.conteoHallazgos} hallazgos`}
     >
-      <Espina rango={prescripcion.espina as RangoGravedad | null} />
+      <Espina rango={rango} />
       <View className="flex-1 flex-row items-center px-3.5 py-3.5">
         <View className="flex-1">
-          <Text className="text-fila font-medio text-ink">{prescripcion.nombre}</Text>
+          <View className="flex-row flex-wrap items-center gap-2">
+            <Text className="text-fila font-medio text-ink">{prescripcion.nombre}</Text>
+            {/* La palabra de severidad, no el conteo: acá el rediseño de Figma
+                cambia qué información se prioriza en el vistazo — antes era
+                "cuántos hallazgos tiene este fármaco" (`BadgeConteo`), ahora es
+                "qué tan grave es lo peor que tiene". El conteo por fármaco
+                sigue disponible entrando a "Ver hallazgos"; se pierde del
+                vistazo de esta fila a propósito, siguiendo el frame. */}
+            {rango !== null ? (
+              <View className="rounded-sm px-2 py-0.5" style={{ backgroundColor: color! }}>
+                <Text className="font-fuerte text-[11px] uppercase tracking-wider text-white">
+                  {RANGO_ETIQUETA[rango]}
+                </Text>
+              </View>
+            ) : null}
+          </View>
           <Text className="font-sans mt-1 text-meta text-ink-suave">
             {/* La pauta en mono: son cifras, y alineadas se comparan de un
                 vistazo entre filas. */}
@@ -491,13 +530,13 @@ function FilaTratamiento({
           </Text>
           {prescripcion.esFarmacoLibre ? (
             <View className="mt-1.5 self-start rounded-chip bg-paper px-2 py-0.5">
-              <Text className="font-medio text-eyebrow uppercase tracking-wider text-ink-suave">
+              <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
                 No se verifica
               </Text>
             </View>
           ) : null}
         </View>
-        <BadgeConteo n={prescripcion.conteoHallazgos} />
+        <Icono nombre="mas-opciones" tamano={16} color={col.tenue} />
       </View>
     </SuperficieTocable>
   );

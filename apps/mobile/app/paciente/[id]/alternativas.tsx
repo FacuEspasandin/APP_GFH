@@ -10,6 +10,7 @@ import {
   problemasDeAlternativa,
   resumenAlternativas,
 } from '@/dominio/alternativas';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { ConsultaPlegada, GrupoGravedad } from '@/ui/herramienta';
 import { Boton, Estado, Eyebrow, Pantalla } from '@/ui/kit';
@@ -76,28 +77,41 @@ export default function Alternativas() {
     // la prescripción. Antes mostraba "No se pudo cargar" con el detalle vacío,
     // que parecía una falla del servidor.
     return (
-      <Pantalla>
-        <Estado
-          titulo="Sin fármaco elegido"
-          detalle="Las alternativas se piden desde un fármaco del tratamiento."
-        />
-      </Pantalla>
+      <View className="flex-1 bg-paper">
+        <EncabezadoConTitulo titulo="Alternativas" />
+        <Pantalla>
+          <Estado
+            titulo="Sin fármaco elegido"
+            detalle="Las alternativas se piden desde un fármaco del tratamiento."
+          />
+        </Pantalla>
+      </View>
     );
   }
 
-  if (isLoading) return <SkeletonLista filas={3} />;
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-paper">
+        <EncabezadoConTitulo titulo="Alternativas" />
+        <SkeletonLista filas={3} />
+      </View>
+    );
+  }
   if (error || !data) {
     return (
-      <Pantalla>
-        <Estado
-          titulo="No se pudo cargar"
-          detalle={
-            error instanceof Error && error.message
-              ? error.message
-              : 'Probá de nuevo en unos segundos.'
-          }
-        />
-      </Pantalla>
+      <View className="flex-1 bg-paper">
+        <EncabezadoConTitulo titulo="Alternativas" />
+        <Pantalla>
+          <Estado
+            titulo="No se pudo cargar"
+            detalle={
+              error instanceof Error && error.message
+                ? error.message
+                : 'Probá de nuevo en unos segundos.'
+            }
+          />
+        </Pantalla>
+      </View>
     );
   }
 
@@ -148,7 +162,7 @@ export default function Alternativas() {
                 alt={alt}
                 onReemplazar={() =>
                   router.push({
-                    pathname: '/paciente/[id]/aceptar-alternativa',
+                    pathname: '/paciente/[id]/elegir-producto-alternativa',
                     params: {
                       id: pacienteId,
                       paOrigenId: data.paOrigenIds?.[0] ?? '',
@@ -207,7 +221,7 @@ function TarjetaAlternativa({ alt, onReemplazar }: { alt: Alternativa; onReempla
             dos alternativas dentro de "Atención" no son iguales si una arrastra
             una alerta y la otra tres. */}
         <Text
-          className="font-medio text-eyebrow uppercase tracking-wider"
+          className="font-fuerte text-eyebrow uppercase tracking-wider"
           style={{ color: colorEspina(peor) }}
         >
           {conteoDeAlertas(alt)}

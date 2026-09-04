@@ -3,17 +3,25 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { useFicha, type ClaveDetalle, type Ficha } from '@/api/ficha';
+import type { Restriccion } from '@/dominio/restricciones';
+import { useFicha, usePresentaciones, useSimilares, type ClaveDetalle, type Ficha } from '@/api/ficha';
 import { usePlan } from '@/api/plan';
 import { cupoAgotado, gastaConsulta, rutaPaywall, textoCupo } from '@/dominio/plan-gratis';
+import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { HojaInferior } from '@/ui/hoja-inferior';
-import { Boton, Chip, Eyebrow, Pantalla } from '@/ui/kit';
+import { Boton, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { Pestanas } from '@/ui/pestanas';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
+import { SelloSeccion } from '@/ui/monografia';
 import { GrillaRestricciones } from '@/ui/restricciones';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
-import { colorEspina, RANGO_POR_SEVERIDAD_INTERACCION } from '@gfh/shared-types';
+import { colorEspina, RANGO_POR_SEVERIDAD_INTERACCION, type ClaveSeccion } from '@gfh/shared-types';
+
+import { ContenidoSimilares } from './[id]/similares';
+
+type Pestana = 'info' | 'ficha' | 'similares' | 'presentaciones';
 
 /**
  * Ficha de fármaco (5.4-5.9).
@@ -47,6 +55,7 @@ export default function FichaFarmaco() {
 
   /** La que el médico tocó y todavía no confirmó. */
   const [porConfirmar, setPorConfirmar] = useState<ClaveDetalle | null>(null);
+  const [tab, setTab] = useState<Pestana>('info');
 
   const ir = (clave: ClaveDetalle) => router.push(`/farmaco/${id}/${clave}` as never);
 
@@ -67,7 +76,8 @@ export default function FichaFarmaco() {
 
   return (
     <>
-      <Stack.Screen options={{ title: data?.nombreComercial ?? 'Fármaco' }} />
+      <Stack.Screen options={{ headerShown: false }} />
+      <EncabezadoApp />
       <Pantalla>
         <ResultadoConsulta
           cargando={isLoading}
@@ -79,16 +89,39 @@ export default function FichaFarmaco() {
             <>
               <Encabezado f={data} />
 
-              <Eyebrow>Restricciones</Eyebrow>
-              <GrillaRestricciones restricciones={data.restricciones} onAbrir={abrir} />
+              <Pestanas
+                pestanas={[
+                  { clave: 'info', titulo: 'Info' },
+                  { clave: 'ficha', titulo: 'Ficha técnica' },
+                  { clave: 'similares', titulo: 'Similares' },
+                  { clave: 'presentaciones', titulo: 'Presentaciones' },
+                ]}
+                activa={tab}
+                onCambiar={setTab}
+              />
 
-              <FilaInteracciones f={data} onPress={() => abrir('interacciones')} />
+              <View className="pt-4">
+                {tab === 'info' ? (
+                  <>
+                    <AlertaCritica restricciones={data.restricciones} />
 
-              {/* El contador va debajo de las cinco puertas que lo gastan, no
-                  arriba de la pantalla: es lo que se lee antes de tocar una. */}
-              {textoContador ? <Contador texto={textoContador} agotado={sinCupo} /> : null}
+                    <TituloSeccion icono="alerta" titulo="Restricciones" />
+                    <GrillaRestricciones restricciones={data.restricciones} onAbrir={abrir} />
 
-              <Composicion f={data} />
+                    <FilaInteracciones f={data} onPress={() => abrir('interacciones')} />
+
+                    {/* El contador va debajo de las cinco puertas que lo gastan, no
+                        arriba de la pantalla: es lo que se lee antes de tocar una. */}
+                    {textoContador ? <Contador texto={textoContador} agotado={sinCupo} /> : null}
+
+                    <Composicion f={data} />
+                  </>
+                ) : null}
+
+                {tab === 'ficha' ? <Monografia f={data} /> : null}
+                {tab === 'similares' ? <TabSimilares f={data} /> : null}
+                {tab === 'presentaciones' ? <TabPresentaciones productoId={data.id} /> : null}
+              </View>
             </>
           ) : null}
         </ResultadoConsulta>
@@ -183,23 +216,84 @@ function Contador({ texto, agotado }: { texto: string; agotado: boolean }) {
   );
 }
 
-function Encabezado({ f }: { f: Ficha }) {
+/** Encabezado de sección grande — más presencia que `Eyebrow` (que es un
+ *  epígrafe chico), para las dos secciones largas de esta pantalla. */
+function TituloSeccion({ icono, titulo }: { icono: Parameters<typeof Icono>[0]['nombre']; titulo: string }) {
+  const col = useColores();
   return (
-    <View className="mb-3.5 rounded-card bg-primary-light px-3.5 py-3.5">
-      <Text className="text-grande font-fuerte text-ink">
-        {f.nombreComercial}
-        {f.dosisTexto ? <Text className="font-sans text-ink-suave"> {f.dosisTexto}</Text> : null}
+    <View className="mb-3 flex-row items-center gap-2">
+      <Icono nombre={icono} tamano={18} color={col.inkSuave} />
+      <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
+    </View>
+  );
+}
+
+/**
+ * Lo peor de las cuatro restricciones, arriba de todo — sólo cuando el
+ * catálogo lo AFIRMA (`evitar`), nunca por ausencia de dato. Es el mismo
+ * criterio del veredicto del cockpit, aplicado acá sin paciente: esto no dice
+ * "es peligroso para alguien", dice "el fármaco en sí tiene una restricción
+ * fuerte" — que es un hecho de la ficha, no una inferencia.
+ */
+function AlertaCritica({ restricciones }: { restricciones: readonly Restriccion[] }) {
+  const graves = restricciones.filter((r) => r.estado === 'evitar');
+  if (graves.length === 0) return null;
+  const [primera, ...resto] = graves;
+
+  return (
+    <View
+      className="mb-4 flex-row gap-4 rounded-xl p-4"
+      style={{ backgroundColor: '#FFDAD6' }}
+    >
+      <Icono nombre="alerta" tamano={20} color="#93000A" />
+      <View className="flex-1">
+        <Text className="text-fila font-fuerte" style={{ color: '#93000A' }}>
+          {primera!.titulo}
+        </Text>
+        <Text className="mt-1 text-meta leading-5" style={{ color: 'rgba(147,0,10,0.9)' }}>
+          {primera!.glosa}
+          {resto.length > 0 ? ` Y ${resto.length} más abajo.` : ''}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function Encabezado({ f }: { f: Ficha }) {
+  const col = useColores();
+  const codigosATC = [...new Set(f.principiosActivos.map((p) => p.codigoATC).filter(Boolean))] as string[];
+
+  return (
+    <Superficie elevacion="media" className="mb-4 p-5">
+      <Text className="text-[28px] font-fuerte leading-9 text-ink">{f.nombreComercial}</Text>
+      <Text className="mt-0.5 text-body text-ink-suave">
+        {[f.dosisTexto, f.formaFarmaceutica].filter(Boolean).join(' ') || 'Sin dosis registrada'}
       </Text>
-      <Text className="font-sans mt-1 text-meta text-ink-suave">
-        {[f.formaFarmaceutica, f.laboratorio].filter(Boolean).join(' · ') ||
-          'Sin datos de presentación'}
-      </Text>
-      <View className="mt-2.5 flex-row flex-wrap gap-1.5">
+      {f.laboratorio ? (
+        <Text className="mt-1 text-meta font-medio text-ink-suave">{f.laboratorio}</Text>
+      ) : null}
+
+      <View className="mt-3 flex-row flex-wrap gap-1.5">
         {f.principiosActivos.map((p) => (
           <Chip key={p.id} texto={p.nombre} />
         ))}
       </View>
-    </View>
+
+      {codigosATC.length > 0 ? (
+        <View className="mt-3.5 border-t border-line pt-3">
+          <Text className="font-fuerte text-[11px] uppercase tracking-wider text-ink-suave">
+            Código ATC
+          </Text>
+          <View className="mt-1.5 flex-row flex-wrap gap-1.5">
+            {codigosATC.map((c) => (
+              <View key={c} className="rounded px-2 py-1" style={{ backgroundColor: col.paper }}>
+                <Text className="font-mono-fuerte text-meta text-ink">{c}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      ) : null}
+    </Superficie>
   );
 }
 
@@ -239,6 +333,8 @@ function FilaInteracciones({ f, onPress }: { f: Ficha; onPress: () => void }) {
 }
 
 function Composicion({ f }: { f: Ficha }) {
+  const router = useRouter();
+  const col = useColores();
   const familias = [
     ...new Set(f.principiosActivos.map((p) => p.grupoTerapeutico).filter(Boolean)),
   ] as string[];
@@ -247,14 +343,37 @@ function Composicion({ f }: { f: Ficha }) {
     <>
       <Eyebrow>Composición</Eyebrow>
       <Superficie elevacion="plana" className="mb-4">
-        {f.principiosActivos.map((p, i) => (
-          <View key={p.id} className={`px-3.5 py-2.5 ${i > 0 ? 'border-t border-line' : ''}`}>
-            <Text className="text-body font-medio text-ink">{p.nombre}</Text>
-            <Text className="font-sans text-meta text-ink-suave">
-              {p.grupoTerapeutico ?? 'Sin grupo terapéutico en el catálogo'}
-            </Text>
-          </View>
-        ))}
+        {f.principiosActivos.map((p, i) => {
+          const fila = (
+            <View className="flex-1">
+              <Text className="text-body font-medio text-ink">{p.nombre}</Text>
+              <Text className="font-sans text-meta text-ink-suave">
+                {p.grupoTerapeutico ?? 'Sin grupo terapéutico en el catálogo'}
+              </Text>
+            </View>
+          );
+          // Sin genérico cargado para este componente, no hay a dónde llevar
+          // el toque — la fila queda informativa, como antes.
+          if (!p.productoGenericoId) {
+            return (
+              <View key={p.id} className={`px-3.5 py-2.5 ${i > 0 ? 'border-t border-line' : ''}`}>
+                {fila}
+              </View>
+            );
+          }
+          return (
+            <Pressable
+              key={p.id}
+              onPress={() => router.push(`/farmaco/${p.productoGenericoId}`)}
+              accessibilityRole="button"
+              accessibilityLabel={`Ver ficha de ${p.nombre}`}
+              className={`flex-row items-center px-3.5 py-2.5 ${i > 0 ? 'border-t border-line' : ''}`}
+            >
+              {fila}
+              <Icono nombre="chevron" tamano={15} color={col.tenue} />
+            </Pressable>
+          );
+        })}
       </Superficie>
 
       {familias.length > 0 ? (
@@ -269,14 +388,146 @@ function Composicion({ f }: { f: Ficha }) {
           </Superficie>
         </>
       ) : null}
+    </>
+  );
+}
 
-      <Eyebrow>Monografía</Eyebrow>
-      <Superficie elevacion="plana" className="mb-4 px-3.5 py-3">
-        <Text className="font-sans text-meta leading-4 text-ink-suave">
-          La ficha descriptiva todavía no está conectada. El ajuste de dosis y las interacciones
-          que sí ves salen del motor propio.
-        </Text>
-      </Superficie>
+/**
+ * Pestaña "Similares" — sólo tiene sentido por fármaco (el ATC es del
+ * componente, no del envase). En un combinado cada uno tendría su propia
+ * clase, así que se pide elegir desde Composición en vez de mostrar una de
+ * las dos a medias.
+ */
+function TabSimilares({ f }: { f: Ficha }) {
+  const unicoPa = f.principiosActivos.length === 1 ? f.principiosActivos[0] : null;
+
+  if (!unicoPa) {
+    return (
+      <Estado
+        titulo="Es un producto combinado"
+        detalle="Similares se mira por fármaco. Entrá a cada componente desde Composición, en Info."
+      />
+    );
+  }
+  return <SimilaresDelUnicoPa principioActivoId={unicoPa.id} />;
+}
+
+function SimilaresDelUnicoPa({ principioActivoId }: { principioActivoId: string }) {
+  const { data, isLoading, error, refetch } = useSimilares(principioActivoId);
+  return (
+    <ResultadoConsulta cargando={isLoading} error={error} onReintentar={() => void refetch()} filasSkeleton={3}>
+      {data ? <ContenidoSimilares s={data} /> : null}
+    </ResultadoConsulta>
+  );
+}
+
+/**
+ * Pestaña "Presentaciones" — otras dosis/formas de la misma marca ("Klaricid
+ * 500" ↔ "Klaricid 250"). Con el catálogo de hoy (631 genéricos, uno por
+ * principio activo) casi siempre trae un solo elemento: se avisa en vez de
+ * dejar la pestaña en blanco, que se leería como roto.
+ */
+function TabPresentaciones({ productoId }: { productoId: string }) {
+  const router = useRouter();
+  const { data, isLoading, error, refetch } = usePresentaciones(productoId);
+
+  return (
+    <ResultadoConsulta cargando={isLoading} error={error} onReintentar={() => void refetch()} filasSkeleton={2}>
+      {!data || data.length <= 1 ? (
+        <Estado
+          titulo="Sin otras presentaciones cargadas"
+          detalle="El catálogo todavía no tiene otra dosis o forma de esta misma marca."
+        />
+      ) : (
+        <Superficie elevacion="plana">
+          {data.map((p, i) => (
+            <Pressable
+              key={p.id}
+              onPress={() => !p.actual && router.push(`/farmaco/${p.id}` as never)}
+              disabled={p.actual}
+              accessibilityRole="button"
+              className={`flex-row items-center px-3.5 py-2.5 ${i > 0 ? 'border-t border-line' : ''}`}
+            >
+              <View className="flex-1">
+                <Text className="text-body font-medio text-ink">
+                  {[p.dosisTexto, p.formaFarmaceutica].filter(Boolean).join(' · ') || p.nombreComercial}
+                </Text>
+                {p.actual ? (
+                  <Text className="mt-0.5 text-meta font-medio text-accent">Ésta</Text>
+                ) : null}
+              </View>
+              {!p.actual ? <Icono nombre="chevron" tamano={15} color="#8CA39A" /> : null}
+            </Pressable>
+          ))}
+        </Superficie>
+      )}
+    </ResultadoConsulta>
+  );
+}
+
+/**
+ * La monografía, como índice.
+ *
+ * No se parece a las tarjetas de arriba y no debería: aquéllas tienen estado y
+ * color porque cruzan algo contra el paciente, y esto es texto. El médico
+ * entra buscando una sección —posología, interacciones—, casi nunca el
+ * documento entero, así que lo que sirve es un índice y no un muro.
+ *
+ * Sólo aparecen las secciones que tienen texto. Una sección vacía en la lista
+ * haría creer que el fármaco no tiene interacciones cuando lo que pasa es que
+ * no las cargamos: es la regla 5 aplicada a un índice.
+ */
+function Monografia({ f }: { f: Ficha }) {
+  const col = useColores();
+  const router = useRouter();
+
+  // El índice es uno solo aunque el producto tenga dos componentes: se junta
+  // la unión de las secciones. Adentro, cada pantalla muestra el texto de
+  // todos los que la tengan, separado por nombre.
+  const claves = new Map<ClaveSeccion, Ficha['monografias'][number]['secciones'][number]>();
+  for (const m of f.monografias) {
+    for (const sec of m.secciones) if (!claves.has(sec.clave)) claves.set(sec.clave, sec);
+  }
+  const secciones = [...claves.values()];
+
+  if (secciones.length === 0) {
+    return (
+      <>
+        <TituloSeccion icono="documento" titulo="Monografía" />
+        <Superficie elevacion="plana" className="mb-4 px-3.5 py-3">
+          <Text className="font-sans text-meta leading-4 text-ink-suave">
+            Este fármaco todavía no tiene monografía cargada. El ajuste de dosis y las
+            interacciones que sí ves salen del motor propio.
+          </Text>
+        </Superficie>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <TituloSeccion icono="documento" titulo="Monografía" />
+      <View className="mb-4 gap-2">
+        {secciones.map((sec) => (
+          <Pressable
+            key={sec.clave}
+            onPress={() => router.push(`/farmaco/${f.id}/monografia/${sec.clave}`)}
+            accessibilityRole="button"
+            accessibilityLabel={sec.titulo}
+            className="flex-row items-center rounded-xl border px-4 py-4"
+            style={{ borderColor: col.line, backgroundColor: col.surface }}
+          >
+            <SelloSeccion clave={sec.clave} />
+            <View className="ml-3 flex-1">
+              <Text className="text-fila font-medio text-ink">{sec.titulo}</Text>
+              <Text className="font-sans mt-0.5 text-meta leading-4 text-ink-suave">
+                {sec.glosa}
+              </Text>
+            </View>
+            <Icono nombre="chevron" tamano={15} color={col.tenue} />
+          </Pressable>
+        ))}
+      </View>
     </>
   );
 }

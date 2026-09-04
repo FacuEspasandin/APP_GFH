@@ -1,17 +1,21 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+import { Platform, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { api, iniciarSesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { useVolverAInicio } from '@/ui/boton-volver';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
+import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto } from '@/ui/kit';
-import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
 /** Registro (1.4). Nombre de usuario único + email + contraseña. */
 export default function Registro() {
   const col = useColores();
+  const volver = useVolverAInicio();
 
   const router = useRouter();
   const [c, setC] = useState({
@@ -57,10 +61,9 @@ export default function Registro() {
     c.password.length > 0;
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Crear cuenta" alVolver={volver} />
+      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
         <BloqueFormulario titulo="Quién sos" exigencia="Obligatorio">
           <View className="flex-row gap-3">
@@ -112,12 +115,16 @@ export default function Registro() {
         {/* Decía "El acceso es de pago desde el primer día, sin prueba
             gratuita". Era verdad antes del plan gratis, y quedó contradiciendo
             al paywall — que sí ofrece un paciente sin pagar. */}
-        <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
-          <Text className="font-sans text-meta leading-5 text-ink-suave">
+        <View
+          className="mb-3.5 flex-row gap-3 rounded-md px-4 py-3.5"
+          style={{ backgroundColor: col.paper, borderLeftWidth: 4, borderLeftColor: '#005228' }}
+        >
+          <Icono nombre="info" tamano={20} color="#005228" />
+          <Text className="font-sans flex-1 text-meta leading-5 text-ink-suave">
             Empezás con el plan gratis: un paciente, con todas las verificaciones. Cuando quieras el
             segundo, ahí se elige plan.
           </Text>
-        </Superficie>
+        </View>
 
         {error ? (
           <Text className="font-sans mb-1 px-1 text-meta" style={{ color: col.peligro }}>
@@ -131,6 +138,7 @@ export default function Registro() {
           Crear cuenta
         </Boton>
       </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }

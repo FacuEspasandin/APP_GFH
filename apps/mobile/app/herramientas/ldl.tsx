@@ -1,7 +1,10 @@
 import { Stack } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
+import { EncabezadoApp } from '@/ui/encabezado-app';
+import { Icono } from '@/ui/iconos';
 import { CampoTexto } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
@@ -75,15 +78,22 @@ export default function CalculadoraLdl() {
   const mostrarAlternativas = abiertas || r.ldl.motivo === 'TG_ALTOS';
 
   return (
-    <>
-      <Stack.Screen options={{ title: 'Colesterol LDL' }} />
-      <KeyboardAvoidingView
-        className="flex-1 bg-paper"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerClassName="px-4 pb-8 pt-3" keyboardShouldPersistTaps="handled">
-          <Superficie elevacion="plana" className="mb-3 px-3.5 py-3.5">
-            <View className="mb-2.5 flex-row items-center justify-between">
+    <View className="flex-1 bg-paper">
+      <Stack.Screen options={{ headerShown: false }} />
+      <EncabezadoApp />
+      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView contentContainerClassName="px-4 pb-8 pt-4" keyboardShouldPersistTaps="handled">
+          <Text className="text-[26px] font-fuerte leading-9 text-ink">Calculadora de LDL</Text>
+          <Text className="mb-4 mt-1 font-sans text-body leading-6 text-ink-suave">
+            Estimación del colesterol LDL mediante la fórmula de Friedewald.
+          </Text>
+
+          <Superficie
+            elevacion="media"
+            className="mb-4 p-5"
+            style={{ borderLeftWidth: 4, borderLeftColor: '#8CA39A' }}
+          >
+            <View className="mb-3 flex-row items-center justify-between">
               <Text className="text-fila font-fuerte text-ink">Perfil lipídico</Text>
               {/* Un solo selector para los tres: un análisis viene entero en la
                   misma unidad, y tres interruptores serían pedir tres veces la
@@ -91,53 +101,62 @@ export default function CalculadoraLdl() {
               <SelectorUnidad activa={unidad} onElegir={setUnidad} />
             </View>
 
-            <View className="flex-row gap-2">
-              <View className="flex-1">
-                <CampoTexto
-                  etiqueta="Total"
-                  value={texto.total}
-                  onChangeText={(v) => setTexto((p) => ({ ...p, total: v }))}
-                  keyboardType="numeric"
-                  rango={rangos.total}
-                  valor={entrada.colesterolTotal}
-                />
-              </View>
-              <View className="flex-1">
-                <CampoTexto
-                  etiqueta="HDL"
-                  value={texto.hdl}
-                  onChangeText={(v) => setTexto((p) => ({ ...p, hdl: v }))}
-                  keyboardType="numeric"
-                  rango={rangos.hdl}
-                  valor={entrada.hdl}
-                />
-              </View>
-              <View className="flex-1">
-                <CampoTexto
-                  etiqueta="TG"
-                  value={texto.tg}
-                  onChangeText={(v) => setTexto((p) => ({ ...p, tg: v }))}
-                  keyboardType="numeric"
-                  rango={rangos.tg}
-                  valor={entrada.trigliceridos}
-                />
+            <View className="gap-3">
+              <CampoTexto
+                etiqueta="Colesterol Total (mg/dL)"
+                value={texto.total}
+                onChangeText={(v) => setTexto((p) => ({ ...p, total: v }))}
+                keyboardType="numeric"
+                rango={rangos.total}
+                valor={entrada.colesterolTotal}
+              />
+              <CampoTexto
+                etiqueta="Colesterol HDL (mg/dL)"
+                value={texto.hdl}
+                onChangeText={(v) => setTexto((p) => ({ ...p, hdl: v }))}
+                keyboardType="numeric"
+                rango={rangos.hdl}
+                valor={entrada.hdl}
+              />
+              <CampoTexto
+                etiqueta="Triglicéridos (mg/dL)"
+                value={texto.tg}
+                onChangeText={(v) => setTexto((p) => ({ ...p, tg: v }))}
+                keyboardType="numeric"
+                rango={rangos.tg}
+                valor={entrada.trigliceridos}
+              />
+            </View>
+          </Superficie>
+
+          <Superficie elevacion="plana" className="mb-4 flex-row gap-3 p-4" style={{ backgroundColor: '#F8FAFC' }}>
+            <Icono nombre="info" tamano={20} color="#5C5F61" />
+            <View className="flex-1">
+              <Text className="text-fila font-fuerte text-ink">Fórmula de Friedewald</Text>
+              <Text className="mt-1 text-meta leading-5 text-ink-suave">
+                Estima el LDL a partir del colesterol total, el HDL y los triglicéridos — no aplica
+                si los triglicéridos superan el umbral de la fórmula.
+              </Text>
+              <View
+                className="mt-2 items-center rounded px-2 py-2"
+                style={{ backgroundColor: '#F2F3F9', borderWidth: 1, borderColor: '#BECABD', borderStyle: 'dashed' }}
+              >
+                <Text className="font-mono text-meta text-ink-suave">
+                  {unidad === 'mg/dL' ? 'LDL = TC − HDL − TG/5' : 'LDL = TC − HDL − TG/2,2'}
+                </Text>
               </View>
             </View>
           </Superficie>
 
           {/* Las dos cifras, siempre las dos. */}
-          <View className="mb-2 flex-row gap-2">
-            <Cifra titulo="LDL-C" valor={r.ldl} unidad={unidad} />
-            <Cifra titulo="no-HDL-C" valor={r.noHdl} unidad={unidad} />
+          <View className="mb-2 gap-3">
+            <Cifra titulo="LDL-C" descriptor="Estimado (Friedewald)" valor={r.ldl} unidad={unidad} />
+            <Cifra titulo="no-HDL-C" descriptor="Total − HDL" valor={r.noHdl} unidad={unidad} />
           </View>
 
-          {r.ldl.motivo === null ? (
-            <Text className="font-mono mb-3 px-1 text-eyebrow uppercase tracking-wider text-tenue">
-              Friedewald · {unidad === 'mg/dL' ? 'TC − HDL − TG/5' : 'TC − HDL − TG/2,2'}
-            </Text>
-          ) : (
+          {r.ldl.motivo !== null ? (
             <PorQueNo motivo={r.ldl.motivo} faltan={faltan} algoEscrito={algoEscrito} />
-          )}
+          ) : null}
 
           <Alternativas
             abiertas={mostrarAlternativas}
@@ -160,7 +179,7 @@ export default function CalculadoraLdl() {
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
-    </>
+    </View>
   );
 }
 
@@ -180,38 +199,48 @@ function aNumero(t: string): number | undefined {
  */
 function Cifra({
   titulo,
+  descriptor,
   valor,
   unidad,
 }: {
   titulo: string;
+  descriptor: string;
   valor: ValorLipidico;
   unidad: UnidadLipidos;
 }) {
   const col = useColores();
   const hay = valor.valor !== null;
+  const color = hay ? '#005228' : col.tenue;
 
   return (
-    <Superficie
-      elevacion="plana"
-      className="flex-1 px-3.5 py-3"
-      style={{ borderLeftWidth: 4, borderLeftColor: hay ? col.primary : col.tenue }}
-    >
-      <Text className="font-mono text-eyebrow uppercase tracking-wider text-ink-suave">
-        {titulo}
-      </Text>
-      <Text
-        className="font-mono-fuerte mt-1"
-        style={{
-          fontSize: hay ? 25 : 21,
-          color: hay ? col.primary : col.tenue,
-          fontVariant: ['tabular-nums'],
-        }}
+    <Superficie elevacion="media" className="p-5" style={{ borderLeftWidth: 4, borderLeftColor: color }}>
+      <View className="flex-row items-center justify-between">
+        <Text className="font-fuerte text-[11px] uppercase tracking-wider text-ink-suave">
+          {titulo}
+        </Text>
+        <Icono nombre="info" tamano={16} color={col.tenue} />
+      </View>
+      <Text className="mt-1 text-meta text-ink-suave">{descriptor}</Text>
+
+      <View className="mt-1 flex-row items-baseline gap-2">
+        <Text
+          className="font-fuerte"
+          style={{ fontSize: 32, color: hay ? col.ink : col.tenue, fontVariant: ['tabular-nums'] }}
+        >
+          {hay ? valor.valor : '—'}
+        </Text>
+        <Text className="text-meta font-medio text-ink-suave">{hay ? unidad : 'no aplica'}</Text>
+      </View>
+
+      <View
+        className="mt-3 flex-row items-center justify-between border-t pt-2"
+        style={{ borderColor: `${col.line}80` }}
       >
-        {hay ? valor.valor : '—'}
-      </Text>
-      <Text className="font-mono mt-0.5 text-eyebrow text-tenue">
-        {hay ? unidad : 'no aplica'}
-      </Text>
+        <Text className="font-fuerte text-[11px] uppercase tracking-wider" style={{ color: col.inkSuave }}>
+          {hay ? 'Calculado' : 'Sin datos suficientes'}
+        </Text>
+        <View className="rounded-full" style={{ width: 12, height: 12, backgroundColor: color }} />
+      </View>
     </Superficie>
   );
 }

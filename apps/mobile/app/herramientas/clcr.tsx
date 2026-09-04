@@ -1,11 +1,13 @@
 import { Stack } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { AnilloClcr } from '@/ui/anillo-clcr';
-import { BloqueFormulario } from '@/ui/bloque-formulario';
-import { CampoTexto, Chip } from '@/ui/kit';
+import { EncabezadoApp } from '@/ui/encabezado-app';
+import { CampoTexto } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 import {
   calcularClcr,
   DatoClinicoInvalido,
@@ -33,6 +35,7 @@ import {
  * salir, igual que el resto de las herramientas sueltas (modelo §5).
  */
 export default function CalculadoraClcr() {
+  const col = useColores();
   const [d, setD] = useState({ edadAnios: '', pesoKg: '', creatininaMgDl: '' });
   const [sexo, setSexo] = useState<Sexo>('F');
 
@@ -60,17 +63,22 @@ export default function CalculadoraClcr() {
     .find(Boolean);
 
   return (
-    <>
-      <Stack.Screen options={{ title: 'Clearance de creatinina' }} />
-      <KeyboardAvoidingView
-        className="flex-1 bg-paper"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
+    <View className="flex-1 bg-paper">
+      <Stack.Screen options={{ headerShown: false }} />
+      <EncabezadoApp />
+      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView
-          contentContainerClassName="px-4 pb-8 pt-3"
+          contentContainerClassName="px-4 pb-8 pt-4"
           keyboardShouldPersistTaps="handled"
         >
-          <BloqueFormulario titulo="Datos del paciente" exigencia="Obligatorio">
+          <Text className="text-fila font-fuerte text-ink">
+            Calculadora de Aclaramiento de Creatinina (Cockcroft-Gault)
+          </Text>
+          <Text className="mb-4 mt-1 font-sans text-meta leading-5 text-ink-suave">
+            Ingrese los datos del paciente para estimar la TFG.
+          </Text>
+
+          <Superficie elevacion="media" className="mb-4 p-5">
             {/* Los tres en una fila, igual que en Crear paciente: son números
                 cortos que alimentan una sola fórmula. */}
             <View className="flex-row gap-2">
@@ -109,27 +117,42 @@ export default function CalculadoraClcr() {
               </View>
             </View>
 
-            <Text className="mb-1.5 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
-              Sexo
+            <Text className="mb-2 mt-1 font-fuerte text-[11px] uppercase tracking-wider text-ink-suave">
+              Sexo biológico
             </Text>
             <View className="flex-row gap-2">
-              {OPCIONES_SEXO.map((o) => (
-                <Chip
-                  key={o.valor}
-                  texto={o.sigla}
-                  activo={sexo === o.valor}
-                  onPress={() => setSexo(o.valor)}
-                />
-              ))}
+              {OPCIONES_SEXO.map((o) => {
+                const activo = sexo === o.valor;
+                return (
+                  <Pressable
+                    key={o.valor}
+                    onPress={() => setSexo(o.valor)}
+                    accessibilityRole="radio"
+                    accessibilityState={{ selected: activo }}
+                    className="flex-1 items-center rounded-full border py-2.5"
+                    style={{
+                      backgroundColor: activo ? '#005228' : col.surface,
+                      borderColor: activo ? '#005228' : col.line,
+                    }}
+                  >
+                    <Text
+                      className="text-body"
+                      style={{ color: activo ? '#FFFFFF' : col.ink }}
+                    >
+                      {o.sigla}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
-          </BloqueFormulario>
+          </Superficie>
 
           {/* El anillo aparece siempre, vacío mientras faltan datos. Que el
               resultado se materialice recién al completar los campos deja al
               médico escribiendo a ciegas sin saber cuánto falta. */}
-          <Superficie elevacion="plana" className="mb-3.5 items-center px-3.5 py-4">
-            <AnilloClcr clcrMlMin={clcr} gradoKdigo={grado} tamano={132} />
-            <Text className="font-sans mt-2.5 text-center text-meta leading-5 text-ink-suave">
+          <Superficie elevacion="media" className="mb-3.5 items-center px-3.5 py-6">
+            <AnilloClcr clcrMlMin={clcr} gradoKdigo={grado} tamano={160} />
+            <Text className="font-sans mt-3 text-center text-meta leading-5 text-ink-suave">
               {clcr !== null
                 ? sexo === 'F'
                   ? 'Cockcroft-Gault, con el factor 0,85 por sexo.'
@@ -158,7 +181,7 @@ export default function CalculadoraClcr() {
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
-    </>
+    </View>
   );
 }
 

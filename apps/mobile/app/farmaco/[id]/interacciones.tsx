@@ -1,8 +1,9 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';
 
 import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { nombreFamilia, nombreLegible } from '@/dominio/restricciones';
+import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { MarcaSinValidar, PieContexto } from '@/ui/restricciones';
@@ -29,9 +30,11 @@ export default function InteraccionesFarmaco() {
   const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'interacciones');
 
   return (
-    <>
-      <Stack.Screen options={{ title: 'Interacciones' }} />
+    <View className="flex-1 bg-paper">
+      <EncabezadoApp />
       <Pantalla>
+        <Text className="mb-4 text-[28px] font-fuerte text-ink">Interacciones</Text>
+
         <ResultadoConsulta
           cargando={isLoading}
           error={error}
@@ -41,7 +44,7 @@ export default function InteraccionesFarmaco() {
           {data ? <Contenido f={data} /> : null}
         </ResultadoConsulta>
       </Pantalla>
-    </>
+    </View>
   );
 }
 

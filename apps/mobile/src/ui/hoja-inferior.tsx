@@ -75,7 +75,7 @@ export function HojaInferior({
     >
       <BottomSheetView className="px-4 pb-9 pt-1">
         {titulo ? (
-          <Text className="mb-1 text-eyebrow font-medio uppercase tracking-wider text-ink-suave">
+          <Text className="mb-1 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
             {titulo}
           </Text>
         ) : null}

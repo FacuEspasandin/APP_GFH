@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+import { Platform, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import type { Cockpit } from '@/api/tipos';
 import * as API from '@/api/endpoints';
@@ -17,6 +18,7 @@ import {
 } from '@/dominio/gestacion';
 import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 
@@ -56,7 +58,14 @@ export default function EmbarazoYLactancia() {
     },
   });
 
-  if (isLoading || !cockpit) return <SkeletonFormulario campos={2} />;
+  if (isLoading || !cockpit) {
+    return (
+      <View className="flex-1 bg-paper">
+        <EncabezadoConTitulo titulo="Embarazo y Lactancia" cierra />
+        <SkeletonFormulario campos={2} />
+      </View>
+    );
+  }
 
   const p = cockpit.paciente;
 
@@ -67,11 +76,13 @@ export default function EmbarazoYLactancia() {
   const numeroSemana = textoSemana.trim() === '' ? undefined : Number(textoSemana);
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-paper"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+    <View className="flex-1 bg-paper">
+      <EncabezadoConTitulo titulo="Embarazo y Lactancia" cierra />
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
         <BloqueFormulario
           titulo="Embarazo"
           etiqueta={embarazoActual === 'si' ? 'Cargado' : 'Sin dato'}
@@ -141,7 +152,8 @@ export default function EmbarazoYLactancia() {
           Guardar y recalcular
         </Boton>
       </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 

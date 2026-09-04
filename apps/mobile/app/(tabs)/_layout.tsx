@@ -26,7 +26,7 @@ export default function LayoutTabs() {
         headerStyle: { backgroundColor: c.fondoHeader },
         headerTintColor: c.textoHeader,
         // Familia y no peso: con fuentes estáticas la negrita es otra familia.
-        headerTitleStyle: { fontFamily: 'IBMPlexSans_700Bold', fontSize: 16 },
+        headerTitleStyle: { fontFamily: 'Inter_700Bold', fontSize: 16 },
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Pacientes' }} />

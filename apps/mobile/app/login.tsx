@@ -2,13 +2,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { z } from 'zod';
 
 import { api, iniciarSesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
 import { BotonVolverFlotante } from '@/ui/boton-volver';
 import { Disclaimer } from '@/ui/disclaimer';
+import { Icono, type NombreIcono } from '@/ui/iconos';
 import { useColores } from '@/ui/tema';
 
 const esquema = z.object({
@@ -65,8 +67,8 @@ export default function Login() {
       <BotonVolverFlotante />
 
       <ScrollView contentContainerClassName="flex-grow justify-center px-6 py-10">
-        <View className="mb-10 items-center">
-          <View className="h-16 w-16 items-center justify-center rounded-card bg-primary">
+        <View className="mb-8 items-center">
+          <View className="h-16 w-16 items-center justify-center rounded-2xl" style={{ backgroundColor: '#005228' }}>
             <Text className="text-lg font-fuerte tracking-widest text-white">GFH</Text>
           </View>
           <Text className="mt-4 text-grande font-fuerte text-ink">Iniciar sesión</Text>
@@ -75,52 +77,67 @@ export default function Login() {
           </Text>
         </View>
 
-        <Campo
-          control={control}
-          nombre="identificador"
-          etiqueta="Email"
-          placeholder="tu@email.com"
-          error={errors.identificador?.message}
-          teclado="email-address"
-        />
-        <Campo
-          control={control}
-          nombre="password"
-          etiqueta="Contraseña"
-          placeholder="••••••••"
-          error={errors.password?.message}
-          secreto
-        />
+        <View
+          className="gap-3 rounded-xl border bg-surface px-5 pb-6 pt-8"
+          style={{
+            borderColor: col.line,
+            borderLeftWidth: 4,
+            borderLeftColor: '#22C55E',
+            shadowColor: '#000',
+            shadowOpacity: 0.05,
+            shadowRadius: 1,
+            shadowOffset: { width: 0, height: 1 },
+          }}
+        >
+          <Campo
+            control={control}
+            nombre="identificador"
+            etiqueta="Email"
+            placeholder="tu@email.com"
+            error={errors.identificador?.message}
+            teclado="email-address"
+            icono="correo"
+          />
+          <Campo
+            control={control}
+            nombre="password"
+            etiqueta="Contraseña"
+            placeholder="••••••••"
+            error={errors.password?.message}
+            secreto
+            icono="candado"
+          />
 
-        {errorServidor ? (
-          <View className="mt-2 rounded-chip border border-line bg-surface p-3">
-            <Text className="font-sans text-meta" style={{ color: col.peligro }}>
+          <Pressable
+            onPress={() => router.push('/recuperar')}
+            accessibilityRole="button"
+            className="items-end pb-1"
+          >
+            <Text className="text-meta font-medio" style={{ color: '#005228' }}>
+              ¿Olvidé mi contraseña?
+            </Text>
+          </Pressable>
+
+          {errorServidor ? (
+            <Text className="text-meta" style={{ color: col.peligro }}>
               {errorServidor}
             </Text>
-          </View>
-        ) : null}
+          ) : null}
 
-        <Pressable
-          onPress={enviar}
-          disabled={isSubmitting}
-          className="mt-6 h-12 flex-row items-center justify-center rounded-chip bg-primary active:bg-primary-hover"
-          style={{ opacity: isSubmitting ? 0.6 : 1 }}
-          accessibilityRole="button"
-        >
-          {isSubmitting ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
-            <Text className="text-body font-fuerte text-white">Entrar</Text>
-          )}
-        </Pressable>
-
-        <Pressable
-          onPress={() => router.push('/recuperar')}
-          accessibilityRole="button"
-          className="mt-5 self-center"
-        >
-          <Text className="text-meta font-medio text-accent">Olvidé mi contraseña</Text>
-        </Pressable>
+          <Pressable
+            onPress={enviar}
+            disabled={isSubmitting}
+            className="h-14 flex-row items-center justify-center rounded-full"
+            style={{ backgroundColor: '#005228', opacity: isSubmitting ? 0.6 : 1 }}
+            accessibilityRole="button"
+          >
+            {isSubmitting ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text className="text-fila font-fuerte text-white">Entrar</Text>
+            )}
+          </Pressable>
+        </View>
       </ScrollView>
 
       <Disclaimer />
@@ -136,6 +153,7 @@ function Campo({
   error,
   secreto,
   teclado,
+  icono,
 }: {
   control: ReturnType<typeof useForm<Campos>>['control'];
   nombre: keyof Campos;
@@ -144,31 +162,52 @@ function Campo({
   error?: string;
   secreto?: boolean;
   teclado?: 'email-address';
+  icono: NombreIcono;
 }) {
   const col = useColores();
+  const [verPassword, setVerPassword] = useState(false);
 
   return (
-    <View className="mb-4">
-      <Text className="mb-1.5 text-eyebrow font-medio uppercase text-ink-suave">{etiqueta}</Text>
-      <Controller
-        control={control}
-        name={nombre}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            value={value}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            placeholder={placeholder}
-            placeholderTextColor={col.tenue}
-            secureTextEntry={secreto}
-            keyboardType={teclado}
-            autoCapitalize="none"
-            autoCorrect={false}
-            accessibilityLabel={etiqueta}
-            className="h-12 rounded-chip border border-line bg-surface px-3.5 text-body text-ink"
-          />
-        )}
-      />
+    <View>
+      <Text className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
+        {etiqueta}
+      </Text>
+      <View className="flex-row items-center">
+        <View className="pointer-events-none absolute left-3.5 z-10">
+          <Icono nombre={icono} tamano={18} color={col.tenue} />
+        </View>
+        <Controller
+          control={control}
+          name={nombre}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              placeholder={placeholder}
+              placeholderTextColor={col.tenue}
+              secureTextEntry={secreto && !verPassword}
+              keyboardType={teclado}
+              autoCapitalize="none"
+              autoCorrect={false}
+              accessibilityLabel={etiqueta}
+              className="h-[52px] flex-1 rounded-lg border border-line bg-surface pl-11 text-body text-ink"
+              style={{ paddingRight: secreto ? 44 : 14 }}
+            />
+          )}
+        />
+        {secreto ? (
+          <Pressable
+            onPress={() => setVerPassword((v) => !v)}
+            accessibilityRole="button"
+            accessibilityLabel={verPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            className="absolute right-3 h-8 w-8 items-center justify-center"
+            hitSlop={6}
+          >
+            <Icono nombre={verPassword ? 'ojoCerrado' : 'ojo'} tamano={18} color={col.tenue} />
+          </Pressable>
+        ) : null}
+      </View>
       {error ? (
         <Text className="font-sans mt-1 text-meta" style={{ color: col.peligro }}>
           {error}

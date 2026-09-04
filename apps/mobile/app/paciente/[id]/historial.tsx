@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { FlashList } from '@shopify/flash-list';
 import { useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
@@ -16,7 +16,9 @@ import {
   type FamiliaEvento,
   type Historial,
 } from '@/dominio/historial';
+import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
+import { Icono, type NombreIcono } from '@/ui/iconos';
 import { Chip, Estado, Pantalla } from '@/ui/kit';
 import {
   NOMBRE_GRUPO,
@@ -26,7 +28,6 @@ import {
   type GrupoDeEvento,
   type Periodo,
 } from '@gfh/shared-types';
-import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
 /**
@@ -42,6 +43,8 @@ import { useColores } from '@/ui/tema';
  */
 export default function HistorialPaciente() {
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
+  const derecha = <BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />;
 
   /**
    * `null` = sin filtrar. Es el estado de arranque a propósito: el historial se
@@ -73,18 +76,28 @@ export default function HistorialPaciente() {
       enabled: Boolean(pacienteId),
     });
 
-  if (isLoading) return <SkeletonLista filas={6} />;
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-paper">
+        <EncabezadoApp derecha={derecha} />
+        <SkeletonLista filas={6} />
+      </View>
+    );
+  }
 
   if (error || !data) {
     return (
-      <Pantalla>
-        <Estado
-          titulo="No se pudo cargar el historial"
-          detalle={error instanceof Error ? error.message : 'Error desconocido.'}
-          accion="Reintentar"
-          onAccion={() => void refetch()}
-        />
-      </Pantalla>
+      <View className="flex-1 bg-paper">
+        <EncabezadoApp derecha={derecha} />
+        <Pantalla>
+          <Estado
+            titulo="No se pudo cargar el historial"
+            detalle={error instanceof Error ? error.message : 'Error desconocido.'}
+            accion="Reintentar"
+            onAccion={() => void refetch()}
+          />
+        </Pantalla>
+      </View>
     );
   }
 
@@ -115,9 +128,12 @@ export default function HistorialPaciente() {
 
   if (eventos.length === 0) {
     return (
-      <Pantalla>
-        <Estado titulo="Sin movimientos" detalle={MOTIVO_DE_VACIO} />
-      </Pantalla>
+      <View className="flex-1 bg-paper">
+        <EncabezadoApp derecha={derecha} />
+        <Pantalla>
+          <Estado titulo="Sin movimientos" detalle={MOTIVO_DE_VACIO} />
+        </Pantalla>
+      </View>
     );
   }
 
@@ -125,6 +141,7 @@ export default function HistorialPaciente() {
     // Mismo padding que `Pantalla`: la barra inferior ocupa su propio espacio
     // en el layout raíz, no flota encima, así que no hay que reservarle nada.
     <View className="flex-1 bg-paper">
+      <EncabezadoApp derecha={derecha} />
       <Filtros
         grupo={grupo}
         periodo={periodo}
@@ -190,11 +207,17 @@ type Fila =
     };
 
 /**
- * Dónde cae el punto: el `pt-2` de la entrada más media línea del título. Es un
- * número y no un centrado porque tiene que coincidir con el texto, no con la
- * caja.
+ * Diámetro del punto del hilo y su ícono interior.
+ *
+ * Antes era un punto de 10px sin ícono — antes/después de la propuesta visual
+ * de Figma (ver PR de rediseño), pasa a ser un círculo de 24px con un ícono
+ * adentro, para que la familia del hecho se lea sin acercarse a leer el
+ * título. El hilo que conecta un punto con el siguiente lo mantenemos: la
+ * captura de Figma no lo dibuja, pero es lo que permite barrer la lista sin
+ * leer cada tarjeta (razón ya validada en este archivo), y sacarlo sería
+ * perder una función real por copiar un único frame estático.
  */
-const ALTO_HASTA_EL_TITULO = 13;
+const DIAMETRO_PUNTO = 24;
 
 /**
  * Una línea del hilo.
@@ -270,6 +293,21 @@ function Filtros({
   );
 }
 
+/**
+ * Ícono y color por familia.
+ *
+ * El verde NO es el verde de severidad «ok» (`#22C55E`) aunque el primer
+ * render de Figma usaba ese tono — acá significaría «este fármaco no tiene
+ * problemas», que es otra escala. Es el verde de marca nuevo, así queda
+ * separado de la severidad clínica igual que antes (ver comentario que
+ * reemplaza este).
+ */
+const MARCA: Record<FamiliaEvento, { color: string; relleno: boolean; icono: NombreIcono | null }> = {
+  tratamiento: { color: '#006D37', relleno: true, icono: 'check' },
+  paciente: { color: '#8CA39A', relleno: true, icono: 'documento' },
+  baja: { color: '#BECABD', relleno: false, icono: null },
+};
+
 function Linea({
   evento,
   primero,
@@ -280,85 +318,127 @@ function Linea({
   ultimo: boolean;
 }) {
   const col = useColores();
-
-  // La baja se distingue por FORMA —un anillo vacío— y no por color. El único
-  // color libre que quedaba para «se sacó algo» era el naranja de atención, y
-  // ese ya significa gravedad en toda la app: usarlo acá diría que suspender un
-  // fármaco es una alerta de nivel medio, que es otra cosa.
-  const marcas: Record<FamiliaEvento, { color: string; relleno: boolean }> = {
-    tratamiento: { color: col.primary, relleno: true },
-    paciente: { color: col.tenue, relleno: true },
-    baja: { color: col.inkSuave, relleno: false },
-  };
-  const marca = marcas[familiaDe(evento.tipo)];
+  const familia = familiaDe(evento.tipo);
+  const marca = MARCA[familia];
+  const esBaja = familia === 'baja';
 
   return (
-    <View className="flex-row">
-      {/* Canal del hilo.
-          El punto va a la altura del TÍTULO y no centrado en la entrada: si se
-          centra, en una entrada alta —las que traen antes/después— el punto
-          queda al lado de la tabla de cambios y deja de señalar el hecho. */}
-      <View className="w-4 items-center">
+    <View className="flex-row pb-4">
+      {/* Canal del hilo: el punto arranca a 4px del techo de la fila, a la
+          misma altura que el borde superior de la tarjeta — no centrado en el
+          título como antes, porque ahora la tarjeta tiene su propio
+          encabezado con hora, y centrar el punto en toda la tarjeta lo
+          alejaría del título en las entradas con tabla de cambios. */}
+      <View style={{ width: DIAMETRO_PUNTO, alignItems: 'center' }}>
         <View
           className="w-px"
-          style={{ height: ALTO_HASTA_EL_TITULO, backgroundColor: primero ? 'transparent' : col.line }}
+          style={{ height: 4, backgroundColor: primero ? 'transparent' : col.line }}
         />
         <View
-          className="h-2.5 w-2.5 rounded-full"
           style={{
-            backgroundColor: marca.relleno ? marca.color : col.paper,
-            borderWidth: marca.relleno ? 0 : 2,
-            borderColor: marca.color,
+            width: DIAMETRO_PUNTO,
+            height: DIAMETRO_PUNTO,
+            borderRadius: DIAMETRO_PUNTO / 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: marca.relleno ? marca.color : col.surface,
+            borderWidth: 2,
+            borderColor: marca.relleno ? col.surface : marca.color,
           }}
-        />
-        <View
-          className="w-px flex-1"
-          style={{ backgroundColor: ultimo ? 'transparent' : col.line }}
-        />
+        >
+          {marca.icono ? (
+            <Icono nombre={marca.icono} tamano={12} color={marca.relleno ? '#FFFFFF' : marca.color} />
+          ) : null}
+        </View>
+        <View className="w-px flex-1" style={{ backgroundColor: ultimo ? 'transparent' : col.line }} />
       </View>
 
-      <View className="flex-1 pb-3 pl-3 pt-2">
-        <Text className="text-meta font-medio text-ink">{evento.titulo}</Text>
+      <View
+        className="ml-3 flex-1 rounded-lg border px-4 py-3.5"
+        style={{
+          backgroundColor: col.surface,
+          borderColor: col.line,
+          opacity: esBaja ? 0.75 : 1,
+          shadowColor: '#000',
+          shadowOpacity: 0.05,
+          shadowRadius: 2,
+          shadowOffset: { width: 0, height: 1 },
+          elevation: esBaja ? 0 : 1,
+        }}
+      >
+        <View className="flex-row items-start justify-between gap-2">
+          <Text
+            className="flex-1 text-fila font-fuerte text-ink"
+            style={esBaja ? { textDecorationLine: 'line-through' } : undefined}
+          >
+            {evento.titulo}
+          </Text>
+          <Text className="font-mono text-eyebrow text-ink-suave">{hora(evento.createdAt)}</Text>
+        </View>
 
         {evento.detalle ? (
-          <Text className="font-sans mt-0.5 text-eyebrow leading-4 text-ink-suave">
-            {evento.detalle}
-          </Text>
+          <Text className="font-sans mt-1 text-meta leading-5 text-ink-suave">{evento.detalle}</Text>
         ) : null}
 
         {evento.cambios && evento.cambios.length > 0 ? (
-          <Superficie elevacion="plana" className="mt-1.5 px-2.5 py-2">
-            {evento.cambios.map((c, i) => (
-              <FilaCambio key={`${c.campo}-${i}`} cambio={c} primera={i === 0} />
-            ))}
-          </Superficie>
+          <TablaCambios cambios={evento.cambios} />
         ) : null}
-
-        <Text className="font-mono mt-1 text-eyebrow text-tenue">{hora(evento.createdAt)}</Text>
       </View>
     </View>
   );
 }
 
-/** «Creatinina · 1.1 mg/dL → 1.8 mg/dL», con el valor viejo tachado. */
-function FilaCambio({ cambio, primera }: { cambio: CambioEvento; primera: boolean }) {
-  const { campo, antes, despues } = leerCambio(cambio);
+/**
+ * Los cambios como tabla (Campo / Antes / Después), no como líneas sueltas.
+ *
+ * Con un solo cambio es una tabla de una fila — se ve un poco solemne para
+ * «Peso: 78 kg → 81 kg», pero gana consistencia: es la MISMA tarjeta la que
+ * trae dos cambios (renal) que la que trae uno (peso), sin que la forma
+ * cambie según cuántos datos vinieron.
+ */
+function TablaCambios({ cambios }: { cambios: CambioEvento[] }) {
+  const col = useColores();
 
   return (
-    <View className={primera ? '' : 'mt-1'}>
-      <Text className="font-sans text-eyebrow leading-5 text-ink-suave">
-        {campo}
-        {'  '}
-        {/* La flecha, y no sólo el tachado: dos números pegados se leen como
-            dos datos, no como uno que cambió por el otro. */}
-        {antes === null ? null : (
-          <Text className="font-mono text-tenue">
-            <Text className="line-through">{antes}</Text>
-            {'  →  '}
-          </Text>
-        )}
-        <Text className="font-mono-fuerte text-ink">{despues}</Text>
-      </Text>
+    <View className="mt-2.5 overflow-hidden rounded-md border" style={{ borderColor: col.line }}>
+      <View
+        className="flex-row border-b px-2.5 py-2"
+        style={{ backgroundColor: col.paper, borderColor: col.line }}
+      >
+        <Text
+          className="font-fuerte uppercase tracking-wider text-ink-suave"
+          style={{ flex: 1.3, fontSize: 10 }}
+        >
+          Campo
+        </Text>
+        <Text className="font-fuerte uppercase tracking-wider text-ink-suave" style={{ flex: 1, fontSize: 10 }}>
+          Antes
+        </Text>
+        <Text className="font-fuerte uppercase tracking-wider text-ink-suave" style={{ flex: 1, fontSize: 10 }}>
+          Después
+        </Text>
+      </View>
+
+      {cambios.map((c, i) => {
+        const { campo, antes, despues } = leerCambio(c);
+        return (
+          <View
+            key={`${campo}-${i}`}
+            className="flex-row items-center px-2.5 py-2"
+            style={i < cambios.length - 1 ? { borderBottomWidth: 1, borderColor: col.line } : undefined}
+          >
+            <Text className="font-sans text-eyebrow text-ink" style={{ flex: 1.3 }}>
+              {campo}
+            </Text>
+            <Text className="font-mono text-eyebrow text-tenue line-through" style={{ flex: 1 }}>
+              {antes ?? '—'}
+            </Text>
+            <Text className="font-mono-fuerte text-eyebrow text-ink" style={{ flex: 1 }}>
+              {despues}
+            </Text>
+          </View>
+        );
+      })}
     </View>
   );
 }

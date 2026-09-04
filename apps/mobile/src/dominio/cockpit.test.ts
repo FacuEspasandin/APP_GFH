@@ -2,77 +2,15 @@ import { describe, expect, it } from 'vitest';
 
 import {
   destacados,
-  detalleCockpit,
   hepaticoSinEvaluar,
   opcionesDelPaciente,
   peoresPorCategoria,
-  titularCockpit,
   type HallazgoResumible,
 } from './cockpit';
 
 const h = (categoria: HallazgoResumible['categoria'], rango: 0 | 1 | 2 | 3): HallazgoResumible => ({
   categoria,
   rango,
-});
-
-describe('titular del cockpit', () => {
-  it('sin hallazgos no inventa un veredicto', () => {
-    expect(titularCockpit([])).toBe('Sin hallazgos');
-  });
-
-  it('manda la peor gravedad, no la más numerosa', () => {
-    const hallazgos = [
-      h('INTERACCION', 0),
-      h('CONDICION', 3),
-      h('CONDICION', 3),
-      h('CONDICION', 3),
-    ];
-    expect(titularCockpit(hallazgos)).toBe('1 interacción contraindicada');
-  });
-
-  it('cuenta cuántos hay de la peor gravedad, no el total', () => {
-    expect(titularCockpit([h('CONDICION', 1), h('CONDICION', 1), h('INTERACCION', 3)])).toBe(
-      '2 alertas graves',
-    );
-  });
-
-  it('concuerda el adjetivo con el sustantivo de la categoría', () => {
-    // "1 interacción contraindicado" sería incorrecto: RANGO_ETIQUETA es
-    // masculino porque describe un hallazgo genérico.
-    expect(titularCockpit([h('INTERACCION', 0)])).toBe('1 interacción contraindicada');
-    expect(titularCockpit([h('CONDICION', 2)])).toBe('1 alerta de atención');
-    expect(titularCockpit([h('AJUSTE_RENAL', 1)])).toBe('1 ajuste renal grave');
-    expect(titularCockpit([h('AJUSTE_RENAL', 1), h('AJUSTE_RENAL', 1)])).toBe(
-      '2 ajustes renales graves',
-    );
-  });
-
-  it('rango 2 en plural no dice "de atencións"', () => {
-    expect(titularCockpit([h('CONDICION', 2), h('CONDICION', 2)])).toBe('2 alertas de atención');
-  });
-});
-
-describe('detalle del cockpit', () => {
-  it('sin hallazgos aclara que el silencio no es seguridad (regla 5)', () => {
-    expect(detalleCockpit([])).toContain('No es lo mismo que decir que sea seguro');
-  });
-
-  it('desglosa por gravedad, de la peor a la más leve', () => {
-    const hallazgos = [h('CONDICION', 2), h('INTERACCION', 0), h('CONDICION', 2), h('CONDICION', 1)];
-    expect(detalleCockpit(hallazgos)).toBe(
-      '4 hallazgos en total: 1 contraindicado, 1 grave, 2 de atención.',
-    );
-  });
-
-  it('no lista las gravedades que no aparecen', () => {
-    expect(detalleCockpit([h('INTERACCION', 3)])).toBe('1 hallazgo en total: 1 informativo.');
-  });
-
-  it('pluraliza "hallazgos" y cada gravedad', () => {
-    expect(detalleCockpit([h('INTERACCION', 3), h('INTERACCION', 3)])).toBe(
-      '2 hallazgos en total: 2 informativos.',
-    );
-  });
 });
 
 describe('peor rango por categoría', () => {

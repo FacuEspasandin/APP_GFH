@@ -80,6 +80,22 @@ export interface PrescripcionCockpit {
 
 export type CategoriaHallazgo = 'INTERACCION' | 'CONDICION' | 'AJUSTE_RENAL' | 'AJUSTE_HEPATICO';
 
+/** Mecanismo clínico de una interacción — espejo de `TipoRiesgoInteraccion` en
+ *  shared-types. Ausente en CONDICION/AJUSTE_*, que no lo tienen. */
+export type TipoRiesgoInteraccion =
+  | 'SANGRADO'
+  | 'MIOPATIA_RABDOMIOLISIS'
+  | 'MIELOSUPRESION'
+  | 'SINDROME_SEROTONINERGICO'
+  | 'HIPERPOTASEMIA'
+  | 'NEFROTOXICIDAD'
+  | 'TOXICIDAD_DIGITALICA'
+  | 'TOXICIDAD_LITIO'
+  | 'HIPOGLUCEMIA'
+  | 'EFICACIA_REDUCIDA'
+  | 'QT_PROLONGADO'
+  | 'ABSORCION_REDUCIDA';
+
 export interface Hallazgo {
   clave: string;
   categoria: CategoriaHallazgo;
@@ -91,6 +107,8 @@ export interface Hallazgo {
   prescripcionIds: string[];
   estadoValidacion: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
   mostradoPeseARechazo: boolean;
+  /** Solo en INTERACCION — clave de agrupación del cockpit. */
+  tipoRiesgo?: TipoRiesgoInteraccion;
 }
 
 export interface Cockpit {

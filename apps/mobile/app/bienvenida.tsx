@@ -6,15 +6,17 @@ export default function Bienvenida() {
   const router = useRouter();
 
   return (
-    <View className="flex-1 bg-primary px-6 pb-10 pt-24">
+    <View className="flex-1 px-6 pb-6 pt-24" style={{ backgroundColor: '#006D37' }}>
       <View className="flex-1 items-center justify-center">
-        <View className="h-24 w-24 items-center justify-center rounded-card bg-white/10">
-          <Text className="text-2xl font-fuerte tracking-widest text-white">GFH</Text>
+        <View className="h-24 w-24 items-center justify-center rounded-2xl bg-white">
+          <Text className="text-2xl font-fuerte" style={{ color: '#005228' }}>
+            GFH
+          </Text>
         </View>
-        <Text className="mt-6 text-center text-grande font-fuerte text-white">
+        <Text className="mt-8 text-center text-grande font-fuerte text-white">
           ¿Es seguro este fármaco para este paciente, hoy?
         </Text>
-        <Text className="font-sans mt-3 text-center text-body leading-6 text-white/70">
+        <Text className="font-sans mt-4 text-center text-body leading-6 text-white/80">
           Interacciones, ajuste renal y alertas por condición o alergia, calculados sobre lo que
           cargaste.
         </Text>
@@ -23,20 +25,34 @@ export default function Bienvenida() {
       <Pressable
         onPress={() => router.push('/login')}
         accessibilityRole="button"
-        className="h-12 items-center justify-center rounded-chip bg-white"
+        className="h-14 items-center justify-center rounded-full bg-white"
+        style={{
+          shadowColor: '#000',
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+          shadowOffset: { width: 0, height: 4 },
+          elevation: 3,
+        }}
       >
-        <Text className="text-body font-fuerte text-primary">Iniciar sesión</Text>
+        <Text
+          className="font-fuerte text-eyebrow uppercase tracking-wider"
+          style={{ color: '#005228' }}
+        >
+          Iniciar sesión
+        </Text>
       </Pressable>
 
       <Pressable
         onPress={() => router.push('/registro')}
         accessibilityRole="button"
-        className="mt-3 h-12 items-center justify-center rounded-chip border border-white/40"
+        className="mt-2 h-14 items-center justify-center rounded-full border border-white"
       >
-        <Text className="text-body font-fuerte text-white">Registrarme</Text>
+        <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-white">
+          Registrarme
+        </Text>
       </Pressable>
 
-      <Text className="font-sans mt-6 text-center text-eyebrow leading-4 text-white/60">
+      <Text className="font-sans mt-4 text-center text-eyebrow leading-4 text-white/60">
         Herramienta de apoyo a la decisión clínica. No sustituye el juicio del médico tratante.
       </Text>
     </View>
