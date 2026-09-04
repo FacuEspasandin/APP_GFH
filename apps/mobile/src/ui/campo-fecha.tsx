@@ -1,5 +1,6 @@
+import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useState } from 'react';
-import { Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Modal, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { Icono } from './iconos';
 import {
@@ -19,10 +20,28 @@ import { useColores } from './tema';
  *
  * Las dos formas de cargar conviven porque sirven para cosas distintas: quien
  * sabe la fecha la teclea más rápido de lo que navega un calendario, y quien
- * la tiene que buscar prefiere verla. Para fechas de nacimiento el calendario
- * arranca por el AÑO — desde 2026 hasta 1948 hay 936 meses, y con flechas de
- * mes eso no se recorre.
+ * la tiene que buscar prefiere verla.
+ *
+ * El calendario es el del SISTEMA en iOS y Android: el médico ya sabe usarlo y
+ * en Android trae su propio salto de año, que es lo que hacía falta para una
+ * fecha de nacimiento (desde 2026 hasta 1948 hay 936 meses). En web —donde no
+ * hay picker nativo— sigue el calendario propio, que arranca por el AÑO por esa
+ * misma razón.
  */
+
+/**
+ * El picker nativo devuelve una fecha LOCAL y todo el resto de la app lee en
+ * UTC (`aTexto`, `validarFecha`). Sin esta conversión, en un huso al este de
+ * Greenwich la medianoche local del 7 cae el 6 en UTC y la fecha de nacimiento
+ * se guarda un día antes. Se reconstruye por componentes, que es lo único que
+ * no depende del huso.
+ */
+function aUtc(local: Date): Date {
+  return new Date(Date.UTC(local.getFullYear(), local.getMonth(), local.getDate()));
+}
+
+/** Ninguna fecha de nacimiento es futura, y el calendario no debería ofrecerla. */
+const HOY = () => new Date();
 export function CampoFecha({
   etiqueta,
   valor,
@@ -46,6 +65,32 @@ export function CampoFecha({
   // terminar bien; sí apenas un tramo es imposible.
   const error = errorExterno ?? (tocado || validacion.completa ? validacion.error : null);
 
+  const elegir = (f: Date) => {
+    onChange(aTexto(aUtc(f)));
+    setTocado(true);
+    setAbierto(false);
+  };
+
+  /*
+   * Android abre el diálogo del sistema por llamada y no montando un
+   * componente; iOS y web sí necesitan que algo se dibuje, por eso sólo ahí se
+   * usa `abierto`.
+   */
+  const abrirCalendario = () => {
+    if (Platform.OS === 'android') {
+      DateTimePickerAndroid.open({
+        value: validacion.fecha ?? HOY(),
+        mode: 'date',
+        maximumDate: HOY(),
+        onChange: (evento, fecha) => {
+          if (evento.type === 'set' && fecha) elegir(fecha);
+        },
+      });
+      return;
+    }
+    setAbierto(true);
+  };
+
   return (
     <View className="mb-3.5">
       <Text className="mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
@@ -66,7 +111,7 @@ export function CampoFecha({
           style={{ borderColor: error ? '#EF4444' : col.line }}
         />
         <Pressable
-          onPress={() => setAbierto(true)}
+          onPress={abrirCalendario}
           accessibilityRole="button"
           accessibilityLabel="Elegir del calendario"
           className="h-12 w-12 items-center justify-center rounded-chip border border-line bg-surface"
@@ -85,16 +130,39 @@ export function CampoFecha({
         </Text>
       ) : null}
 
-      <Calendario
-        visible={abierto}
-        inicial={validacion.fecha}
-        onCerrar={() => setAbierto(false)}
-        onElegir={(f) => {
-          onChange(aTexto(f));
-          setTocado(true);
-          setAbierto(false);
-        }}
-      />
+      {Platform.OS === 'ios' ? (
+        /* En iOS el picker se dibuja inline: va adentro de una hoja propia con
+           su botón de cerrar, porque la rueda sola no tiene forma de salir. */
+        <Modal visible={abierto} transparent animationType="slide" onRequestClose={() => setAbierto(false)}>
+          <Pressable className="flex-1 justify-end" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }} onPress={() => setAbierto(false)}>
+            <Pressable className="rounded-t-sheet bg-surface px-4 pb-8 pt-3" onPress={(e) => e.stopPropagation()}>
+              <View className="mb-2 flex-row justify-end">
+                <Pressable onPress={() => setAbierto(false)} accessibilityRole="button" hitSlop={8}>
+                  <Text className="text-fila font-medio" style={{ color: col.primary }}>
+                    Listo
+                  </Text>
+                </Pressable>
+              </View>
+              <DateTimePicker
+                value={validacion.fecha ?? HOY()}
+                mode="date"
+                display="spinner"
+                maximumDate={HOY()}
+                onChange={(_evento, fecha) => {
+                  if (fecha) onChange(aTexto(aUtc(fecha)));
+                }}
+              />
+            </Pressable>
+          </Pressable>
+        </Modal>
+      ) : Platform.OS === 'web' ? (
+        <Calendario
+          visible={abierto}
+          inicial={validacion.fecha}
+          onCerrar={() => setAbierto(false)}
+          onElegir={elegir}
+        />
+      ) : null}
     </View>
   );
 }

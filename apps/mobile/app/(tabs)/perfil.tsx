@@ -98,6 +98,13 @@ export default function PerfilPantalla() {
           valor={ETIQUETA_TEMA[tema]}
           onPress={() => router.push('/perfil/tema')}
         />
+        {/* Es del TELÉFONO y no de la cuenta: por eso no muestra valor traído
+            del servidor como las otras dos. Ver `api/bloqueo.ts`. */}
+        <Opcion
+          icono="candado"
+          titulo="Bloqueo con huella"
+          onPress={() => router.push('/perfil/bloqueo')}
+        />
         <Opcion
           icono="campana"
           titulo="Notificaciones"

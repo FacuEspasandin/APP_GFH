@@ -1,6 +1,7 @@
+import * as Burnt from 'burnt';
 import { AnimatePresence, MotiView } from 'moti';
 import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from 'react';
-import { Text } from 'react-native';
+import { Platform, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { hapticaSeleccion } from './haptica';
@@ -19,12 +20,17 @@ import { hapticaSeleccion } from './haptica';
  * cambió la medicación de un paciente, el médico tiene que poder volver a
  * mirarlo, no haberlo alcanzado a leer.
  *
- * Hecho con moti —que ya estaba instalada— y no con una librería de toasts
- * nativos: las nativas se ven mejor pero no corren en Expo Go, y no se puede
- * verificar lo que no se puede abrir.
+ * En iOS y Android lo dibuja `burnt`, que es el aviso nativo del sistema: se
+ * ve como el del teléfono y no como una caja nuestra. En web —donde `burnt` no
+ * existe— cae al cartel hecho con moti, que es el que estaba antes y funciona
+ * igual. Es la única diferencia entre plataformas y es de forma, no de qué se
+ * dice.
  */
 
 const MS_VISIBLE = 2600;
+
+/** `burnt` es nativo y en web no hay a qué llamar. */
+const NATIVO = Platform.OS === 'ios' || Platform.OS === 'android';
 
 /** Alto del encabezado de `Stack`, para que el aviso caiga debajo y no encima. */
 const ALTO_ENCABEZADO = 52;
@@ -45,11 +51,18 @@ export function ProveedorAviso({ children }: { children: ReactNode }) {
   const inset = useSafeAreaInsets();
 
   const avisar = useCallback((t: string) => {
+    hapticaSeleccion();
+
+    if (NATIVO) {
+      // El sistema ya encola y descarta solo; no hay reloj que llevar.
+      Burnt.toast({ title: t, preset: 'done', haptic: 'none', duration: MS_VISIBLE / 1000 });
+      return;
+    }
+
     // Un aviso nuevo pisa al anterior en vez de encolarse: dos carteles
     // seguidos obligan a leer el segundo a las apuradas, y el que importa
     // siempre es el último.
     if (reloj.current) clearTimeout(reloj.current);
-    hapticaSeleccion();
     setTexto(t);
     reloj.current = setTimeout(() => setTexto(null), MS_VISIBLE);
   }, []);

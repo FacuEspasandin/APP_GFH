@@ -36,3 +36,6 @@ Thumbs.db
 # Capturas de `pnpm capturas` — se regeneran, no se versionan
 .capturas/
 /android/
+
+# Volcados de jerarquía de UI de Android (uiautomator), de sesiones de debug.
+scratch-ui*.xml

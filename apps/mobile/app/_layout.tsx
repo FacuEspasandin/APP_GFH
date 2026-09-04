@@ -14,6 +14,7 @@ import {
   registrarManejadorLimitePlan,
   registrarManejadorSuscripcionVencida,
 } from '@/api/cliente';
+import { iniciarReporteDeErrores } from '@/api/errores';
 import { MS_MAXIMO, opcionesDeshidratado, persistidor } from '@/api/persistencia';
 import { rutaPaywall } from '@/dominio/plan-gratis';
 import { ProveedorAviso } from '@/ui/aviso';
@@ -21,6 +22,10 @@ import { useFuentes } from '@/ui/fuentes';
 import { MenuInferior } from '@/ui/menu-inferior';
 import { activarPantallaCompletaWeb } from '@/ui/pantalla-completa-web';
 import { coloresChrome, ProveedorTema, useTema } from '@/ui/tema';
+
+/* Antes de que se monte nada: un error en el primer render también tiene que
+   reportarse. Sin DSN configurado no hace nada — ver `api/errores.ts`. */
+iniciarReporteDeErrores();
 
 export default function LayoutRaiz() {
   useEffect(() => activarPantallaCompletaWeb(), []);
@@ -233,6 +238,7 @@ function Navegacion() {
         {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
         <Stack.Screen name="perfil/notificaciones" options={{ headerShown: false }} />
         <Stack.Screen name="perfil/umbral" options={{ headerShown: false }} />
+        <Stack.Screen name="perfil/bloqueo" options={{ headerShown: false }} />
         {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
         <Stack.Screen name="perfil/suscripcion" options={{ headerShown: false }} />
         {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
