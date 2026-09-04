@@ -10,6 +10,7 @@ import {
 import type { AlergiaPaciente, GrupoAlergenico } from '../../dominio/clinico/alergias';
 import type { Curacion } from '../../dominio/clinico/interacciones';
 import type {
+  AjusteHepaticoDeFarmaco,
   AjusteRenalDeFarmaco,
   AlertaDeCatalogo,
   ComponenteConGrupos,
@@ -146,12 +147,18 @@ export async function cargarContextosDeMedico(
   const codigos = [...todosLosCodigos];
 
   // (6)-(9) El catálogo, acotado a lo que este médico realmente receta.
-  const [ajustesRenales, alertas, grupos, curaciones] = await Promise.all([
+  const [ajustesRenales, ajustesHepaticos, alertas, grupos, curaciones] = await Promise.all([
     paIds.length === 0
       ? Promise.resolve([])
       : prisma.ajusteRenalFarmaco.findMany({
           where: { principioActivoId: { in: paIds } },
           include: { rangos: { orderBy: { orden: 'asc' } } },
+        }),
+    paIds.length === 0
+      ? Promise.resolve([])
+      : prisma.ajusteHepaticoFarmaco.findMany({
+          where: { principioActivoId: { in: paIds } },
+          include: { rangos: true },
         }),
     paIds.length === 0 || codigos.length === 0
       ? Promise.resolve([])
@@ -189,6 +196,26 @@ export async function cargarContextosDeMedico(
       })),
     });
     ajustesPorPa.set(a.principioActivoId, lista);
+  }
+
+  const ajustesHepaticosPorPa = new Map<string, AjusteHepaticoDeFarmaco[]>();
+  for (const a of ajustesHepaticos) {
+    const lista = ajustesHepaticosPorPa.get(a.principioActivoId) ?? [];
+    lista.push({
+      principioActivoId: a.principioActivoId,
+      viaAdministracion: a.viaAdministracion,
+      dosisFuncionNormal: a.dosisFuncionNormal,
+      metodoAjuste: a.metodoAjuste,
+      requiereRevision: a.requiereRevision,
+      estadoValidacion: a.estadoValidacion,
+      rangos: a.rangos.map((r) => ({
+        id: r.id,
+        clase: r.clase,
+        textoRecomendacion: r.textoRecomendacion,
+        tipo: r.tipo,
+      })),
+    });
+    ajustesHepaticosPorPa.set(a.principioActivoId, lista);
   }
 
   const alertasDominio: AlertaDeCatalogo[] = alertas.map((a) => ({
@@ -270,6 +297,7 @@ export async function cargarContextosDeMedico(
       // no las modifica.
       gruposAlergenicos: gruposMap,
       ajustesRenales: ajustesPorPa,
+      ajustesHepaticos: ajustesHepaticosPorPa,
       alertas: alertasDominio,
       curaciones: curacionesMap,
       umbralAdultoMayor: umbral,

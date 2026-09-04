@@ -248,24 +248,78 @@ describe('datos hepáticos', () => {
     expect(new Date(d.childPughMedidoAt as string).getTime()).toBeLessThanOrEqual(Date.now() + 1000);
   });
   describe('herramienta suelta', () => {
+    let conTabla: string; // Warfarina: tiene fila de ajuste hepático cargada
+    let sinTabla: string; // cualquier PA sin fila cargada
+
+    beforeAll(async () => {
+      const [warfarina, otro] = await Promise.all([
+        ctx.prisma.principioActivo.findUniqueOrThrow({
+          where: { nombre: 'Warfarina' },
+          select: { id: true },
+        }),
+        ctx.prisma.principioActivo.findFirstOrThrow({
+          where: { nombre: 'Amiodarona' },
+          select: { id: true },
+        }),
+      ]);
+      conTabla = warfarina.id;
+      sinTabla = otro.id;
+    });
+
     it('calcula sin paciente y sin guardar', async () => {
-      const r = await api.post('/herramientas/ajuste-hepatico', COMPLETO_A, medico.token);
+      const r = await api.post(
+        '/herramientas/ajuste-hepatico',
+        { ...COMPLETO_A, principioActivoIds: [conTabla] },
+        medico.token,
+      );
       expect(r.status).toBe(200);
       expect(r.cuerpo!.data.clase).toBe('A');
       expect(r.cuerpo!.data.glosa).toMatch(/compensada/i);
     });
 
-    it('avisa que la tabla de ajuste por fármaco todavía no existe', async () => {
-      const r = await api.post('/herramientas/ajuste-hepatico', COMPLETO_A, medico.token);
-      expect(r.cuerpo!.data.tablaDisponible).toBe(false);
-      expect(r.cuerpo!.data.resultados).toEqual([]);
+    it('con clase y tabla, devuelve la recomendación de esa clase', async () => {
+      const r = await api.post(
+        '/herramientas/ajuste-hepatico',
+        { ...COMPLETO_A, principioActivoIds: [conTabla] },
+        medico.token,
+      );
+      const resultado = (r.cuerpo!.data.resultados as Array<Record<string, unknown>>)[0]!;
+      expect(resultado.sinDatos).toBe(false);
+      expect(resultado.nombre).toBe('Warfarina');
+      expect(resultado.tipo).toBe('REDUCIR_DOSIS');
     });
 
-    it('sin datos devuelve vacío, no una clase', async () => {
-      const r = await api.post('/herramientas/ajuste-hepatico', {}, medico.token);
+    it('sin tabla para ese fármaco, avisa sin datos en vez de inventar', async () => {
+      const r = await api.post(
+        '/herramientas/ajuste-hepatico',
+        { ...COMPLETO_A, principioActivoIds: [sinTabla] },
+        medico.token,
+      );
+      const resultado = (r.cuerpo!.data.resultados as Array<Record<string, unknown>>)[0]!;
+      expect(resultado.sinDatos).toBe(true);
+    });
+
+    it('sin los cinco criterios devuelve clase null y ningún resultado por fármaco', async () => {
+      const r = await api.post(
+        '/herramientas/ajuste-hepatico',
+        { principioActivoIds: [conTabla] },
+        medico.token,
+      );
       expect(r.cuerpo!.data.clase).toBeNull();
       expect(r.cuerpo!.data.puntos).toBe(0);
       expect(r.cuerpo!.data.glosa).toBeNull();
+      expect(r.cuerpo!.data.resultados).toEqual([]);
+    });
+
+    it('la clase puede pasarse directo, sin recalcularla de los cinco criterios', async () => {
+      const r = await api.post(
+        '/herramientas/ajuste-hepatico',
+        { principioActivoIds: [conTabla], clase: 'C' },
+        medico.token,
+      );
+      expect(r.cuerpo!.data.clase).toBe('C');
+      const resultado = (r.cuerpo!.data.resultados as Array<Record<string, unknown>>)[0]!;
+      expect(resultado.tipo).toBe('CONTRAINDICADO');
     });
   });
 });

@@ -3,6 +3,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { gradoKdigo, parClave, RANGO_POR_TIPO_AJUSTE , calcularChildPugh, GLOSA_CLASE } from '@gfh/shared-types';
 
 import { elegirRango } from '../../dominio/clinico/ajuste-renal';
+import { elegirRangoPorClase } from '../../dominio/clinico/ajuste-hepatico';
 import { evaluarAlergias, type GrupoAlergenico } from '../../dominio/clinico/alergias';
 import { calcularClcr, DatoClinicoInvalido } from '@gfh/shared-types';
 import { aplicaEnSemana } from '../../dominio/clinico/condiciones';
@@ -240,38 +241,81 @@ export class HerramientasService {
   }
 
   /**
-   * Herramienta 4: ajuste hepático.
+   * Herramienta 4: N fármacos contra una clase de Child-Pugh, directa o
+   * calculada. Mismo patrón que `ajusteRenal`: no guarda nada (modelo §5).
    *
-   * No hay fuente de datos: GFH no tiene tablas hepáticas y la clasificación
-   * clínica todavía no está confirmada. Se responde explícitamente "sin datos"
-   * en vez de devolver una lista vacía que se lea como "no hay problema".
+   * A diferencia del renal no hace falta `elegirRango` sobre un continuo — la
+   * clase ya es la clave, la búsqueda es directa (`elegirRangoPorClase`).
    */
-  /**
-   * Child-Pugh sin paciente. No guarda nada: las herramientas sueltas son
-   * descartables a propósito (modelo §5).
-   *
-   * `disponible: false` sigue significando lo mismo que antes —no hay tabla de
-   * ajuste por fármaco— pero ahora la clase sí se calcula. Pasar de «no se
-   * puede evaluar» a «clase B, sin tabla todavía» es la diferencia entre una
-   * pantalla muerta y una que sirve.
-   */
-  ajusteHepatico(dto: HerramientaHepaticaDto) {
-    const r = calcularChildPugh({
+  async ajusteHepatico(dto: HerramientaHepaticaDto) {
+    const calculo = calcularChildPugh({
       bilirrubinaMgDl: dto.bilirrubinaMgDl,
       albuminaGDl: dto.albuminaGDl,
       inr: dto.inr,
       ascitis: dto.ascitis,
       encefalopatia: dto.encefalopatia,
     });
+    const clase = dto.clase ?? calculo.clase;
 
-    return {
-      ...r,
-      glosa: r.clase === null ? null : GLOSA_CLASE[r.clase],
-      /** La tabla de ajuste por fármaco: sigue sin existir. */
-      tablaDisponible: false,
-      motivo:
-        'La clase se calcula, pero todavía no hay tabla de ajuste por fármaco contra la cual evaluarla.',
-      resultados: [],
+    const base = {
+      ...calculo,
+      clase,
+      glosa: clase === null ? null : GLOSA_CLASE[clase],
     };
+
+    const principioActivoIds = dto.principioActivoIds ?? [];
+    if (clase === null || principioActivoIds.length === 0) {
+      return { ...base, resultados: [] };
+    }
+
+    const ajustes = await this.prisma.ajusteHepaticoFarmaco.findMany({
+      where: { principioActivoId: { in: principioActivoIds } },
+      include: {
+        rangos: true,
+        principioActivo: { select: { id: true, nombre: true } },
+      },
+    });
+
+    const porFarmaco = new Map<string, (typeof ajustes)[number][]>();
+    for (const a of ajustes) {
+      porFarmaco.set(a.principioActivoId, [...(porFarmaco.get(a.principioActivoId) ?? []), a]);
+    }
+
+    const resultados = principioActivoIds.map((paId) => {
+      const deEsteFarmaco = porFarmaco.get(paId);
+      if (!deEsteFarmaco || deEsteFarmaco.length === 0) {
+        // Sin tabla = sin datos. No es un error y no se inventa una dosis.
+        return { principioActivoId: paId, nombre: null, sinDatos: true };
+      }
+
+      const ajuste =
+        deEsteFarmaco.find((a) => a.viaAdministracion === 'NO_ESPECIFICADA') ?? deEsteFarmaco[0]!;
+      const elegido = elegirRangoPorClase(
+        ajuste.rangos.map((r) => ({
+          id: r.id,
+          clase: r.clase,
+          textoRecomendacion: r.textoRecomendacion,
+          tipo: r.tipo,
+        })),
+        clase,
+      );
+
+      return {
+        principioActivoId: paId,
+        nombre: ajuste.principioActivo.nombre,
+        sinDatos: false,
+        via: ajuste.viaAdministracion,
+        dosisFuncionNormal: ajuste.dosisFuncionNormal,
+        metodoAjuste: ajuste.metodoAjuste,
+        requiereRevision: ajuste.requiereRevision,
+        recomendacion: elegido?.textoRecomendacion ?? null,
+        tipo: elegido?.tipo ?? null,
+        rangoGravedad: elegido
+          ? (RANGO_POR_TIPO_AJUSTE[elegido.tipo as keyof typeof RANGO_POR_TIPO_AJUSTE] ?? null)
+          : null,
+      };
+    });
+
+    return { ...base, resultados };
   }
 }

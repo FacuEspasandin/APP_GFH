@@ -281,6 +281,32 @@ describe('contrato con el mobile', () => {
     );
   });
 
+  it('herramientas/hepatico.tsx — modo directo y modo calculado', async () => {
+    aceptado(
+      await api.post(
+        '/herramientas/ajuste-hepatico',
+        { principioActivoIds: [principioActivoId], clase: 'B' },
+        medico.token,
+      ),
+      'hepático directo',
+    );
+    aceptado(
+      await api.post(
+        '/herramientas/ajuste-hepatico',
+        {
+          principioActivoIds: [principioActivoId],
+          bilirrubinaMgDl: 1.0,
+          albuminaGDl: 4.0,
+          inr: 1.1,
+          ascitis: 'AUSENTE',
+          encefalopatia: 'AUSENTE',
+        },
+        medico.token,
+      ),
+      'hepático calculado',
+    );
+  });
+
   it('herramientas/condicion-alergia.tsx', async () => {
     const grupos = await api.get('/catalogo/grupos-alergenicos', medico.token);
     const condiciones = await api.get('/catalogo/condiciones', medico.token);

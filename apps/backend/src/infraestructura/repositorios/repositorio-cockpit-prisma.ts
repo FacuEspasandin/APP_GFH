@@ -26,6 +26,7 @@
 import type { PrismaClient } from '@prisma/client';
 
 import type {
+  AjusteHepaticoDeFarmaco,
   AjusteRenalDeFarmaco,
   AlertaDeCatalogo,
   ComponenteConGrupos,
@@ -135,12 +136,18 @@ export class RepositorioCockpitPrisma implements RepositorioCockpit {
 
     // (6)-(9) El catálogo. Acotado por los PA que el paciente realmente toma —
     //         nunca se trae el catálogo entero.
-    const [ajustesRenales, alertas, grupos, curaciones] = await Promise.all([
+    const [ajustesRenales, ajustesHepaticos, alertas, grupos, curaciones] = await Promise.all([
       principioActivoIds.length === 0
         ? Promise.resolve([])
         : this.prisma.ajusteRenalFarmaco.findMany({
             where: { principioActivoId: { in: principioActivoIds } },
             include: { rangos: { orderBy: { orden: 'asc' } } },
+          }),
+      principioActivoIds.length === 0
+        ? Promise.resolve([])
+        : this.prisma.ajusteHepaticoFarmaco.findMany({
+            where: { principioActivoId: { in: principioActivoIds } },
+            include: { rangos: true },
           }),
       principioActivoIds.length === 0 || codigosTodos.length === 0
         ? Promise.resolve([])
@@ -179,6 +186,26 @@ export class RepositorioCockpitPrisma implements RepositorioCockpit {
         })),
       });
       ajustesPorPa.set(a.principioActivoId, lista);
+    }
+
+    const ajustesHepaticosPorPa = new Map<string, AjusteHepaticoDeFarmaco[]>();
+    for (const a of ajustesHepaticos) {
+      const lista = ajustesHepaticosPorPa.get(a.principioActivoId) ?? [];
+      lista.push({
+        principioActivoId: a.principioActivoId,
+        viaAdministracion: a.viaAdministracion,
+        dosisFuncionNormal: a.dosisFuncionNormal,
+        metodoAjuste: a.metodoAjuste,
+        requiereRevision: a.requiereRevision,
+        estadoValidacion: a.estadoValidacion,
+        rangos: a.rangos.map((r) => ({
+          id: r.id,
+          clase: r.clase,
+          textoRecomendacion: r.textoRecomendacion,
+          tipo: r.tipo,
+        })),
+      });
+      ajustesHepaticosPorPa.set(a.principioActivoId, lista);
     }
 
     const alertasDominio: AlertaDeCatalogo[] = alertas.map((a) => ({
@@ -251,6 +278,7 @@ export class RepositorioCockpitPrisma implements RepositorioCockpit {
       alergias: alergiasDominio,
       gruposAlergenicos: gruposMap,
       ajustesRenales: ajustesPorPa,
+      ajustesHepaticos: ajustesHepaticosPorPa,
       alertas: alertasDominio,
       curaciones: curacionesMap,
       umbralAdultoMayor: umbral,

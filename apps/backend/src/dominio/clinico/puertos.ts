@@ -17,6 +17,7 @@ import type { SeveridadAlerta } from './condiciones';
 import type { ComponenteActivo, Curacion } from './interacciones';
 import type { AlergiaPaciente, GrupoAlergenico } from './alergias';
 import type { RangoClcr } from './ajuste-renal';
+import type { RangoChildPugh } from './ajuste-hepatico';
 
 /**
  * Un componente activo con sus grupos alergénicos ya resueltos. Se traen en la
@@ -49,6 +50,16 @@ export interface AjusteRenalDeFarmaco {
   requiereRevision: boolean;
   estadoValidacion: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
   rangos: RangoClcr[];
+}
+
+export interface AjusteHepaticoDeFarmaco {
+  principioActivoId: string;
+  viaAdministracion: string;
+  dosisFuncionNormal: string;
+  metodoAjuste: string;
+  requiereRevision: boolean;
+  estadoValidacion: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
+  rangos: RangoChildPugh[];
 }
 
 export interface AlertaDeCatalogo {
@@ -97,6 +108,8 @@ export interface ContextoCockpit {
   gruposAlergenicos: Map<string, GrupoAlergenico>;
   /** Indexado por principioActivoId, solo de los PA que el paciente toma. */
   ajustesRenales: Map<string, AjusteRenalDeFarmaco[]>;
+  /** Mismo patrón que `ajustesRenales`. */
+  ajustesHepaticos: Map<string, AjusteHepaticoDeFarmaco[]>;
   /** Alertas del catálogo para (PA del paciente × condiciones del paciente). */
   alertas: AlertaDeCatalogo[];
   curaciones: Map<string, Curacion>;

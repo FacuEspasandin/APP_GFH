@@ -208,10 +208,14 @@ export class DemoService implements OnModuleInit {
 
     const paIds = prescripciones.flatMap((p) => p.componentes.map((c) => c.principioActivoId));
 
-    const [ajustes, alertas] = await Promise.all([
+    const [ajustes, ajustesHepaticos, alertas] = await Promise.all([
       this.prisma.ajusteRenalFarmaco.findMany({
         where: { principioActivoId: { in: paIds } },
         include: { rangos: { orderBy: { orden: 'asc' } } },
+      }),
+      this.prisma.ajusteHepaticoFarmaco.findMany({
+        where: { principioActivoId: { in: paIds } },
+        include: { rangos: true },
       }),
       this.prisma.alertaCondicionFarmaco.findMany({
         where: { principioActivoId: { in: paIds } },
@@ -224,6 +228,13 @@ export class DemoService implements OnModuleInit {
       const lista = ajustesPorPa.get(a.principioActivoId) ?? [];
       lista.push(mapearAjuste(a));
       ajustesPorPa.set(a.principioActivoId, lista);
+    }
+
+    const ajustesHepaticosPorPa = new Map<string, ReturnType<typeof mapearAjusteHepatico>[]>();
+    for (const a of ajustesHepaticos) {
+      const lista = ajustesHepaticosPorPa.get(a.principioActivoId) ?? [];
+      lista.push(mapearAjusteHepatico(a));
+      ajustesHepaticosPorPa.set(a.principioActivoId, lista);
     }
 
     return {
@@ -240,8 +251,8 @@ export class DemoService implements OnModuleInit {
         clcrMlMin: null,
         clcrOrigen: null,
         clcrMedidoAt: null,
-        childPughClase: null,
-        childPughOrigen: null,
+        childPughClase: DATOS_DEMO.childPughClase,
+        childPughOrigen: 'INGRESADO_MANUAL',
         semanaGestacion: DATOS_DEMO.semanaGestacion,
         estaLactando: DATOS_DEMO.estaLactando,
       },
@@ -263,6 +274,7 @@ export class DemoService implements OnModuleInit {
         ]),
       ),
       ajustesRenales: ajustesPorPa,
+      ajustesHepaticos: ajustesHepaticosPorPa,
       alertas: alertas.map((a) => ({
         principioActivoId: a.principioActivoId,
         condicionId: a.condicionClinicaId,
@@ -296,6 +308,26 @@ function mapearAjuste(a: {
     dosisFrNormal: a.dosisFrNormal,
     metodoAjuste: a.metodoAjuste,
     suplementoHd: a.suplementoHd,
+    requiereRevision: a.requiereRevision,
+    estadoValidacion: a.estadoValidacion,
+    rangos: a.rangos,
+  } as never;
+}
+
+function mapearAjusteHepatico(a: {
+  principioActivoId: string;
+  viaAdministracion: string;
+  dosisFuncionNormal: string;
+  metodoAjuste: string;
+  requiereRevision: boolean;
+  estadoValidacion: string;
+  rangos: Array<{ clase: string; textoRecomendacion: string | null; tipo: string }>;
+}) {
+  return {
+    principioActivoId: a.principioActivoId,
+    viaAdministracion: a.viaAdministracion,
+    dosisFuncionNormal: a.dosisFuncionNormal,
+    metodoAjuste: a.metodoAjuste,
     requiereRevision: a.requiereRevision,
     estadoValidacion: a.estadoValidacion,
     rangos: a.rangos,

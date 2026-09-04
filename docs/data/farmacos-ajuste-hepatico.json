@@ -1,0 +1,219 @@
+{
+  "_lea_esto": [
+    "Ajuste hepático por clase Child-Pugh (A/B/C), a diferencia del renal que es",
+    "por rango de Clcr — decisión tomada el 2026-09-03: las fichas técnicas",
+    "reales (ver monografias-texto.json) nunca dan un puntaje ni un valor de",
+    "corte, solo vocabulario de severidad (leve/moderada/grave), que mapea a",
+    "clase y no a puntaje.",
+    "",
+    "Cada fila sale de precauciones/contraindicaciones de una ficha técnica real",
+    "ya transcripta (apps/backend/prisma/datos/monografias-texto.json). NO es un",
+    "catálogo publicado y numerado como las tablas SEN del renal — es",
+    "categorización propia del texto de la fuente por clase, así que TODAS las",
+    "filas llevan rev:true para revisión farmacéutica, y solo se cargó donde el",
+    "texto distingue con claridad una clase de otra (regla no negociable 5: si",
+    "el texto no distingue, no se inventa la distinción).",
+    "",
+    "Cobertura deliberadamente parcial: 15 fármacos de los 33 con ficha",
+    "transcripta. El resto del catálogo (631 fármacos) queda sin tabla — la UI",
+    "muestra 'sin datos', no 'sin problema'. Se amplía cuando haya más fichas o",
+    "la API real conectada."
+  ],
+  "version": "1.0.0",
+  "fuente": "Fichas técnicas transcriptas (ver apps/backend/prisma/datos/monografias-texto.json), categorizadas por clase Child-Pugh",
+  "fecha_fuente": "2026-09-03",
+  "farmacos": [
+    {
+      "pa": "Atorvastatina",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "10-80 mg/día",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve-moderada: controlar transaminasas y CPK; suspender si transaminasas > 3x el valor normal o CPK > 5x." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve-moderada: controlar transaminasas y CPK; suspender si transaminasas > 3x el valor normal o CPK > 5x." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave o hepatopatía activa." }
+      ],
+      "obs": "Ficha: precauciones distinguen leve-moderada de grave; A y B comparten la misma recomendación de la fuente.",
+      "rev": true
+    },
+    {
+      "pa": "Rosuvastatina",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "10-40 mg/día",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve-moderada: controlar transaminasas y CPK; suspender si transaminasas > 3x el valor normal o CPK > 5x." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve-moderada: controlar transaminasas y CPK; suspender si transaminasas > 3x el valor normal o CPK > 5x." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave o hepatopatía activa." }
+      ],
+      "obs": "Ficha: precauciones distinguen leve-moderada de grave; A y B comparten la misma recomendación de la fuente.",
+      "rev": true
+    },
+    {
+      "pa": "Simvastatina",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "10-40 mg/día",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve-moderada: controlar transaminasas y CPK; suspender si transaminasas > 3x el valor normal o CPK > 5x." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve-moderada: controlar transaminasas y CPK; suspender si transaminasas > 3x el valor normal o CPK > 5x." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave o hepatopatía activa." }
+      ],
+      "obs": "Ficha: precauciones distinguen leve-moderada de grave; A y B comparten la misma recomendación de la fuente.",
+      "rev": true
+    },
+    {
+      "pa": "Metotrexato",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "Variable según indicación (oncológica vs. antirreumática)",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve o moderada: monitorizar hemograma y enzimograma hepático estrechamente." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve o moderada: monitorizar hemograma y enzimograma hepático estrechamente." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática severa o hiperbilirrubinemia > 5 mg/dL." }
+      ],
+      "obs": "Ficha sin posología transcripta; dosisFuncionNormal es orientativo, no de la fuente.",
+      "rev": true
+    },
+    {
+      "pa": "Paracetamol",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "500-1000 mg c/6-8 h",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve a moderada: mayor riesgo de toxicidad en alcoholismo, desnutrición, ayuno prolongado o miopatías." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática leve a moderada: mayor riesgo de toxicidad en alcoholismo, desnutrición, ayuno prolongado o miopatías." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática severa." }
+      ],
+      "obs": "Ficha sin posología transcripta; dosisFuncionNormal es de conocimiento clínico general, no de la fuente.",
+      "rev": true
+    },
+    {
+      "pa": "Warfarina",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "2-5 mg/día, ajustado por INR",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "REDUCIR_DOSIS", "texto": "Insuficiencia hepática leve o moderada: puede requerir dosis menores a las recomendadas; control estricto de INR." },
+        { "clase": "B", "tipo": "REDUCIR_DOSIS", "texto": "Insuficiencia hepática leve o moderada: puede requerir dosis menores a las recomendadas; control estricto de INR." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." }
+      ],
+      "obs": "Ficha: precauciones distinguen leve-moderada de grave (agrupada con renal grave en contraindicaciones, leída como dos contraindicaciones independientes).",
+      "rev": true
+    },
+    {
+      "pa": "Verapamilo",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "80-120 mg c/8 h (liberación convencional)",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "B", "tipo": "REDUCIR_DOSIS", "texto": "Insuficiencia hepática moderada a severa: reducir la dosis a un 50%." },
+        { "clase": "C", "tipo": "REDUCIR_DOSIS", "texto": "Insuficiencia hepática moderada a severa: reducir la dosis a un 50%." }
+      ],
+      "obs": "Ficha no menciona clase A (leve) — sin dato, se deja sin fila en vez de asumir 'sin ajuste'.",
+      "rev": true
+    },
+    {
+      "pa": "Losartan",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "50 mg/día",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "REDUCIR_DOSIS", "texto": "Insuficiencia hepática: mitad de dosis." },
+        { "clase": "B", "tipo": "REDUCIR_DOSIS", "texto": "Insuficiencia hepática: mitad de dosis." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." }
+      ],
+      "obs": "Posología: 'Coadministración con diuréticos, hipovolemia o Insuf. hepática: mitad de dosis' — no distingue grado, se aplica a A y B; contraindicaciones sí distingue grave.",
+      "rev": true
+    },
+    {
+      "pa": "Glibenclamida",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "2,5-5 mg/día",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática: mayor riesgo de hipoglicemia, considerar antes de iniciar el tratamiento." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática: mayor riesgo de hipoglicemia, considerar antes de iniciar el tratamiento." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." }
+      ],
+      "obs": "Ficha: precauciones no distinguen grado (se aplica a A/B); contraindicaciones sí distingue grave.",
+      "rev": true
+    },
+    {
+      "pa": "Gliclazida",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "80 mg c/8-24 h",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática: mayor riesgo de hipoglicemia, considerar antes de iniciar el tratamiento." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática: mayor riesgo de hipoglicemia, considerar antes de iniciar el tratamiento." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." }
+      ],
+      "obs": "Ficha: precauciones no distinguen grado (se aplica a A/B); contraindicaciones sí distingue grave.",
+      "rev": true
+    },
+    {
+      "pa": "Claritromicina",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "500 mg c/12 h",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática: usar con precaución." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática: usar con precaución." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." }
+      ],
+      "obs": "Ficha: contraindicaciones lista 'Insuf. Hepática y renal grave' — leído como dos contraindicaciones independientes, no una condición compuesta.",
+      "rev": true
+    },
+    {
+      "pa": "Colchicina",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "0,5-1 mg c/12-24 h",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Enfermedad hepática: aumenta el riesgo de toxicidad. Margen terapéutico estrecho." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Enfermedad hepática: aumenta el riesgo de toxicidad. Margen terapéutico estrecho." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." }
+      ],
+      "obs": "Ficha: contraindicaciones lista 'Insuf. renal y hepática graves' — leído como dos contraindicaciones independientes.",
+      "rev": true
+    },
+    {
+      "pa": "Tramadol",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "50-100 mg c/6-8 h",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática: riesgo aumentado de toxicidad." },
+        { "clase": "B", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática: riesgo aumentado de toxicidad." },
+        { "clase": "C", "tipo": "EVITAR", "texto": "Insuficiencia hepática severa: evitar presentaciones de liberación prolongada. Con liberación inmediata, usar con precaución extrema." }
+      ],
+      "obs": "Ficha sin posología transcripta; dosisFuncionNormal es de conocimiento clínico general, no de la fuente.",
+      "rev": true
+    },
+    {
+      "pa": "Azitromicina",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "500 mg/día",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "C", "tipo": "PRECAUCION", "texto": "Insuficiencia hepática severa: usar con precaución." }
+      ],
+      "obs": "Ficha solo menciona 'severa' en precauciones — sin dato para A/B, se deja sin fila. La contraindicación de la ficha (antecedente de ictericia/hepatotoxicidad por azitromicina) es un dato de historia clínica, no de clase Child-Pugh, y no se incluyó acá.",
+      "rev": true
+    },
+    {
+      "pa": "Metformina",
+      "via": "NO_ESPECIFICADA",
+      "dosisFuncionNormal": "500-850 mg c/8-12 h",
+      "metodo": "D",
+      "rangos": [
+        { "clase": "A", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática: riesgo de acidosis láctica." },
+        { "clase": "B", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática: riesgo de acidosis láctica." },
+        { "clase": "C", "tipo": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática: riesgo de acidosis láctica." }
+      ],
+      "obs": "Ficha contraindica 'Insuf. hepática' sin distinguir grado — se aplicó a las tres clases por igual; marcado para revisión farmacéutica por ser la lectura más estricta de un texto que no gradúa.",
+      "rev": true
+    }
+  ]
+}

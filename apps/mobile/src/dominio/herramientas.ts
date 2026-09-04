@@ -115,6 +115,16 @@ export const HERRAMIENTAS: readonly Herramienta[] = [
     busca: ['clcr', 'dosis', 'insuficiencia renal'],
   },
   {
+    clave: 'ajuste-hepatico',
+    titulo: 'Ajuste hepático por fármaco',
+    detalle: 'Cuánto ajustar cada fármaco para una clase de Child-Pugh',
+    ruta: '/herramientas/ajuste-hepatico',
+    cruza: true,
+    categorias: ['hepatico', 'dosis'],
+    icono: 'higado',
+    busca: ['child-pugh', 'dosis', 'insuficiencia hepatica', 'cirrosis'],
+  },
+  {
     clave: 'condicion-alergia',
     titulo: 'Condición y alergia',
     detalle: 'Un fármaco candidato contra condiciones y alergias',

@@ -96,16 +96,20 @@ describe('plan gratis', () => {
       expect(r.status).toBe(403);
     });
 
-    it('la calculadora de Child-Pugh es libre', async () => {
-      // Es una fórmula publicada: cobrarla nos pondría a competir con
-      // cualquier calculadora web.
+    it('cruzar fármacos contra una clase de Child-Pugh también pide suscripción', async () => {
+      /*
+       * La FÓRMULA de Child-Pugh sigue siendo libre —es publicada, cobrarla
+       * nos pondría a competir con cualquier calculadora web— pero corre en el
+       * teléfono y no toca esta ruta: `app/herramientas/hepatico.tsx` la
+       * resuelve con el molde, sin red. Lo que cuesta es el catálogo, igual
+       * que en el par `clcr.tsx` (libre) / `renal.tsx` (de pago).
+       */
       const r = await api.post(
         '/herramientas/ajuste-hepatico',
-        { bilirrubinaMgDl: 1, albuminaGDl: 4, inr: 1.1, ascitis: 'AUSENTE', encefalopatia: 'AUSENTE' },
+        { principioActivoIds: [], clase: 'A' },
         gratis.token,
       );
-      expect(r.status).toBe(200);
-      expect(r.cuerpo!.data.clase).toBe('A');
+      expect(r.status).toBe(403);
     });
   });
 

@@ -74,6 +74,7 @@ function prismaFalso(cantidadFarmacos: number) {
     alergia: { findMany: registrar('alergia', 'findMany', []) },
     configuracionUsuario: { findUnique: registrar('configuracionUsuario', 'findUnique', null) },
     ajusteRenalFarmaco: { findMany: registrar('ajusteRenalFarmaco', 'findMany', []) },
+    ajusteHepaticoFarmaco: { findMany: registrar('ajusteHepaticoFarmaco', 'findMany', []) },
     alertaCondicionFarmaco: { findMany: registrar('alertaCondicionFarmaco', 'findMany', []) },
     grupoAlergenico: { findMany: registrar('grupoAlergenico', 'findMany', []) },
     interaccionCurada: { findMany: registrar('interaccionCurada', 'findMany', []) },
@@ -95,11 +96,11 @@ describe('número fijo de consultas (motor §4.6, §5.5, §8.5)', () => {
     expect(muchos.llamadas.length).toBe(pocos.llamadas.length);
   });
 
-  it('son 9 consultas, y ninguna se repite por fármaco', async () => {
+  it('son 10 consultas, y ninguna se repite por fármaco', async () => {
     const { cliente, llamadas } = prismaFalso(12);
     await new RepositorioCockpitPrisma(cliente as any, HOY).cargarContexto('med-1', 'pac-1');
 
-    expect(llamadas).toHaveLength(9);
+    expect(llamadas).toHaveLength(10);
 
     // Ningún modelo se consulta dos veces: si alguno aparece repetido, es que
     // hay un bucle con await adentro.
@@ -113,6 +114,9 @@ describe('número fijo de consultas (motor §4.6, §5.5, §8.5)', () => {
 
     const ajustes = llamadas.find((l) => l.modelo === 'ajusteRenalFarmaco')!;
     expect(ajustes.args.where.principioActivoId.in).toHaveLength(12);
+
+    const ajustesHepaticos = llamadas.find((l) => l.modelo === 'ajusteHepaticoFarmaco')!;
+    expect(ajustesHepaticos.args.where.principioActivoId.in).toHaveLength(12);
   });
 
   it('sin prescripciones no consulta el catálogo clínico', async () => {
@@ -120,6 +124,7 @@ describe('número fijo de consultas (motor §4.6, §5.5, §8.5)', () => {
     await new RepositorioCockpitPrisma(cliente as any, HOY).cargarContexto('med-1', 'pac-1');
 
     expect(llamadas.find((l) => l.modelo === 'ajusteRenalFarmaco')).toBeUndefined();
+    expect(llamadas.find((l) => l.modelo === 'ajusteHepaticoFarmaco')).toBeUndefined();
     expect(llamadas.find((l) => l.modelo === 'alertaCondicionFarmaco')).toBeUndefined();
   });
 });
@@ -140,7 +145,7 @@ describe('aislamiento por medicoId (regla no negociable 3)', () => {
     const { cliente, llamadas } = prismaFalso(5);
     await new RepositorioCockpitPrisma(cliente as any, HOY).cargarContexto('med-1', 'pac-1');
 
-    for (const modelo of ['ajusteRenalFarmaco', 'alertaCondicionFarmaco', 'grupoAlergenico']) {
+    for (const modelo of ['ajusteRenalFarmaco', 'ajusteHepaticoFarmaco', 'alertaCondicionFarmaco', 'grupoAlergenico']) {
       const llamada = llamadas.find((l) => l.modelo === modelo);
       expect(llamada?.args?.where?.medicoId).toBeUndefined();
     }

@@ -25,11 +25,12 @@ export function esDelDemo(id: string): boolean {
 /**
  * Los fármacos del demo, por nombre de principio activo.
  *
- * Elegidos para que el motor encuentre algo en las cuatro categorías que sí
- * tienen datos: dos interacciones graves, alertas por úlcera y por embarazo, y
- * cuatro ajustes renales con un Clcr de 26. El hepático queda vacío porque no
- * hay tabla para ningún fármaco — el demo no inventa lo que el producto no
- * tiene.
+ * Elegidos para que el motor encuentre algo en las CUATRO categorías: dos
+ * interacciones graves, alertas por úlcera y por embarazo, cuatro ajustes
+ * renales con un Clcr de 26, y —desde que existe la tabla hepática— ajuste
+ * hepático sobre Warfarina, Simvastatina y Paracetamol con la clase B que
+ * trae `DATOS_DEMO`. Digoxina y Enalapril no tienen tabla hepática y por eso
+ * no aparecen ahí: el demo muestra el hueco real, no lo tapa.
  */
 export const FARMACOS_DEMO = [
   { comercial: 'Coumadin', pas: ['Warfarina'], dosis: '5 mg', frecuencia: 'cada 24 h', via: 'ORAL' },
@@ -70,6 +71,14 @@ export const DATOS_DEMO = {
   creatininaMgDl: 1.6,
   semanaGestacion: 24,
   estaLactando: null,
+  /**
+   * Clase fija y no calculada desde los cinco criterios: el demo no guarda
+   * bilirrubina/albúmina/INR porque no los muestra en ninguna pantalla, y
+   * derivarla haría que un cambio en la escala moviera el demo sin que nadie
+   * lo pida. B es lo que hace visible la categoría sin volverla toda roja:
+   * Warfarina baja dosis, Simvastatina y Paracetamol quedan en precaución.
+   */
+  childPughClase: 'B' as const,
 };
 
 /**

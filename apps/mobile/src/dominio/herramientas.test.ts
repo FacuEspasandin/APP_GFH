@@ -74,7 +74,10 @@ describe('filtrar por categoría', () => {
 
 describe('buscar', () => {
   it('encuentra por título', () => {
-    expect(claves(buscar(HERRAMIENTAS, 'child'))).toEqual(['child-pugh']);
+    // «child» está en el título de la calculadora y en las palabras extra del
+    // ajuste por fármaco: las dos son de Child-Pugh, la calculadora primero
+    // porque lo tiene en el título.
+    expect(claves(buscar(HERRAMIENTAS, 'child'))).toEqual(['child-pugh', 'ajuste-hepatico']);
   });
 
   it('encuentra por el detalle, no sólo por el título', () => {
@@ -119,6 +122,7 @@ describe('agrupar', () => {
     // que el médico recorre con el ojo es el título.
     const g = agrupar(HERRAMIENTAS);
     expect(g[1]!.herramientas.map((h) => h.titulo)).toEqual([
+      'Ajuste hepático por fármaco',
       'Ajuste renal por fármaco',
       'Condición y alergia',
       'Interacción fármaco-fármaco',
@@ -126,9 +130,10 @@ describe('agrupar', () => {
   });
 
   it('no dibuja una sección vacía', () => {
-    // Filtrando por «Hígado» sobra el título «Contra el catálogo» encima de nada.
-    const soloHigado = filtrarPorCategoria(HERRAMIENTAS, 'hepatico');
-    expect(agrupar(soloHigado).map((x) => x.titulo)).toEqual(['Calculadoras']);
+    // Filtrando por «Laboratorio» sobra el título «Contra el catálogo» encima
+    // de nada: la única de esa categoría es el LDL, que calcula sin cruzar.
+    const soloLaboratorio = filtrarPorCategoria(HERRAMIENTAS, 'laboratorio');
+    expect(agrupar(soloLaboratorio).map((x) => x.titulo)).toEqual(['Calculadoras']);
   });
 
   it('sin nada devuelve cero grupos', () => {

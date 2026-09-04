@@ -9,6 +9,7 @@
 import type { CatalogoInteracciones } from './interacciones';
 import { detectarInteracciones } from './interacciones';
 import { elegirRango, farmacoLibreRequiereAlerta } from './ajuste-renal';
+import { elegirRangoPorClase } from './ajuste-hepatico';
 import { evaluarAlergias } from './alergias';
 import {
   aplicaEnSemana,
@@ -123,6 +124,7 @@ export function evaluarCockpit(
     parClave: i.parClave,
     severidad: i.severidad,
     texto: i.texto,
+    tipoRiesgo: i.tipoRiesgo,
     estadoValidacion: 'PENDIENTE',
   }));
 
@@ -157,6 +159,34 @@ export function evaluarCockpit(
           rangoTexto: elegido.rango.rangoTexto,
           textoRecomendacion: elegido.rango.textoRecomendacion,
           tipo: elegido.rango.tipo as AjusteParaHallazgo['tipo'],
+          estadoValidacion: ajuste.estadoValidacion,
+        });
+      }
+    }
+  }
+
+  // --- 2-bis. ajuste hepático ------------------------------------------------
+  // Mismo patrón que el renal, pero sin elegirRango: Child-Pugh es una de tres
+  // clases fijas, no un continuo, así que la fila es un lookup directo.
+  const ajustesHepaticos: AjusteParaHallazgo[] = [];
+  if (p.childPughClase !== null) {
+    for (const pr of ctx.prescripciones) {
+      if (pr.esFarmacoLibre) continue; // sin tabla posible; motor §4.5 es sólo renal
+
+      for (const comp of pr.componentes) {
+        const ajuste = elegirAjustePorVia(ctx.ajustesHepaticos.get(comp.principioActivoId), pr.via);
+        if (!ajuste) continue; // sin tabla = sin datos, no es un error
+
+        const elegido = elegirRangoPorClase(ajuste.rangos, p.childPughClase);
+        if (!elegido) continue;
+
+        ajustesHepaticos.push({
+          prescripcionId: pr.id,
+          rangoId: elegido.id,
+          farmacoNombre: comp.nombre,
+          rangoTexto: `Clase ${p.childPughClase}`,
+          textoRecomendacion: elegido.textoRecomendacion,
+          tipo: elegido.tipo as AjusteParaHallazgo['tipo'],
           estadoValidacion: ajuste.estadoValidacion,
         });
       }
@@ -227,17 +257,20 @@ export function evaluarCockpit(
   }
   // Dos motivos distintos por los que el ajuste hepático no evalúa, y decir el
   // equivocado sería mentirle al médico: o falta el dato del paciente —que él
-  // puede resolver— o falta la tabla de ajuste por fármaco —que no—. Antes los
-  // dos casos daban el mismo aviso, así que cargar Child-Pugh parecía inútil.
+  // puede resolver— o ninguno de sus fármacos actuales tiene tabla —que no—.
+  // Antes los dos casos daban el mismo aviso, así que cargar Child-Pugh parecía
+  // inútil. Ahora que el catálogo SÍ tiene tablas para algunos fármacos, el
+  // segundo aviso sólo sale cuando de verdad no hubo ningún match — igual que
+  // el renal, que no avisa nada por cada fármaco sin tabla individual.
   if (p.childPughClase === null) {
     avisos.push({
       codigo: 'SIN_CHILD_PUGH',
       detalle: 'Sin estado hepático: el ajuste hepático no se puede evaluar.',
     });
-  } else {
+  } else if (ajustesHepaticos.length === 0) {
     avisos.push({
       codigo: 'SIN_TABLA_HEPATICA',
-      detalle: `Clase Child-Pugh ${p.childPughClase} registrada. Todavía no hay tabla de ajuste hepático por fármaco contra la cual evaluarla.`,
+      detalle: `Clase Child-Pugh ${p.childPughClase} registrada. Ninguno de los fármacos de este tratamiento tiene tabla de ajuste hepático todavía.`,
     });
   }
 
@@ -245,7 +278,7 @@ export function evaluarCockpit(
     interacciones,
     alertas,
     ajustesRenales,
-    ajustesHepaticos: [], // sin fuente de datos todavía — modelo §7.1
+    ajustesHepaticos,
   });
 
   return {

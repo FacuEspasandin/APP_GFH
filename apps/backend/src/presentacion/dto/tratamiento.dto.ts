@@ -159,6 +159,14 @@ export class HerramientaInteraccionesDto {
  * paciente suma un campo, la herramienta no tiene por qué heredarlo.
  */
 export class HerramientaHepaticaDto {
+  /** Opcional: la calculadora de la clase es libre y funciona sin fármacos —
+   *  es una fórmula publicada, cobrarla sería competir con cualquier
+   *  calculadora web. Sin fármacos, `resultados` simplemente sale vacío. */
+  @IsOptional() @IsArray() @ArrayMaxSize(20) @IsUUID('4', { each: true })
+  principioActivoIds?: string[];
+
+  @IsOptional() @IsEnum(['A', 'B', 'C']) clase?: 'A' | 'B' | 'C';
+
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.01) @Max(80) bilirrubinaMgDl?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.1) @Max(10) albuminaGDl?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.5) @Max(20) inr?: number;
