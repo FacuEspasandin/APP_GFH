@@ -218,6 +218,25 @@ enum SeveridadInteraccion {
   CONTRAINDICADA
 }
 
+/// Mecanismo clínico de una interacción — agrupa en el cockpit, cerrado a
+/// propósito (ver `TIPOS_RIESGO_INTERACCION` en shared-types). Sumar un valor
+/// acá y en `docs/data/reglas-interaccion.json` cuando aparezca un mecanismo
+/// nuevo que no encaje en ninguno de estos.
+enum TipoRiesgoInteraccion {
+  SANGRADO
+  MIOPATIA_RABDOMIOLISIS
+  MIELOSUPRESION
+  SINDROME_SEROTONINERGICO
+  HIPERPOTASEMIA
+  NEFROTOXICIDAD
+  TOXICIDAD_DIGITALICA
+  TOXICIDAD_LITIO
+  HIPOGLUCEMIA
+  EFICACIA_REDUCIDA
+  QT_PROLONGADO
+  ABSORCION_REDUCIDA
+}
+
 enum NivelCruce {
   ALTO
   MODERADO
@@ -241,17 +260,58 @@ enum SeveridadAlergia {
 /// guia de dosis es peor que darle una guia observada.
 enum CondicionVenta {
   VENTA_LIBRE
+  /// Control Médico Recomendado (CMR en Farmanuario) — distinto de RECETA:
+  /// se aconseja consultar, pero no exige receta para dispensarse.
+  CONTROL_MEDICO_RECOMENDADO
   RECETA
+  /// Genérico, de antes de separar PSICOFARMACO/ESTUPEFACIENTE (ver guía
+  /// técnica Farmanuario, campo TIPORECETA_PRODUCTO). Sin uso hoy; se deja
+  /// sin borrar porque Postgres no permite sacar un valor de un enum sin
+  /// recrear el tipo, y no vale la pena por un valor que nadie usa.
   RECETA_CONTROLADA
+  /// PS en Farmanuario — venta bajo receta, medicamento controlado.
+  PSICOFARMACO
+  /// ES en Farmanuario — venta bajo receta, medicamento controlado.
+  ESTUPEFACIENTE
   /// Lo que trae el proveedor cuando no lo declara. NO es «venta libre»:
   /// suponerlo sería inventar un dato regulatorio (regla 5).
   DESCONOCIDA
+}
+
+/// Estado del producto según el proveedor (ver guía técnica Farmanuario,
+/// campo ESTADO_PRODUCTO) — más fino que `vigente`: Baja Temporal y
+/// Discontinuado siguen con registro del M.S.P. vigente pero YA no deberían
+/// prescribirse (el laboratorio dejó de reponerlos), que es distinto de Baja
+/// Definitiva (perdió el registro, no puede comercializarse). Vive aparte de
+/// `vigente` — que sigue siendo el booleano simple que ya usa el resto de la
+/// app para "¿se puede prescribir?" — porque ninguna pantalla necesita hoy el
+/// motivo fino, sólo lo trae el importador para cuando haga falta explicarlo.
+enum EstadoProducto {
+  ACTIVO
+  BAJA_TEMPORAL
+  DISCONTINUADO
+  BAJA_DEFINITIVA
 }
 
 enum EstadoValidacion {
   PENDIENTE
   APROBADO
   RECHAZADO
+}
+
+/// De donde salio una tabla de ajuste.
+///
+/// `SEN` son las tablas publicadas: tres bandas fijas, iguales para todos los
+/// farmacos. `MONOGRAFIA` son los umbrales que trae la ficha del proveedor,
+/// que son por farmaco y por eso mas precisos — pero solo estan en cerca de
+/// un tercio de los casos; en el resto la ficha dice "ajustar dosis" sin
+/// numero, y de ahi no sale una fila. Por eso conviven: MONOGRAFIA gana donde
+/// existe, SEN cubre el resto. Reemplazar todo por monografia dejaria en gris
+/// a dos tercios de los farmacos que hoy tienen tabla.
+enum FuenteAjuste {
+  SEN
+  MONOGRAFIA
+  MANUAL
 }
 
 // ============================================================================
@@ -280,10 +340,32 @@ model PrincipioActivo {
   /// ABIERTO: de donde se completa este campo (modelo §7.4).
   codigoATC String?
 
+  /// Código en el Formulario Terapéutico de Medicamentos uruguayo (COD_FTM en
+  /// Farmanuario). Referencia nacional aparte del ATC, no se usa para calcular
+  /// nada — sólo para mostrar/matchear.
+  codFtm String?
+
+  /// Especialidad médica del fármaco (CAPITULO en Farmanuario) — más ancho
+  /// que `grupoTerapeutico`: "Cardiología" contiene el grupo "Antiarrítmicos".
+  /// Para cuando el Buscador navegue por especialidad; hoy no se usa.
+  capitulo String?
+
+  /// Acción terapéutica puntual (ACCION_TERAPEUTICA en Farmanuario) — más fino
+  /// que `grupoTerapeutico`, ej. "Antiarrítmico de clase III" para Amiodarona
+  /// dentro del grupo "Antiarrítmicos".
+  accionTerapeutica String?
+
+  /// Resumen de una línea (DEFINICION_FARMACO en Farmanuario) — distinto del
+  /// párrafo completo en `MonografiaFarmaco.descripcion` (DESCRIPCION_FARMACO):
+  /// éste es corto, para listas y encabezados; aquél es el texto largo con
+  /// farmacocinética y mecanismo, para leer.
+  definicionCorta String?
+
   /// Plural: hay un ajuste POR VIA, no uno por farmaco. Ver AjusteRenalFarmaco.
   ajustesRenales   AjusteRenalFarmaco[]
   ajustesHepaticos AjusteHepaticoFarmaco[]
 
+  monografia                   MonografiaFarmaco?
   productos                    ProductoComercialPrincipioActivo[]
   alertasCondicion             AlertaCondicionFarmaco[]
   gruposAlergenicos            PrincipioActivoGrupoAlergenico[]
@@ -350,14 +432,30 @@ model ProductoComercial {
   /// error clínico esperando, no un problema de prolijidad.
   vigente Boolean @default(true)
 
+  /// El motivo fino de por qué `vigente` es false (o va a pasar a serlo) —
+  /// ver `EstadoProducto`. Opcional y aparte de `vigente` a propósito:
+  /// ninguna pantalla lo necesita hoy, lo trae el importador para el día que
+  /// haga falta explicar "por qué no aparece este producto" en vez de
+  /// limitarse a esconderlo.
+  estadoProveedor EstadoProducto?
+
+  /// Código de barras del envase (Cod_Barras en Farmanuario). Sólo para
+  /// mostrar/matchear, el motor clínico no lo usa.
+  codigoBarras String?
+
+  /// Número de registro del producto en el M.S.P. (REGISTRO_MSP en
+  /// Farmanuario). Dato regulatorio de referencia, no clínico.
+  registroMsp String?
+
   /// Cuándo lo tocó por última vez un importador, y cuál. Nulo = cargado a
   /// mano o por el seed. Es lo que permite decir «según el catálogo del …» y
   /// saber qué filas quedaron viejas.
   importadoAt DateTime?
   origenDato  String?
 
-  principiosActivos ProductoComercialPrincipioActivo[]
-  prescripciones    Prescripcion[]
+  principiosActivos     ProductoComercialPrincipioActivo[]
+  prescripciones        Prescripcion[]
+  alternativasAceptadas AlternativaAceptada[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -398,6 +496,50 @@ model ProductoComercialPrincipioActivo {
 /// que elegir la fila por `Prescripcion.via`, con NO_ESPECIFICADA como
 /// fallback. Si no hay fila para esa via ni una NO_ESPECIFICADA, es "sin
 /// datos" — neutro, no "sin problema".
+/// La monografia: el texto descriptivo de un farmaco, para LEER.
+///
+/// Es lo unico del catalogo que no se cruza contra el paciente. El resto de las
+/// tablas contesta "¿esto es seguro para este paciente?"; esta contesta "¿que
+/// es esto?". Por eso no tiene severidad, ni semanas, ni rangos.
+///
+/// Se guarda PARTIDA en los mismos campos en que viene la fuente. Guardarla
+/// como un solo bloque obligaria a volver a partirla en cada pantalla, y el
+/// medico entra buscando una seccion —posologia, interacciones—, no el texto
+/// entero.
+///
+/// Cuelga del principio activo: dos marcas del mismo farmaco comparten
+/// monografia. Una fila por principio activo.
+///
+/// Todos los campos son opcionales a proposito: una ficha real puede no traer
+/// alguno, y "vacio" tiene que poder distinguirse de "con texto". La pantalla
+/// no muestra la seccion que no tiene contenido — mostrarla vacia haria creer
+/// que el farmaco no tiene interacciones cuando lo que pasa es que no las
+/// cargamos (regla no negociable 5).
+model MonografiaFarmaco {
+  id                String @id @default(uuid())
+  principioActivoId String @unique
+
+  descripcion        String?
+  usos               String?
+  posologia          String?
+  precauciones       String?
+  contraindicaciones String?
+  reaccionesAdversas String?
+  interacciones      String?
+  embarazo           String?
+  lactancia          String?
+
+  /// De donde salio el texto. Sirve para poder purgarlo con una consulta.
+  fuente String?
+
+  principioActivo PrincipioActivo @relation(fields: [principioActivoId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("monografia_farmaco")
+}
+
 model AjusteRenalFarmaco {
   id                String            @id @default(uuid())
   principioActivoId String
@@ -411,6 +553,11 @@ model AjusteRenalFarmaco {
   /// NO es lo mismo que estadoValidacion (revision farmaceutica). Van los dos.
   requiereRevision Boolean @default(false)
   tablaOrigenNum   Int? // 1-26, trazabilidad a la tabla SEN original
+
+  /// Quien escribio esta tabla. Ver `FuenteAjuste`. Se llama `fuenteDato` y
+  /// no `fuente` porque `fuente` ya existe en AlertaCondicionFarmaco con otro
+  /// significado (texto libre).
+  fuenteDato FuenteAjuste @default(SEN)
 
   /// DECISION: campo agregado (no esta en modelo-datos, lo exige regla no
   /// negociable 8 + motor §10.2). Ojo: aun en RECHAZADO este contenido se
@@ -528,6 +675,16 @@ model CondicionClinica {
 ///
 /// Regla que no se toca al implementar: paciente SIN semana registrada ⇒ la
 /// alerta SE MANTIENE. Nunca se oculta una alerta por falta de datos.
+///
+/// Índice único NULL-safe en (principioActivoId, condicionClinicaId,
+/// COALESCE(semanaMin,-1), COALESCE(semanaMax,-1)) — creado en SQL crudo en la
+/// migración limpiar_y_unique_alerta_condicion_farmaco, NO declarado como
+/// @@unique acá porque el DSL de Prisma no puede expresar unicidad NULL-safe
+/// (un @@unique plano no distingue dos filas null/null, que es el caso más
+/// común). Mismo patrón que los índices trigram de
+/// producto_comercial/principio_activo: vive en SQL crudo, Prisma no lo
+/// conoce. Bloquea la fila exactamente repetida, no el par con ventanas
+/// distintas.
 model AlertaCondicionFarmaco {
   id                 String          @id @default(uuid())
   principioActivoId  String
@@ -997,6 +1154,13 @@ model InteraccionDetectada {
   vista     Boolean              @default(false)
   vistaAt   DateTime?
 
+  /// Mecanismo clínico, para agrupar en el cockpit (motor §9 addendum) — no
+  /// participa del cálculo de severidad, que sigue siendo `severidad` arriba.
+  /// Nullable porque las filas anteriores a esta columna no lo tienen; se
+  /// completa solo al recalcular (persistir-interacciones.ts lo trae siempre
+  /// para lo nuevo).
+  tipoRiesgo TipoRiesgoInteraccion?
+
   medico           Medico          @relation(fields: [medicoId], references: [id], onDelete: Cascade)
   paciente         Paciente        @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
   prescripcionA    Prescripcion    @relation("InteraccionPrescripcionA", fields: [prescripcionAId], references: [id], onDelete: Cascade)
@@ -1090,15 +1254,23 @@ model AlternativaAceptada {
   paOrigenId           String
   paAlternativaId      String
 
+  /// Qué presentación comercial concreta se eligió para la alternativa — el
+  /// médico la elige en una pantalla propia (motor §8, rediseño del flujo de
+  /// alternativas) en vez de que el sistema resuelva el genérico en silencio.
+  /// Null en las filas de antes de esta columna, y también cuando la
+  /// alternativa se ofreció sin reemplazo (solo se documentó la decisión).
+  productoComercialId String?
+
   disclaimerVersion String
   aceptadoAt        DateTime @default(now())
   nota              String?
 
-  medico             Medico          @relation(fields: [medicoId], references: [id], onDelete: Cascade)
-  paciente           Paciente        @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
-  prescripcionOrigen Prescripcion?   @relation(fields: [prescripcionOrigenId], references: [id], onDelete: SetNull)
-  paOrigen           PrincipioActivo @relation("AceptadaOrigen", fields: [paOrigenId], references: [id], onDelete: Restrict)
-  paAlternativa      PrincipioActivo @relation("AceptadaDestino", fields: [paAlternativaId], references: [id], onDelete: Restrict)
+  medico             Medico           @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  paciente           Paciente         @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  prescripcionOrigen Prescripcion?    @relation(fields: [prescripcionOrigenId], references: [id], onDelete: SetNull)
+  paOrigen           PrincipioActivo  @relation("AceptadaOrigen", fields: [paOrigenId], references: [id], onDelete: Restrict)
+  paAlternativa      PrincipioActivo  @relation("AceptadaDestino", fields: [paAlternativaId], references: [id], onDelete: Restrict)
+  productoComercial  ProductoComercial? @relation(fields: [productoComercialId], references: [id], onDelete: SetNull)
 
   @@index([medicoId, pacienteId])
   @@index([pacienteId, paOrigenId])
