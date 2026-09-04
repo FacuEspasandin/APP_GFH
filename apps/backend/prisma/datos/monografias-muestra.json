@@ -1,0 +1,459 @@
+{
+  "_lea_esto": [
+    "Datos DERIVADOS de 33 fichas técnicas del proveedor de monografías,",
+    "obtenidas con acceso de prueba en agosto de 2026. No es el texto de las",
+    "fichas: son las filas que salen de leerlas, que es lo único que el motor",
+    "consume. La prosa no se guarda.",
+    "",
+    "Es material de DESARROLLO, para validar que el modelo de datos aguanta un",
+    "fármaco con todo cargado. No va a producción hasta que haya licencia.",
+    "Todo entra como PENDIENTE y el ajuste renal queda marcado MONOGRAFIA, así",
+    "que se puede purgar con una consulta.",
+    "",
+    "Reglas que se siguieron al armarlo, las mismas del pipeline:",
+    "  1. La severidad NO se infiere. Sale de una frase literal:",
+    "       «contraindicado»              -> CONTRAINDICADO",
+    "       «no se recomienda» / «evitar» -> EVITAR",
+    "       «evaluar riesgo/beneficio»    -> PRECAUCION",
+    "     Lo que dice «puede usarse» NO genera fila: hoy la ficha no sabe",
+    "     mostrar «el catálogo afirma que es seguro» para embarazo y lactancia",
+    "     —sólo sabe hacerlo para renal— y una fila INFO se pintaría ámbar,",
+    "     que es peor que gris. Queda anotado como decisión pendiente.",
+    "  2. Una condición sólo se mapea si el texto la nombra literalmente. Lo",
+    "     que no matchea con las 27 no se fuerza: se deja afuera.",
+    "  3. El ajuste renal sólo sale cuando el texto trae NÚMEROS o afirma que",
+    "     no hace falta ajuste. «Ajustar dosis» a secas no es una tabla."
+  ],
+  "farmacos": [
+    {
+      "nombre": "Amiodarona",
+      "codigoATC": "C01BD01",
+      "embarazo": { "severidad": "PRECAUCION", "texto": "En animales y humanos toxicidad demostrada. Evaluar riesgo/beneficio." },
+      "lactancia": { "severidad": "CONTRAINDICADO", "texto": "Se excreta en la leche y tiene vida media muy larga. Se debe interrumpir la lactancia durante el tratamiento." },
+      "condiciones": [
+        { "codigo": "HIPOTIROIDISMO", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en disfunción tiroidea." },
+        { "codigo": "QT_LARGO", "severidad": "CONTRAINDICADO", "texto": "Prolonga el intervalo QT. Riesgo de Torsade de Pointes." },
+        { "codigo": "ICC", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia cardíaca." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Precaución en hepatopatía. Monitoreo de función hepática." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor." }
+      ]
+    },
+    {
+      "nombre": "Atorvastatina",
+      "codigoATC": "C10AA05",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Potencial riesgo de inhibir la síntesis de hormonas derivadas del colesterol." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se desconoce su excreción. El paso a leche de cantidades significativas es improbable. Evaluar riesgo/beneficio." },
+      "condiciones": [
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave y hepatopatías activas." },
+        { "codigo": "DM2", "severidad": "PRECAUCION", "texto": "Precaución en diabetes. Puede aumentar la glucemia en ayunas y la hemoglobina glicosilada." },
+        { "codigo": "HIPOTIROIDISMO", "severidad": "PRECAUCION", "texto": "Precaución en hipotiroidismo." },
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia renal." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor." }
+      ]
+    },
+    {
+      "nombre": "Azitromicina",
+      "codigoATC": "J01FA10",
+      "embarazo": { "severidad": "PRECAUCION", "texto": "En animales no ha demostrado toxicidad. Evaluar riesgo/beneficio." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se excreta en leche en cantidades no significativas. Vigilar diarrea y candidiasis en el lactante." },
+      "renal": { "sinAjuste": true, "dosisFrNormal": "500 mg/24 h", "texto": "No requiere ajuste en insuficiencia renal." },
+      "condiciones": [
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado ante insuficiencia hepatocítica o ictericia previa asociada al fármaco." },
+        { "codigo": "MIASTENIA", "severidad": "PRECAUCION", "texto": "Precaución en miastenia gravis." },
+        { "codigo": "QT_LARGO", "severidad": "PRECAUCION", "texto": "Aumenta el intervalo QT. Precaución en portadores de QT largo congénito o conocido." },
+        { "codigo": "ICC", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia cardíaca y condiciones arritmogénicas." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor." }
+      ]
+    },
+    {
+      "nombre": "Ciprofloxacino",
+      "codigoATC": "J01MA02",
+      "embarazo": { "severidad": "PRECAUCION", "texto": "No se ha demostrado teratogenicidad ni toxicidad. Evaluar riesgo/beneficio." },
+      "lactancia": { "severidad": "EVITAR", "texto": "Se excreta por la leche materna. No se recomienda por el riesgo de lesión articular, salvo que se requiera una fluoroquinolona." },
+      "condiciones": [
+        { "codigo": "EPILEPSIA", "severidad": "PRECAUCION", "texto": "Precaución en epilepsia. Puede producir convulsiones." },
+        { "codigo": "MIASTENIA", "severidad": "PRECAUCION", "texto": "Precaución en miastenia gravis: puede exacerbarla." },
+        { "codigo": "DEFICIT_G6PD", "severidad": "PRECAUCION", "texto": "Riesgo de anemia hemolítica en pacientes con déficit de G6PD." },
+        { "codigo": "QT_LARGO", "severidad": "PRECAUCION", "texto": "Prolonga el intervalo QTc. Precaución ante QT prolongado congénito." },
+        { "codigo": "DM2", "severidad": "PRECAUCION", "texto": "Precaución en diabéticos: riesgo de hipoglicemia e hiperglicemia." },
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "Ajustar intervalo de dosis según clearance de creatinina." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor: mayor riesgo de tendinitis y ruptura tendinosa." }
+      ]
+    },
+    {
+      "nombre": "Claritromicina",
+      "codigoATC": "J01FA09",
+      "embarazo": { "severidad": "EVITAR", "texto": "En animales toxicidad demostrada. No se recomienda. Mujeres en edad fértil deben utilizar anticonceptivos." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se excreta en cantidades no significativas. Vigilar diarrea y candidiasis en el lactante." },
+      "renal": {
+        "dosisFrNormal": "500 mg c/12 h",
+        "metodoAjuste": "D_E_I",
+        "rangos": [
+          { "clcrMin": 30, "clcrMax": null, "rangoTexto": "≥30 mL/min", "tipo": "SIN_AJUSTE", "textoRecomendacion": "100 %" },
+          { "clcrMin": 10, "clcrMax": 29, "rangoTexto": "<30 mL/min", "tipo": "REDUCIR_DOSIS", "textoRecomendacion": "Mitad de dosis, igual intervalo" },
+          { "clcrMin": null, "clcrMax": 9, "rangoTexto": "<10 mL/min", "tipo": "REDUCIR_DOSIS_Y_INTERVALO", "textoRecomendacion": "Mitad de dosis una vez/día" }
+        ]
+      },
+      "condiciones": [
+        { "codigo": "QT_LARGO", "severidad": "CONTRAINDICADO", "texto": "Contraindicado ante intervalo QT prolongado." },
+        { "codigo": "HIPOPOTASEMIA", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en hipopotasemia." },
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." },
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal grave." },
+        { "codigo": "MIASTENIA", "severidad": "PRECAUCION", "texto": "Precaución en miastenia gravis." }
+      ]
+    },
+    {
+      "nombre": "Colchicina",
+      "codigoATC": "M04AC01",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "En animales, teratogenicidad demostrada." },
+      "lactancia": { "severidad": "EVITAR", "texto": "Se excreta a través de la leche materna. No se recomienda su uso durante la lactancia." },
+      "condiciones": [
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal grave." },
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor. Margen terapéutico estrecho." }
+      ]
+    },
+    {
+      "nombre": "Diclofenaco",
+      "codigoATC": "M01AB05",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Toxicidad demostrada en el tercer trimestre. En el resto del embarazo no se aconseja su uso.", "semanaMin": 28 },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se excreta en leche materna en cantidades no significativas. Evaluar riesgo/beneficio." },
+      "condiciones": [
+        { "codigo": "ULCERA", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en úlcera péptica activa y hemorragia activa." },
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal severa." },
+        { "codigo": "ICC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia cardíaca congestiva establecida (NYHA II-IV)." }
+      ]
+    },
+    {
+      "nombre": "Digoxina",
+      "codigoATC": "C01AA05",
+      "embarazo": { "severidad": "PRECAUCION", "texto": "La evidencia disponible no ha demostrado toxicidad. Teratogenicidad no evaluada. Evaluar riesgo/beneficio." },
+      "condiciones": [
+        { "codigo": "FA", "severidad": "INFO", "texto": "Indicado en fibrilación auricular con frecuencia rápida." },
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "Ajustar dosis o intervalo en insuficiencia renal. No se dializa." },
+        { "codigo": "HIPOTIROIDISMO", "severidad": "PRECAUCION", "texto": "Precaución en hipo e hipertiroidismo." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Riesgo de intoxicación por disminución del volumen de distribución y aumento de la vida media." }
+      ]
+    },
+    {
+      "nombre": "Diltiazem",
+      "codigoATC": "C08DB01",
+      "embarazo": { "severidad": "EVITAR", "texto": "En animales toxicidad demostrada. No se recomienda." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se excreta en la leche. Evaluar riesgo/beneficio, elegir alternativa segura." },
+      "condiciones": [
+        { "codigo": "ICC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia cardíaca izquierda severa." },
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia renal." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia hepática." },
+        { "codigo": "DM2", "severidad": "PRECAUCION", "texto": "Precaución en diabetes." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor." }
+      ]
+    },
+    {
+      "nombre": "Enalapril",
+      "codigoATC": "C09AA02",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Teratogenicidad y toxicidad demostradas. Puede causar hipoplasia pulmonar, retraso del crecimiento, hipotensión, falla renal, anuria y oligoamnios." },
+      "condiciones": [
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal severa y en estenosis de la arteria renal." },
+        { "codigo": "HIPERPOTASEMIA", "severidad": "PRECAUCION", "texto": "Riesgo de hiperpotasemia, sobre todo en insuficiencia renal o con ahorradores de potasio." },
+        { "codigo": "ICC", "severidad": "INFO", "texto": "Indicado en insuficiencia cardíaca en todas sus etapas. Comenzar con dosis bajas." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Posible respuesta exagerada por descenso del filtrado glomerular o depleción de volumen." }
+      ]
+    },
+    {
+      "nombre": "Escitalopram",
+      "codigoATC": "N06AB10",
+      "embarazo": { "severidad": "EVITAR", "texto": "Evitar en el tercer trimestre.", "semanaMin": 28 },
+      "condiciones": [
+        { "codigo": "QT_LARGO", "severidad": "CONTRAINDICADO", "texto": "Contraindicado ante antecedentes de QT largo." },
+        { "codigo": "EPILEPSIA", "severidad": "PRECAUCION", "texto": "Precaución en pacientes con convulsiones." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia hepática. Reducir dosis." },
+        { "codigo": "GLAUCOMA", "severidad": "PRECAUCION", "texto": "Precaución en glaucoma de ángulo cerrado." },
+        { "codigo": "DEPRESION", "severidad": "PRECAUCION", "texto": "Monitorear riesgo suicida los 2 primeros meses del tratamiento." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "En mayores de 65 años, dosis máxima 10 mg/día." }
+      ]
+    },
+    {
+      "nombre": "Fluconazol",
+      "codigoATC": "J02AC01",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Teratogenicidad en humanos. Contraindicado en el primer trimestre; posteriormente valorar riesgo/beneficio.", "semanaMax": 13 },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Compatible en dosis única de 150-200 mg. No se recomiendan dosis múltiples ni altas dosis." },
+      "condiciones": [
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "Ajustar dosis en insuficiencia renal." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia hepática." },
+        { "codigo": "QT_LARGO", "severidad": "PRECAUCION", "texto": "Riesgo de arritmias ventriculares y torsade de pointes." }
+      ]
+    },
+    {
+      "nombre": "Fluoxetina",
+      "codigoATC": "N06AB03",
+      "embarazo": { "severidad": "EVITAR", "texto": "Evitar en el tercer trimestre.", "semanaMin": 28 },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Vigilar en el lactante sedación, curva de peso, irritabilidad e insomnio. Preferir sertralina o paroxetina." },
+      "condiciones": [
+        { "codigo": "EPILEPSIA", "severidad": "PRECAUCION", "texto": "Precaución en pacientes con convulsiones." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Insuficiencia hepática: requiere ajuste de dosis." },
+        { "codigo": "GLAUCOMA", "severidad": "PRECAUCION", "texto": "Precaución en glaucoma de ángulo cerrado." },
+        { "codigo": "DEPRESION", "severidad": "PRECAUCION", "texto": "Monitorear riesgo suicida los 2 primeros meses del tratamiento." }
+      ]
+    },
+    {
+      "nombre": "Glibenclamida",
+      "codigoATC": "A10BB01",
+      "embarazo": { "severidad": "PRECAUCION", "texto": "No indicada en la diabetes gestacional. En animales disminuye el crecimiento de huesos largos. Evaluar riesgo/beneficio." },
+      "condiciones": [
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal grave." },
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." },
+        { "codigo": "DEFICIT_G6PD", "severidad": "PRECAUCION", "texto": "Riesgo de anemia hemolítica en déficit de glucosa 6-fosfato deshidrogenasa." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor: riesgo de hipoglicemia." }
+      ]
+    },
+    {
+      "nombre": "Gliclazida",
+      "codigoATC": "A10BB09",
+      "embarazo": { "severidad": "PRECAUCION", "texto": "No indicada en la diabetes gestacional. En animales no ha demostrado teratogenicidad. Evaluar riesgo/beneficio." },
+      "lactancia": { "severidad": "EVITAR", "texto": "Eventual riesgo de hipoglicemia. No se recomienda." },
+      "condiciones": [
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal grave." },
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." },
+        { "codigo": "DEFICIT_G6PD", "severidad": "PRECAUCION", "texto": "Riesgo de anemia hemolítica en déficit de glucosa 6-fosfato deshidrogenasa." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "INFO", "texto": "De elección en adultos mayores dentro de las sulfonilureas." }
+      ]
+    },
+    {
+      "nombre": "Ibuprofeno",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Contraindicado en el tercer trimestre.", "semanaMin": 28 },
+      "condiciones": [
+        { "codigo": "ULCERA", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en enfermedad ulceropéptica activa y antecedentes de hemorragia o perforación por AINE." },
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal severa." },
+        { "codigo": "ICC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia cardíaca clase II-IV de NYHA." },
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática severa." },
+        { "codigo": "ASMA", "severidad": "PRECAUCION", "texto": "Precaución en asma, rinitis alérgica estacional y pólipos nasales." },
+        { "codigo": "EPOC", "severidad": "PRECAUCION", "texto": "Precaución en enfermedad pulmonar obstructiva crónica." },
+        { "codigo": "HTA", "severidad": "PRECAUCION", "texto": "Precaución en hipertensión arterial." },
+        { "codigo": "DM2", "severidad": "PRECAUCION", "texto": "Precaución en diabetes y dislipemia." }
+      ]
+    },
+    {
+      "nombre": "Itraconazol",
+      "codigoATC": "J02AC02",
+      "embarazo": { "severidad": "EVITAR", "texto": "En animales teratogenicidad demostrada. Evitar su uso." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Escasa excreción en la leche materna. Evaluar riesgo/beneficio." },
+      "condiciones": [
+        { "codigo": "ICC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia cardíaca cuando se usa para onicomicosis." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Precaución en hepatopatía." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en mayores de 65 años." }
+      ]
+    },
+    {
+      "nombre": "Levofloxacino",
+      "codigoATC": "J01MA12",
+      "embarazo": { "severidad": "PRECAUCION", "texto": "En animales no ha demostrado teratogenicidad ni toxicidad. Evaluar riesgo/beneficio." },
+      "lactancia": { "severidad": "EVITAR", "texto": "Se excreta por la leche materna. No se recomienda por el riesgo de lesión articular." },
+      "renal": {
+        "dosisFrNormal": "500-750 mg/24 h",
+        "metodoAjuste": "D_E_I",
+        "rangos": [
+          { "clcrMin": 51, "clcrMax": null, "rangoTexto": ">50 mL/min", "tipo": "SIN_AJUSTE", "textoRecomendacion": "100 %" },
+          { "clcrMin": 20, "clcrMax": 50, "rangoTexto": "50-20 mL/min", "tipo": "REDUCIR_DOSIS_Y_INTERVALO", "textoRecomendacion": "Reducir de 500 a 250 mg c/24 h; si la dosis indicada es 750 mg, aumentar el intervalo a c/48 h" },
+          { "clcrMin": null, "clcrMax": 19, "rangoTexto": "<20 mL/min y hemodiálisis", "tipo": "REDUCIR_DOSIS", "textoRecomendacion": "125-250 mg c/24 h según gravedad de la infección" }
+        ]
+      },
+      "condiciones": [
+        { "codigo": "EPILEPSIA", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en epilepsia." },
+        { "codigo": "MIASTENIA", "severidad": "PRECAUCION", "texto": "Precaución en miastenia gravis." },
+        { "codigo": "DEFICIT_G6PD", "severidad": "PRECAUCION", "texto": "Riesgo de anemia hemolítica en pacientes con déficit de G6PD." },
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "Requiere ajuste de dosis en insuficiencia renal." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia hepática." },
+        { "codigo": "DM2", "severidad": "PRECAUCION", "texto": "Precaución en diabéticos: riesgo de hipoglicemia e hiperglicemia." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor: mayor riesgo de tendinitis y de aneurisma aórtico." }
+      ]
+    },
+    {
+      "nombre": "Litio, Carbonato",
+      "codigoATC": "N05AN01",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Teratogenicidad demostrada." },
+      "lactancia": { "severidad": "CONTRAINDICADO", "texto": "Contraindicado durante la lactancia." },
+      "condiciones": [
+        { "codigo": "HIPONATREMIA", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en hiponatremia, uso de natriuréticos o dieta hiposódica." },
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en enfermedad renal severa." },
+        { "codigo": "ICC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en enfermedad cardiovascular severa." },
+        { "codigo": "HIPOTIROIDISMO", "severidad": "PRECAUCION", "texto": "Precaución en bocio o hipotiroidismo. Control periódico de función tiroidea." },
+        { "codigo": "DM2", "severidad": "PRECAUCION", "texto": "Precaución en diabetes." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "En mayores de 65 años aumenta la susceptibilidad a reacciones neurotóxicas." }
+      ]
+    },
+    {
+      "nombre": "Losartan",
+      "codigoATC": "C09CA01",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Teratogenicidad y toxicidad demostradas. Puede causar hipotensión, falla renal, anuria y oligoamnios." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se desconoce su excreción. El paso a leche en cantidades significativas es improbable. Elegir alternativa segura." },
+      "renal": { "sinAjuste": true, "dosisFrNormal": "25-100 mg/24 h", "texto": "No requiere ajuste posológico en la insuficiencia renal." },
+      "condiciones": [
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "En insuficiencia renal puede provocar hiperpotasemia. Contraindicado ante estenosis bilateral de la arteria renal." },
+        { "codigo": "HIPERPOTASEMIA", "severidad": "PRECAUCION", "texto": "Riesgo de hiperpotasemia, sobre todo con ahorradores de potasio o suplementos de potasio." },
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave." },
+        { "codigo": "ICC", "severidad": "INFO", "texto": "Indicado en insuficiencia cardíaca." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Valorar función renal e hipovolemia en el adulto mayor." }
+      ]
+    },
+    {
+      "nombre": "Metformina",
+      "codigoATC": "A10BA02",
+      "embarazo": { "severidad": "PRECAUCION", "texto": "Aceptada en el tratamiento de la diabetes gestacional; no se interrumpe si la paciente ya la estaba tomando. La insulina es de elección si no se alcanzan los objetivos." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se excreta en leche materna en cantidades insignificantes. No se han observado problemas en los lactantes." },
+      "renal": {
+        "dosisFrNormal": "500-850 mg c/8-12 h",
+        "metodoAjuste": "D",
+        "rangos": [
+          { "clcrMin": 90, "clcrMax": null, "rangoTexto": "≥90 mL/min", "tipo": "SIN_AJUSTE", "textoRecomendacion": "100 %" },
+          { "clcrMin": 60, "clcrMax": 89, "rangoTexto": "60-89 mL/min", "tipo": "REDUCIR_DOSIS", "textoRecomendacion": "Dosis máxima 3 g/día" },
+          { "clcrMin": 45, "clcrMax": 59, "rangoTexto": "45-59 mL/min", "tipo": "REDUCIR_DOSIS", "textoRecomendacion": "Dosis máxima 2 g/día" },
+          { "clcrMin": 30, "clcrMax": 44, "rangoTexto": "30-44 mL/min", "tipo": "REDUCIR_DOSIS", "textoRecomendacion": "Dosis máxima 1 g/día" },
+          { "clcrMin": null, "clcrMax": 29, "rangoTexto": "<30 mL/min", "tipo": "CONTRAINDICADO", "textoRecomendacion": "Contraindicada" }
+        ]
+      },
+      "condiciones": [
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal grave con clearance menor de 30 mL/min o creatininemia mayor a 1,5." },
+        { "codigo": "ICC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia cardíaca descompensada por riesgo de hipoxia tisular." },
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática." },
+        { "codigo": "EPOC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia respiratoria por riesgo de hipoxia tisular." },
+        { "codigo": "DM2", "severidad": "INFO", "texto": "Primera línea de tratamiento farmacológico en la diabetes mellitus tipo 2." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Evaluar función renal con mayor frecuencia en adultos mayores." }
+      ]
+    },
+    {
+      "nombre": "Metotrexato",
+      "codigoATC": "L01BA01",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Teratogenicidad y toxicidad demostradas." },
+      "lactancia": { "severidad": "CONTRAINDICADO", "texto": "Se excreta en la leche. Contraindicado." },
+      "condiciones": [
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado con ClCr menor a 30 mL/min." },
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática severa o hiperbilirrubinemia mayor a 5 mg/dL." },
+        { "codigo": "ULCERA", "severidad": "PRECAUCION", "texto": "Precaución en úlcera gastroduodenal y colitis ulcerosa." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en mayores de 65 años." }
+      ]
+    },
+    {
+      "nombre": "Naproxeno",
+      "codigoATC": "M01AE02",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Toxicidad demostrada en el tercer trimestre. En el resto del embarazo no se aconseja su uso.", "semanaMin": 28 },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se excreta en leche materna en pequeña cantidad. Evaluar riesgo/beneficio." },
+      "condiciones": [
+        { "codigo": "ULCERA", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en úlcera péptica activa y hemorragia activa." },
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal severa." },
+        { "codigo": "ICC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia cardíaca clase funcional IV." },
+        { "codigo": "ASMA", "severidad": "PRECAUCION", "texto": "Mayor riesgo de reacciones de hipersensibilidad en rinitis alérgica." },
+        { "codigo": "EPOC", "severidad": "PRECAUCION", "texto": "Mayor riesgo de hipersensibilidad en enfermedades pulmonares obstructivas crónicas." },
+        { "codigo": "HTA", "severidad": "PRECAUCION", "texto": "Precaución en hipertensión arterial." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Mayores de 65 años: riesgo aumentado de sangrado gastrointestinal y toxicidad renal." }
+      ]
+    },
+    {
+      "nombre": "Paracetamol",
+      "codigoATC": "N02BE01",
+      "condiciones": [
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática severa." },
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "En insuficiencia renal severa se acumula: espaciar o disminuir dosis." },
+        { "codigo": "OBESIDAD", "severidad": "PRECAUCION", "texto": "Aumenta el riesgo de toxicidad en obesos." },
+        { "codigo": "DM2", "severidad": "PRECAUCION", "texto": "Aumenta el riesgo de toxicidad en diabéticos." },
+        { "codigo": "ASMA", "severidad": "INFO", "texto": "De elección ante contraindicación de otros AINE, por ejemplo en asma." }
+      ]
+    },
+    {
+      "nombre": "Rifampicina",
+      "codigoATC": "J04AB02",
+      "embarazo": { "severidad": "EVITAR", "texto": "En animales teratogenicidad demostrada. Al final del embarazo puede causar hemorragias postparto en la madre y el recién nacido." },
+      "condiciones": [
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "En insuficiencia hepática no superar la dosis máxima diaria de 8 mg/kg." },
+        { "codigo": "DM2", "severidad": "PRECAUCION", "texto": "Precaución en diabetes mellitus." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor." }
+      ]
+    },
+    {
+      "nombre": "Rosuvastatina",
+      "codigoATC": "C10AA07",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Potencial riesgo de inhibir la síntesis de hormonas derivadas del colesterol, esenciales para el desarrollo del feto." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se excreta en la leche. El paso de cantidades significativas es improbable. Evaluar riesgo/beneficio." },
+      "renal": {
+        "dosisFrNormal": "5-40 mg/24 h",
+        "metodoAjuste": "D",
+        "rangos": [
+          { "clcrMin": 60, "clcrMax": null, "rangoTexto": "≥60 mL/min", "tipo": "SIN_AJUSTE", "textoRecomendacion": "100 %" },
+          { "clcrMin": 30, "clcrMax": 59, "rangoTexto": "60-30 mL/min", "tipo": "REDUCIR_DOSIS", "textoRecomendacion": "La dosis de 40 mg/día está contraindicada" },
+          { "clcrMin": null, "clcrMax": 29, "rangoTexto": "<30 mL/min", "tipo": "CONTRAINDICADO", "textoRecomendacion": "Contraindicada" }
+        ]
+      },
+      "condiciones": [
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave y hepatopatías activas." },
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado con ClCr menor a 30 mL/min." },
+        { "codigo": "HIPOTIROIDISMO", "severidad": "PRECAUCION", "texto": "Precaución en hipotiroidismo: mayor riesgo de miopatía." },
+        { "codigo": "DM2", "severidad": "PRECAUCION", "texto": "Puede aumentar la glucemia en ayunas y la hemoglobina glicosilada." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor." }
+      ]
+    },
+    {
+      "nombre": "Sertralina",
+      "codigoATC": "N06AB06",
+      "embarazo": { "severidad": "EVITAR", "texto": "Evitar en el tercer trimestre.", "semanaMin": 28 },
+      "condiciones": [
+        { "codigo": "QT_LARGO", "severidad": "PRECAUCION", "texto": "Precaución ante antecedentes de QT largo o uso concomitante de fármacos que lo prolongan." },
+        { "codigo": "EPILEPSIA", "severidad": "PRECAUCION", "texto": "Precaución en pacientes con convulsiones." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia hepática." },
+        { "codigo": "GLAUCOMA", "severidad": "PRECAUCION", "texto": "Precaución en glaucoma de ángulo cerrado." },
+        { "codigo": "DEPRESION", "severidad": "PRECAUCION", "texto": "Monitorear riesgo suicida los 2 primeros meses del tratamiento." }
+      ]
+    },
+    {
+      "nombre": "Simvastatina",
+      "codigoATC": "C10AA01",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Potencial riesgo de inhibir la síntesis de hormonas derivadas del colesterol, esenciales para el desarrollo del feto." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se desconoce su excreción. El paso a leche de cantidades significativas es improbable. Evaluar riesgo/beneficio." },
+      "condiciones": [
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave y hepatopatías activas." },
+        { "codigo": "HIPOTIROIDISMO", "severidad": "PRECAUCION", "texto": "Precaución en hipotiroidismo: mayor riesgo de miopatía." },
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia renal." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Adulto mayor: iniciar con 5 mg/día y aumentar gradualmente." }
+      ]
+    },
+    {
+      "nombre": "Tramadol",
+      "codigoATC": "N02AX02",
+      "embarazo": { "severidad": "EVITAR", "texto": "Atraviesa la barrera placentaria. No se aconseja su uso durante el embarazo." },
+      "lactancia": { "severidad": "PRECAUCION", "texto": "Se excreta en cantidades poco significativas. Posible sedación y trastornos alimenticios. Evitar uso prolongado." },
+      "condiciones": [
+        { "codigo": "EPILEPSIA", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en epilepsia." },
+        { "codigo": "DEPRESION", "severidad": "PRECAUCION", "texto": "Precaución ante depresión o labilidad emocional. Contraindicado ante ideación suicida." },
+        { "codigo": "EPOC", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia respiratoria." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Riesgo aumentado de toxicidad en insuficiencia hepática. Evitar liberación prolongada si es severa." },
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "Riesgo aumentado de toxicidad en insuficiencia renal. Evitar liberación prolongada si es severa." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Mayores de 65 años: riesgo aumentado de toxicidad." }
+      ]
+    },
+    {
+      "nombre": "Verapamilo",
+      "codigoATC": "C08DA01",
+      "embarazo": { "severidad": "EVITAR", "texto": "Evidencia insuficiente. No se recomienda." },
+      "condiciones": [
+        { "codigo": "ICC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia cardíaca izquierda severa y en insuficiencia cardíaca congestiva con FEVI menor de 35 %." },
+        { "codigo": "FA", "severidad": "INFO", "texto": "Indicado en prevención de flutter y fibrilación auricular, excepto en síndrome de Wolff-Parkinson-White." },
+        { "codigo": "CIRROSIS", "severidad": "PRECAUCION", "texto": "Insuficiencia hepática moderada a severa: reducir dosis a 50 %." },
+        { "codigo": "ERC", "severidad": "PRECAUCION", "texto": "Precaución en insuficiencia renal." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Precaución en el adulto mayor: iniciar con 40 mg c/8 h." }
+      ]
+    },
+    {
+      "nombre": "Warfarina",
+      "codigoATC": "B01AA03",
+      "embarazo": { "severidad": "CONTRAINDICADO", "texto": "Contraindicado durante el embarazo." },
+      "condiciones": [
+        { "codigo": "ULCERA", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en úlcera gastroduodenal." },
+        { "codigo": "HTA", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en hipertensión arterial grave." },
+        { "codigo": "CIRROSIS", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia hepática grave. Precaución en la leve o moderada." },
+        { "codigo": "ERC", "severidad": "CONTRAINDICADO", "texto": "Contraindicado en insuficiencia renal grave. Precaución en nefropatía." },
+        { "codigo": "ICC", "severidad": "PRECAUCION", "texto": "En insuficiencia cardíaca grave puede requerir dosis menores a las recomendadas." },
+        { "codigo": "HIPOTIROIDISMO", "severidad": "PRECAUCION", "texto": "Precaución en tirotoxicosis." },
+        { "codigo": "FA", "severidad": "INFO", "texto": "Indicado en profilaxis de embolias sistémicas en fibrilación auricular." },
+        { "codigo": "ADULTO_MAYOR", "severidad": "PRECAUCION", "texto": "Mayores de 65 años pueden requerir dosis menores a las recomendadas." }
+      ]
+    }
+  ]
+}
