@@ -172,6 +172,12 @@ export class CatalogoController {
     return this.catalogo.fichaLibre(id);
   }
 
+  /** Otras dosis/formas de la misma marca. Libre, igual que la ficha. */
+  @Get('productos/:id/presentaciones')
+  presentaciones(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.catalogo.presentaciones(id);
+  }
+
   /**
    * El detalle de UNA restricción de un producto.
    *
@@ -208,7 +214,7 @@ export class CatalogoController {
         : clave === 'RENAL'
           ? { tablasRenales: ficha.tablasRenales }
           : clave === 'HEPATICO'
-            ? { tablasHepaticas: [] }
+            ? { tablasHepaticas: ficha.tablasHepaticas }
             : clave === 'EMBARAZO'
               ? { alertas: ficha.embarazo }
               : { alertas: ficha.lactancia };
@@ -269,6 +275,13 @@ export class HerramientasController {
     return this.herramientas.ajusteRenal(dto);
   }
 
+  /**
+   * Cruza fármacos contra una clase de Child-Pugh, así que pide suscripción
+   * igual que el renal: lo que se paga es el catálogo, no la fórmula. La
+   * calculadora de la clase sola sigue libre y corre en el teléfono sin tocar
+   * esta ruta (`app/herramientas/hepatico.tsx`), igual que la de Clcr.
+   */
+  @DePago('Cruzar fármacos contra una clase de Child-Pugh')
   @Post('ajuste-hepatico')
   @HttpCode(200)
   ajusteHepatico(@Cuerpo(HerramientaHepaticaDto) dto: HerramientaHepaticaDto) {

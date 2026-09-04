@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
-import { normalizar, restriccionesDe } from '@gfh/shared-types';
+import { normalizar, restriccionesDe, seccionesDe } from '@gfh/shared-types';
 
 import {
   agruparInteracciones,
@@ -108,6 +108,7 @@ export class CatalogoService {
         grupoTerapeutico: true,
         tieneAjusteRenal: true,
         tieneAjusteHepatico: true,
+        codigoATC: true,
       },
     });
   }
@@ -146,6 +147,7 @@ export class CatalogoService {
               include: {
                 ajustesRenales: { include: { rangos: { orderBy: { orden: 'asc' } } } },
                 ajustesHepaticos: { include: { rangos: true } },
+                monografia: true,
               },
             },
           },
@@ -182,6 +184,22 @@ export class CatalogoService {
           estadoValidacion: a.estadoValidacion,
         }));
 
+    // El genérico de cada componente — un producto sintético por principio
+    // activo (ver comentario en el modelo) — es a donde lleva tocar un
+    // fármaco en Composición: la ficha nunca cuelga de un PrincipioActivo
+    // solo, siempre de un producto (regla no negociable 8).
+    const genericos = await this.prisma.productoComercial.findMany({
+      where: {
+        esGenerico: true,
+        principiosActivos: { some: { principioActivoId: { in: pas.map((p) => p.id) } } },
+      },
+      select: { id: true, principiosActivos: { select: { principioActivoId: true } } },
+    });
+    const genericoPorPa = new Map<string, string>();
+    for (const g of genericos) {
+      for (const rel of g.principiosActivos) genericoPorPa.set(rel.principioActivoId, g.id);
+    }
+
     return {
       id: producto.id,
       nombreComercial: producto.nombreComercial,
@@ -194,7 +212,25 @@ export class CatalogoService {
         nombre: pa.nombre,
         grupoTerapeutico: pa.grupoTerapeutico,
         codigoATC: pa.codigoATC,
+        // Null cuando el propio producto YA ES el genérico de ese componente
+        // (nada a donde ir que no sea esta misma ficha) o cuando el catálogo
+        // no tiene un genérico cargado para él todavía.
+        productoGenericoId:
+          genericoPorPa.get(pa.id) === producto.id ? null : (genericoPorPa.get(pa.id) ?? null),
       })),
+
+      /**
+       * La monografía, partida en secciones y sin las vacías.
+       *
+       * Va en la ficha LIBRE y no detrás del cupo: lo que se paga es el motor
+       * —en qué trimestre, cuánto ajustar, con qué interactúa ESTE paciente—,
+       * no el texto descriptivo, que cualquier vademécum ya da. Cobrar por
+       * leer sería cobrar por lo único que no calculamos nosotros.
+       *
+       * Se arma por PRINCIPIO ACTIVO: en una asociación cada componente trae
+       * la suya y el médico elige cuál abrir.
+       */
+      monografias: monografiasDe(pas),
       // Los chips salen de CUALQUIER componente que tenga tabla.
       tieneAjusteRenal: pas.some((pa) => pa.tieneAjusteRenal),
       tieneAjusteHepatico: pas.some((pa) => pa.tieneAjusteHepatico),
@@ -213,6 +249,25 @@ export class CatalogoService {
             tipo: r.tipo,
           })),
         })),
+      ),
+      // Una fila por (fármaco, clase) — flat, como espera `peldanosHepaticos`
+      // del lado de la app. Un combinado con dos componentes con tabla propia
+      // simplemente aporta más filas; el peldaño de cada clase se pinta con la
+      // primera que encuentra, igual que el resto de la ficha no distingue
+      // componente en la vista resumida.
+      tablasHepaticas: pas.flatMap((pa) =>
+        pa.ajustesHepaticos.flatMap((a) =>
+          a.rangos.map((r) => ({
+            principioActivo: pa.nombre,
+            via: a.viaAdministracion,
+            dosisFuncionNormal: a.dosisFuncionNormal,
+            clase: r.clase,
+            texto: r.textoRecomendacion,
+            severidad: r.tipo,
+            estadoValidacion: a.estadoValidacion,
+            requiereRevision: a.requiereRevision,
+          })),
+        ),
       ),
       // Interacciones conocidas del fármaco, generales: acá no hay paciente,
       // así que no hay severidad instanciada contra nadie.
@@ -271,6 +326,7 @@ export class CatalogoService {
 
     const {
       tablasRenales,
+      tablasHepaticas: _tablasHepaticas,
       embarazo,
       lactancia,
       interaccionesConocidas,
@@ -370,12 +426,55 @@ export class CatalogoService {
       }),
     );
 
+    // El nivel 5 (subgrupo químico, ej. J01CA) es el que de verdad sirve como
+    // "esto es intercambiable con esto" — los niveles 1/3/4 son demasiado
+    // anchos para listar (todo el grupo anatómico), sólo cuentan.
+    const prefijoSubgrupo = pa.codigoATC.slice(0, 5);
+    const mismoSubgrupo =
+      prefijoSubgrupo.length === 5
+        ? await this.prisma.principioActivo.findMany({
+            where: { codigoATC: { startsWith: prefijoSubgrupo }, id: { not: pa.id } },
+            orderBy: { nombre: 'asc' },
+            take: 30,
+            select: { id: true, nombre: true, tieneAjusteRenal: true, tieneAjusteHepatico: true },
+          })
+        : [];
+
     return {
       codigoATC: pa.codigoATC,
       motivoSinDatos: null,
       niveles,
+      mismoSubgrupo,
       mismaClase: await this.mismaClase(pa.grupoTerapeutico, pa.id),
     };
+  }
+
+  /**
+   * Otras dosis/formas de la misma marca — "Klaricid 500" y "Klaricid 250" son
+   * dos filas de catálogo sin relación explícita hoy; se agrupan por
+   * (nombreNormalizado, laboratorio), que ya es lo que las distingue de una
+   * marca DISTINTA (el `@@unique` de la tabla usa esas mismas columnas).
+   *
+   * Con el catálogo actual (631 genéricos, uno por principio activo) esto casi
+   * siempre devuelve una lista de un solo elemento — recién va a tener
+   * contenido real cuando se cargue un catálogo comercial con variantes de
+   * verdad. No es un bug: es que todavía no hay más de una presentación
+   * cargada para ninguna marca.
+   */
+  async presentaciones(productoId: string) {
+    const producto = await this.prisma.productoComercial.findUnique({
+      where: { id: productoId },
+      select: { nombreNormalizado: true, laboratorio: true },
+    });
+    if (!producto) throw new NotFoundException('Producto no encontrado.');
+
+    const hermanos = await this.prisma.productoComercial.findMany({
+      where: { nombreNormalizado: producto.nombreNormalizado, laboratorio: producto.laboratorio },
+      orderBy: [{ dosisTexto: 'asc' }, { formaFarmaceutica: 'asc' }],
+      select: { id: true, nombreComercial: true, dosisTexto: true, formaFarmaceutica: true, esGenerico: true },
+    });
+
+    return hermanos.map((h) => ({ ...h, actual: h.id === productoId }));
   }
 
   private async mismaClase(grupoTerapeutico: string | null, excluirId: string) {
@@ -384,7 +483,7 @@ export class CatalogoService {
       where: { grupoTerapeutico, id: { not: excluirId } },
       orderBy: { nombre: 'asc' },
       take: 30,
-      select: { id: true, nombre: true, tieneAjusteRenal: true },
+      select: { id: true, nombre: true, tieneAjusteRenal: true, tieneAjusteHepatico: true },
     });
   }
 
@@ -426,6 +525,25 @@ export class CatalogoService {
  * recetar. Se conserva la peor porque perder la contraindicada y mostrar la
  * alta sería una rebaja silenciosa de la severidad.
  */
+/**
+ * Las monografías de un producto, una por principio activo que tenga texto.
+ *
+ * El fármaco sin monografía NO aparece en la lista, ni siquiera vacío: la
+ * pantalla dibuja lo que recibe, y una entrada vacía le haría poner el índice
+ * de secciones de un fármaco del que no sabemos nada.
+ *
+ * En una asociación pueden venir dos, y van las dos: cada componente tiene su
+ * propio texto y fusionarlos perdería de cuál habla cada frase.
+ */
+export function monografiasDe<
+  T extends { nombre: string; monografia?: Parameters<typeof seccionesDe>[0] },
+>(pas: readonly T[]) {
+  return pas.flatMap((pa) => {
+    const secciones = seccionesDe(pa.monografia);
+    return secciones.length === 0 ? [] : [{ principioActivo: pa.nombre, secciones }];
+  });
+}
+
 const PESO_SEVERIDAD: Record<string, number> = { CONTRAINDICADA: 0, ALTA: 1, INFORMATIVA: 3 };
 
 export function unicasPorFarmaco<T extends { conNombre: string; severidad: string }>(

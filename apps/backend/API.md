@@ -284,7 +284,10 @@ Resuelve texto libre contra el catálogo. Lo que no matchea vuelve marcado como
 
 ### `GET /catalogo/productos/indice`
 El catálogo entero, mínimo, para buscar en el teléfono sin ir y volver.
-Hoy **638 productos, 154 KB** medidos.
+Hoy **232 productos, ~56 KB** — el catálogo se limpió el 2026-09-03 (ver
+`apps/backend/prisma/limpiar-catalogo.ts`): quedó lo verificado contra ficha
+real o lo que ya sostiene una regla de interacción, una alerta o una
+alternativa terapéutica cargada; salió la tabla renal SEN cruda sin curar.
 
 ### `GET /catalogo/productos/conteo`
 
@@ -292,6 +295,10 @@ Hoy **638 productos, 154 KB** medidos.
 La ficha **libre**: composición, presentación, familia alergénica, y el
 **estado** de cada una de las cinco restricciones (`ok`, `evitar`, `precaucion`,
 `ajustar`, `sindato`) con su glosa. El estado sí; el detalle no.
+
+### `GET /catalogo/productos/:id/presentaciones`
+Otros envases/dosis del mismo producto (mismo nombre y laboratorio) — para la
+pestaña "Presentaciones" de la ficha.
 
 ### `POST /catalogo/productos/:id/restricciones/:herramienta`
 El detalle de **una** restricción. `:herramienta` ∈ `INTERACCIONES`, `RENAL`,
@@ -305,7 +312,7 @@ El cupo es de **diez consultas de por vida**, contadas por par (producto,
 herramienta): volver a lo mismo no descuenta otra vez.
 
 ### `GET /catalogo/principios-activos` · `?q=`
-### `GET /catalogo/principios-activos/indice` — 631 filas, 102 KB
+### `GET /catalogo/principios-activos/indice` — 225 filas, ~36 KB
 ### `GET /catalogo/principios-activos/:id/similares`
 ### `GET /catalogo/condiciones` — 27
 ### `GET /catalogo/grupos-alergenicos` — 13
@@ -329,8 +336,10 @@ herramienta): volver a lo mismo no descuenta otra vez.
 `{ "principioActivoIds": [], "clcrMlMin": 24 }` — o los datos para calcularlo.
 
 ### `POST /herramientas/ajuste-hepatico`
-Los cinco criterios de Child-Pugh, sin paciente. Hoy devuelve la clase y el
-aviso `SIN_TABLA_HEPATICA`: **no hay tabla de ajuste por fármaco todavía**.
+`{ "principioActivoIds": [], "clase": "B" }` — o los cinco criterios de
+Child-Pugh para calcularla. `principioActivoIds` es opcional: sin fármacos,
+la calculadora de la clase sigue siendo libre y `resultados` sale vacío.
+Cobertura de tabla por fármaco parcial — ver `docs/data/farmacos-ajuste-hepatico.json`.
 
 ---
 
@@ -400,8 +409,7 @@ Honestidad sobre el estado, para que nadie lo descubra integrando:
   viejos; hoy el único cliente es la app y se despliegan juntos.
 - **Ajuste hepático sin datos.** 0 filas. La categoría responde
   `SIN_TABLA_HEPATICA` en vez de suponer.
-- **Catálogo comercial incompleto.** 7 de 638 productos tienen laboratorio; no
-  hay código ATC en el esquema.
+- **Catálogo comercial incompleto.** 7 de 232 productos tienen laboratorio.
 - **Contenido clínico sin validar.** 507 alertas por condición y 271
   alternativas, **0 aprobadas** por farmacéutico. El motor las usa igual y las
   marca como `PENDIENTE`: esconderlas sería ocultar riesgo.

@@ -43,6 +43,7 @@ type PaExport = {
   grupoTerapeutico: string | null;
   viaDefault: string;
   tieneAjusteRenal: boolean;
+  codigoATC?: string | null;
 };
 type SenRango = { min: number | null; max: number | null; texto: string | null; tipo: string };
 type SenFarmaco = {
@@ -113,10 +114,10 @@ const descartes: string[] = [];
 const nota = (linea: string) => descartes.push(linea);
 
 async function main() {
-  // Alertas y alternativas entran con createMany, así que una segunda corrida
-  // las duplicaría sin decir nada. Cortar acá y no "arreglarlo" con
-  // skipDuplicates: no hay clave natural que distinga dos alertas del mismo par
-  // con la misma ventana, y silenciar el problema es peor que frenar.
+  // Alternativas entra con createMany sobre un @@unique — una segunda corrida
+  // falla fuerte ahí en vez de duplicar en silencio. Alertas se re-sincroniza
+  // sola con deleteMany (ver sección 4). Frenar acá sigue siendo la primera
+  // defensa contra correr esto sin querer sobre una base ya cargada.
   const yaCargado = await prisma.principioActivo.count();
   if (yaCargado > 0 && process.env.GFH_REIMPORTAR !== '1') {
     throw new Error(
@@ -160,7 +161,11 @@ async function main() {
   for (const pa of porNorm.values()) {
     await prisma.principioActivo.upsert({
       where: { nombreNormalizado: normalizar(pa.nombre) },
-      update: {},
+      // El ATC se va cargando fármaco a fármaco a medida que se revisan las
+      // fichas técnicas (fuente Farmanuario) — a diferencia del resto de estos
+      // campos, sí se sincroniza en el update para que una recarga del
+      // catálogo no pierda lo ya cargado ni deje de traer lo nuevo.
+      update: { codigoATC: pa.codigoATC ?? null },
       create: {
         nombre: pa.nombre,
         nombreNormalizado: normalizar(pa.nombre),
@@ -168,7 +173,7 @@ async function main() {
         viaDefault: exigir<$Enums.ViaAdministracion>(pa.viaDefault, VIAS, 'viaDefault', pa.nombre),
         tieneAjusteRenal: pa.tieneAjusteRenal,
         tieneAjusteHepatico: false, // sin fuente todavía
-        codigoATC: null, // no existe en GFH — ver INFORME §3.1
+        codigoATC: pa.codigoATC ?? null,
       },
     });
   }
@@ -263,7 +268,16 @@ async function main() {
   // Varias filas por par (fármaco, condición) diferenciadas por ventana de
   // gestación — 18 pares tienen más de una. NO deduplicar: la severidad de un
   // AINE cambia en la semana 20.
+  //
+  // Catálogo puro (no dato de paciente): se re-sincroniza completo en cada
+  // import con deleteMany + createMany, nunca skipDuplicates. Ahora existe un
+  // índice único NULL-safe en la base (ver migración
+  // limpiar_y_unique_alerta_condicion_farmaco) que evitaría el error de
+  // INSERT, pero skipDuplicates igual no serviría para corregir una severidad
+  // que cambió en el JSON entre corridas — por eso se re-sincroniza completo,
+  // no se silencia.
   const alertas = leer<AlertaExport[]>('alertas-condicion-farmaco.json');
+  await prisma.alertaCondicionFarmaco.deleteMany({});
   await prisma.alertaCondicionFarmaco.createMany({
     data: alertas.map((a) => ({
       principioActivoId: idPa(a.principioActivoNombre),
@@ -275,7 +289,6 @@ async function main() {
       semanaMax: a.semanaMax,
       estadoValidacion: 'PENDIENTE' as const,
     })),
-    skipDuplicates: false,
   });
 
   // =========================================================================

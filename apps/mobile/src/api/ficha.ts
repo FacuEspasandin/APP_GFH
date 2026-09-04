@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import { api } from '@/api/cliente';
 import type { AlertaFicha, ClaveRestriccion, Restriccion, TablaRenalFicha } from '@/dominio/restricciones';
-import type { SeveridadInteraccion } from '@gfh/shared-types';
+import type { SeccionMonografia, SeveridadInteraccion } from '@gfh/shared-types';
 
 /**
  * La ficha de un producto del catálogo. Libre para cualquiera.
@@ -30,6 +30,10 @@ export interface Ficha {
     nombre: string;
     grupoTerapeutico: string | null;
     codigoATC: string | null;
+    /** El producto genérico de este componente — a dónde lleva tocarlo en
+     *  Composición. Null si este producto YA es su genérico, o si el
+     *  catálogo no tiene uno cargado para él. */
+    productoGenericoId: string | null;
   }>;
   tieneAjusteRenal: boolean;
   tieneAjusteHepatico: boolean;
@@ -37,13 +41,60 @@ export interface Ficha {
   restricciones: Restriccion[];
   /** De las interacciones sólo lo que dibuja la fila: cuántas y cuán graves. */
   interacciones: { total: number; peorSeveridad: SeveridadInteraccion | null };
-  monografia: null;
+  /**
+   * La monografía, por principio activo y ya partida en secciones.
+   *
+   * Viene con la ficha libre y no detrás del cupo: lo que se paga es el motor,
+   * no el texto. Un fármaco sin monografía cargada trae la lista vacía, y la
+   * pantalla no dibuja nada — mostrar la sección vacía haría creer que el
+   * fármaco no tiene interacciones cuando lo que pasa es que no las cargamos.
+   */
+  monografias: Array<{ principioActivo: string; secciones: SeccionMonografia[] }>;
 }
 
 export function useFicha(id: string | undefined) {
   return useQuery({
     queryKey: ['ficha', id],
     queryFn: () => api.get<Ficha>(`/catalogo/productos/${id}`),
+    enabled: Boolean(id),
+  });
+}
+
+/** Fármacos de la misma clase ATC — nivel 5 (subgrupo químico), que es el que
+ *  de verdad sirve como "esto es intercambiable con esto". `motivoSinDatos`
+ *  no null significa que el catálogo no tiene ATC cargado para éste todavía —
+ *  regla 5: neutro, no vacío sin explicación. */
+export interface Similares {
+  codigoATC: string | null;
+  motivoSinDatos: string | null;
+  niveles: Array<{ prefijo: string; cantidad: number }>;
+  mismoSubgrupo: Array<{ id: string; nombre: string; tieneAjusteRenal: boolean; tieneAjusteHepatico: boolean }>;
+  mismaClase: Array<{ id: string; nombre: string; tieneAjusteRenal: boolean; tieneAjusteHepatico: boolean }>;
+}
+
+export function useSimilares(principioActivoId: string | undefined) {
+  return useQuery({
+    queryKey: ['similares', principioActivoId],
+    queryFn: () => api.get<Similares>(`/catalogo/principios-activos/${principioActivoId}/similares`),
+    enabled: Boolean(principioActivoId),
+  });
+}
+
+/** Otras dosis/formas de la misma marca — ver comentario en el servicio.
+ *  Con el catálogo de hoy casi siempre trae un solo elemento (éste mismo). */
+export interface Presentacion {
+  id: string;
+  nombreComercial: string;
+  dosisTexto: string | null;
+  formaFarmaceutica: string | null;
+  esGenerico: boolean;
+  actual: boolean;
+}
+
+export function usePresentaciones(id: string | undefined) {
+  return useQuery({
+    queryKey: ['presentaciones', id],
+    queryFn: () => api.get<Presentacion[]>(`/catalogo/productos/${id}/presentaciones`),
     enabled: Boolean(id),
   });
 }
