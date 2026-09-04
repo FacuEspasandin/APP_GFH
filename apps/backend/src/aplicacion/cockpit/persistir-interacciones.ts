@@ -60,6 +60,7 @@ export async function persistirInteracciones(
             principioActivoBId: d.principioActivoBId,
             severidad: d.severidad,
             texto: d.texto,
+            tipoRiesgo: d.tipoRiesgo,
             fuente: null,
           },
         }),
@@ -68,13 +69,16 @@ export async function persistirInteracciones(
       continue;
     }
 
-    const cambio = existente.severidad !== d.severidad || existente.texto !== d.texto;
+    const cambio =
+      existente.severidad !== d.severidad ||
+      existente.texto !== d.texto ||
+      existente.tipoRiesgo !== d.tipoRiesgo;
     if (cambio) {
       escrituras.push(
         prisma.interaccionDetectada.update({
           where: { id: existente.id },
           // `vista` y `vistaAt` quedan fuera del update a propósito.
-          data: { severidad: d.severidad, texto: d.texto },
+          data: { severidad: d.severidad, texto: d.texto, tipoRiesgo: d.tipoRiesgo },
         }),
       );
       actualizadas += 1;

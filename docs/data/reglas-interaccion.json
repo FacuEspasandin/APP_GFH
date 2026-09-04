@@ -201,7 +201,8 @@
         "Eritromicina"
       ],
       "severidad": "CONTRAINDICADA",
-      "texto": "El macrólido inhibe CYP3A4 y multiplica la exposición a la estatina, con riesgo de rabdomiólisis. Suspender la estatina durante el antibiótico o elegir azitromicina / pravastatina."
+      "texto": "El macrólido inhibe CYP3A4 y multiplica la exposición a la estatina, con riesgo de rabdomiólisis. Suspender la estatina durante el antibiótico o elegir azitromicina / pravastatina.",
+      "tipoRiesgo": "MIOPATIA_RABDOMIOLISIS"
     },
     {
       "orden": 1,
@@ -227,7 +228,8 @@
         "Isavuconazol"
       ],
       "severidad": "CONTRAINDICADA",
-      "texto": "El azol inhibe CYP3A4 y eleva mucho la concentración de la estatina, con riesgo de rabdomiólisis. Suspender la estatina o usar pravastatina/rosuvastatina."
+      "texto": "El azol inhibe CYP3A4 y eleva mucho la concentración de la estatina, con riesgo de rabdomiólisis. Suspender la estatina o usar pravastatina/rosuvastatina.",
+      "tipoRiesgo": "MIOPATIA_RABDOMIOLISIS"
     },
     {
       "orden": 2,
@@ -246,7 +248,8 @@
         "Sulfametoxazol"
       ],
       "severidad": "CONTRAINDICADA",
-      "texto": "Efecto antifolato aditivo con riesgo de mielosupresión grave. Evitar la combinación; si fuera inevitable, vigilar hemograma estrechamente."
+      "texto": "Efecto antifolato aditivo con riesgo de mielosupresión grave. Evitar la combinación; si fuera inevitable, vigilar hemograma estrechamente.",
+      "tipoRiesgo": "MIELOSUPRESION"
     },
     {
       "orden": 3,
@@ -282,7 +285,8 @@
         "Zolmitriptán"
       ],
       "severidad": "CONTRAINDICADA",
-      "texto": "El linezolid es IMAO: combinado con serotoninérgicos puede precipitar un síndrome serotoninérgico grave. Evitar; respetar período de lavado."
+      "texto": "El linezolid es IMAO: combinado con serotoninérgicos puede precipitar un síndrome serotoninérgico grave. Evitar; respetar período de lavado.",
+      "tipoRiesgo": "SINDROME_SEROTONINERGICO"
     },
     {
       "orden": 4,
@@ -303,7 +307,8 @@
         "Eritromicina"
       ],
       "severidad": "ALTA",
-      "texto": "Inhibición de CYP3A4 que aumenta la exposición a la estatina y el riesgo de miopatía. Reducir dosis o pausar la estatina mientras dure el macrólido."
+      "texto": "Inhibición de CYP3A4 que aumenta la exposición a la estatina y el riesgo de miopatía. Reducir dosis o pausar la estatina mientras dure el macrólido.",
+      "tipoRiesgo": "MIOPATIA_RABDOMIOLISIS"
     },
     {
       "orden": 5,
@@ -328,7 +333,8 @@
         "Isavuconazol"
       ],
       "severidad": "ALTA",
-      "texto": "El azol inhibe CYP3A4 y aumenta el riesgo de miopatía por atorvastatina. Reducir dosis o pausar."
+      "texto": "El azol inhibe CYP3A4 y aumenta el riesgo de miopatía por atorvastatina. Reducir dosis o pausar.",
+      "tipoRiesgo": "MIOPATIA_RABDOMIOLISIS"
     },
     {
       "orden": 6,
@@ -351,7 +357,8 @@
         "Amiodarona"
       ],
       "severidad": "ALTA",
-      "texto": "Inhibición de CYP3A4 que eleva la concentración de la estatina y el riesgo de miopatía. Considerar dosis menor o estatina no dependiente de CYP3A4."
+      "texto": "Inhibición de CYP3A4 que eleva la concentración de la estatina y el riesgo de miopatía. Considerar dosis menor o estatina no dependiente de CYP3A4.",
+      "tipoRiesgo": "MIOPATIA_RABDOMIOLISIS"
     },
     {
       "orden": 7,
@@ -373,7 +380,8 @@
         "Gemfibrozilo"
       ],
       "severidad": "ALTA",
-      "texto": "El gemfibrozilo aumenta el riesgo de miopatía/rabdomiólisis con estatinas. Preferir fenofibrato o separar el tratamiento."
+      "texto": "El gemfibrozilo aumenta el riesgo de miopatía/rabdomiólisis con estatinas. Preferir fenofibrato o separar el tratamiento.",
+      "tipoRiesgo": "MIOPATIA_RABDOMIOLISIS"
     },
     {
       "orden": 8,
@@ -403,7 +411,8 @@
         "Parecoxib"
       ],
       "severidad": "ALTA",
-      "texto": "Uso conjunto con riesgo de sangrado: el AINE daña la mucosa gástrica e inhibe la agregación plaquetaria. Vigilar INR y signos de hemorragia; preferir paracetamol."
+      "texto": "Uso conjunto con riesgo de sangrado: el AINE daña la mucosa gástrica e inhibe la agregación plaquetaria. Vigilar INR y signos de hemorragia; preferir paracetamol.",
+      "tipoRiesgo": "SANGRADO"
     },
     {
       "orden": 9,
@@ -424,7 +433,8 @@
         "Roxitromicina"
       ],
       "severidad": "ALTA",
-      "texto": "El macrólido potencia el efecto anticoagulante y eleva el INR. Controlar INR de cerca al iniciar y suspender el antibiótico."
+      "texto": "El macrólido potencia el efecto anticoagulante y eleva el INR. Controlar INR de cerca al iniciar y suspender el antibiótico.",
+      "tipoRiesgo": "SANGRADO"
     },
     {
       "orden": 10,
@@ -450,7 +460,8 @@
         "Isavuconazol"
       ],
       "severidad": "ALTA",
-      "texto": "El azol inhibe el metabolismo del anticoagulante y eleva el INR, con riesgo de sangrado. Controlar INR."
+      "texto": "El azol inhibe el metabolismo del anticoagulante y eleva el INR, con riesgo de sangrado. Controlar INR.",
+      "tipoRiesgo": "SANGRADO"
     },
     {
       "orden": 11,
@@ -472,7 +483,8 @@
         "Metronidazol"
       ],
       "severidad": "ALTA",
-      "texto": "Potenciación del efecto anticoagulante con elevación del INR y riesgo hemorrágico. Vigilar INR."
+      "texto": "Potenciación del efecto anticoagulante con elevación del INR y riesgo hemorrágico. Vigilar INR.",
+      "tipoRiesgo": "SANGRADO"
     },
     {
       "orden": 12,
@@ -495,7 +507,8 @@
         "Ofloxacino"
       ],
       "severidad": "ALTA",
-      "texto": "La fluorquinolona puede potenciar el efecto anticoagulante y elevar el INR. Controlar INR."
+      "texto": "La fluorquinolona puede potenciar el efecto anticoagulante y elevar el INR. Controlar INR.",
+      "tipoRiesgo": "SANGRADO"
     },
     {
       "orden": 13,
@@ -513,7 +526,8 @@
         "Amiodarona"
       ],
       "severidad": "ALTA",
-      "texto": "La amiodarona inhibe el metabolismo del anticoagulante y eleva el INR durante semanas. Reducir dosis del anticoagulante y controlar INR."
+      "texto": "La amiodarona inhibe el metabolismo del anticoagulante y eleva el INR durante semanas. Reducir dosis del anticoagulante y controlar INR.",
+      "tipoRiesgo": "SANGRADO"
     },
     {
       "orden": 14,
@@ -545,7 +559,8 @@
         "Sacubitril/Valsartan"
       ],
       "severidad": "ALTA",
-      "texto": "Doble bloqueo del sistema renina-angiotensina: mayor riesgo de hiperpotasemia, hipotensión y deterioro renal sin beneficio claro. Evitar la asociación."
+      "texto": "Doble bloqueo del sistema renina-angiotensina: mayor riesgo de hiperpotasemia, hipotensión y deterioro renal sin beneficio claro. Evitar la asociación.",
+      "tipoRiesgo": "HIPERPOTASEMIA"
     },
     {
       "orden": 15,
@@ -581,7 +596,8 @@
         "Triamterene"
       ],
       "severidad": "ALTA",
-      "texto": "Riesgo de hiperpotasemia por efecto aditivo sobre el potasio, sobre todo con función renal reducida. Monitorizar potasio y creatinina."
+      "texto": "Riesgo de hiperpotasemia por efecto aditivo sobre el potasio, sobre todo con función renal reducida. Monitorizar potasio y creatinina.",
+      "tipoRiesgo": "HIPERPOTASEMIA"
     },
     {
       "orden": 16,
@@ -626,7 +642,8 @@
         "Parecoxib"
       ],
       "severidad": "ALTA",
-      "texto": "El AINE reduce el filtrado glomerular y, junto al bloqueo del SRAA, aumenta el riesgo de deterioro renal e hiperpotasemia (mayor aún si hay diurético)."
+      "texto": "El AINE reduce el filtrado glomerular y, junto al bloqueo del SRAA, aumenta el riesgo de deterioro renal e hiperpotasemia (mayor aún si hay diurético).",
+      "tipoRiesgo": "NEFROTOXICIDAD"
     },
     {
       "orden": 17,
@@ -648,7 +665,8 @@
         "Sulfametoxazol"
       ],
       "severidad": "ALTA",
-      "texto": "Riesgo aditivo de hiperpotasemia. Controlar el potasio sérico, especialmente con insuficiencia renal."
+      "texto": "Riesgo aditivo de hiperpotasemia. Controlar el potasio sérico, especialmente con insuficiencia renal.",
+      "tipoRiesgo": "HIPERPOTASEMIA"
     },
     {
       "orden": 18,
@@ -672,7 +690,8 @@
         "Propafenona"
       ],
       "severidad": "ALTA",
-      "texto": "Aumento de los niveles de digoxina con riesgo de toxicidad digitálica. Reducir la dosis de digoxina y controlar digoxinemia y potasio."
+      "texto": "Aumento de los niveles de digoxina con riesgo de toxicidad digitálica. Reducir la dosis de digoxina y controlar digoxinemia y potasio.",
+      "tipoRiesgo": "TOXICIDAD_DIGITALICA"
     },
     {
       "orden": 19,
@@ -716,7 +735,8 @@
         "Trandolapril"
       ],
       "severidad": "ALTA",
-      "texto": "Reducción de la eliminación renal de litio con riesgo de toxicidad. Controlar litemia y función renal; ajustar dosis."
+      "texto": "Reducción de la eliminación renal de litio con riesgo de toxicidad. Controlar litemia y función renal; ajustar dosis.",
+      "tipoRiesgo": "TOXICIDAD_LITIO"
     },
     {
       "orden": 20,
@@ -747,7 +767,8 @@
         "Probenecid"
       ],
       "severidad": "ALTA",
-      "texto": "Disminución de la eliminación renal de metotrexato con riesgo de toxicidad (mielosupresión, mucositis). Vigilar hemograma y función renal."
+      "texto": "Disminución de la eliminación renal de metotrexato con riesgo de toxicidad (mielosupresión, mucositis). Vigilar hemograma y función renal.",
+      "tipoRiesgo": "MIELOSUPRESION"
     },
     {
       "orden": 21,
@@ -777,7 +798,8 @@
         "Nortriptilina"
       ],
       "severidad": "ALTA",
-      "texto": "Aumento de la actividad serotoninérgica con riesgo de síndrome serotoninérgico y descenso del umbral convulsivo. Vigilar agitación, hipertermia y mioclonías."
+      "texto": "Aumento de la actividad serotoninérgica con riesgo de síndrome serotoninérgico y descenso del umbral convulsivo. Vigilar agitación, hipertermia y mioclonías.",
+      "tipoRiesgo": "SINDROME_SEROTONINERGICO"
     },
     {
       "orden": 22,
@@ -804,7 +826,8 @@
         "Venlafaxina"
       ],
       "severidad": "ALTA",
-      "texto": "Combinación serotoninérgica con riesgo de síndrome serotoninérgico. Vigilar síntomas; usar con precaución."
+      "texto": "Combinación serotoninérgica con riesgo de síndrome serotoninérgico. Vigilar síntomas; usar con precaución.",
+      "tipoRiesgo": "SINDROME_SEROTONINERGICO"
     },
     {
       "orden": 23,
@@ -837,7 +860,8 @@
         "Isavuconazol"
       ],
       "severidad": "ALTA",
-      "texto": "Inhibición de CYP3A4/P-gp que eleva la colchicina, con riesgo de toxicidad grave (mielosupresión, miopatía). Reducir dosis o evitar, sobre todo en ERC."
+      "texto": "Inhibición de CYP3A4/P-gp que eleva la colchicina, con riesgo de toxicidad grave (mielosupresión, miopatía). Reducir dosis o evitar, sobre todo en ERC.",
+      "tipoRiesgo": "MIELOSUPRESION"
     },
     {
       "orden": 24,
@@ -863,7 +887,8 @@
         "Fluconazol"
       ],
       "severidad": "ALTA",
-      "texto": "Potenciación del efecto hipoglucemiante de la sulfonilurea. Reforzar controles de glucemia."
+      "texto": "Potenciación del efecto hipoglucemiante de la sulfonilurea. Reforzar controles de glucemia.",
+      "tipoRiesgo": "HIPOGLUCEMIA"
     },
     {
       "orden": 25,
@@ -894,7 +919,8 @@
         "Diltiazem"
       ],
       "severidad": "ALTA",
-      "texto": "La rifampicina es un inductor enzimático potente: reduce la concentración y la eficacia del otro fármaco. Ajustar dosis o elegir alternativa."
+      "texto": "La rifampicina es un inductor enzimático potente: reduce la concentración y la eficacia del otro fármaco. Ajustar dosis o elegir alternativa.",
+      "tipoRiesgo": "EFICACIA_REDUCIDA"
     },
     {
       "orden": 26,
@@ -929,7 +955,8 @@
         "Escitalopram"
       ],
       "severidad": "ALTA",
-      "texto": "Efecto aditivo de prolongación del QT con riesgo de torsades de pointes. Vigilar ECG y electrolitos; evitar si es posible."
+      "texto": "Efecto aditivo de prolongación del QT con riesgo de torsades de pointes. Vigilar ECG y electrolitos; evitar si es posible.",
+      "tipoRiesgo": "QT_PROLONGADO"
     },
     {
       "orden": 27,
@@ -955,7 +982,8 @@
         "Almagato"
       ],
       "severidad": "INFORMATIVA",
-      "texto": "Los cationes del antiácido quelan al antibiótico y reducen su absorción. Separar las tomas al menos 2-4 horas."
+      "texto": "Los cationes del antiácido quelan al antibiótico y reducen su absorción. Separar las tomas al menos 2-4 horas.",
+      "tipoRiesgo": "ABSORCION_REDUCIDA"
     }
   ],
   "paresExtra": [
@@ -964,7 +992,8 @@
       "a": "Tramadol",
       "b": "Linezolid",
       "severidad": "CONTRAINDICADA",
-      "texto": "El linezolid (IMAO) con tramadol aumenta el riesgo de síndrome serotoninérgico y de convulsiones. Evitar."
+      "texto": "El linezolid (IMAO) con tramadol aumenta el riesgo de síndrome serotoninérgico y de convulsiones. Evitar.",
+      "tipoRiesgo": "SINDROME_SEROTONINERGICO"
     }
   ]
 }

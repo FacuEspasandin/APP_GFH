@@ -11,6 +11,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { TIPOS_RIESGO_INTERACCION, type TipoRiesgoInteraccion } from '@gfh/shared-types';
+
 import type { Regla, SeveridadInteraccion } from '../../dominio/clinico/interacciones';
 
 interface ReglaCruda {
@@ -21,6 +23,7 @@ interface ReglaCruda {
   bResuelta: string[];
   severidad: string;
   texto: string;
+  tipoRiesgo: string;
 }
 
 interface ParExtraCrudo {
@@ -29,6 +32,7 @@ interface ParExtraCrudo {
   b: string;
   severidad: string;
   texto: string;
+  tipoRiesgo: string;
 }
 
 interface ArchivoReglas {
@@ -44,6 +48,15 @@ function severidad(valor: string, ctx: string): SeveridadInteraccion {
     throw new Error(`Severidad de interacción desconocida: "${valor}" (${ctx})`);
   }
   return valor as SeveridadInteraccion;
+}
+
+const TIPOS_RIESGO = new Set<string>(TIPOS_RIESGO_INTERACCION);
+
+function tipoRiesgo(valor: string, ctx: string): TipoRiesgoInteraccion {
+  if (!TIPOS_RIESGO.has(valor)) {
+    throw new Error(`Tipo de riesgo de interacción desconocido: "${valor}" (${ctx})`);
+  }
+  return valor as TipoRiesgoInteraccion;
 }
 
 /**
@@ -75,7 +88,14 @@ export function cargarReglasInteraccion(archivo: string): CargaReglas {
     verificarExpansion(a, r.aResuelta, `regla ${r.orden}, lado a`);
     verificarExpansion(b, r.bResuelta, `regla ${r.orden}, lado b`);
 
-    return { orden: r.orden, a, b, severidad: severidad(r.severidad, `regla ${r.orden}`), texto: r.texto };
+    return {
+      orden: r.orden,
+      a,
+      b,
+      severidad: severidad(r.severidad, `regla ${r.orden}`),
+      texto: r.texto,
+      tipoRiesgo: tipoRiesgo(r.tipoRiesgo, `regla ${r.orden}`),
+    };
   });
 
   // Los pares sueltos se aplican DESPUÉS de todas las reglas, con la misma
@@ -87,6 +107,7 @@ export function cargarReglasInteraccion(archivo: string): CargaReglas {
       b: [p.b],
       severidad: severidad(p.severidad, `par extra ${p.orden}`),
       texto: p.texto,
+      tipoRiesgo: tipoRiesgo(p.tipoRiesgo, `par extra ${p.orden}`),
     });
   }
 

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  agruparPorRiesgo,
+  descripcionDeVista,
   filtrarAvisos,
   filtrarHallazgos,
   mensajeVacio,
@@ -159,5 +161,67 @@ describe('vistas de hallazgos', () => {
       // — regla 5: ante falta de dato, neutro.
       expect(mensajeVacio({ tipo: 'todos' })).toMatch(/con los datos cargados/);
     });
+  });
+
+  describe('descripción del encabezado', () => {
+    it('cada vista tiene su propia bajada', () => {
+      const vistas: Vista[] = [
+        { tipo: 'todos' },
+        { tipo: 'avisos' },
+        { tipo: 'categoria', categoria: 'INTERACCION' },
+        { tipo: 'prescripcion', prescripcionId: 'p1' },
+      ];
+      const descripciones = vistas.map(descripcionDeVista);
+      expect(new Set(descripciones).size).toBe(4);
+      expect(descripciones.every((d) => d.length > 0)).toBe(true);
+    });
+  });
+});
+
+describe('agrupar interacciones por tipo de riesgo', () => {
+  const ri = (clave: string, rango: 0 | 1 | 2 | 3, tipoRiesgo?: string) => ({
+    clave,
+    rango,
+    tipoRiesgo: tipoRiesgo as never,
+  });
+
+  it('junta las que comparten mecanismo en un solo grupo', () => {
+    const lista = [ri('a', 1, 'SANGRADO'), ri('b', 1, 'SANGRADO'), ri('c', 1, 'SANGRADO')];
+    const filas = agruparPorRiesgo(lista);
+    expect(filas).toHaveLength(1);
+    expect(filas[0]).toMatchObject({ tipo: 'grupo', tipoRiesgo: 'SANGRADO' });
+    if (filas[0]!.tipo === 'grupo') expect(filas[0]!.hallazgos).toHaveLength(3);
+  });
+
+  it('un mecanismo con una sola interacción no arma grupo', () => {
+    const lista = [ri('a', 0, 'QT_PROLONGADO')];
+    const filas = agruparPorRiesgo(lista);
+    expect(filas).toEqual([{ tipo: 'individual', hallazgo: lista[0] }]);
+  });
+
+  it('lo que no tiene tipoRiesgo (condición, ajustes) queda individual y en su lugar', () => {
+    const lista = [ri('cond', 0, undefined), ri('a', 1, 'SANGRADO'), ri('b', 1, 'SANGRADO')];
+    const filas = agruparPorRiesgo(lista);
+    expect(filas).toHaveLength(2);
+    expect(filas[0]).toEqual({ tipo: 'individual', hallazgo: lista[0] });
+    expect(filas[1]).toMatchObject({ tipo: 'grupo', tipoRiesgo: 'SANGRADO' });
+  });
+
+  it('el peor del grupo es el rango mínimo de sus interacciones', () => {
+    const lista = [ri('a', 1, 'SANGRADO'), ri('b', 0, 'SANGRADO')];
+    const filas = agruparPorRiesgo(lista);
+    expect(filas[0]).toMatchObject({ tipo: 'grupo', peor: 0 });
+  });
+
+  it('agrupa aunque no sean adyacentes, en la posición de la primera aparición', () => {
+    const lista = [
+      ri('a', 0, 'MIOPATIA_RABDOMIOLISIS'),
+      ri('cond', 1, undefined),
+      ri('b', 1, 'MIOPATIA_RABDOMIOLISIS'),
+    ];
+    const filas = agruparPorRiesgo(lista);
+    expect(filas).toHaveLength(2);
+    expect(filas[0]).toMatchObject({ tipo: 'grupo', hallazgos: [lista[0], lista[2]] });
+    expect(filas[1]).toEqual({ tipo: 'individual', hallazgo: lista[1] });
   });
 });

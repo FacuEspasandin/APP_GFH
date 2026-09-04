@@ -25,6 +25,7 @@ const interaccion = (over: Partial<InteraccionParaHallazgo> = {}): InteraccionPa
   parClave: 'ibuprofeno|warfarina',
   severidad: 'ALTA',
   texto: 'riesgo de sangrado',
+  tipoRiesgo: 'SANGRADO',
   estadoValidacion: 'PENDIENTE',
   ...over,
 });

@@ -109,7 +109,7 @@ export class AlternativasService {
       prescripcionOrigenId?: string;
       disclaimerVersion: string;
       nota?: string;
-      reemplazo?: { dosis: string; frecuencia: string; via: string };
+      reemplazo?: { dosis: string; frecuencia: string; via: string; productoComercialId?: string };
     },
   ) {
     const paciente = await this.prisma.paciente.findFirst({
@@ -124,27 +124,47 @@ export class AlternativasService {
 
     if (datos.reemplazo) {
       // La alternativa es un principio activo; para prescribirla hace falta un
-      // producto. Se usa el genérico, que existe para los 631.
-      const generico = await this.prisma.productoComercial.findFirst({
-        where: {
-          esGenerico: true,
-          principiosActivos: { some: { principioActivoId: datos.paAlternativaId } },
-        },
-        select: { id: true },
-      });
-      if (!generico) {
-        throw new NotFoundException(
-          'No hay un producto para esa alternativa. Cargala a mano desde Agregar fármaco.',
-        );
+      // producto. Si el médico ya lo eligió (pantalla de selección de
+      // producto), se valida que de verdad lo contenga y se usa ese. Si no
+      // vino ninguno —llamadores viejos, o casos sin esa pantalla todavía— se
+      // cae al genérico, que existe para los 631.
+      let producto: { id: string } | null = null;
+
+      if (datos.reemplazo.productoComercialId) {
+        producto = await this.prisma.productoComercial.findFirst({
+          where: {
+            id: datos.reemplazo.productoComercialId,
+            principiosActivos: { some: { principioActivoId: datos.paAlternativaId } },
+          },
+          select: { id: true },
+        });
+        if (!producto) {
+          throw new NotFoundException(
+            'Ese producto no corresponde a la alternativa elegida.',
+          );
+        }
+      } else {
+        producto = await this.prisma.productoComercial.findFirst({
+          where: {
+            esGenerico: true,
+            principiosActivos: { some: { principioActivoId: datos.paAlternativaId } },
+          },
+          select: { id: true },
+        });
+        if (!producto) {
+          throw new NotFoundException(
+            'No hay un producto para esa alternativa. Cargala a mano desde Agregar fármaco.',
+          );
+        }
       }
-      productoAlternativaId = generico.id;
+      productoAlternativaId = producto.id;
 
       operaciones.push(
         this.prisma.prescripcion.create({
           data: {
             medicoId,
             pacienteId,
-            productoComercialId: generico.id,
+            productoComercialId: producto.id,
             dosis: datos.reemplazo.dosis,
             frecuencia: datos.reemplazo.frecuencia,
             via: datos.reemplazo.via as 'ORAL',
@@ -169,6 +189,7 @@ export class AlternativasService {
           prescripcionOrigenId: datos.prescripcionOrigenId ?? null,
           paOrigenId: datos.paOrigenId,
           paAlternativaId: datos.paAlternativaId,
+          productoComercialId: productoAlternativaId,
           disclaimerVersion: datos.disclaimerVersion,
           nota: datos.nota ?? null,
         },

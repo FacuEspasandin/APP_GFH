@@ -23,6 +23,11 @@ export class ReemplazoDto {
   @IsString() @Length(1, 60) dosis!: string;
   @IsString() @Length(1, 60) frecuencia!: string;
   @IsString() @Length(1, 20) via!: string;
+  /** Qué presentación comercial eligió el médico (pantalla de selección de
+   *  producto). Sin esto, se resuelve el genérico como antes — mantiene
+   *  compatibilidad con "Agregar fármaco" y otros llamadores que no pasan
+   *  por esa pantalla todavía. */
+  @IsOptional() @IsUUID() productoComercialId?: string;
 }
 
 export class AceptarAlternativaDto {

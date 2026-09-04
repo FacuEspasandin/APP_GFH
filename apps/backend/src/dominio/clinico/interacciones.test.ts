@@ -84,8 +84,8 @@ describe('invariante de severidad: gana la más grave', () => {
     // Prueba de que el test sirve: si la ALTA se declarara antes que la
     // CONTRAINDICADA, el par quedaría como ALTA.
     const invertidas: Regla[] = [
-      { orden: 0, a: ['Simvastatina'], b: ['Claritromicina'], severidad: 'ALTA', texto: '' },
-      { orden: 1, a: ['Simvastatina'], b: ['Claritromicina'], severidad: 'CONTRAINDICADA', texto: '' },
+      { orden: 0, a: ['Simvastatina'], b: ['Claritromicina'], severidad: 'ALTA', texto: '', tipoRiesgo: 'MIOPATIA_RABDOMIOLISIS' },
+      { orden: 1, a: ['Simvastatina'], b: ['Claritromicina'], severidad: 'CONTRAINDICADA', texto: '', tipoRiesgo: 'MIOPATIA_RABDOMIOLISIS' },
     ];
     const roto = construirCatalogo(invertidas);
     expect(roto.get(parClave('Simvastatina', 'Claritromicina'))!.severidad).toBe('ALTA');

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { unicasPorFarmaco } from './catalogo.service';
+import { monografiasDe, unicasPorFarmaco } from './catalogo.service';
 
 /**
  * Un producto con dos principios activos matchea la misma regla dos veces.
@@ -46,5 +46,50 @@ describe('interacciones únicas por fármaco', () => {
     ]);
 
     expect(r).toHaveLength(1);
+  });
+});
+
+/**
+ * La monografía es lo único de la ficha que se lee en vez de cruzarse contra
+ * el paciente, y por eso tiene una regla propia: la que no está, no se dibuja.
+ */
+describe('monografías de un producto', () => {
+  it('un fármaco sin monografía no aparece en la lista', () => {
+    // Ni siquiera vacío: la pantalla dibuja lo que recibe, y una entrada vacía
+    // le haría poner el índice de un fármaco del que no sabemos nada.
+    expect(monografiasDe([{ nombre: 'Warfarina' }])).toEqual([]);
+    expect(monografiasDe([{ nombre: 'Warfarina', monografia: null }])).toEqual([]);
+  });
+
+  it('una monografía con todos los campos vacíos tampoco', () => {
+    expect(
+      monografiasDe([{ nombre: 'Warfarina', monografia: { posologia: '', usos: null } }]),
+    ).toEqual([]);
+  });
+
+  it('sólo viajan las secciones con texto', () => {
+    const r = monografiasDe([
+      { nombre: 'Metformina', monografia: { posologia: '500 mg c/12 h.', usos: '' } },
+    ]);
+    expect(r).toHaveLength(1);
+    expect(r[0]!.principioActivo).toBe('Metformina');
+    expect(r[0]!.secciones.map((s) => s.clave)).toEqual(['posologia']);
+  });
+
+  it('una asociación trae una monografía por componente', () => {
+    // No se fusionan: fusionarlas perdería de cuál de los dos habla cada frase.
+    const r = monografiasDe([
+      { nombre: 'Ibuprofeno', monografia: { usos: 'Dolor.' } },
+      { nombre: 'Paracetamol', monografia: { usos: 'Fiebre.' } },
+    ]);
+    expect(r.map((x) => x.principioActivo)).toEqual(['Ibuprofeno', 'Paracetamol']);
+  });
+
+  it('el componente sin monografía se saltea y el otro queda', () => {
+    const r = monografiasDe([
+      { nombre: 'Ibuprofeno', monografia: null },
+      { nombre: 'Paracetamol', monografia: { usos: 'Fiebre.' } },
+    ]);
+    expect(r.map((x) => x.principioActivo)).toEqual(['Paracetamol']);
   });
 });

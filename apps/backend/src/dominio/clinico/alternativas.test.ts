@@ -12,9 +12,9 @@ import { construirCatalogo, type ComponenteActivo, type Regla } from './interacc
 // --- escenario --------------------------------------------------------------
 
 const REGLAS: Regla[] = [
-  { orden: 0, a: ['Claritromicina'], b: ['Simvastatina'], severidad: 'CONTRAINDICADA', texto: 'rabdomiólisis' },
-  { orden: 1, a: ['Warfarina'], b: ['Naproxeno'], severidad: 'ALTA', texto: 'sangrado' },
-  { orden: 2, a: ['Warfarina'], b: ['Tramadol'], severidad: 'INFORMATIVA', texto: 'INR' },
+  { orden: 0, a: ['Claritromicina'], b: ['Simvastatina'], severidad: 'CONTRAINDICADA', texto: 'rabdomiólisis', tipoRiesgo: 'MIOPATIA_RABDOMIOLISIS' },
+  { orden: 1, a: ['Warfarina'], b: ['Naproxeno'], severidad: 'ALTA', texto: 'sangrado', tipoRiesgo: 'SANGRADO' },
+  { orden: 2, a: ['Warfarina'], b: ['Tramadol'], severidad: 'INFORMATIVA', texto: 'INR', tipoRiesgo: 'SANGRADO' },
 ];
 const CATALOGO = construirCatalogo(REGLAS);
 

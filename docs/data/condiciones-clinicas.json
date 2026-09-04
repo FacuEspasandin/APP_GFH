@@ -30,6 +30,11 @@
     "descripcion": "Síndrome de QT largo o riesgo de prolongación"
   },
   {
+    "codigo": "HIPOPOTASEMIA",
+    "nombre": "Hipopotasemia",
+    "descripcion": "Potasio sérico bajo — mayor riesgo de QT prolongado y arritmias con fármacos que lo prolongan"
+  },
+  {
     "codigo": "HIPERPOTASEMIA",
     "nombre": "Hiperpotasemia",
     "descripcion": "Potasio sérico elevado"

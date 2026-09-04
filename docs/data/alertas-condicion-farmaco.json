@@ -9,24 +9,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "FA",
-    "severidad": "PRECAUCION",
-    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "ERC",
-    "severidad": "EVITAR",
-    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Indometacina",
     "condicionCodigo": "ERC",
     "severidad": "EVITAR",
@@ -54,33 +36,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Metformina",
-    "condicionCodigo": "ERC",
-    "severidad": "PRECAUCION",
-    "texto": "Metformina en ERC: contraindicada si Clcr < 30 mL/min por riesgo de acidosis láctica; reducir dosis con Clcr 30-45 mL/min.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Enalapril",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Losartan",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "IECA/ARA-II en embarazo: contraindicados por teratogenicidad, oligohidramnios e hipoplasia pulmonar. Cambiar a metildopa, labetalol o nifedipino.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Valsartan",
     "condicionCodigo": "EMBARAZO",
     "severidad": "CONTRAINDICADO",
@@ -88,24 +43,6 @@
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Warfarina",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "Cumarínico en el 1er trimestre: teratógeno (síndrome warfarínico fetal). Contraindicado; cambiar a heparina de bajo peso molecular.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": 12
-  },
-  {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "EVITAR",
-    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": 19
   },
   {
     "principioActivoNombre": "Diazepam",
@@ -126,37 +63,10 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "ERC",
-    "severidad": "EVITAR",
-    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "ERC",
-    "severidad": "EVITAR",
-    "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Ketoprofeno",
     "condicionCodigo": "ERC",
     "severidad": "EVITAR",
     "texto": "AINE en ERC: riesgo de deterioro adicional de la función renal, retención hidrosalina e hiperpotasemia. Preferir paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "ICC",
-    "severidad": "EVITAR",
-    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -423,15 +333,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Atorvastatina",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "Estatina en embarazo: contraindicada; el colesterol es necesario para el desarrollo fetal. Suspender.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Fluvastatina",
     "condicionCodigo": "EMBARAZO",
     "severidad": "CONTRAINDICADO",
@@ -511,24 +412,6 @@
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "EVITAR",
-    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": 19
-  },
-  {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "EVITAR",
-    "texto": "AINE antes de la semana 20: evitar por riesgo de oligohidramnios y efectos sobre la implantación. Preferir paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": 19
   },
   {
     "principioActivoNombre": "Indometacina",
@@ -630,25 +513,7 @@
     "semanaMax": 14
   },
   {
-    "principioActivoNombre": "Ciprofloxacino",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "EVITAR",
-    "texto": "Fluorquinolona en embarazo: evitar por posible toxicidad sobre el cartílago en desarrollo.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Delafloxacino",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "EVITAR",
-    "texto": "Fluorquinolona en embarazo: evitar por posible toxicidad sobre el cartílago en desarrollo.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Levofloxacino",
     "condicionCodigo": "EMBARAZO",
     "severidad": "EVITAR",
     "texto": "Fluorquinolona en embarazo: evitar por posible toxicidad sobre el cartílago en desarrollo.",
@@ -738,15 +603,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Simvastatina",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "Estatina en embarazo: contraindicada; el colesterol es necesario para el desarrollo fetal. Suspender.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Misoprostol",
     "condicionCodigo": "EMBARAZO",
     "severidad": "CONTRAINDICADO",
@@ -754,24 +610,6 @@
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Metotrexato",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "Metotrexato en embarazo: abortivo y teratógeno. Contraindicado.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Litio, Carbonato",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "EVITAR",
-    "texto": "Litio en el 1er trimestre: riesgo de anomalía de Ebstein. Valorar riesgo/beneficio con psiquiatría.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": 12
   },
   {
     "principioActivoNombre": "Alprazolam",
@@ -823,42 +661,6 @@
     "condicionCodigo": "LACTANCIA",
     "severidad": "PRECAUCION",
     "texto": "Benzodiacepina en lactancia: pasa a la leche; riesgo de sedación e hipotonía del lactante. Preferir vida media corta y dosis mínima.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Litio, Carbonato",
-    "condicionCodigo": "LACTANCIA",
-    "severidad": "EVITAR",
-    "texto": "Litio en lactancia: se excreta en leche con riesgo de toxicidad en el lactante.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Amiodarona",
-    "condicionCodigo": "LACTANCIA",
-    "severidad": "EVITAR",
-    "texto": "Amiodarona en lactancia: alto contenido de yodo y vida media larga; riesgo de disfunción tiroidea del lactante.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "ICC",
-    "severidad": "EVITAR",
-    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "ICC",
-    "severidad": "EVITAR",
-    "texto": "AINE en insuficiencia cardíaca: retención hidrosalina y descompensación, con riesgo de hospitalización.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -954,24 +756,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Verapamilo",
-    "condicionCodigo": "ICC",
-    "severidad": "EVITAR",
-    "texto": "Calcioantagonista no dihidropiridínico en IC con FEVI reducida: efecto inotrópico negativo, riesgo de descompensación.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Diltiazem",
-    "condicionCodigo": "ICC",
-    "severidad": "EVITAR",
-    "texto": "Calcioantagonista no dihidropiridínico en IC con FEVI reducida: efecto inotrópico negativo, riesgo de descompensación.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Pioglitazona",
     "condicionCodigo": "ICC",
     "severidad": "EVITAR",
@@ -985,33 +769,6 @@
     "condicionCodigo": "ICC",
     "severidad": "EVITAR",
     "texto": "Disopiramida en IC: marcado efecto inotrópico negativo.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "HTA",
-    "severidad": "PRECAUCION",
-    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "HTA",
-    "severidad": "PRECAUCION",
-    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "HTA",
-    "severidad": "PRECAUCION",
-    "texto": "AINE en HTA: eleva la presión arterial y reduce el efecto de los antihipertensivos.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -1215,24 +972,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "ASMA",
-    "severidad": "PRECAUCION",
-    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "ASMA",
-    "severidad": "PRECAUCION",
-    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Indometacina",
     "condicionCodigo": "ASMA",
     "severidad": "PRECAUCION",
@@ -1336,15 +1075,6 @@
     "condicionCodigo": "EPOC",
     "severidad": "PRECAUCION",
     "texto": "Betabloqueante no selectivo en EPOC: riesgo de broncoespasmo; preferir cardioselectivo.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "FA",
-    "severidad": "PRECAUCION",
-    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -1620,24 +1350,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Amiodarona",
-    "condicionCodigo": "HIPOTIROIDISMO",
-    "severidad": "PRECAUCION",
-    "texto": "Fármaco con efecto antitiroideo en hipotiroidismo: puede agravar el déficit. Controlar función tiroidea.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Atorvastatina",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Fluvastatina",
     "condicionCodigo": "CIRROSIS",
     "severidad": "EVITAR",
@@ -1657,33 +1369,6 @@
   },
   {
     "principioActivoNombre": "Pravastatina",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Rosuvastatina",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Simvastatina",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Itraconazol",
     "condicionCodigo": "CIRROSIS",
     "severidad": "EVITAR",
     "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
@@ -1719,15 +1404,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Metotrexato",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Leflunomida",
     "condicionCodigo": "CIRROSIS",
     "severidad": "EVITAR",
@@ -1747,24 +1423,6 @@
   },
   {
     "principioActivoNombre": "Pirazinamida",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Rifampicina",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Amiodarona",
     "condicionCodigo": "CIRROSIS",
     "severidad": "EVITAR",
     "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
@@ -1795,33 +1453,6 @@
     "condicionCodigo": "CIRROSIS",
     "severidad": "EVITAR",
     "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "AINE en cirrosis: riesgo de sangrado digestivo y síndrome hepatorrenal.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -1939,42 +1570,6 @@
     "condicionCodigo": "CIRROSIS",
     "severidad": "PRECAUCION",
     "texto": "Benzodiacepina en cirrosis: riesgo de encefalopatía hepática. Preferir lorazepam (sin metabolismo hepático extenso) a dosis baja.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Paracetamol",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "PRECAUCION",
-    "texto": "Paracetamol en hepatopatía: limitar la dosis diaria (habitualmente ≤ 2-3 g/día) y evitar el uso crónico.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "ULCERA",
-    "severidad": "EVITAR",
-    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "ULCERA",
-    "severidad": "EVITAR",
-    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "ULCERA",
-    "severidad": "EVITAR",
-    "texto": "AINE en enfermedad ulcerosa: riesgo de hemorragia o perforación. Evitar; si es imprescindible, asociar IBP.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -2142,15 +1737,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Warfarina",
-    "condicionCodigo": "ULCERA",
-    "severidad": "PRECAUCION",
-    "texto": "Anticoagulante en úlcera/HDA: mayor riesgo de hemorragia digestiva. Valorar gastroprotección.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Acenocumarol",
     "condicionCodigo": "ULCERA",
     "severidad": "PRECAUCION",
@@ -2268,15 +1854,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Tramadol",
-    "condicionCodigo": "EPILEPSIA",
-    "severidad": "PRECAUCION",
-    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Tapentadol",
     "condicionCodigo": "EPILEPSIA",
     "severidad": "PRECAUCION",
@@ -2295,25 +1872,7 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Ciprofloxacino",
-    "condicionCodigo": "EPILEPSIA",
-    "severidad": "PRECAUCION",
-    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Delafloxacino",
-    "condicionCodigo": "EPILEPSIA",
-    "severidad": "PRECAUCION",
-    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Levofloxacino",
     "condicionCodigo": "EPILEPSIA",
     "severidad": "PRECAUCION",
     "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
@@ -2412,34 +1971,7 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Azitromicina",
-    "condicionCodigo": "QT_LARGO",
-    "severidad": "EVITAR",
-    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Claritromicina",
-    "condicionCodigo": "QT_LARGO",
-    "severidad": "EVITAR",
-    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Roxitromicina",
-    "condicionCodigo": "QT_LARGO",
-    "severidad": "EVITAR",
-    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Ciprofloxacino",
     "condicionCodigo": "QT_LARGO",
     "severidad": "EVITAR",
     "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
@@ -2475,15 +2007,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Levofloxacino",
-    "condicionCodigo": "QT_LARGO",
-    "severidad": "EVITAR",
-    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Moxifloxacino",
     "condicionCodigo": "QT_LARGO",
     "severidad": "EVITAR",
@@ -2503,24 +2026,6 @@
   },
   {
     "principioActivoNombre": "Ofloxacino",
-    "condicionCodigo": "QT_LARGO",
-    "severidad": "EVITAR",
-    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Fluconazol",
-    "condicionCodigo": "QT_LARGO",
-    "severidad": "EVITAR",
-    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Itraconazol",
     "condicionCodigo": "QT_LARGO",
     "severidad": "EVITAR",
     "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
@@ -2619,15 +2124,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Escitalopram",
-    "condicionCodigo": "QT_LARGO",
-    "severidad": "EVITAR",
-    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Disopiramida",
     "condicionCodigo": "QT_LARGO",
     "severidad": "EVITAR",
@@ -2683,15 +2179,6 @@
   },
   {
     "principioActivoNombre": "Captopril",
-    "condicionCodigo": "HIPERPOTASEMIA",
-    "severidad": "EVITAR",
-    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Enalapril",
     "condicionCodigo": "HIPERPOTASEMIA",
     "severidad": "EVITAR",
     "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
@@ -2764,15 +2251,6 @@
   },
   {
     "principioActivoNombre": "Irbesartan",
-    "condicionCodigo": "HIPERPOTASEMIA",
-    "severidad": "EVITAR",
-    "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Losartan",
     "condicionCodigo": "HIPERPOTASEMIA",
     "severidad": "EVITAR",
     "texto": "IECA/ARA-II en hiperpotasemia: elevan el potasio sérico. Evitar hasta corregir y controlar.",
@@ -2871,34 +2349,7 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Escitalopram",
-    "condicionCodigo": "HIPONATREMIA",
-    "severidad": "PRECAUCION",
-    "texto": "ISRS en hiponatremia: puede inducir SIADH y empeorar el sodio, sobre todo en ancianos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Fluoxetina",
-    "condicionCodigo": "HIPONATREMIA",
-    "severidad": "PRECAUCION",
-    "texto": "ISRS en hiponatremia: puede inducir SIADH y empeorar el sodio, sobre todo en ancianos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Paroxetina",
-    "condicionCodigo": "HIPONATREMIA",
-    "severidad": "PRECAUCION",
-    "texto": "ISRS en hiponatremia: puede inducir SIADH y empeorar el sodio, sobre todo en ancianos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Sertralina",
     "condicionCodigo": "HIPONATREMIA",
     "severidad": "PRECAUCION",
     "texto": "ISRS en hiponatremia: puede inducir SIADH y empeorar el sodio, sobre todo en ancianos.",
@@ -3069,25 +2520,7 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Ciprofloxacino",
-    "condicionCodigo": "MIASTENIA",
-    "severidad": "PRECAUCION",
-    "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Delafloxacino",
-    "condicionCodigo": "MIASTENIA",
-    "severidad": "PRECAUCION",
-    "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Levofloxacino",
     "condicionCodigo": "MIASTENIA",
     "severidad": "PRECAUCION",
     "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
@@ -3109,24 +2542,6 @@
     "condicionCodigo": "MIASTENIA",
     "severidad": "PRECAUCION",
     "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Azitromicina",
-    "condicionCodigo": "MIASTENIA",
-    "severidad": "PRECAUCION",
-    "texto": "Macrólido en miastenia gravis: puede empeorar la transmisión neuromuscular.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Claritromicina",
-    "condicionCodigo": "MIASTENIA",
-    "severidad": "PRECAUCION",
-    "texto": "Macrólido en miastenia gravis: puede empeorar la transmisión neuromuscular.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -3232,15 +2647,6 @@
   },
   {
     "principioActivoNombre": "Delafloxacino",
-    "condicionCodigo": "DEFICIT_G6PD",
-    "severidad": "PRECAUCION",
-    "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Levofloxacino",
     "condicionCodigo": "DEFICIT_G6PD",
     "severidad": "PRECAUCION",
     "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
@@ -3492,24 +2898,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Rosuvastatina",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "Estatina en embarazo: contraindicada; el colesterol es necesario para el desarrollo fetal. Suspender.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Warfarina",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "EVITAR",
-    "texto": "Cumarínico después del 1er trimestre: riesgo de hemorragia fetal y neonatal. Preferir heparina de bajo peso molecular.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": 13,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Acenocumarol",
     "condicionCodigo": "EMBARAZO",
     "severidad": "EVITAR",
@@ -3526,24 +2914,6 @@
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": 19
-  },
-  {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": 20,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": 20,
-    "semanaMax": null
   },
   {
     "principioActivoNombre": "Indometacina",
@@ -3681,15 +3051,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Litio, Carbonato",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "PRECAUCION",
-    "texto": "Litio después del 1er trimestre: controlar litemia (cambia el volumen de distribución) y vigilar toxicidad neonatal cerca del parto.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": 13,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Lorazepam",
     "condicionCodigo": "LACTANCIA",
     "severidad": "PRECAUCION",
@@ -3726,15 +3087,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "EMBARAZO",
-    "severidad": "CONTRAINDICADO",
-    "texto": "AINE desde la semana 20: contraindicado por cierre prematuro del ductus arterioso y oligohidramnios. Usar paracetamol.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": 20,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Metimazol",
     "condicionCodigo": "EMBARAZO",
     "severidad": "EVITAR",
@@ -3762,15 +3114,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "ASMA",
-    "severidad": "PRECAUCION",
-    "texto": "AINE en asma: puede precipitar broncoespasmo en pacientes con enfermedad respiratoria exacerbada por AINE.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Propranolol",
     "condicionCodigo": "EPOC",
     "severidad": "PRECAUCION",
@@ -3784,15 +3127,6 @@
     "condicionCodigo": "EPOC",
     "severidad": "PRECAUCION",
     "texto": "Betabloqueante no selectivo en EPOC: riesgo de broncoespasmo; preferir cardioselectivo.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "FA",
-    "severidad": "PRECAUCION",
-    "texto": "AINE en FA habitualmente anticoagulada: aumenta el riesgo de sangrado y puede elevar la presión arterial.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -3820,24 +3154,6 @@
     "condicionCodigo": "DM2",
     "severidad": "PRECAUCION",
     "texto": "Betabloqueante no selectivo en diabetes: puede enmascarar síntomas de hipoglucemia.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Litio, Carbonato",
-    "condicionCodigo": "HIPOTIROIDISMO",
-    "severidad": "PRECAUCION",
-    "texto": "Fármaco con efecto antitiroideo en hipotiroidismo: puede agravar el déficit. Controlar función tiroidea.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Fluconazol",
-    "condicionCodigo": "CIRROSIS",
-    "severidad": "EVITAR",
-    "texto": "Fármaco hepatotóxico en hepatopatía/cirrosis: riesgo de daño hepático adicional. Evitar o ajustar con control de transaminasas.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -3924,15 +3240,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Amiodarona",
-    "condicionCodigo": "QT_LARGO",
-    "severidad": "EVITAR",
-    "texto": "Fármaco que prolonga el QT en paciente con QT largo: riesgo de torsades de pointes. Evitar o monitorizar ECG y electrolitos.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Trimetoprim",
     "condicionCodigo": "HIPERPOTASEMIA",
     "severidad": "PRECAUCION",
@@ -3973,15 +3280,6 @@
     "condicionCodigo": "MIASTENIA",
     "severidad": "PRECAUCION",
     "texto": "Betabloqueante en miastenia gravis: puede agravar la debilidad muscular.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Ciprofloxacino",
-    "condicionCodigo": "DEFICIT_G6PD",
-    "severidad": "PRECAUCION",
-    "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -4158,33 +3456,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Ibuprofeno",
-    "condicionCodigo": "ADULTO_MAYOR",
-    "severidad": "EVITAR",
-    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Naproxeno",
-    "condicionCodigo": "ADULTO_MAYOR",
-    "severidad": "EVITAR",
-    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Diclofenaco",
-    "condicionCodigo": "ADULTO_MAYOR",
-    "severidad": "EVITAR",
-    "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Indometacina",
     "condicionCodigo": "ADULTO_MAYOR",
     "severidad": "EVITAR",
@@ -4270,15 +3541,6 @@
     "condicionCodigo": "ADULTO_MAYOR",
     "severidad": "EVITAR",
     "texto": "Beers/STOPP: los AINEs en el adulto mayor aumentan el riesgo de hemorragia digestiva, deterioro renal e hipertensión. Si no se pueden evitar, asociar protección gástrica y usar el menor tiempo posible.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Glibenclamida",
-    "condicionCodigo": "ADULTO_MAYOR",
-    "severidad": "EVITAR",
-    "texto": "Beers: sulfonilurea de acción prolongada en el adulto mayor, con riesgo alto de hipoglucemia grave y sostenida. Preferir gliclazida o glimepirida.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null
@@ -4392,24 +3654,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Digoxina",
-    "condicionCodigo": "ADULTO_MAYOR",
-    "severidad": "PRECAUCION",
-    "texto": "Beers: en el adulto mayor no superar 0,125 mg/día de digoxina. El descenso de la función renal con la edad estrecha el margen terapéutico.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
-    "principioActivoNombre": "Amiodarona",
-    "condicionCodigo": "ADULTO_MAYOR",
-    "severidad": "PRECAUCION",
-    "texto": "Beers: amiodarona no es de primera línea para fibrilación auricular en el adulto mayor por su toxicidad tiroidea, pulmonar y hepática, salvo insuficiencia cardíaca o hipertrofia ventricular.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Nitrofurantoina",
     "condicionCodigo": "ADULTO_MAYOR",
     "severidad": "EVITAR",
@@ -4509,15 +3753,6 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Tramadol",
-    "condicionCodigo": "ADULTO_MAYOR",
-    "severidad": "PRECAUCION",
-    "texto": "STOPP: opioide con riesgo de hiponatremia, confusión y descenso del umbral convulsivo en el adulto mayor. Empezar por la dosis más baja.",
-    "fuente": "Curado GFH _REVISAR_",
-    "semanaMin": null,
-    "semanaMax": null
-  },
-  {
     "principioActivoNombre": "Tapentadol",
     "condicionCodigo": "ADULTO_MAYOR",
     "severidad": "PRECAUCION",
@@ -4558,6 +3793,1860 @@
     "condicionCodigo": "ADULTO_MAYOR",
     "severidad": "PRECAUCION",
     "texto": "STOPP: betabloqueante no selectivo en el adulto mayor: mayor riesgo de bradicardia sintomática y de enmascarar hipoglucemias.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "PRECAUCION",
+    "texto": "Prolonga el intervalo QT. Precaución en portadores de QT largo congénito: control ECG y electrolitos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Ficha no demuestra teratogenicidad ni toxicidad. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "EVITAR",
+    "texto": "Se excreta por la leche materna. No se recomienda por riesgo de lesión articular, salvo que sea la fluoroquinolona de menor excreción indicada.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en diabéticos: riesgo de hipoglicemia e hiperglicemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Insuficiencia renal: ajustar intervalo de dosis según clearance de creatinina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor: mayor riesgo de tendinitis y ruptura tendinosa, y de aneurisma/disección aórtica.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fármaco que reduce el umbral convulsivo en epilepsia: riesgo de crisis. Usar con cautela y a dosis mínima.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en miastenia gravis: puede exacerbar la debilidad muscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ciprofloxacino",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Fluorquinolona en déficit de G6PD: puede inducir hemólisis. Usar con precaución.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado ante intervalo QT prolongado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia renal grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Evidencia insuficiente; toxicidad demostrada en animales. No se recomienda su uso.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Se excreta en cantidades no significativas. Vigilar diarrea y candidiasis en el lactante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Macrólido en miastenia gravis: puede empeorar la transmisión neuromuscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Claritromicina",
+    "condicionCodigo": "HIPOPOTASEMIA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado ante hipopotasemia: mayor riesgo de arritmia por prolongación del QT.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "HIPOTIROIDISMO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en disfunción tiroidea.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Se excreta en la leche y tiene vida media muy larga. Contraindicado: interrumpir la lactancia durante el tratamiento.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en hepatopatía: monitoreo de función hepática.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "PRECAUCION",
+    "texto": "Prolonga el intervalo QT: requiere control electrocardiográfico en tratamientos prolongados.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Toxicidad demostrada en animales y humanos. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "ICC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia cardíaca.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Amiodarona",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "No es de primera línea para fibrilación auricular en el adulto mayor por su toxicidad tiroidea, pulmonar y hepática, salvo insuficiencia cardíaca o hipertrofia ventricular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atorvastatina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática grave y hepatopatías activas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atorvastatina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicada: el colesterol es necesario para el desarrollo fetal. Suspender.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atorvastatina",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en diabetes: puede aumentar la glucemia en ayunas y la hemoglobina glicosilada.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atorvastatina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atorvastatina",
+    "condicionCodigo": "HIPOTIROIDISMO",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en hipotiroidismo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atorvastatina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Atorvastatina",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Se desconoce su excreción; alto peso molecular y unión a proteínas hacen improbable el paso a leche. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "PRECAUCION",
+    "texto": "Aumenta el intervalo QT. Precaución en portadores de QT largo congénito o conocido, bradiarritmias y condiciones arritmogénicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado ante insuficiencia hepatocítica o ictericia previa asociada al uso de azitromicina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia renal severa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "ICC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia cardíaca y condiciones arritmogénicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Macrólido en miastenia gravis: puede empeorar la transmisión neuromuscular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "En animales no ha demostrado toxicidad. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Azitromicina",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Se excreta en leche en cantidades no significativas. Vigilar diarrea y candidiasis en el lactante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Colchicina",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia renal grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Colchicina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Colchicina",
+    "condicionCodigo": "ULCERA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado ante trastornos gastrointestinales graves.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Colchicina",
+    "condicionCodigo": "ICC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en enfermedad cardíaca.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Colchicina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Colchicina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Teratogenicidad demostrada en animales. Contraindicado durante el embarazo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Colchicina",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "EVITAR",
+    "texto": "Se excreta a través de la leche materna. No se recomienda su uso durante la lactancia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "ULCERA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en úlcera péptica activa o hemorragia digestiva activa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia renal severa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "ICC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia cardíaca congestiva establecida (NYHA II-IV), cardiopatía isquémica o enfermedad arterial periférica/cerebrovascular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Toxicidad demostrada en tercer trimestre: contraindicado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 28,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Evidencia insuficiente en el resto del embarazo. No se aconseja su uso; evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 27
+  },
+  {
+    "principioActivoNombre": "Diclofenaco",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Se excreta en leche materna en cantidades no significativas. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Digoxina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Insuficiencia renal: ajustar dosis o intervalo. No se dializa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Digoxina",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "PRECAUCION",
+    "texto": "Las alteraciones del potasio (hiper o hipopotasemia) aumentan el riesgo de toxicidad digitálica.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Digoxina",
+    "condicionCodigo": "HIPOPOTASEMIA",
+    "severidad": "PRECAUCION",
+    "texto": "Las alteraciones del potasio (hiper o hipopotasemia) aumentan el riesgo de toxicidad digitálica.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Digoxina",
+    "condicionCodigo": "HIPOTIROIDISMO",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en hipo o hipertiroidismo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Digoxina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Mayor riesgo de intoxicación por disminución del volumen de distribución y aumento de la vida media.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Digoxina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Evidencia disponible no ha demostrado toxicidad. Teratogenicidad no evaluada. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diltiazem",
+    "condicionCodigo": "ICC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia cardíaca izquierda severa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diltiazem",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diltiazem",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia hepática.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diltiazem",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en diabetes.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diltiazem",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diltiazem",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Toxicidad demostrada en animales. No se recomienda.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Diltiazem",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "EVITAR",
+    "texto": "Se excreta en la leche. Elegir una alternativa segura.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluconazol",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Insuficiencia renal: ajustar dosis.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluconazol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia hepática.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluconazol",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en pacientes con riesgo de arritmias ventriculares (prolonga el QT).",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluconazol",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Teratogenicidad en humanos. Contraindicado en el primer trimestre.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 13
+  },
+  {
+    "principioActivoNombre": "Fluconazol",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Posteriormente al primer trimestre, valorar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 14,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluconazol",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Compatible en dosis única ≤150-200 mg; no se recomiendan dosis múltiples o altas dosis.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluoxetina",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en pacientes con convulsiones.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluoxetina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Insuficiencia hepática: requiere ajuste de dosis.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluoxetina",
+    "condicionCodigo": "GLAUCOMA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en glaucoma de ángulo cerrado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluoxetina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 27
+  },
+  {
+    "principioActivoNombre": "Fluoxetina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Evitar en el tercer trimestre.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 28,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Fluoxetina",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "EVITAR",
+    "texto": "Vigilar sedación, curva de peso, irritabilidad e insomnio en el lactante. Preferir sertralina o paroxetina.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Glibenclamida",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia renal grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Glibenclamida",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Glibenclamida",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en déficit de glucosa 6-fosfato deshidrogenasa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Glibenclamida",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor: mayor riesgo de hipoglicemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Glibenclamida",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "No indicada en la diabetes gestacional. En animales disminuye el crecimiento de huesos largos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Glibenclamida",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Paso a leche probablemente nulo o ínfimo. Vigilar hipoglicemia en el lactante.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Enalapril",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia renal severa (no así la elevación de creatinina esperable durante el tratamiento).",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Enalapril",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Posible respuesta exagerada por descenso del filtrado glomerular, depleción de volumen o alteraciones en la sed.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Enalapril",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Teratogenicidad/toxicidad demostrada en humanos y animales. Puede aumentar la morbimortalidad fetal y neonatal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en pacientes con convulsiones.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia hepática.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "GLAUCOMA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en glaucoma de ángulo cerrado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado con antecedentes de QT largo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Mayor riesgo de arritmia: corregir disionías y realizar monitoreo ECG.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 27
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Evitar en el tercer trimestre.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 28,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Escitalopram",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Escasa excreción en leche materna. Vigilar sedación en el niño.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Itraconazol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en hepatopatía.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Itraconazol",
+    "condicionCodigo": "ICC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia cardíaca, particularmente en tratamiento de onicomicosis.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Itraconazol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en mayores de 65 años.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Itraconazol",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Teratogenicidad demostrada en animales. Evitar su uso.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Itraconazol",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Escasa excreción en la leche materna. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en epilepsia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Insuficiencia renal: requiere ajuste de dosis.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia hepática.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en diabéticos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en miastenia gravis.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en déficit de G6PD.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Evidencia insuficiente en animales; no ha demostrado teratogenicidad ni toxicidad. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Levofloxacino",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "EVITAR",
+    "texto": "Se excreta por la leche materna. No se recomienda por riesgo de lesión articular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "HIPONATREMIA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en hiponatremia, uso de natriuréticos o dieta hiposódica.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en enfermedad renal severa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "ICC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en enfermedad cardiovascular severa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en diabetes.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "HIPOTIROIDISMO",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en bocio o hipotiroidismo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "En mayores de 65 años aumenta la susceptibilidad a reacciones neurotóxicas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Teratogenicidad demostrada. Contraindicado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Litio, Carbonato",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gliclazida",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia renal grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gliclazida",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gliclazida",
+    "condicionCodigo": "DEFICIT_G6PD",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en déficit de glucosa 6-fosfato deshidrogenasa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gliclazida",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gliclazida",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "No indicada en la diabetes gestacional. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Gliclazida",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "EVITAR",
+    "texto": "Riesgo de hipoglicemia en el lactante. No se recomienda.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "ULCERA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en enfermedad ulceropéptica activa o antecedentes de hemorragia/perforación digestiva por AINEs.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia renal severa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática severa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "ICC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia cardíaca clase II-IV NYHA, cardiopatía isquémica, enfermedad arterial periférica o cerebrovascular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en hipertensión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en diabetes.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en asma, rinitis alérgica estacional o pólipos nasales: riesgo de broncoespasmo por hipersensibilidad a AINEs.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "EPOC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en enfermedad pulmonar obstructiva crónica.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en el tercer trimestre.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 28,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ULCERA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en úlcera péptica activa o hemorragia activa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia renal severa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ICC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia cardíaca clase funcional IV.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "HTA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en hipertensión arterial.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ASMA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en rinitis alérgica o enfermedad pulmonar obstructiva crónica: mayor riesgo de hipersensibilidad.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "EPOC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en enfermedad pulmonar obstructiva crónica.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Mayor riesgo de sangrado gastrointestinal y toxicidad renal en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia hepática: riesgo de toxicidad.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Toxicidad demostrada en tercer trimestre: contraindicado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 28,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Evidencia insuficiente en el resto del embarazo. No se aconseja su uso; evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 27
+  },
+  {
+    "principioActivoNombre": "Naproxeno",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Se excreta en leche materna en pequeña cantidad. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Paracetamol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática severa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Paracetamol",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Insuficiencia renal severa: se acumula, espaciar o disminuir dosis.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Paracetamol",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Mayor riesgo de toxicidad hepática en diabéticos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Paracetamol",
+    "condicionCodigo": "OBESIDAD",
+    "severidad": "PRECAUCION",
+    "texto": "Mayor riesgo de toxicidad hepática en obesidad.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Losartan",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia renal: evaluar niveles de creatinina, ajustes solo en casos severos.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Losartan",
+    "condicionCodigo": "HIPERPOTASEMIA",
+    "severidad": "PRECAUCION",
+    "texto": "En insuficiencia renal puede provocar hiperpotasemia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Losartan",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Losartan",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Valorar función renal y situación de hipovolemia o uso de diuréticos en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Losartan",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Teratogenicidad/toxicidad demostrada en humanos y animales.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Losartan",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "EVITAR",
+    "texto": "Se desconoce su excreción en leche. Elegir una alternativa segura.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metformina",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado con clearance de creatinina menor a 30 mL/min.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metformina",
+    "condicionCodigo": "ICC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia cardíaca descompensada.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metformina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metformina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Mayor frecuencia de control en adultos mayores y pacientes de riesgo renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metformina",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Se excreta en cantidades insignificantes; sin problemas observados en lactantes. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metotrexato",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática severa o hiperbilirrubinemia > 5 mg/dL.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metotrexato",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado con clearance de creatinina menor a 30 mL/min.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metotrexato",
+    "condicionCodigo": "ULCERA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en úlcera gastroduodenal o colitis ulcerosa.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metotrexato",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en mayores de 65 años.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metotrexato",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Teratogenicidad/toxicidad demostrada.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Metotrexato",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Simvastatina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática grave y hepatopatías activas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Simvastatina",
+    "condicionCodigo": "HIPOTIROIDISMO",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en hipotiroidismo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Simvastatina",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Simvastatina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Simvastatina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Potencial riesgo de inhibir síntesis de hormonas derivadas del colesterol, esenciales para el desarrollo fetal. Contraindicado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Simvastatina",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Se desconoce su excreción. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rifampicina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Insuficiencia hepática: no superar la dosis máxima diaria de 8 mg/kg.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rifampicina",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en diabetes mellitus.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rifampicina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rifampicina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "No se recomienda. Teratogenicidad demostrada en animales; riesgo de hemorragia postparto al final del embarazo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rosuvastatina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática grave y hepatopatías activas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rosuvastatina",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado con clearance de creatinina menor a 30 mL/min.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rosuvastatina",
+    "condicionCodigo": "HIPOTIROIDISMO",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en hipotiroidismo: factor de riesgo de miopatía.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rosuvastatina",
+    "condicionCodigo": "DM2",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en diabetes.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rosuvastatina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rosuvastatina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Potencial riesgo de inhibir síntesis de hormonas derivadas del colesterol, esenciales para el desarrollo fetal. Contraindicado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Rosuvastatina",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Muy improbable el paso a leche en cantidades significativas. Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sertralina",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en pacientes con convulsiones.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sertralina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia hepática.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sertralina",
+    "condicionCodigo": "GLAUCOMA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en glaucoma de ángulo cerrado.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sertralina",
+    "condicionCodigo": "QT_LARGO",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución con antecedentes de QT largo o uso concomitante de fármacos que prolongan el QT.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Sertralina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "PRECAUCION",
+    "texto": "Evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 27
+  },
+  {
+    "principioActivoNombre": "Sertralina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Evitar en el tercer trimestre.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 28,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Cumarínico en el 1er trimestre: teratógeno (síndrome warfarínico fetal). Contraindicado; cambiar a heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 12
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Cumarínico después del 1er trimestre: riesgo de hemorragia fetal y neonatal. Preferir heparina de bajo peso molecular.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": 13,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "ULCERA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en úlcera gastroduodenal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia hepática grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "ERC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia renal grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "HTA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en hipertensión arterial grave.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "ICC",
+    "severidad": "PRECAUCION",
+    "texto": "Insuficiencia cardíaca grave: puede requerir dosis menores a las recomendadas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Warfarina",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Mayores de 65 años pueden requerir dosis menores a las recomendadas.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tramadol",
+    "condicionCodigo": "EPILEPSIA",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en epilepsia: reduce el umbral convulsivo.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tramadol",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "EVITAR",
+    "texto": "Evitar presentaciones de liberación prolongada en insuficiencia hepática severa; riesgo aumentado de toxicidad en insuficiencia hepática en general.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tramadol",
+    "condicionCodigo": "ERC",
+    "severidad": "EVITAR",
+    "texto": "Evitar presentaciones de liberación prolongada en insuficiencia renal severa; riesgo aumentado de toxicidad en insuficiencia renal en general.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tramadol",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en mayores de 65 años.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tramadol",
+    "condicionCodigo": "DEPRESION",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en depresión o labilidad emocional.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tramadol",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Atraviesa la placenta. No se aconseja su uso durante el embarazo; puede provocar síndrome de abstinencia y depresión respiratoria neonatal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Tramadol",
+    "condicionCodigo": "LACTANCIA",
+    "severidad": "PRECAUCION",
+    "texto": "Se excreta en cantidades poco significativas. Evitar uso prolongado; en dosis única no es necesario interrumpir la lactancia.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Verapamilo",
+    "condicionCodigo": "ICC",
+    "severidad": "CONTRAINDICADO",
+    "texto": "Contraindicado en insuficiencia cardíaca izquierda severa o con FEVI menor de 35%.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Verapamilo",
+    "condicionCodigo": "CIRROSIS",
+    "severidad": "PRECAUCION",
+    "texto": "Insuficiencia hepática moderada a severa: reducir dosis a la mitad.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Verapamilo",
+    "condicionCodigo": "ERC",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en insuficiencia renal.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Verapamilo",
+    "condicionCodigo": "ADULTO_MAYOR",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en el adulto mayor.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Verapamilo",
+    "condicionCodigo": "MIASTENIA",
+    "severidad": "PRECAUCION",
+    "texto": "Precaución en enfermedades neuromusculares.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Verapamilo",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Evidencia insuficiente. No se recomienda.",
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": null,
     "semanaMax": null

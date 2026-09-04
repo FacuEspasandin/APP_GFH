@@ -44,12 +44,20 @@ export const POR_PRODUCTO: Campos<ProductoResumen> = {
   tambien: (p) => [...p.principiosActivos, p.laboratorio ?? ''],
 };
 
+/** Para la pestaña "ATC" del buscador: solo el nombre del fármaco, sin
+ *  arrastrar marcas comerciales a la coincidencia. */
+export const POR_PRINCIPIO_ACTIVO: Campos<PrincipioActivoResumen> = {
+  nombre: (p) => p.nombre,
+  tambien: (p) => [p.grupoTerapeutico ?? ''],
+};
+
 export interface PrincipioActivoResumen {
   id: string;
   nombre: string;
   grupoTerapeutico: string | null;
   tieneAjusteRenal: boolean;
   tieneAjusteHepatico: boolean;
+  codigoATC: string | null;
 }
 
 /**

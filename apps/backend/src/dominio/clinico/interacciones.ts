@@ -8,7 +8,7 @@
  * estatinas.
  */
 
-import { normalizar, parClave } from '@gfh/shared-types';
+import { normalizar, parClave, type TipoRiesgoInteraccion } from '@gfh/shared-types';
 
 export type SeveridadInteraccion = 'INFORMATIVA' | 'ALTA' | 'CONTRAINDICADA';
 
@@ -30,12 +30,14 @@ export interface Regla {
   b: readonly string[];
   severidad: SeveridadInteraccion;
   texto: string;
+  tipoRiesgo: TipoRiesgoInteraccion;
 }
 
 export interface EntradaCatalogo {
   parClave: string;
   severidad: SeveridadInteraccion;
   texto: string;
+  tipoRiesgo: TipoRiesgoInteraccion;
   /** Qué regla ganó el par. Sirve para depurar por qué un par tiene la
    *  severidad que tiene sin releer todo el catálogo. */
   ordenRegla: number;
@@ -68,6 +70,7 @@ export function construirCatalogo(reglas: readonly Regla[]): CatalogoInteraccion
           parClave: clave,
           severidad: regla.severidad,
           texto: regla.texto,
+          tipoRiesgo: regla.tipoRiesgo,
           ordenRegla: regla.orden,
         });
       }
@@ -157,6 +160,7 @@ export interface InteraccionDetectada {
   severidad: SeveridadInteraccion;
   texto: string;
   parClave: string;
+  tipoRiesgo: TipoRiesgoInteraccion;
 }
 
 /** Override del farmacéutico sobre un par del catálogo de código (motor §5.3). */
@@ -210,6 +214,7 @@ export function detectarInteracciones(
         severidad: curacion?.severidadOverride ?? entrada.severidad,
         texto: curacion?.textoOverride ?? entrada.texto,
         parClave: clave,
+        tipoRiesgo: entrada.tipoRiesgo,
       });
     }
   }

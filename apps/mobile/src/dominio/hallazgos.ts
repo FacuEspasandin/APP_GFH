@@ -1,4 +1,4 @@
-import type { CategoriaHallazgo } from '@/api/tipos';
+import type { CategoriaHallazgo, TipoRiesgoInteraccion } from '@/api/tipos';
 
 /**
  * Qué se muestra en la pantalla de hallazgos.
@@ -109,6 +109,20 @@ export function tituloDeVista(vista: Vista, nombreDelFarmaco: (id: string) => st
   }
 }
 
+/** Bajada de una línea para el encabezado de la pantalla, según qué corte se esté viendo. */
+export function descripcionDeVista(vista: Vista): string {
+  switch (vista.tipo) {
+    case 'avisos':
+      return 'Datos que faltan para completar la evaluación de este paciente.';
+    case 'categoria':
+      return 'Ordenados por gravedad, de más a menos crítico.';
+    case 'prescripcion':
+      return 'Hallazgos de las verificaciones automáticas relacionados con este fármaco.';
+    case 'todos':
+      return 'Todo lo que encontraron las verificaciones automáticas, ordenado por gravedad.';
+  }
+}
+
 const VACIO_CATEGORIA: Record<CategoriaHallazgo, string> = {
   INTERACCION: 'Ninguna interacción conocida entre los fármacos cargados.',
   CONDICION: 'Ninguna alerta por las condiciones y alergias cargadas.',
@@ -134,4 +148,61 @@ export function mensajeVacio(vista: Vista): string {
     case 'todos':
       return 'Ninguna verificación encontró algo con los datos cargados.';
   }
+}
+
+type HallazgoAgrupable = {
+  rango: 0 | 1 | 2 | 3;
+  tipoRiesgo?: TipoRiesgoInteraccion;
+};
+
+export type FilaAgrupada<T> =
+  | { tipo: 'individual'; hallazgo: T }
+  | { tipo: 'grupo'; tipoRiesgo: TipoRiesgoInteraccion; peor: 0 | 1 | 2 | 3; hallazgos: T[] };
+
+/**
+ * Junta las interacciones que comparten mecanismo clínico (motor §9 addendum).
+ *
+ * Sólo INTERACCION trae `tipoRiesgo` — condiciones y ajustes pasan de largo,
+ * individuales, en su lugar de siempre. Un mecanismo con una sola interacción
+ * NO arma grupo: agrupar de a uno es peor que la lista plana, agrega un
+ * acordeón para abrir algo que ya se leía entero.
+ *
+ * El grupo aparece en la posición de su primera aparición — la lista ya viene
+ * ordenada por gravedad del backend, así que eso alcanza para que lo peor
+ * siga arriba.
+ */
+export function agruparPorRiesgo<T extends HallazgoAgrupable>(
+  lista: readonly T[],
+): FilaAgrupada<T>[] {
+  const orden: FilaAgrupada<T>[] = [];
+  const grupos = new Map<TipoRiesgoInteraccion, Extract<FilaAgrupada<T>, { tipo: 'grupo' }>>();
+
+  for (const h of lista) {
+    if (!h.tipoRiesgo) {
+      orden.push({ tipo: 'individual', hallazgo: h });
+      continue;
+    }
+    const existente = grupos.get(h.tipoRiesgo);
+    if (existente) {
+      existente.hallazgos.push(h);
+      if (h.rango < existente.peor) existente.peor = h.rango;
+      continue;
+    }
+    const nuevo: Extract<FilaAgrupada<T>, { tipo: 'grupo' }> = {
+      tipo: 'grupo',
+      tipoRiesgo: h.tipoRiesgo,
+      peor: h.rango,
+      hallazgos: [h],
+    };
+    grupos.set(h.tipoRiesgo, nuevo);
+    orden.push(nuevo);
+  }
+
+  // Un grupo de uno se deshace: se lee igual que un hallazgo suelto, sin la
+  // mecánica de expandir/colapsar de más.
+  return orden.map((f) =>
+    f.tipo === 'grupo' && f.hallazgos.length === 1
+      ? { tipo: 'individual' as const, hallazgo: f.hallazgos[0]! }
+      : f,
+  );
 }

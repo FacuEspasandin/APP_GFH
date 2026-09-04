@@ -21,6 +21,7 @@ import {
   type SeveridadAlerta,
   type SeveridadInteraccion,
   type TipoRangoAjuste,
+  type TipoRiesgoInteraccion,
 } from '@gfh/shared-types';
 
 /**
@@ -58,6 +59,9 @@ export interface Hallazgo {
   /** true cuando el contenido está observado y se devuelve igual. Solo pasa con
    *  ajuste renal/hepático. */
   mostradoPeseARechazo: boolean;
+  /** Solo en INTERACCION — es la clave de agrupación del cockpit (motor §9,
+   *  agrupado por mecanismo). Ausente en las demás categorías. */
+  tipoRiesgo?: TipoRiesgoInteraccion;
 }
 
 // --- entradas, una por verificación ----------------------------------------
@@ -72,6 +76,7 @@ export interface InteraccionParaHallazgo {
   parClave: string;
   severidad: SeveridadInteraccion;
   texto: string;
+  tipoRiesgo: TipoRiesgoInteraccion;
   estadoValidacion: EstadoValidacion;
 }
 
@@ -172,6 +177,7 @@ export function unificarHallazgos(entrada: EntradaUnificacion): ResultadoUnifica
       prescripcionIds: [i.prescripcionAId, i.prescripcionBId],
       estadoValidacion: i.estadoValidacion,
       mostradoPeseARechazo: false,
+      tipoRiesgo: i.tipoRiesgo,
     });
   }
 
