@@ -20,7 +20,10 @@
       "buildNumber": "1",
       "infoPlist": {
         "CFBundleDisplayName": "GFH",
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        }
       }
     },
     "android": {
