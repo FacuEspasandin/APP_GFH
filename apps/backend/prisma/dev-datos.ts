@@ -169,6 +169,11 @@ async function main() {
       pesoKg: 58,
       creatininaMgDl: 1.6,
       clcrMedidoAt: new Date(),
+      // Clase B, ingresada a mano: activa el ajuste hepático sobre Warfarina
+      // y Simvastatina, que ya están prescriptas y tienen tabla por fármaco.
+      childPughClase: 'B',
+      childPughOrigen: 'INGRESADO_MANUAL',
+      childPughMedidoAt: new Date(),
     },
   });
 
