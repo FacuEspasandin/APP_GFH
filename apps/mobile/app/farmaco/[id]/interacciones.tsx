@@ -1,9 +1,11 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Text, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, Text, View } from 'react-native';
 
 import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { nombreFamilia, nombreLegible } from '@/dominio/restricciones';
 import { EncabezadoApp } from '@/ui/encabezado-app';
+import { Icono } from '@/ui/iconos';
 import { Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { MarcaSinValidar, PieContexto } from '@/ui/restricciones';
@@ -78,7 +80,6 @@ function Contenido({ f }: { f: DetalleRestriccion }) {
 }
 
 function Grupo({ g }: { g: NonNullable<DetalleRestriccion['gruposInteraccion']>[number] }) {
-  const col = useColores();
   const rango = RANGO_POR_SEVERIDAD_INTERACCION[g.severidad as SeveridadInteraccion];
   const color = colorEspina(rango);
 
@@ -102,22 +103,7 @@ function Grupo({ g }: { g: NonNullable<DetalleRestriccion['gruposInteraccion']>[
       <Eyebrow>Con qué interactúa</Eyebrow>
 
       {g.familias.map((fam) => (
-        <Superficie key={fam.nombre} elevacion="plana" className="mb-2 px-3.5 py-3">
-          <View className="mb-2 flex-row items-center">
-            <Text className="flex-1 text-fila font-medio text-ink">
-              {nombreFamilia(fam.nombre)}
-            </Text>
-            <View
-              className="rounded px-2 py-0.5"
-              style={{ backgroundColor: col.paper }}
-            >
-              <Text className="font-mono-fuerte text-meta" style={{ color }}>
-                {fam.miembros.length}
-              </Text>
-            </View>
-          </View>
-          <Miembros nombres={fam.miembros} />
-        </Superficie>
+        <GrupoFamilia key={fam.nombre} nombre={fam.nombre} miembros={fam.miembros} color={color} />
       ))}
 
       {g.sueltos.length > 0 ? (
@@ -134,9 +120,55 @@ function Grupo({ g }: { g: NonNullable<DetalleRestriccion['gruposInteraccion']>[
   );
 }
 
-/** Los primeros seis y un contador: la lista completa no cabe ni hace falta. */
-function Miembros({ nombres }: { nombres: readonly string[] }) {
-  const visibles = nombres.slice(0, 6);
+/**
+ * Una familia (AINES, Quinolonas...), plegada a seis nombres hasta que el
+ * médico la toca — entonces muestra los N completos. Es la misma mecánica de
+ * expandir/colapsar que ya usan los grupos de riesgo del cockpit, acá sobre
+ * la lista de miembros y no sobre hallazgos.
+ */
+function GrupoFamilia({
+  nombre,
+  miembros,
+  color,
+}: {
+  nombre: string;
+  miembros: readonly string[];
+  color: string;
+}) {
+  const col = useColores();
+  const [abierto, setAbierto] = useState(false);
+  const puedeExpandir = miembros.length > 6;
+
+  return (
+    <Pressable
+      onPress={() => puedeExpandir && setAbierto((v) => !v)}
+      accessibilityRole={puedeExpandir ? 'button' : undefined}
+      accessibilityState={puedeExpandir ? { expanded: abierto } : undefined}
+      accessibilityLabel={`${nombreFamilia(nombre)}, ${miembros.length} fármacos`}
+    >
+      <Superficie elevacion="plana" className="mb-2 px-3.5 py-3">
+        <View className="mb-2 flex-row items-center">
+          <Text className="flex-1 text-fila font-medio text-ink">{nombreFamilia(nombre)}</Text>
+          <View className="flex-row items-center rounded px-2 py-0.5" style={{ backgroundColor: col.paper }}>
+            <Text className="font-mono-fuerte text-meta" style={{ color }}>
+              {miembros.length}
+            </Text>
+          </View>
+          {puedeExpandir ? (
+            <View className="ml-1.5">
+              <Icono nombre={abierto ? 'chevronArriba' : 'chevron'} tamano={15} color={col.inkSuave} />
+            </View>
+          ) : null}
+        </View>
+        <Miembros nombres={miembros} mostrarTodos={abierto} />
+      </Superficie>
+    </Pressable>
+  );
+}
+
+/** Los primeros seis y un contador — hasta que `mostrarTodos` los muestra todos. */
+function Miembros({ nombres, mostrarTodos = false }: { nombres: readonly string[]; mostrarTodos?: boolean }) {
+  const visibles = mostrarTodos ? nombres : nombres.slice(0, 6);
   const resto = nombres.length - visibles.length;
 
   return (
