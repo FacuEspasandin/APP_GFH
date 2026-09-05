@@ -171,11 +171,6 @@ export function MenuInferior() {
               backgroundColor: VERDE_BARRA,
               borderTopLeftRadius: 12,
               borderTopRightRadius: 12,
-              shadowColor: '#122A23',
-              shadowOpacity: 0.18,
-              shadowOffset: { width: 0, height: -3 },
-              shadowRadius: 14,
-              elevation: 12,
             }}
           >
             <View className="flex-1 flex-row" style={{ height: ALTO_CONTENIDO, paddingRight: 34 }}>

@@ -237,9 +237,12 @@ export default function CockpitPaciente() {
               accessibilityLabel="Ver condiciones y alergias"
               className="mt-4 border-t border-line pt-3.5"
             >
-              <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
-                Condiciones Activas
-              </Text>
+              <View className="mb-2 flex-row items-center justify-between">
+                <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+                  Condiciones Activas
+                </Text>
+                <Icono nombre="chevron" tamano={16} color={col.tenue} />
+              </View>
               <View className="flex-row flex-wrap gap-1.5">
               {data.condicionesEfectivas.map((c) => (
                 <View
