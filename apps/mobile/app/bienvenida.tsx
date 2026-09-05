@@ -1,12 +1,17 @@
 import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 /** Bienvenida (1.2). Logo, las dos entradas, y los legales al pie. */
 export default function Bienvenida() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View className="flex-1 px-6 pb-6 pt-24" style={{ backgroundColor: '#006D37' }}>
+    <View
+      className="flex-1 px-6 pb-6"
+      style={{ backgroundColor: '#006D37', paddingTop: insets.top + 24 }}
+    >
       <View className="flex-1 items-center justify-center">
         <View className="h-24 w-24 items-center justify-center rounded-2xl bg-white">
           <Text className="text-2xl font-fuerte" style={{ color: '#005228' }}>
