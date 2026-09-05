@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -54,6 +55,10 @@ export function Consulta({
  * Dos renglones: qué se preguntó y con qué datos. Lo segundo importa más de lo
  * que parece — al ver un Clcr de 28,2 lo primero que se duda es con qué peso
  * se calculó.
+ *
+ * Hace de encabezado de la pantalla en el estado de resultado —no hay
+ * `EncabezadoApp` arriba—, así que el padding del notch/status bar es suyo:
+ * sin `insets.top` el botón "Cambiar" queda debajo de la hora y la cámara.
  */
 export function ConsultaPlegada({
   titulo,
@@ -65,9 +70,13 @@ export function ConsultaPlegada({
   onCambiar: () => void;
 }) {
   const col = useColores();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View className="flex-row items-center border-b border-line bg-surface px-4 py-2.5">
+    <View
+      className="flex-row items-center border-b border-line bg-surface px-4 pb-2.5"
+      style={{ paddingTop: insets.top + 10 }}
+    >
       <View className="flex-1 pr-3">
         <Text className="text-body font-medio text-ink" numberOfLines={1}>
           {titulo}
