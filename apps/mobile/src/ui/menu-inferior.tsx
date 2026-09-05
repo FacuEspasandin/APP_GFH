@@ -156,8 +156,11 @@ export function MenuInferior() {
   return (
     <>
       {/* El contenedor reserva lo que sobresale el botón, para que ninguna
-          pantalla quede tapada por él. */}
-      <View style={{ paddingTop: 20 }}>
+          pantalla quede tapada por él. El fondo tiene que ser el de la
+          pantalla y no transparente: sin él, esos 20px dejaban ver el blanco
+          de la ventana nativa, como una franja distinta entre el contenido y
+          la barra verde. */}
+      <View style={{ paddingTop: 20, backgroundColor: c.fondoPantalla }}>
         <View style={{ position: 'relative' }}>
           {/* De borde a borde: el verde llega a los lados de la pantalla y baja
               hasta el borde inferior, cubriendo el área segura del teléfono.
