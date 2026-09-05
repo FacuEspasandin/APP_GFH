@@ -62,6 +62,11 @@ export interface Hallazgo {
   /** Solo en INTERACCION — es la clave de agrupación del cockpit (motor §9,
    *  agrupado por mecanismo). Ausente en las demás categorías. */
   tipoRiesgo?: TipoRiesgoInteraccion;
+  /** Solo en CONDICION — id de la condición o de la alergia (§ evaluar-cockpit),
+   *  clave de agrupación cuando varios fármacos tocan la misma. */
+  condicionId?: string;
+  /** Solo en CONDICION — nombre para el encabezado del grupo. */
+  condicionNombre?: string;
 }
 
 // --- entradas, una por verificación ----------------------------------------
@@ -192,6 +197,8 @@ export function unificarHallazgos(entrada: EntradaUnificacion): ResultadoUnifica
       prescripcionIds: [a.prescripcionId],
       estadoValidacion: a.estadoValidacion,
       mostradoPeseARechazo: false,
+      condicionId: a.condicionId,
+      condicionNombre: a.condicionNombre,
     });
   }
 

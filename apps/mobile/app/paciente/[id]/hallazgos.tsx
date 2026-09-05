@@ -7,7 +7,7 @@ import PagerView from 'react-native-pager-view';
 import type { Cockpit, Hallazgo } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import {
-  agruparPorRiesgo,
+  agruparHallazgos,
   descripcionDeVista,
   filtrarAvisos,
   filtrarHallazgos,
@@ -28,7 +28,6 @@ import {
   claveColorPorRango,
   colorEspina,
   COLOR_SEVERIDAD,
-  TIPO_RIESGO_ETIQUETA,
   viaLegible,
   type CategoriaHallazgo,
   type RangoGravedad,
@@ -182,9 +181,9 @@ export default function Hallazgos() {
         </View>
       ) : null}
 
-      {agruparPorRiesgo(lista).map((f) => (
+      {agruparHallazgos(lista).map((f) => (
         <FilaHallazgo
-          key={f.tipo === 'grupo' ? `grupo:${f.tipoRiesgo}` : f.hallazgo.clave}
+          key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave}
           fila={f}
           nombres={nombres}
           onAlternativas={(pid) =>
@@ -319,9 +318,9 @@ function PorCategoria({
                   </View>
                 ) : null}
 
-                {agruparPorRiesgo(lista).map((f) => (
+                {agruparHallazgos(lista).map((f) => (
                   <FilaHallazgo
-                    key={f.tipo === 'grupo' ? `grupo:${f.tipoRiesgo}` : f.hallazgo.clave}
+                    key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave}
                     fila={f}
                     nombres={nombres}
                     onAlternativas={onAlternativas}
@@ -390,10 +389,12 @@ function FilaHallazgo({
 }
 
 /**
- * Varias interacciones, un mismo mecanismo (motor §9 addendum) — colapsadas a
- * una tarjeta hasta que el médico las abre.
+ * Varios hallazgos, un mismo riesgo — colapsados a una tarjeta hasta que el
+ * médico la abre. Dos casos: interacciones que comparten mecanismo clínico
+ * (motor §9 addendum), o condiciones/alergias donde varios fármacos alertan
+ * sobre la misma condición.
  *
- * Agrupar no oculta nada: cada interacción de adentro es la misma `Tarjeta`
+ * Agrupar no oculta nada: cada hallazgo de adentro es la misma `Tarjeta`
  * completa que se vería suelta, con su severidad, su texto y su acceso a
  * alternativas. Lo único que cambia es que no hay que leer las N de una para
  * darse cuenta de que es el mismo riesgo contado varias veces.
@@ -416,17 +417,15 @@ function TarjetaGrupoRiesgo({
         onPress={() => setAbierto((v) => !v)}
         accessibilityRole="button"
         accessibilityState={{ expanded: abierto }}
-        accessibilityLabel={`${TIPO_RIESGO_ETIQUETA[grupo.tipoRiesgo]}, ${grupo.hallazgos.length} interacciones`}
+        accessibilityLabel={`${grupo.etiqueta}, ${grupo.hallazgos.length} hallazgos`}
       >
         <Superficie elevacion={grupo.peor <= 1 ? 'media' : 'plana'} className="flex-row items-stretch">
           <Espina rango={grupo.peor} />
           <View className="flex-1 flex-row items-center justify-between gap-2 px-3.5 py-3.5">
             <View className="flex-1">
-              <Text className="text-fila font-medio text-ink">
-                {TIPO_RIESGO_ETIQUETA[grupo.tipoRiesgo]}
-              </Text>
+              <Text className="text-fila font-medio text-ink">{grupo.etiqueta}</Text>
               <Text className="font-sans mt-0.5 text-meta text-ink-suave">
-                {grupo.hallazgos.length} interacciones
+                {grupo.hallazgos.length} hallazgos
               </Text>
             </View>
             <ChipSeveridad rango={grupo.peor} />

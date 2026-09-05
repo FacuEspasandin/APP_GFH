@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  agruparPorRiesgo,
+  agruparHallazgos,
   descripcionDeVista,
   filtrarAvisos,
   filtrarHallazgos,
@@ -178,50 +178,86 @@ describe('vistas de hallazgos', () => {
   });
 });
 
-describe('agrupar interacciones por tipo de riesgo', () => {
+describe('agrupar hallazgos por riesgo compartido', () => {
   const ri = (clave: string, rango: 0 | 1 | 2 | 3, tipoRiesgo?: string) => ({
     clave,
     rango,
     tipoRiesgo: tipoRiesgo as never,
   });
+  const cond = (clave: string, rango: 0 | 1 | 2 | 3, condicionId?: string, condicionNombre?: string) => ({
+    clave,
+    rango,
+    condicionId,
+    condicionNombre,
+  });
 
-  it('junta las que comparten mecanismo en un solo grupo', () => {
+  it('junta las interacciones que comparten mecanismo en un solo grupo', () => {
     const lista = [ri('a', 1, 'SANGRADO'), ri('b', 1, 'SANGRADO'), ri('c', 1, 'SANGRADO')];
-    const filas = agruparPorRiesgo(lista);
+    const filas = agruparHallazgos(lista);
     expect(filas).toHaveLength(1);
-    expect(filas[0]).toMatchObject({ tipo: 'grupo', tipoRiesgo: 'SANGRADO' });
+    expect(filas[0]).toMatchObject({ tipo: 'grupo', clave: 'riesgo:SANGRADO' });
     if (filas[0]!.tipo === 'grupo') expect(filas[0]!.hallazgos).toHaveLength(3);
   });
 
   it('un mecanismo con una sola interacción no arma grupo', () => {
     const lista = [ri('a', 0, 'QT_PROLONGADO')];
-    const filas = agruparPorRiesgo(lista);
+    const filas = agruparHallazgos(lista);
     expect(filas).toEqual([{ tipo: 'individual', hallazgo: lista[0] }]);
   });
 
-  it('lo que no tiene tipoRiesgo (condición, ajustes) queda individual y en su lugar', () => {
-    const lista = [ri('cond', 0, undefined), ri('a', 1, 'SANGRADO'), ri('b', 1, 'SANGRADO')];
-    const filas = agruparPorRiesgo(lista);
+  it('lo que no tiene tipoRiesgo ni condicionId (ajustes) queda individual y en su lugar', () => {
+    const lista = [ri('ajuste', 0, undefined), ri('a', 1, 'SANGRADO'), ri('b', 1, 'SANGRADO')];
+    const filas = agruparHallazgos(lista);
     expect(filas).toHaveLength(2);
     expect(filas[0]).toEqual({ tipo: 'individual', hallazgo: lista[0] });
-    expect(filas[1]).toMatchObject({ tipo: 'grupo', tipoRiesgo: 'SANGRADO' });
+    expect(filas[1]).toMatchObject({ tipo: 'grupo', clave: 'riesgo:SANGRADO' });
   });
 
-  it('el peor del grupo es el rango mínimo de sus interacciones', () => {
+  it('el peor del grupo es el rango mínimo de sus hallazgos', () => {
     const lista = [ri('a', 1, 'SANGRADO'), ri('b', 0, 'SANGRADO')];
-    const filas = agruparPorRiesgo(lista);
+    const filas = agruparHallazgos(lista);
     expect(filas[0]).toMatchObject({ tipo: 'grupo', peor: 0 });
   });
 
   it('agrupa aunque no sean adyacentes, en la posición de la primera aparición', () => {
     const lista = [
       ri('a', 0, 'MIOPATIA_RABDOMIOLISIS'),
-      ri('cond', 1, undefined),
+      ri('otra', 1, undefined),
       ri('b', 1, 'MIOPATIA_RABDOMIOLISIS'),
     ];
-    const filas = agruparPorRiesgo(lista);
+    const filas = agruparHallazgos(lista);
     expect(filas).toHaveLength(2);
     expect(filas[0]).toMatchObject({ tipo: 'grupo', hallazgos: [lista[0], lista[2]] });
     expect(filas[1]).toEqual({ tipo: 'individual', hallazgo: lista[1] });
+  });
+
+  it('junta las condiciones que varios fármacos tocan a la vez, con la etiqueta de la condición', () => {
+    const lista = [
+      cond('a', 2, 'cond-ulcera', 'Úlcera péptica'),
+      cond('b', 3, 'cond-ulcera', 'Úlcera péptica'),
+    ];
+    const filas = agruparHallazgos(lista);
+    expect(filas).toHaveLength(1);
+    expect(filas[0]).toMatchObject({
+      tipo: 'grupo',
+      clave: 'condicion:cond-ulcera',
+      etiqueta: 'Úlcera péptica',
+      peor: 2,
+    });
+  });
+
+  it('condición e interacción no se mezclan aunque coincida el rango', () => {
+    const lista = [
+      ri('i1', 1, 'SANGRADO'),
+      ri('i2', 1, 'SANGRADO'),
+      cond('c1', 1, 'cond-hta', 'Hipertensión arterial'),
+      cond('c2', 1, 'cond-hta', 'Hipertensión arterial'),
+    ];
+    const filas = agruparHallazgos(lista);
+    expect(filas).toHaveLength(2);
+    expect(filas.map((f) => (f.tipo === 'grupo' ? f.clave : f.hallazgo.clave))).toEqual([
+      'riesgo:SANGRADO',
+      'condicion:cond-hta',
+    ]);
   });
 });

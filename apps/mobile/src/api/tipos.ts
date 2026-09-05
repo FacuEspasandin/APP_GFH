@@ -109,6 +109,10 @@ export interface Hallazgo {
   mostradoPeseARechazo: boolean;
   /** Solo en INTERACCION — clave de agrupación del cockpit. */
   tipoRiesgo?: TipoRiesgoInteraccion;
+  /** Solo en CONDICION — id de la condición o alergia, clave de agrupación. */
+  condicionId?: string;
+  /** Solo en CONDICION — nombre para el encabezado del grupo. */
+  condicionNombre?: string;
 }
 
 export interface Cockpit {

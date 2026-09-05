@@ -1,3 +1,5 @@
+import { TIPO_RIESGO_ETIQUETA } from '@gfh/shared-types';
+
 import type { CategoriaHallazgo, TipoRiesgoInteraccion } from '@/api/tipos';
 
 /**
@@ -153,36 +155,52 @@ export function mensajeVacio(vista: Vista): string {
 type HallazgoAgrupable = {
   rango: 0 | 1 | 2 | 3;
   tipoRiesgo?: TipoRiesgoInteraccion;
+  condicionId?: string;
+  condicionNombre?: string;
 };
 
 export type FilaAgrupada<T> =
   | { tipo: 'individual'; hallazgo: T }
-  | { tipo: 'grupo'; tipoRiesgo: TipoRiesgoInteraccion; peor: 0 | 1 | 2 | 3; hallazgos: T[] };
+  | { tipo: 'grupo'; clave: string; etiqueta: string; peor: 0 | 1 | 2 | 3; hallazgos: T[] };
+
+/** De qué comparten riesgo dos hallazgos, si comparten alguno. INTERACCION por
+ *  mecanismo clínico (motor §9 addendum); CONDICION por la condición o
+ *  alergia — dos fármacos distintos alertando sobre la misma úlcera o la
+ *  misma hipertensión es el mismo caso que dos interacciones con el mismo
+ *  mecanismo. Ajustes no traen ninguno de los dos campos: quedan sueltos. */
+function claveYEtiqueta(h: HallazgoAgrupable): { clave: string; etiqueta: string } | null {
+  if (h.tipoRiesgo) return { clave: `riesgo:${h.tipoRiesgo}`, etiqueta: TIPO_RIESGO_ETIQUETA[h.tipoRiesgo] };
+  if (h.condicionId) return { clave: `condicion:${h.condicionId}`, etiqueta: h.condicionNombre ?? 'Alerta' };
+  return null;
+}
 
 /**
- * Junta las interacciones que comparten mecanismo clínico (motor §9 addendum).
+ * Junta los hallazgos que comparten riesgo: interacciones por mecanismo
+ * clínico (motor §9 addendum), condiciones/alergias por la condición que
+ * varios fármacos tocan a la vez.
  *
- * Sólo INTERACCION trae `tipoRiesgo` — condiciones y ajustes pasan de largo,
- * individuales, en su lugar de siempre. Un mecanismo con una sola interacción
- * NO arma grupo: agrupar de a uno es peor que la lista plana, agrega un
- * acordeón para abrir algo que ya se leía entero.
+ * Lo que no comparte ninguno de los dos —ajustes, y cualquier hallazgo suelto—
+ * pasa de largo, individual, en su lugar de siempre. Un riesgo con un solo
+ * hallazgo NO arma grupo: agrupar de a uno es peor que la lista plana, agrega
+ * un acordeón para abrir algo que ya se leía entero.
  *
  * El grupo aparece en la posición de su primera aparición — la lista ya viene
  * ordenada por gravedad del backend, así que eso alcanza para que lo peor
  * siga arriba.
  */
-export function agruparPorRiesgo<T extends HallazgoAgrupable>(
+export function agruparHallazgos<T extends HallazgoAgrupable>(
   lista: readonly T[],
 ): FilaAgrupada<T>[] {
   const orden: FilaAgrupada<T>[] = [];
-  const grupos = new Map<TipoRiesgoInteraccion, Extract<FilaAgrupada<T>, { tipo: 'grupo' }>>();
+  const grupos = new Map<string, Extract<FilaAgrupada<T>, { tipo: 'grupo' }>>();
 
   for (const h of lista) {
-    if (!h.tipoRiesgo) {
+    const info = claveYEtiqueta(h);
+    if (!info) {
       orden.push({ tipo: 'individual', hallazgo: h });
       continue;
     }
-    const existente = grupos.get(h.tipoRiesgo);
+    const existente = grupos.get(info.clave);
     if (existente) {
       existente.hallazgos.push(h);
       if (h.rango < existente.peor) existente.peor = h.rango;
@@ -190,11 +208,12 @@ export function agruparPorRiesgo<T extends HallazgoAgrupable>(
     }
     const nuevo: Extract<FilaAgrupada<T>, { tipo: 'grupo' }> = {
       tipo: 'grupo',
-      tipoRiesgo: h.tipoRiesgo,
+      clave: info.clave,
+      etiqueta: info.etiqueta,
       peor: h.rango,
       hallazgos: [h],
     };
-    grupos.set(h.tipoRiesgo, nuevo);
+    grupos.set(info.clave, nuevo);
     orden.push(nuevo);
   }
 
