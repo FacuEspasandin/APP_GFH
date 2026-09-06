@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Icono } from '@/ui/iconos';
 import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
@@ -59,18 +60,53 @@ export function Consulta({
  * Hace de encabezado de la pantalla en el estado de resultado —no hay
  * `EncabezadoApp` arriba—, así que el padding del notch/status bar es suyo:
  * sin `insets.top` el botón "Cambiar" queda debajo de la hora y la cámara.
+ *
+ * `variante`: 'cambiar' (default) es un botón de texto que rearma la consulta
+ * con otros datos — las herramientas standalone. 'volver' es una flecha atrás
+ * de verdad: Alternativas ya hacía `router.back()` bajo el rótulo "Cambiar",
+ * que no cambia nada y confundía — nadie esperaba que "Cambiar" fuera la
+ * única forma de salir de la pantalla.
  */
 export function ConsultaPlegada({
   titulo,
   detalle,
   onCambiar,
+  variante = 'cambiar',
 }: {
   titulo: string;
   detalle: string;
   onCambiar: () => void;
+  variante?: 'cambiar' | 'volver';
 }) {
   const col = useColores();
   const insets = useSafeAreaInsets();
+
+  if (variante === 'volver') {
+    return (
+      <View
+        className="flex-row items-center border-b border-line bg-surface px-2 pb-2.5"
+        style={{ paddingTop: insets.top + 10 }}
+      >
+        <Pressable
+          onPress={onCambiar}
+          accessibilityRole="button"
+          accessibilityLabel="Volver"
+          hitSlop={8}
+          className="h-10 w-10 items-center justify-center rounded-full"
+        >
+          <Icono nombre="atras" tamano={18} color={col.ink} />
+        </Pressable>
+        <View className="flex-1 pr-3">
+          <Text className="text-body font-medio text-ink" numberOfLines={1}>
+            {titulo}
+          </Text>
+          <Text className="font-sans text-meta text-ink-suave" numberOfLines={1}>
+            {detalle}
+          </Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View

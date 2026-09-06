@@ -124,6 +124,7 @@ export default function Alternativas() {
         titulo={`En lugar de ${data.farmacoOrigen}`}
         detalle={resumenAlternativas(data.viables.length, limpias)}
         onCambiar={() => router.back()}
+        variante="volver"
       />
 
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
