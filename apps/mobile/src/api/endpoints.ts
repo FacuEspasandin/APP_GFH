@@ -53,6 +53,7 @@ export const registrarse = (datos: {
   password: string;
   nombre: string;
   apellido: string;
+  especialidad?: string;
   dispositivoInfo?: string;
 }) => api.post<{ accessToken: string; refreshToken: string }>('/auth/registro', datos);
 

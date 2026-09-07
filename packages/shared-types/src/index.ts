@@ -1,6 +1,7 @@
 export * from './child-pugh';
 export * from './clcr';
 export * from './enums';
+export * from './especialidad';
 export * from './historial-filtros';
 export * from './lipidos';
 export * from './molde';

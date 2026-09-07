@@ -135,6 +135,7 @@ export interface Medico {
   nombreUsuario: string;
   nombre: string;
   apellido: string;
+  especialidad?: string | null;
   rol: string;
   disclaimerAceptadoAt?: string | null;
   disclaimerVersion?: string | null;

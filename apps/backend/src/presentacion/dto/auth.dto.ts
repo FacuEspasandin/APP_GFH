@@ -1,4 +1,5 @@
-import { IsEmail, IsOptional, IsString, Length, Matches, MinLength } from 'class-validator';
+import { ESPECIALIDADES } from '@gfh/shared-types';
+import { IsEmail, IsIn, IsOptional, IsString, Length, Matches, MinLength } from 'class-validator';
 
 export class RegistroDto {
   @IsEmail({}, { message: 'El email no es válido.', context: { propio: true } })
@@ -20,6 +21,9 @@ export class RegistroDto {
 
   @IsString() @Length(1, 80) nombre!: string;
   @IsString() @Length(1, 80) apellido!: string;
+  @IsOptional()
+  @IsIn(ESPECIALIDADES, { message: 'Especialidad no reconocida.', context: { propio: true } })
+  especialidad?: string;
   @IsOptional() @IsString() @Length(1, 120) dispositivoInfo?: string;
 }
 

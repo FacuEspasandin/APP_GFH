@@ -824,6 +824,12 @@ model Medico {
   nombre        String
   apellido      String
 
+  /// Opcional, elegida al registrarse de una lista fija (ver
+  /// `@gfh/shared-types/especialidad`). Sólo reordena Herramientas por
+  /// relevancia — nunca filtra: las que cruzan el catálogo las usa cualquier
+  /// especialidad por igual. Ver decisión en Obsidian.
+  especialidad String?
+
   rol    RolMedico    @default(USER)
   estado EstadoMedico @default(ACTIVO)
 

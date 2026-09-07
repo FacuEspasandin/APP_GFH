@@ -8,8 +8,9 @@ import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { useVolverAInicio } from '@/ui/boton-volver';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
-import { Boton, CampoTexto } from '@/ui/kit';
+import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
+import { ESPECIALIDADES, type Especialidad } from '@gfh/shared-types';
 
 /** Registro (1.4). Nombre de usuario único + email + contraseña. */
 export default function Registro() {
@@ -25,6 +26,7 @@ export default function Registro() {
     password: '',
     confirmar: '',
   });
+  const [especialidad, setEspecialidad] = useState<Especialidad | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
 
@@ -41,6 +43,7 @@ export default function Registro() {
         nombreUsuario: c.nombreUsuario,
         email: c.email,
         password: c.password,
+        especialidad: especialidad ?? undefined,
       });
       // El registro ya devuelve tokens, pero se hace login para reusar el
       // mismo camino de guardado y no duplicar la lógica de sesión.
@@ -109,6 +112,26 @@ export default function Registro() {
             onChangeText={campo('confirmar')}
             secureTextEntry
           />
+        </BloqueFormulario>
+
+        <BloqueFormulario titulo="Especialidad" exigencia="Opcional">
+          {/* Sólo reordena Herramientas por relevancia — nunca filtra: las
+              que cruzan el catálogo las usa cualquier especialidad por
+              igual. Por eso se puede saltear sin perder nada. */}
+          <Text className="font-sans -mt-2 mb-3 px-1 text-meta leading-4 text-ink-suave">
+            Para mostrar arriba las calculadoras que más vas a usar. Se puede
+            saltear.
+          </Text>
+          <View className="flex-row flex-wrap gap-2">
+            {ESPECIALIDADES.map((e) => (
+              <Chip
+                key={e}
+                texto={e}
+                activo={especialidad === e}
+                onPress={() => setEspecialidad((p) => (p === e ? null : e))}
+              />
+            ))}
+          </View>
         </BloqueFormulario>
 
         {/* Decía "El acceso es de pago desde el primer día, sin prueba

@@ -1,4 +1,4 @@
-import { normalizar } from '@gfh/shared-types';
+import { normalizar, type Especialidad } from '@gfh/shared-types';
 
 import type { NombreIcono } from '@/ui/iconos';
 
@@ -209,18 +209,64 @@ export interface GrupoHerramientas {
 }
 
 /**
+ * Qué aparatos le interesan a cada especialidad — no qué herramientas: una
+ * herramienta nueva que se etiquete `renal` entra sola a lo que ve un
+ * nefrólogo, sin tocar este mapa.
+ *
+ * «Clínica médica» va vacía a propósito: un generalista no tiene un aparato
+ * más propio que otro, así que no hay nada que adelantar. Las cinco
+ * herramientas que cruzan el catálogo NO están en ningún lado de este mapa
+ * — es a propósito, ver el comentario de `CATEGORIAS` arriba: agruparlas por
+ * especialidad las metería en un cajón transversal que nadie abre. Lo único
+ * que hace este mapa es decidir el ORDEN, nunca qué se muestra.
+ */
+const CATEGORIAS_POR_ESPECIALIDAD: Record<Especialidad, readonly CategoriaHerramienta[]> = {
+  'Clínica médica': [],
+  Cardiología: ['laboratorio'],
+  Nefrología: ['renal'],
+  Hepatología: ['hepatico'],
+  // El clearance también es de geriatría y oncología, no sólo de nefrología:
+  // las tres lo usan seguido, por edad o por quimioterapia nefrotóxica.
+  Geriatría: ['renal', 'dosis'],
+  Oncología: ['renal', 'condiciones', 'interacciones'],
+};
+
+/**
+ * Las claves de herramienta relevantes para una especialidad, derivadas de
+ * sus categorías — no una lista aparte que pueda desincronizarse de
+ * `HERRAMIENTAS`.
+ */
+export function relevantesDe(especialidad: Especialidad | null | undefined): ReadonlySet<string> {
+  if (!especialidad) return new Set();
+  const categorias = CATEGORIAS_POR_ESPECIALIDAD[especialidad];
+  if (!categorias || categorias.length === 0) return new Set();
+  return new Set(
+    HERRAMIENTAS.filter((h) => h.categorias.some((c) => categorias.includes(c))).map((h) => h.clave),
+  );
+}
+
+/**
  * Las dos secciones: **calcula** contra **cruza el catálogo**.
  *
  * Es exactamente lo que decide el precio, y por eso se mantiene aunque los
  * chips filtren por aparato: agrupar por aparato dejaría el candado repartido
  * al azar por la lista.
  *
- * Alfabético adentro de cada una. La alternativa —las más usadas primero—
- * mueve las filas de lugar entre visitas, y eso obliga a leer lo que ya te
- * sabías de memoria.
+ * Alfabético adentro de cada una — salvo que la especialidad del médico
+ * adelante alguna: ésas van primero, y entre ellas y entre el resto el orden
+ * sigue siendo alfabético. Es orden, no filtro (ver `CATEGORIAS` arriba): con
+ * `relevantes` vacío el resultado es exactamente el de antes.
  */
-export function agrupar(herramientas: readonly Herramienta[]): GrupoHerramientas[] {
-  const orden = (a: Herramienta, b: Herramienta) => a.titulo.localeCompare(b.titulo, 'es');
+export function agrupar(
+  herramientas: readonly Herramienta[],
+  relevantes: ReadonlySet<string> = new Set(),
+): GrupoHerramientas[] {
+  const orden = (a: Herramienta, b: Herramienta) => {
+    const ra = relevantes.has(a.clave);
+    const rb = relevantes.has(b.clave);
+    if (ra !== rb) return ra ? -1 : 1;
+    return a.titulo.localeCompare(b.titulo, 'es');
+  };
 
   const calculan = herramientas.filter((h) => !h.cruza).sort(orden);
   const cruzan = herramientas.filter((h) => h.cruza).sort(orden);

@@ -36,6 +36,7 @@ export class AuthService {
     password: string;
     nombre: string;
     apellido: string;
+    especialidad?: string;
     dispositivoInfo?: string;
   }): Promise<ParDeTokens> {
     const email = datos.email.trim().toLowerCase();
@@ -58,6 +59,7 @@ export class AuthService {
         passwordHash: await this.hash.hashearPassword(datos.password),
         nombre: datos.nombre.trim(),
         apellido: datos.apellido.trim(),
+        especialidad: datos.especialidad ?? null,
         rol: 'USER',
         configuracion: { create: {} },
       },
@@ -225,6 +227,7 @@ export class AuthService {
         nombreUsuario: true,
         nombre: true,
         apellido: true,
+        especialidad: true,
         rol: true,
         disclaimerVersion: true,
         disclaimerAceptadoAt: true,

@@ -1,7 +1,9 @@
+import { useQuery } from '@tanstack/react-query';
 import { Stack, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
+import * as API from '@/api/endpoints';
 import { usePlan } from '@/api/plan';
 import { useRecientes } from '@/api/recientes';
 import {
@@ -12,9 +14,11 @@ import {
   HERRAMIENTAS,
   NOMBRE_CATEGORIA,
   partir,
+  relevantesDe,
   type CategoriaHerramienta,
   type Herramienta,
 } from '@/dominio/herramientas';
+import type { Especialidad } from '@gfh/shared-types';
 import { esDePago, rutaHerramienta } from '@/dominio/plan-gratis';
 import { mostrarRecientes, recientesVigentes } from '@/dominio/recientes';
 import { EncabezadoApp } from '@/ui/encabezado-app';
@@ -38,6 +42,13 @@ export default function Herramientas() {
   const router = useRouter();
   const { data: plan } = usePlan();
   const { recientes, usar } = useRecientes();
+  // Mismo `queryKey` que Perfil: comparte la caché, no dispara un pedido de
+  // más sólo para saber la especialidad.
+  const { data: perfil } = useQuery({ queryKey: ['perfil'], queryFn: API.yo });
+  const relevantes = useMemo(
+    () => relevantesDe(perfil?.especialidad as Especialidad | undefined),
+    [perfil?.especialidad],
+  );
 
   const [consulta, setConsulta] = useState('');
   const [categoria, setCategoria] = useState<CategoriaHerramienta | null>(null);
@@ -57,7 +68,7 @@ export default function Herramientas() {
     [buscando, buscada, categoria],
   );
 
-  const grupos = useMemo(() => agrupar(visibles), [visibles]);
+  const grupos = useMemo(() => agrupar(visibles, relevantes), [visibles, relevantes]);
 
   const recientesAMostrar = recientesVigentes(recientes, HERRAMIENTAS);
   const hayRecientes =

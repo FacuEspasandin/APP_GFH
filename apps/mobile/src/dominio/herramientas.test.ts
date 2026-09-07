@@ -7,6 +7,7 @@ import {
   filtrarPorCategoria,
   HERRAMIENTAS,
   partir,
+  relevantesDe,
   type Herramienta,
 } from './herramientas';
 
@@ -138,6 +139,49 @@ describe('agrupar', () => {
 
   it('sin nada devuelve cero grupos', () => {
     expect(agrupar([])).toEqual([]);
+  });
+
+  it('sin especialidad, el orden es exactamente el de antes', () => {
+    expect(agrupar(HERRAMIENTAS, relevantesDe(null))).toEqual(agrupar(HERRAMIENTAS));
+  });
+
+  it('especialidad: adelanta lo relevante, alfabético dentro de cada grupo', () => {
+    // Nefrología sólo tiene 'renal': adelanta el clcr y el ajuste renal, en
+    // sus dos secciones, sin sacar nada de la lista.
+    const g = agrupar(HERRAMIENTAS, relevantesDe('Nefrología'));
+    expect(claves(g[0]!.herramientas)).toEqual(['clcr', 'child-pugh', 'ldl']);
+    expect(claves(g[1]!.herramientas)).toEqual([
+      'renal',
+      'ajuste-hepatico',
+      'condicion-alergia',
+      'interacciones',
+    ]);
+  });
+
+  it('«Clínica médica» no adelanta nada: no tiene aparato propio', () => {
+    expect(agrupar(HERRAMIENTAS, relevantesDe('Clínica médica'))).toEqual(agrupar(HERRAMIENTAS));
+  });
+});
+
+describe('relevantesDe', () => {
+  it('sin especialidad, conjunto vacío', () => {
+    expect(relevantesDe(null)).toEqual(new Set());
+    expect(relevantesDe(undefined)).toEqual(new Set());
+  });
+
+  it('nunca es una lista aparte: sale de las categorías ya declaradas', () => {
+    // Nefrología → 'renal' → exactamente las herramientas que ya tienen esa
+    // categoría, ni una más.
+    expect(relevantesDe('Nefrología')).toEqual(new Set(claves(filtrarPorCategoria(HERRAMIENTAS, 'renal'))));
+  });
+
+  it('es orden, no filtro: nunca saca ninguna herramienta de la lista', () => {
+    for (const especialidad of ['Cardiología', 'Nefrología', 'Hepatología', 'Geriatría', 'Oncología'] as const) {
+      const relevantes = relevantesDe(especialidad);
+      const g = agrupar(HERRAMIENTAS, relevantes);
+      const total = g.flatMap((x) => x.herramientas).length;
+      expect(total).toBe(HERRAMIENTAS.length);
+    }
   });
 });
 
