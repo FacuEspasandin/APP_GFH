@@ -6,9 +6,16 @@ import { calcularRiesgoCVParaMolde, moldeRiesgoCV } from '@/dominio/molde-riesgo
 import { Calculadora } from '@/ui/calculadora';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
-import { Chip } from '@/ui/kit';
+import { Boton, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import {
+  metaLdlCardiovascular,
+  type Borrador,
+  type EdadBandaCV,
+  type NivelRiesgoCV,
+  type SexoRiesgoCV,
+} from '@gfh/shared-types';
 
 /**
  * Las cuatro condiciones de la guía que hacen que NO corresponda calcular:
@@ -35,11 +42,19 @@ const EXCLUSIONES = [
  * corta la cascada entera y muestra alto riesgo directo, sin pedir sexo,
  * edad ni el resto — el molde no tiene forma de saltarse sus propios
  * campos, y este corte es previo a la calculadora, no parte de ella.
+ *
+ * La meta de LDL (opcional, debajo del resultado) va por `extra`: reusa
+ * sexo/edad/categoría que el molde ya calculó, y no vuelve a preguntarlos.
  */
 export default function RiesgoCardiovascular() {
   const col = useColores();
   const [excluido, setExcluido] = useState<boolean | null>(null);
+  const [borrador, setBorrador] = useState<Borrador>({});
   const molde = moldeRiesgoCV();
+
+  const categoria = calcularRiesgoCVParaMolde(borrador).valor?.valor as NivelRiesgoCV | null | undefined;
+  const sexo = borrador.sexo as SexoRiesgoCV | undefined;
+  const edad = borrador.edad ? (Number(borrador.edad) as EdadBandaCV) : undefined;
 
   return (
     <View className="flex-1 bg-paper">
@@ -112,7 +127,131 @@ export default function RiesgoCardiovascular() {
         ) : null}
       </View>
 
-      {excluido === false ? <Calculadora molde={molde} calcular={calcularRiesgoCVParaMolde} /> : null}
+      {excluido === false ? (
+        <Calculadora
+          molde={molde}
+          calcular={calcularRiesgoCVParaMolde}
+          onCambio={(b) => setBorrador(b)}
+          extra={
+            categoria && sexo && edad ? (
+              <BloqueMetaLdl categoria={categoria} sexo={sexo} edad={edad} />
+            ) : null
+          }
+        />
+      ) : null}
     </View>
+  );
+}
+
+/**
+ * La meta de LDL, opcional y colgada del resultado — no una pantalla nueva.
+ *
+ * Bajo/Alto/Muy alto/Crítico tienen meta fija: se muestra apenas se toca
+ * «ver». Moderado se ramifica según tres condiciones de la guía (LDL basal,
+ * HTA con HVI, o edad/sexo + otro factor) — acá se preguntan las que no se
+ * pueden derivar de lo que ya se contestó arriba.
+ */
+function BloqueMetaLdl({
+  categoria,
+  sexo,
+  edad,
+}: {
+  categoria: NivelRiesgoCV;
+  sexo: SexoRiesgoCV;
+  edad: EdadBandaCV;
+}) {
+  const col = useColores();
+  const [abierto, setAbierto] = useState(false);
+  const [ldlBasalAlto, setLdlBasalAlto] = useState<boolean | undefined>();
+  const [htaConHvi, setHtaConHvi] = useState<boolean | undefined>();
+  const [otroFactor, setOtroFactor] = useState<boolean | undefined>();
+
+  if (!abierto) {
+    return (
+      <View
+        className="mb-3.5 items-center rounded-card border border-dashed border-line px-3.5 py-3"
+        style={{ backgroundColor: col.surface }}
+      >
+        <Text className="font-sans mb-2 text-center text-meta leading-5 text-ink-suave">
+          ¿Querés ver los valores objetivo de colesterol para este riesgo?
+        </Text>
+        <Boton variante="secundario" onPress={() => setAbierto(true)}>
+          Ver valores objetivo
+        </Boton>
+      </View>
+    );
+  }
+
+  // Moderado se ramifica; el resto tiene meta fija y no necesita nada más.
+  const faltaAlgo =
+    categoria === 2 && (ldlBasalAlto === undefined || htaConHvi === undefined || otroFactor === undefined);
+
+  if (faltaAlgo) {
+    return (
+      <View className="mb-3.5 gap-2.5">
+        <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+          Para la meta, faltan datos
+        </Text>
+        <PreguntaSiNo
+          pregunta="¿El colesterol LDL basal es ≥ 130 mg/dl?"
+          valor={ldlBasalAlto}
+          onCambio={setLdlBasalAlto}
+        />
+        <PreguntaSiNo
+          pregunta="¿Hipertensión arterial con hipertrofia ventricular izquierda?"
+          valor={htaConHvi}
+          onCambio={setHtaConHvi}
+        />
+        <PreguntaSiNo
+          pregunta="¿Colesterol HDL bajo, glicemia de ayuno alterada, o circunferencia abdominal aumentada (>94 cm hombres, >90 cm mujeres)?"
+          valor={otroFactor}
+          onCambio={setOtroFactor}
+        />
+      </View>
+    );
+  }
+
+  const meta = metaLdlCardiovascular({ categoria, sexo, edad, ldlBasalAlto, htaConHvi, otroFactorAsociado: otroFactor });
+  if (!meta) return null;
+
+  return (
+    <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3.5" style={{ backgroundColor: col.primaryLight }}>
+      <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-primary">Meta terapéutica</Text>
+      <View className="mt-2 flex-row items-baseline justify-between border-t py-2" style={{ borderColor: col.line }}>
+        <Text className="text-meta text-ink">Colesterol LDL</Text>
+        <Text className="font-mono-fuerte text-body text-primary">&lt; {meta.ldlMgDl} mg/dl</Text>
+      </View>
+      <View className="flex-row items-baseline justify-between border-t py-2" style={{ borderColor: col.line }}>
+        <Text className="text-meta text-ink">Colesterol no-HDL</Text>
+        <Text className="font-mono-fuerte text-body text-primary">&lt; {meta.noHdlMgDl} mg/dl</Text>
+      </View>
+      {meta.reduccionPorcentualMinima ? (
+        <View className="flex-row items-baseline justify-between border-t py-2" style={{ borderColor: col.line }}>
+          <Text className="text-meta text-ink">Reducción mínima</Text>
+          <Text className="font-mono-fuerte text-body text-primary">{meta.reduccionPorcentualMinima}%</Text>
+        </View>
+      ) : null}
+      <Text className="font-sans mt-2 text-eyebrow text-ink-suave">Guía Nacional de Dislipemias (Uruguay)</Text>
+    </Superficie>
+  );
+}
+
+function PreguntaSiNo({
+  pregunta,
+  valor,
+  onCambio,
+}: {
+  pregunta: string;
+  valor: boolean | undefined;
+  onCambio: (v: boolean) => void;
+}) {
+  return (
+    <Superficie elevacion="plana" className="px-3.5 py-3">
+      <Text className="mb-2 text-meta font-medio text-ink">{pregunta}</Text>
+      <View className="flex-row gap-2">
+        <Chip texto="Sí" activo={valor === true} onPress={() => onCambio(true)} />
+        <Chip texto="No" activo={valor === false} onPress={() => onCambio(false)} />
+      </View>
+    </Superficie>
   );
 }

@@ -4,6 +4,7 @@ export * from './enums';
 export * from './especialidad';
 export * from './historial-filtros';
 export * from './lipidos';
+export * from './meta-ldl-cardiovascular';
 export * from './molde';
 export * from './monografia';
 export * from './orden-tratamiento';
