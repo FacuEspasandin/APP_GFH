@@ -9,6 +9,7 @@ export * from './monografia';
 export * from './orden-tratamiento';
 export * from './rangos';
 export * from './restricciones-ficha';
+export * from './riesgo-cardiovascular';
 export * from './severidad';
 export * from './sexo';
 export * from './texto';

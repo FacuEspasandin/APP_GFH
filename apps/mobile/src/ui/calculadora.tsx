@@ -21,10 +21,23 @@ import {
   unidadDe,
   type Borrador,
   type Campo,
+  type ClaveColorSeveridad,
   type Molde,
   type Unidades,
   type Tramo,
 } from '@gfh/shared-types';
+
+/**
+ * El color de un tramo, que puede venir de la escala clínica (una clave de
+ * `COLOR_SEVERIDAD`) o —desde que existe el riesgo cardiovascular WHO/ISH,
+ * con sus 5 niveles propios— un hex literal. Un mismo campo con dos formas
+ * posibles porque forzar 5 niveles ajenos a la escala clínica de 3-4 le
+ * pondría un significado clínico a un color que no lo tiene.
+ */
+function resolverColorTramo(color: string | undefined): string {
+  if (!color) return COLOR_SEVERIDAD.neutro;
+  return color in COLOR_SEVERIDAD ? COLOR_SEVERIDAD[color as ClaveColorSeveridad] : color;
+}
 
 /**
  * La pantalla de cualquier calculadora, dibujada desde su declaración.
@@ -545,7 +558,7 @@ function Resultado({
     const empezado = cuantosContestados(molde.campos, borrador) > 0;
     const max = r.maximo || puntajeMaximo(molde.campos);
     const tramo = tramoDeValor(puntos);
-    const color = tramo?.color ? COLOR_SEVERIDAD[tramo.color] : COLOR_SEVERIDAD.neutro;
+    const color = resolverColorTramo(tramo?.color);
 
     return (
       <Superficie
@@ -590,7 +603,7 @@ function Resultado({
         <Anillo
           valor={valor}
           maximo={r.maximo}
-          color={tramo?.color ? COLOR_SEVERIDAD[tramo.color] : COLOR_SEVERIDAD.neutro}
+          color={resolverColorTramo(tramo?.color)}
           sufijo={r.unidad}
           insignia={tramo?.rotulo ?? null}
           tamano={132}
@@ -598,6 +611,36 @@ function Resultado({
         <Text className="font-sans mt-2.5 text-center text-meta leading-5 text-ink-suave">
           {valor === null ? porQueNoHay(cifra) : molde.formula}
         </Text>
+      </Superficie>
+    );
+  }
+
+  if (r.tipo === 'categoria') {
+    const cifra = cifras.valor;
+    const valor = cifra?.valor ?? null;
+    const tramo = tramoDeValor(valor);
+    const color = resolverColorTramo(tramo?.color);
+
+    return (
+      <Superficie
+        elevacion="plana"
+        className="mb-3.5 items-center px-3.5 py-5"
+        style={{ borderLeftWidth: 4, borderLeftColor: color }}
+      >
+        {tramo ? (
+          <>
+            <Text className="font-mono-fuerte text-titulo" style={{ color }}>
+              {tramo.rotulo}
+            </Text>
+            <Text className="font-sans mt-2 text-center text-meta leading-5 text-ink-suave">
+              {molde.formula}
+            </Text>
+          </>
+        ) : (
+          <Text className="font-sans text-center text-meta text-ink-suave">
+            {valor === null ? porQueNoHay(cifra) : 'sin tramo declarado para este valor'}
+          </Text>
+        )}
       </Superficie>
     );
   }

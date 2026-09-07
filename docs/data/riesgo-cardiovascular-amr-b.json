@@ -1,0 +1,174 @@
+{
+  "fuente": "WHO/ISH Risk Prediction Charts, subregión AMR B, OMS/OPS 2007-2008 — la que cita la guía nacional uruguaya de dislipemias (pág. 27)",
+  "notaEscala": "1=<10%, 2=10 a <20%, 3=20 a <30%, 4=30 a <40%, 5=>=40%",
+  "notaColesterol": "valores[0..4] = colesterol 4,5,6,7,8 mmol/L, izquierda a derecha en la tabla original",
+  "notaSexo": "M = Hombre, F = Mujer (mismo criterio que Sexo en @gfh/shared-types)",
+  "verificado": "Cada bloque pasa: riesgo no decrece con colesterol (izq→der), no decrece con PAS (120→180), fumador >= no fumador, mujer <= hombre — mismas condiciones",
+  "excepcionesConfirmadas": [
+    "edad 40 con diabetes, Mujeres (No fumadoras y Fumadoras): varias celdas quedan una categoría por encima de la equivalente en Hombres — rompe el patrón mujer<=hombre de todos los demás bloques. Releído dos veces por Facundo contra la imagen original y confirmado igual las dos veces — se toma como dato real de la tabla, no como error de transcripción.",
+    "edad 50 sin diabetes, Mujeres No fumadoras, PAS180/col1: Naranja vs Amarillo de Hombres — confirmado por Facundo.",
+    "edad 40 sin diabetes, Mujeres No fumadoras, PAS180/col1 y PAS160/col3, y Mujeres Fumadoras PAS160/col3: mismo tipo de excepción, confirmado por Facundo. El PAS180/col1 se repite igual en edad 50 y 40 — parece un rasgo real de la tabla en esa franja, no azar."
+  ],
+  "pendiente": [],
+  "tabla": [
+    { "diabetes": true, "edad": 70, "sexo": "M", "fumador": false, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "M", "fumador": false, "pas": 160, "valores": [3, 4, 5, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "M", "fumador": false, "pas": 140, "valores": [2, 3, 3, 4, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "M", "fumador": false, "pas": 120, "valores": [2, 2, 2, 3, 4] },
+
+    { "diabetes": true, "edad": 70, "sexo": "M", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "M", "fumador": true, "pas": 160, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "M", "fumador": true, "pas": 140, "valores": [3, 4, 5, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "M", "fumador": true, "pas": 120, "valores": [2, 3, 3, 4, 5] },
+
+    { "diabetes": true, "edad": 70, "sexo": "F", "fumador": false, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "F", "fumador": false, "pas": 160, "valores": [3, 3, 4, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "F", "fumador": false, "pas": 140, "valores": [2, 2, 3, 3, 4] },
+    { "diabetes": true, "edad": 70, "sexo": "F", "fumador": false, "pas": 120, "valores": [1, 2, 2, 2, 3] },
+
+    { "diabetes": true, "edad": 70, "sexo": "F", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "F", "fumador": true, "pas": 160, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "F", "fumador": true, "pas": 140, "valores": [3, 3, 4, 5, 5] },
+    { "diabetes": true, "edad": 70, "sexo": "F", "fumador": true, "pas": 120, "valores": [2, 2, 3, 3, 4] },
+
+    { "diabetes": true, "edad": 60, "sexo": "M", "fumador": false, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 60, "sexo": "M", "fumador": false, "pas": 160, "valores": [3, 3, 4, 5, 5] },
+    { "diabetes": true, "edad": 60, "sexo": "M", "fumador": false, "pas": 140, "valores": [1, 2, 2, 3, 4] },
+    { "diabetes": true, "edad": 60, "sexo": "M", "fumador": false, "pas": 120, "valores": [1, 1, 1, 2, 2] },
+
+    { "diabetes": true, "edad": 60, "sexo": "M", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 60, "sexo": "M", "fumador": true, "pas": 160, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 60, "sexo": "M", "fumador": true, "pas": 140, "valores": [2, 3, 3, 4, 5] },
+    { "diabetes": true, "edad": 60, "sexo": "M", "fumador": true, "pas": 120, "valores": [1, 2, 2, 3, 4] },
+
+    { "diabetes": true, "edad": 60, "sexo": "F", "fumador": false, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 60, "sexo": "F", "fumador": false, "pas": 160, "valores": [3, 3, 4, 5, 5] },
+    { "diabetes": true, "edad": 60, "sexo": "F", "fumador": false, "pas": 140, "valores": [1, 2, 2, 3, 4] },
+    { "diabetes": true, "edad": 60, "sexo": "F", "fumador": false, "pas": 120, "valores": [1, 1, 1, 2, 2] },
+
+    { "diabetes": true, "edad": 60, "sexo": "F", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 60, "sexo": "F", "fumador": true, "pas": 160, "valores": [3, 3, 5, 5, 5] },
+    { "diabetes": true, "edad": 60, "sexo": "F", "fumador": true, "pas": 140, "valores": [2, 2, 2, 3, 4] },
+    { "diabetes": true, "edad": 60, "sexo": "F", "fumador": true, "pas": 120, "valores": [1, 1, 1, 2, 3] },
+
+    { "diabetes": true, "edad": 50, "sexo": "M", "fumador": false, "pas": 180, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 50, "sexo": "M", "fumador": false, "pas": 160, "valores": [2, 2, 3, 4, 5] },
+    { "diabetes": true, "edad": 50, "sexo": "M", "fumador": false, "pas": 140, "valores": [1, 1, 1, 2, 3] },
+    { "diabetes": true, "edad": 50, "sexo": "M", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 2] },
+
+    { "diabetes": true, "edad": 50, "sexo": "M", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 50, "sexo": "M", "fumador": true, "pas": 160, "valores": [3, 4, 5, 5, 5] },
+    { "diabetes": true, "edad": 50, "sexo": "M", "fumador": true, "pas": 140, "valores": [1, 2, 2, 3, 5] },
+    { "diabetes": true, "edad": 50, "sexo": "M", "fumador": true, "pas": 120, "valores": [1, 1, 1, 2, 3] },
+
+    { "diabetes": true, "edad": 50, "sexo": "F", "fumador": false, "pas": 180, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 50, "sexo": "F", "fumador": false, "pas": 160, "valores": [2, 2, 3, 4, 5] },
+    { "diabetes": true, "edad": 50, "sexo": "F", "fumador": false, "pas": 140, "valores": [1, 1, 1, 2, 4] },
+    { "diabetes": true, "edad": 50, "sexo": "F", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 2] },
+
+    { "diabetes": true, "edad": 50, "sexo": "F", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 50, "sexo": "F", "fumador": true, "pas": 160, "valores": [3, 3, 5, 5, 5] },
+    { "diabetes": true, "edad": 50, "sexo": "F", "fumador": true, "pas": 140, "valores": [1, 2, 2, 3, 4] },
+    { "diabetes": true, "edad": 50, "sexo": "F", "fumador": true, "pas": 120, "valores": [1, 1, 1, 2, 3] },
+
+    { "diabetes": true, "edad": 40, "sexo": "M", "fumador": false, "pas": 180, "valores": [3, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 40, "sexo": "M", "fumador": false, "pas": 160, "valores": [1, 2, 2, 3, 5] },
+    { "diabetes": true, "edad": 40, "sexo": "M", "fumador": false, "pas": 140, "valores": [1, 1, 1, 1, 3] },
+    { "diabetes": true, "edad": 40, "sexo": "M", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 1] },
+
+    { "diabetes": true, "edad": 40, "sexo": "M", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 40, "sexo": "M", "fumador": true, "pas": 160, "valores": [2, 3, 4, 5, 5] },
+    { "diabetes": true, "edad": 40, "sexo": "M", "fumador": true, "pas": 140, "valores": [1, 1, 2, 2, 5] },
+    { "diabetes": true, "edad": 40, "sexo": "M", "fumador": true, "pas": 120, "valores": [1, 1, 1, 1, 3] },
+
+    { "diabetes": true, "edad": 40, "sexo": "F", "fumador": false, "pas": 180, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 40, "sexo": "F", "fumador": false, "pas": 160, "valores": [1, 2, 3, 4, 5] },
+    { "diabetes": true, "edad": 40, "sexo": "F", "fumador": false, "pas": 140, "valores": [1, 1, 1, 2, 4] },
+    { "diabetes": true, "edad": 40, "sexo": "F", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 1] },
+
+    { "diabetes": true, "edad": 40, "sexo": "F", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": true, "edad": 40, "sexo": "F", "fumador": true, "pas": 160, "valores": [2, 3, 5, 5, 5] },
+    { "diabetes": true, "edad": 40, "sexo": "F", "fumador": true, "pas": 140, "valores": [1, 1, 2, 3, 4] },
+    { "diabetes": true, "edad": 40, "sexo": "F", "fumador": true, "pas": 120, "valores": [1, 1, 1, 1, 2] },
+
+    { "diabetes": false, "edad": 70, "sexo": "M", "fumador": false, "pas": 180, "valores": [3, 4, 5, 5, 5] },
+    { "diabetes": false, "edad": 70, "sexo": "M", "fumador": false, "pas": 160, "valores": [2, 2, 3, 3, 4] },
+    { "diabetes": false, "edad": 70, "sexo": "M", "fumador": false, "pas": 140, "valores": [1, 2, 2, 2, 3] },
+    { "diabetes": false, "edad": 70, "sexo": "M", "fumador": false, "pas": 120, "valores": [1, 1, 1, 2, 2] },
+
+    { "diabetes": false, "edad": 70, "sexo": "M", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": false, "edad": 70, "sexo": "M", "fumador": true, "pas": 160, "valores": [3, 3, 4, 5, 5] },
+    { "diabetes": false, "edad": 70, "sexo": "M", "fumador": true, "pas": 140, "valores": [2, 2, 3, 3, 4] },
+    { "diabetes": false, "edad": 70, "sexo": "M", "fumador": true, "pas": 120, "valores": [1, 2, 2, 2, 3] },
+
+    { "diabetes": false, "edad": 70, "sexo": "F", "fumador": false, "pas": 180, "valores": [3, 3, 4, 5, 5] },
+    { "diabetes": false, "edad": 70, "sexo": "F", "fumador": false, "pas": 160, "valores": [2, 2, 2, 3, 3] },
+    { "diabetes": false, "edad": 70, "sexo": "F", "fumador": false, "pas": 140, "valores": [1, 1, 2, 2, 2] },
+    { "diabetes": false, "edad": 70, "sexo": "F", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 2] },
+
+    { "diabetes": false, "edad": 70, "sexo": "F", "fumador": true, "pas": 180, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": false, "edad": 70, "sexo": "F", "fumador": true, "pas": 160, "valores": [2, 3, 3, 4, 5] },
+    { "diabetes": false, "edad": 70, "sexo": "F", "fumador": true, "pas": 140, "valores": [2, 2, 2, 3, 3] },
+    { "diabetes": false, "edad": 70, "sexo": "F", "fumador": true, "pas": 120, "valores": [1, 1, 2, 2, 2] },
+
+    { "diabetes": false, "edad": 60, "sexo": "M", "fumador": false, "pas": 180, "valores": [3, 4, 5, 5, 5] },
+    { "diabetes": false, "edad": 60, "sexo": "M", "fumador": false, "pas": 160, "valores": [2, 2, 2, 3, 4] },
+    { "diabetes": false, "edad": 60, "sexo": "M", "fumador": false, "pas": 140, "valores": [1, 1, 1, 2, 2] },
+    { "diabetes": false, "edad": 60, "sexo": "M", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 1] },
+
+    { "diabetes": false, "edad": 60, "sexo": "M", "fumador": true, "pas": 180, "valores": [5, 5, 5, 5, 5] },
+    { "diabetes": false, "edad": 60, "sexo": "M", "fumador": true, "pas": 160, "valores": [2, 3, 4, 4, 5] },
+    { "diabetes": false, "edad": 60, "sexo": "M", "fumador": true, "pas": 140, "valores": [1, 2, 2, 3, 4] },
+    { "diabetes": false, "edad": 60, "sexo": "M", "fumador": true, "pas": 120, "valores": [1, 1, 1, 2, 2] },
+
+    { "diabetes": false, "edad": 60, "sexo": "F", "fumador": false, "pas": 180, "valores": [3, 3, 4, 5, 5] },
+    { "diabetes": false, "edad": 60, "sexo": "F", "fumador": false, "pas": 160, "valores": [1, 1, 2, 2, 3] },
+    { "diabetes": false, "edad": 60, "sexo": "F", "fumador": false, "pas": 140, "valores": [1, 1, 1, 1, 2] },
+    { "diabetes": false, "edad": 60, "sexo": "F", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 1] },
+
+    { "diabetes": false, "edad": 60, "sexo": "F", "fumador": true, "pas": 180, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": false, "edad": 60, "sexo": "F", "fumador": true, "pas": 160, "valores": [2, 2, 3, 4, 5] },
+    { "diabetes": false, "edad": 60, "sexo": "F", "fumador": true, "pas": 140, "valores": [1, 1, 1, 2, 3] },
+    { "diabetes": false, "edad": 60, "sexo": "F", "fumador": true, "pas": 120, "valores": [1, 1, 1, 1, 2] },
+
+    { "diabetes": false, "edad": 50, "sexo": "M", "fumador": false, "pas": 180, "valores": [2, 3, 4, 5, 5] },
+    { "diabetes": false, "edad": 50, "sexo": "M", "fumador": false, "pas": 160, "valores": [1, 1, 2, 2, 4] },
+    { "diabetes": false, "edad": 50, "sexo": "M", "fumador": false, "pas": 140, "valores": [1, 1, 1, 1, 2] },
+    { "diabetes": false, "edad": 50, "sexo": "M", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 1] },
+
+    { "diabetes": false, "edad": 50, "sexo": "M", "fumador": true, "pas": 180, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": false, "edad": 50, "sexo": "M", "fumador": true, "pas": 160, "valores": [2, 2, 3, 4, 5] },
+    { "diabetes": false, "edad": 50, "sexo": "M", "fumador": true, "pas": 140, "valores": [1, 1, 1, 2, 3] },
+    { "diabetes": false, "edad": 50, "sexo": "M", "fumador": true, "pas": 120, "valores": [1, 1, 1, 1, 2] },
+
+    { "diabetes": false, "edad": 50, "sexo": "F", "fumador": false, "pas": 180, "valores": [3, 3, 4, 5, 5] },
+    { "diabetes": false, "edad": 50, "sexo": "F", "fumador": false, "pas": 160, "valores": [1, 1, 2, 2, 3] },
+    { "diabetes": false, "edad": 50, "sexo": "F", "fumador": false, "pas": 140, "valores": [1, 1, 1, 1, 2] },
+    { "diabetes": false, "edad": 50, "sexo": "F", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 1] },
+
+    { "diabetes": false, "edad": 50, "sexo": "F", "fumador": true, "pas": 180, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": false, "edad": 50, "sexo": "F", "fumador": true, "pas": 160, "valores": [2, 2, 3, 4, 5] },
+    { "diabetes": false, "edad": 50, "sexo": "F", "fumador": true, "pas": 140, "valores": [1, 1, 1, 2, 3] },
+    { "diabetes": false, "edad": 50, "sexo": "F", "fumador": true, "pas": 120, "valores": [1, 1, 1, 1, 2] },
+
+    { "diabetes": false, "edad": 40, "sexo": "M", "fumador": false, "pas": 180, "valores": [2, 3, 4, 5, 5] },
+    { "diabetes": false, "edad": 40, "sexo": "M", "fumador": false, "pas": 160, "valores": [1, 1, 1, 2, 4] },
+    { "diabetes": false, "edad": 40, "sexo": "M", "fumador": false, "pas": 140, "valores": [1, 1, 1, 1, 2] },
+    { "diabetes": false, "edad": 40, "sexo": "M", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 1] },
+
+    { "diabetes": false, "edad": 40, "sexo": "M", "fumador": true, "pas": 180, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": false, "edad": 40, "sexo": "M", "fumador": true, "pas": 160, "valores": [1, 2, 2, 4, 5] },
+    { "diabetes": false, "edad": 40, "sexo": "M", "fumador": true, "pas": 140, "valores": [1, 1, 1, 2, 3] },
+    { "diabetes": false, "edad": 40, "sexo": "M", "fumador": true, "pas": 120, "valores": [1, 1, 1, 1, 1] },
+
+    { "diabetes": false, "edad": 40, "sexo": "F", "fumador": false, "pas": 180, "valores": [3, 3, 4, 5, 5] },
+    { "diabetes": false, "edad": 40, "sexo": "F", "fumador": false, "pas": 160, "valores": [1, 1, 2, 2, 3] },
+    { "diabetes": false, "edad": 40, "sexo": "F", "fumador": false, "pas": 140, "valores": [1, 1, 1, 1, 2] },
+    { "diabetes": false, "edad": 40, "sexo": "F", "fumador": false, "pas": 120, "valores": [1, 1, 1, 1, 1] },
+
+    { "diabetes": false, "edad": 40, "sexo": "F", "fumador": true, "pas": 180, "valores": [4, 5, 5, 5, 5] },
+    { "diabetes": false, "edad": 40, "sexo": "F", "fumador": true, "pas": 160, "valores": [1, 2, 3, 4, 5] },
+    { "diabetes": false, "edad": 40, "sexo": "F", "fumador": true, "pas": 140, "valores": [1, 1, 1, 2, 3] },
+    { "diabetes": false, "edad": 40, "sexo": "F", "fumador": true, "pas": 120, "valores": [1, 1, 1, 1, 1] }
+  ]
+}

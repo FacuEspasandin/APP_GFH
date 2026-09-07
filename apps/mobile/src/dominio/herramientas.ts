@@ -105,6 +105,16 @@ export const HERRAMIENTAS: readonly Herramienta[] = [
     busca: ['colesterol', 'friedewald', 'lipidos', 'trigliceridos', 'hdl', 'dislipemia'],
   },
   {
+    clave: 'riesgo-cv',
+    titulo: 'Riesgo cardiovascular',
+    detalle: 'WHO/ISH a 10 años, sobre sexo, edad, PAS y colesterol',
+    ruta: '/herramientas/riesgo-cardiovascular',
+    cruza: false,
+    categorias: ['laboratorio'],
+    icono: 'pulso',
+    busca: ['cardiovascular', 'who', 'ish', 'framingham', 'amr b', 'infarto', 'acv'],
+  },
+  {
     clave: 'renal',
     titulo: 'Ajuste renal por fármaco',
     detalle: 'Cuánto ajustar cada fármaco para un Clcr dado',

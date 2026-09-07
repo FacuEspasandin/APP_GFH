@@ -145,8 +145,16 @@ export type Unidades = Readonly<Record<string, string | undefined>>;
 export interface Tramo {
   hasta: number;
   rotulo: string;
-  /** Sale de la escala clínica, no de la calculadora. Sin esto, `neutro`. */
-  color?: ClaveColorSeveridad;
+  /**
+   * Sale de la escala clínica, no de la calculadora. Sin esto, `neutro`.
+   *
+   * Acepta también un hex literal para escalas que no son de gravedad
+   * clínica y necesitan más de los 3-4 colores de `COLOR_SEVERIDAD` — el
+   * riesgo cardiovascular WHO/ISH tiene 5 niveles con color propio en la
+   * fuente (verde/amarillo/naranja/rojo/bordó), y forzarlos a la escala
+   * clínica perdería la distinción que trae la tabla original.
+   */
+  color?: ClaveColorSeveridad | string;
 }
 
 /** Una cifra contra una escala continua: el anillo del clearance. */
@@ -178,7 +186,21 @@ export interface ResultadoCifras {
   cifras: readonly { clave: string; rotulo: string; unidad: string }[];
 }
 
-export type FormaResultado = ResultadoAnillo | ResultadoPuntaje | ResultadoCifras;
+/**
+ * Un tramo elegido por una función externa, no por suma de puntos ni por una
+ * escala continua.
+ *
+ * Es la forma del riesgo cardiovascular WHO/ISH: la combinación de sexo,
+ * edad, tabaquismo, diabetes, PAS y colesterol no se puntúa — se busca
+ * directo en una tabla publicada. `calcular` (el mismo prop que usa
+ * `anillo`) entrega el número de tramo (1..N) y acá sólo se interpreta.
+ */
+export interface ResultadoCategoria {
+  tipo: 'categoria';
+  tramos: readonly Tramo[];
+}
+
+export type FormaResultado = ResultadoAnillo | ResultadoPuntaje | ResultadoCifras | ResultadoCategoria;
 
 // ---------------------------------------------------------------------------
 // 3. El molde
