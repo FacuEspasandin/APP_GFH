@@ -5,26 +5,26 @@ import { normalizar, parClave } from '@gfh/shared-types';
 import { describe, expect, it } from 'vitest';
 
 import {
-  cargarReglasInteraccion,
-  RUTA_REGLAS_POR_DEFECTO,
-} from '../../infraestructura/catalogo/cargar-reglas-interaccion';
-import {
   coberturaPorPar,
   construirCatalogo,
   detectarInteracciones,
   masGrave,
+  procesarReglasInteraccion,
+  type ArchivoReglas,
   type ComponenteActivo,
   type Curacion,
   type Regla,
   type SeveridadInteraccion,
 } from './interacciones';
 
-const { reglas, listas, listasSinUso } = cargarReglasInteraccion(RUTA_REGLAS_POR_DEFECTO);
+const RUTA_REGLAS = path.resolve(__dirname, './reglas-interaccion.json');
+const crudo = JSON.parse(fs.readFileSync(RUTA_REGLAS, 'utf8')) as ArchivoReglas;
+const { reglas, listas, listasSinUso } = procesarReglasInteraccion(crudo);
 const catalogo = construirCatalogo(reglas);
 
 const PAS = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, '../../../../../docs/data/principios-activos.json'),
+    path.resolve(__dirname, '../../../docs/data/principios-activos.json'),
     'utf8',
   ),
 ) as Array<{ nombre: string }>;

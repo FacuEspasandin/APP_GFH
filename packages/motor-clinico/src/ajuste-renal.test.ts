@@ -94,7 +94,7 @@ interface SenFarmaco {
 
 const SEN = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, '../../../../../docs/data/farmacos-ajuste-renal.json'),
+    path.resolve(__dirname, '../../../docs/data/farmacos-ajuste-renal.json'),
     'utf8',
   ),
 ) as { farmacos: SenFarmaco[] };

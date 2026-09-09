@@ -1,0 +1,4 @@
+{
+  "extends": "@gfh/tsconfig/base.json",
+  "include": ["src/**/*.ts"]
+}

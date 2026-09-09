@@ -99,7 +99,7 @@ describe('ventana de gestación (motor §6.3)', () => {
 describe('el catálogo real trae las condiciones sintéticas', () => {
   const COND = JSON.parse(
     fs.readFileSync(
-      path.resolve(__dirname, '../../../../../docs/data/condiciones-clinicas.json'),
+      path.resolve(__dirname, '../../../docs/data/condiciones-clinicas.json'),
       'utf8',
     ),
   ) as Array<{ codigo: string }>;

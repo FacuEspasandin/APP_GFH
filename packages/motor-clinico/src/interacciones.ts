@@ -8,7 +8,12 @@
  * estatinas.
  */
 
-import { normalizar, parClave, type TipoRiesgoInteraccion } from '@gfh/shared-types';
+import {
+  normalizar,
+  parClave,
+  TIPOS_RIESGO_INTERACCION,
+  type TipoRiesgoInteraccion,
+} from '@gfh/shared-types';
 
 export type SeveridadInteraccion = 'INFORMATIVA' | 'ALTA' | 'CONTRAINDICADA';
 
@@ -307,4 +312,126 @@ export function agruparInteracciones(
   }
 
   return grupos.sort((x, y) => peso[x.severidad] - peso[y.severidad] || y.total - x.total);
+}
+
+// ---------------------------------------------------------------------------
+// Carga de reglas desde el archivo fuente (formato crudo, sin resolver)
+// ---------------------------------------------------------------------------
+
+export interface ReglaCruda {
+  orden: number;
+  a: string[];
+  b: string[];
+  aResuelta: string[];
+  bResuelta: string[];
+  severidad: string;
+  texto: string;
+  tipoRiesgo: string;
+}
+
+export interface ParExtraCrudo {
+  orden: number;
+  a: string;
+  b: string;
+  severidad: string;
+  texto: string;
+  tipoRiesgo: string;
+}
+
+export interface ArchivoReglas {
+  listas: Record<string, string[]>;
+  reglas: ReglaCruda[];
+  paresExtra: ParExtraCrudo[];
+}
+
+export interface CargaReglas {
+  reglas: Regla[];
+  listas: Record<string, string[]>;
+  listasSinUso: string[];
+}
+
+const SEVERIDADES = new Set<string>(['INFORMATIVA', 'ALTA', 'CONTRAINDICADA']);
+
+function severidadDesde(valor: string, ctx: string): SeveridadInteraccion {
+  if (!SEVERIDADES.has(valor)) {
+    throw new Error(`Severidad de interacción desconocida: "${valor}" (${ctx})`);
+  }
+  return valor as SeveridadInteraccion;
+}
+
+const TIPOS_RIESGO = new Set<string>(TIPOS_RIESGO_INTERACCION);
+
+function tipoRiesgoDesde(valor: string, ctx: string): TipoRiesgoInteraccion {
+  if (!TIPOS_RIESGO.has(valor)) {
+    throw new Error(`Tipo de riesgo de interacción desconocido: "${valor}" (${ctx})`);
+  }
+  return valor as TipoRiesgoInteraccion;
+}
+
+/**
+ * Un token de `a`/`b` es nombre de lista si aparece como clave en `listas`; si
+ * no, es un nombre de fármaco literal. Las reglas mezclan las dos cosas
+ * (`['Metotrexato']` es un fármaco, `['AINES']` es una lista).
+ */
+function resolver(tokens: readonly string[], listas: Record<string, string[]>): string[] {
+  return tokens.flatMap((t) => listas[t] ?? [t]);
+}
+
+function verificarExpansion(propia: string[], esperada: string[], ctx: string): void {
+  const iguales =
+    propia.length === esperada.length && propia.every((v, i) => v === esperada[i]);
+  if (!iguales) {
+    throw new Error(
+      `La expansión no coincide con la del export en ${ctx}.\n` +
+        `  propia:   ${JSON.stringify(propia)}\n` +
+        `  esperada: ${JSON.stringify(esperada)}`,
+    );
+  }
+}
+
+/**
+ * Transforma el archivo crudo de reglas (listas + reglas por clase + pares
+ * sueltos) en el formato que consume `construirCatalogo`. No toca disco: quien
+ * llama decide de dónde sale `crudo` (el backend lo lee de
+ * `docs/data/reglas-interaccion.json`, el móvil lo bundlea con la app).
+ */
+export function procesarReglasInteraccion(crudo: ArchivoReglas): CargaReglas {
+  const reglas: Regla[] = crudo.reglas.map((r) => {
+    const a = resolver(r.a, crudo.listas);
+    const b = resolver(r.b, crudo.listas);
+
+    // Control cruzado: la fuente trae `aResuelta`/`bResuelta` ya expandidas.
+    // Si nuestra resolución no coincide, algo cambió en `listas` y el catálogo
+    // resultante sería distinto del que corre en GFH. Fallar acá es barato;
+    // descubrirlo por una interacción que no aparece, no.
+    verificarExpansion(a, r.aResuelta, `regla ${r.orden}, lado a`);
+    verificarExpansion(b, r.bResuelta, `regla ${r.orden}, lado b`);
+
+    return {
+      orden: r.orden,
+      a,
+      b,
+      severidad: severidadDesde(r.severidad, `regla ${r.orden}`),
+      texto: r.texto,
+      tipoRiesgo: tipoRiesgoDesde(r.tipoRiesgo, `regla ${r.orden}`),
+    };
+  });
+
+  // Los pares sueltos se aplican DESPUÉS de todas las reglas, con la misma
+  // lógica de "el primero gana". Su `orden` ya continúa la numeración.
+  for (const p of crudo.paresExtra ?? []) {
+    reglas.push({
+      orden: p.orden,
+      a: [p.a],
+      b: [p.b],
+      severidad: severidadDesde(p.severidad, `par extra ${p.orden}`),
+      texto: p.texto,
+      tipoRiesgo: tipoRiesgoDesde(p.tipoRiesgo, `par extra ${p.orden}`),
+    });
+  }
+
+  const usadas = new Set(crudo.reglas.flatMap((r) => [...r.a, ...r.b]));
+  const listasSinUso = Object.keys(crudo.listas).filter((l) => !usadas.has(l));
+
+  return { reglas, listas: crudo.listas, listasSinUso };
 }
