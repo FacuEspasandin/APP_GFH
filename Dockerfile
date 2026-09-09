@@ -27,6 +27,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY apps/backend/package.json apps/backend/
 COPY packages/shared-types/package.json packages/shared-types/
 COPY packages/tsconfig/package.json packages/tsconfig/
+COPY packages/motor-clinico/package.json packages/motor-clinico/
 # El manifiesto del mobile, aunque su código no se copie: `pnpm-workspace.yaml`
 # declara `apps/*` y el lockfile tiene los cinco proyectos. Si falta uno,
 # `--frozen-lockfile` corta porque el workspace no coincide con el lockfile.
