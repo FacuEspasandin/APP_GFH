@@ -28,11 +28,19 @@ export function configurarGoogleSignIn(): void {
     return;
   }
 
-  GoogleSignin.configure({
-    webClientId,
-    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS,
-  });
-  configurado = true;
+  // Corre al boot, antes de que exista ninguna pantalla para mostrar un
+  // error: si el SDK nativo tira acá (client id mal formado, config
+  // inconsistente entre plataformas), no puede llevarse puesto el arranque
+  // entero — mismo criterio que `configurarRevenueCat`.
+  try {
+    GoogleSignin.configure({
+      webClientId,
+      iosClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS,
+    });
+    configurado = true;
+  } catch (e) {
+    console.warn('[Google] No se pudo configurar el SDK — el botón no va a funcionar.', e);
+  }
 }
 
 /**
