@@ -84,6 +84,11 @@ export const RANGOS = {
     // la pena preguntar si el número es ése.
     habitual: { min: 20, max: 1000 },
   },
+
+  // --- HbA1c, en %. El estudio ADAG que valida la fórmula usó 4-15%; fuera de
+  // eso la traducción a glucemia promedio deja de estar validada, no sólo de
+  // ser rara. ----------------------------------------------------------------
+  hba1cPorcentaje: { min: 3, max: 20, decimales: 1, habitual: { min: 4, max: 15 } },
 } as const satisfies Record<string, Rango>;
 
 export type CampoConRango = keyof typeof RANGOS;
