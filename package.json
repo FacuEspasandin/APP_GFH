@@ -27,7 +27,10 @@
   },
   "pnpm": {
     "overrides": {
-      "@react-native/metro-config": "0.81.5"
+      "@react-native/metro-config": "0.81.5",
+      "fastify": "^5.12.3",
+      "find-my-way": "^9.9.0",
+      "fast-uri": "^4.1.4"
     }
   }
 }

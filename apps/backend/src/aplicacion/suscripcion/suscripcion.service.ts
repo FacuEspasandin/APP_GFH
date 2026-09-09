@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
+import { PushService } from '../notificaciones/push.service';
 import { PLAN_GRATIS } from './plan';
 
 /**
@@ -29,6 +30,9 @@ export interface EventoRevenueCat {
     product_id?: string;
     store?: string;
     expiration_at_ms?: number | null;
+    /** `TRIAL`/`INTRO` vs `NORMAL` — sin esto no hay forma de avisar "te
+     *  quedan 3 días de prueba", sólo se sabe la fecha de fin. */
+    period_type?: string;
   };
 }
 
@@ -43,7 +47,10 @@ export interface EventoRevenueCat {
 export class SuscripcionService {
   private readonly logger = new Logger(SuscripcionService.name);
 
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(PushService) private readonly push: PushService,
+  ) {}
 
   async procesarWebhook(cuerpo: EventoRevenueCat): Promise<{ aplicado: boolean; motivo?: string }> {
     const e = cuerpo?.event;
@@ -71,7 +78,7 @@ export class SuscripcionService {
 
     const existente = await this.prisma.suscripcion.findUnique({
       where: { medicoId: medico.id },
-      select: { ultimoEventoId: true },
+      select: { ultimoEventoId: true, estado: true, tuvoTrial: true },
     });
 
     // Idempotencia: RevenueCat reintenta, y un RENEWAL aplicado dos veces no
@@ -84,12 +91,19 @@ export class SuscripcionService {
       ? new Date(e.expiration_at_ms)
       : new Date(Date.now() + 24 * 60 * 60 * 1000);
 
+    const periodoEsTrial = e.period_type === 'TRIAL' || e.period_type === 'INTRO';
+
     const datos = {
       entitlementId: e.entitlement_ids?.[0] ?? 'premium',
       productId: e.product_id ?? 'desconocido',
       store: (e.store === 'APP_STORE' ? 'APP_STORE' : 'PLAY_STORE') as 'APP_STORE' | 'PLAY_STORE',
       estado,
       periodoActualFin,
+      periodoEsTrial,
+      // Nunca se apaga solo: una vez que hubo trial, el win-back de "¿viste
+      // todo lo que podés hacer con GFH?" tiene que poder dispararse cuando
+      // ese período venza, aunque para entonces `periodoEsTrial` ya sea false.
+      tuvoTrial: (existente?.tuvoTrial ?? false) || periodoEsTrial,
       ultimoEventoId: e.id,
       ultimoEventoTipo: e.type,
     };
@@ -99,6 +113,17 @@ export class SuscripcionService {
       update: datos,
       create: { medicoId: medico.id, ...datos },
     });
+
+    // Sólo en la transición hacia GRACIA, no en cada reintento del mismo
+    // estado: el dedup de arriba ya corta reintentos del MISMO evento, pero
+    // un evento nuevo con el mismo estado (dos BILLING_ISSUE seguidos) no
+    // debería insistir con el aviso todos los días.
+    if (estado === 'GRACIA' && existente?.estado !== 'GRACIA') {
+      await this.push.enviarAMedico(medico.id, {
+        titulo: 'Hay un problema con tu pago',
+        cuerpo: 'Actualizá el método de cobro en la tienda para no perder el acceso.',
+      });
+    }
 
     await this.prisma.auditLog.create({
       data: {

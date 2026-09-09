@@ -116,7 +116,11 @@ export class AlternativasController {
    * — nunca una lista vacía, que se leería como "la foto no tenía nada".
    */
   @Post('foto')
-  procesarFoto(@Cuerpo(FotoDto) dto: FotoDto) {
-    return this.foto.extraer(dto.imagenBase64);
+  procesarFoto(
+    @MedicoActual() medicoId: string,
+    @Param('pacienteId', new ParseUUIDPipe()) pacienteId: string,
+    @Cuerpo(FotoDto) dto: FotoDto,
+  ) {
+    return this.foto.extraer(medicoId, pacienteId, dto.imagenBase64);
   }
 }

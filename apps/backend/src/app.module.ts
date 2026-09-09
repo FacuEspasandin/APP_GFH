@@ -6,6 +6,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { AlternativasService } from './aplicacion/alternativas/alternativas.service';
 import { AuthService } from './aplicacion/auth/auth.service';
+import { GoogleAuthService } from './aplicacion/auth/google-auth.service';
 import { HashService } from './aplicacion/auth/hash.service';
 import { CatalogoService } from './aplicacion/catalogo/catalogo.service';
 import { CockpitService } from './aplicacion/cockpit/cockpit.service';
@@ -17,9 +18,11 @@ import { DemoService } from './aplicacion/demo/demo.service';
 import { AccesoService } from './aplicacion/suscripcion/acceso.service';
 import { PlanGuard } from './presentacion/comun/requiere-suscripcion';
 import { EventosService } from './aplicacion/historial/eventos.service';
+import { PushService } from './aplicacion/notificaciones/push.service';
 import { PacientesService } from './aplicacion/pacientes/pacientes.service';
 import { TratamientoService } from './aplicacion/tratamiento/tratamiento.service';
 import { CatalogoInteraccionesService } from './infraestructura/catalogo/catalogo-interacciones.service';
+import { NotificacionesCronService } from './infraestructura/mantenimiento/notificaciones-cron.service';
 import { PurgaSesionesService } from './infraestructura/mantenimiento/purga-sesiones.service';
 import { PrismaModule } from './infraestructura/prisma/prisma.module';
 import { AlternativasController } from './presentacion/alternativas.controller';
@@ -66,6 +69,7 @@ import {
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     CatalogoInteraccionesService,
     HashService,
+    GoogleAuthService,
     AuthService,
     CockpitService,
     AccesoService,
@@ -82,6 +86,8 @@ import {
     SuscripcionService,
     SuscripcionGuard,
     PurgaSesionesService,
+    PushService,
+    NotificacionesCronService,
   ],
 })
 export class AppModule {}

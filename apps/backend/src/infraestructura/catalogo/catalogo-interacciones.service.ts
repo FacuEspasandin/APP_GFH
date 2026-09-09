@@ -3,7 +3,7 @@ import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import {
   construirCatalogo,
   type CatalogoInteracciones,
-} from '../../dominio/clinico/interacciones';
+} from '@gfh/motor-clinico';
 import { cargarReglasInteraccion, RUTA_REGLAS_POR_DEFECTO } from './cargar-reglas-interaccion';
 
 /**

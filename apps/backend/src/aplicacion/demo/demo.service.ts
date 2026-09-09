@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { ordenarTratamiento } from '@gfh/shared-types';
 
-import { evaluarCockpit } from '../../dominio/clinico/evaluar-cockpit';
-import type { ContextoCockpit } from '../../dominio/clinico/puertos';
+import { evaluarCockpit } from '@gfh/motor-clinico';
+import type { ContextoCockpit } from '@gfh/motor-clinico';
 import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import type { RespuestaCockpit } from '../cockpit/cockpit.service';

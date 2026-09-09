@@ -1,3 +1,5 @@
+import { createHash, timingSafeEqual } from 'node:crypto';
+
 import {
   Body,
   Controller,
@@ -27,6 +29,7 @@ import {
 } from 'class-validator';
 
 import { HashService } from '../aplicacion/auth/hash.service';
+import { PushService } from '../aplicacion/notificaciones/push.service';
 import { PerfilService } from '../aplicacion/perfil/perfil.service';
 import { SuscripcionService, type EventoRevenueCat } from '../aplicacion/suscripcion/suscripcion.service';
 import { Cuerpo } from './comun/cuerpo';
@@ -50,6 +53,15 @@ export class EliminarCuentaDto {
   @IsString() @Length(1, 200) password!: string;
 }
 
+export class RegistrarPushTokenDto {
+  @IsString() @Length(10, 200) token!: string;
+  @IsEnum(['IOS', 'ANDROID']) plataforma!: 'IOS' | 'ANDROID';
+}
+
+export class EliminarPushTokenDto {
+  @IsString() @Length(10, 200) token!: string;
+}
+
 @Controller('perfil')
 @UseGuards(JwtGuard)
 export class PerfilController {
@@ -57,6 +69,7 @@ export class PerfilController {
     @Inject(PerfilService) private readonly perfil: PerfilService,
     @Inject(SuscripcionService) private readonly suscripcion: SuscripcionService,
     @Inject(HashService) private readonly hash: HashService,
+    @Inject(PushService) private readonly push: PushService,
   ) {}
 
   @Get('configuracion')
@@ -102,6 +115,22 @@ export class PerfilController {
   ) {
     return this.perfil.condicionesYAlergias(medicoId, pacienteId);
   }
+
+  /** El médico es quien identifica el dispositivo — no hace falta un id de
+   *  sesión separado, `token` de Expo ya es único por instalación. */
+  @Post('push-token')
+  @HttpCode(204)
+  registrarPushToken(@MedicoActual() medicoId: string, @Cuerpo(RegistrarPushTokenDto) dto: RegistrarPushTokenDto) {
+    return this.push.registrarToken(medicoId, dto.token, dto.plataforma);
+  }
+
+  /** POST y no DELETE con body: mismo criterio que `logout`, que también
+   *  "borra" una sesión mandando el token a invalidar en el cuerpo. */
+  @Post('push-token/eliminar')
+  @HttpCode(204)
+  eliminarPushToken(@MedicoActual() medicoId: string, @Cuerpo(EliminarPushTokenDto) dto: EliminarPushTokenDto) {
+    return this.push.eliminarToken(medicoId, dto.token);
+  }
 }
 
 /**
@@ -134,7 +163,7 @@ export class RevenueCatController {
       // cualquiera se regale una suscripción.
       throw new UnauthorizedException('Webhook no configurado.');
     }
-    if (autorizacion !== esperado) {
+    if (!coincideSecreto(autorizacion, esperado)) {
       throw new UnauthorizedException('Firma inválida.');
     }
 
@@ -142,4 +171,19 @@ export class RevenueCatController {
     // reintente para siempre un evento que nunca vamos a poder procesar.
     return this.suscripcion.procesarWebhook(cuerpo);
   }
+}
+
+/**
+ * Compara el secreto del webhook en tiempo constante.
+ *
+ * `!==` sobre strings corta apenas encuentra la primera diferencia, y el
+ * tiempo de respuesta filtra de a un carácter cuánto del secreto adivinó
+ * quien pregunta. Se hashea primero para que las dos entradas lleguen a
+ * `timingSafeEqual` con longitud fija — si no, un header más corto o más
+ * largo que el secreto tira una excepción en vez de comparar.
+ */
+function coincideSecreto(recibido: string | undefined, esperado: string): boolean {
+  const a = createHash('sha256').update(recibido ?? '').digest();
+  const b = createHash('sha256').update(esperado).digest();
+  return timingSafeEqual(a, b);
 }

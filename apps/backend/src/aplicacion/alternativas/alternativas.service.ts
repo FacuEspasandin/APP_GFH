@@ -5,11 +5,11 @@ import {
   anotarAlternativas,
   type AlternativaCandidata,
   type AlertaCondicionCatalogo,
-} from '../../dominio/clinico/alternativas';
+} from '@gfh/motor-clinico';
 import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import { RepositorioCockpitPrisma } from '../../infraestructura/repositorios/repositorio-cockpit-prisma';
-import { condicionesEfectivas } from '../../dominio/clinico/condiciones';
+import { condicionesEfectivas } from '@gfh/motor-clinico';
 import { edadEnAnios } from '@gfh/shared-types';
 import { EventosService } from '../historial/eventos.service';
 

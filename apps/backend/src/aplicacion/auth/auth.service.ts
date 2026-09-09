@@ -10,12 +10,18 @@ import { DIAS_DE_GRACIA_BAJA } from '@gfh/shared-types';
 import { JwtService } from '@nestjs/jwt';
 
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
+import { PushService } from '../notificaciones/push.service';
+import { GoogleAuthService } from './google-auth.service';
 import { HashService } from './hash.service';
 
 export interface ParDeTokens {
   accessToken: string;
   refreshToken: string;
   expiraEn: number;
+  /** Sólo en `loginConGoogle`: si la cuenta se acaba de crear, la app tiene
+   *  que mandar al disclaimer de primer ingreso en vez de ir directo a
+   *  Inicio, igual que hace `registrar()`. */
+  esNuevo?: boolean;
 }
 
 const DIAS_REFRESH = 30;
@@ -28,6 +34,8 @@ export class AuthService {
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(HashService) private readonly hash: HashService,
     @Inject(JwtService) private readonly jwt: JwtService,
+    @Inject(PushService) private readonly push: PushService,
+    @Inject(GoogleAuthService) private readonly google: GoogleAuthService,
   ) {}
 
   async registrar(datos: {
@@ -87,46 +95,58 @@ export class AuthService {
     if (!medico || !passwordOk) {
       throw new UnauthorizedException('Email o contraseña incorrectos.');
     }
-    /*
-     * Entrar es la forma de recuperar una cuenta dada de baja.
-     *
-     * Dentro de los siete días de gracia, el login la revive en vez de
-     * rechazarla: el gesto de arrepentirse ya es exactamente «volver a
-     * entrar», y un flujo aparte —un enlace por correo, una pantalla de
-     * restaurar— sería más trabajo para el médico y más código para nosotros.
-     *
-     * La contraseña ya se verificó arriba, así que revivirla acá no abre
-     * ninguna puerta que no estuviera abierta.
-     */
-    if (medico.estado === 'ELIMINADO') {
-      const vence =
-        medico.eliminadaAt === null
-          ? 0
-          : medico.eliminadaAt.getTime() + DIAS_DE_GRACIA_BAJA * 24 * 60 * 60 * 1000;
 
-      if (Date.now() > vence) {
-        throw new UnauthorizedException('La cuenta no está activa.');
+    return this.finalizarLogin(medico, dispositivoInfo);
+  }
+
+  /**
+   * Login/registro con Google, en un solo paso — no hay pantalla de
+   * "confirmar datos" intermedia, se entra directo con lo que Google ya
+   * verificó.
+   *
+   * Resuelve la cuenta en este orden: por `googleId` (ya vinculada), si no
+   * por `email` (cuenta con contraseña que ahora también entra por Google —
+   * es seguro vincular así porque Google ya verificó ese email antes de
+   * emitir el token), si no la crea.
+   */
+  async loginConGoogle(idToken: string, dispositivoInfo?: string): Promise<ParDeTokens> {
+    const identidad = await this.google.verificar(idToken);
+
+    let medico = await this.prisma.medico.findUnique({ where: { googleId: identidad.googleId } });
+
+    if (!medico) {
+      const porEmail = await this.prisma.medico.findUnique({ where: { email: identidad.email } });
+      if (porEmail) {
+        medico = await this.prisma.medico.update({
+          where: { id: porEmail.id },
+          data: { googleId: identidad.googleId },
+        });
       }
-
-      await this.prisma.$transaction([
-        this.prisma.medico.update({
-          where: { id: medico.id },
-          data: { estado: 'ACTIVO', eliminadaAt: null },
-        }),
-        this.prisma.auditLog.create({
-          data: {
-            medicoId: medico.id,
-            accion: 'ADMIN_ACTION',
-            detalle: 'cuenta recuperada dentro de la gracia',
-          },
-        }),
-      ]);
-    } else if (medico.estado !== 'ACTIVO') {
-      throw new UnauthorizedException('La cuenta no está activa.');
     }
 
-    await this.auditar(medico.id, 'LOGIN');
-    return this.emitirTokens(medico.id, dispositivoInfo);
+    let esNuevo = false;
+    if (!medico) {
+      esNuevo = true;
+      medico = await this.prisma.medico.create({
+        data: {
+          email: identidad.email,
+          nombreUsuario: await this.nombreUsuarioLibre(identidad.email),
+          passwordHash: null,
+          googleId: identidad.googleId,
+          nombre: identidad.nombre,
+          apellido: identidad.apellido,
+          rol: 'USER',
+          configuracion: { create: {} },
+        },
+      });
+    }
+
+    const tokens = await this.finalizarLogin(
+      medico,
+      dispositivoInfo,
+      esNuevo ? 'registro con Google' : 'google',
+    );
+    return { ...tokens, esNuevo };
   }
 
   /**
@@ -205,6 +225,9 @@ export class AuthService {
 
   async cambiarPassword(medicoId: string, actual: string, nueva: string): Promise<void> {
     const medico = await this.prisma.medico.findUniqueOrThrow({ where: { id: medicoId } });
+    if (medico.passwordHash === null) {
+      throw new BadRequestException('Esta cuenta entra con Google. No tiene contraseña para cambiar.');
+    }
     if (!(await this.hash.verificarPassword(actual, medico.passwordHash))) {
       throw new UnauthorizedException('La contraseña actual no es correcta.');
     }
@@ -216,6 +239,12 @@ export class AuthService {
     // deja de tener acceso.
     await this.revocarTodas(medicoId);
     await this.auditar(medicoId, 'PASSWORD_CHANGE');
+    // Se manda igual sin sesión activa: el token de push no depende del JWT,
+    // y es justo la confirmación que el médico espera ver tras cambiarla.
+    await this.push.enviarAMedico(medicoId, {
+      titulo: 'Tu contraseña se actualizó',
+      cuerpo: 'Si no fuiste vos, cambiala de nuevo y revisá tus sesiones activas.',
+    });
   }
 
   async perfil(medicoId: string) {
@@ -244,6 +273,105 @@ export class AuthService {
   }
 
   // --- internos -------------------------------------------------------------
+
+  /**
+   * Todo lo que pasa DESPUÉS de saber quién es el médico y que puede entrar,
+   * sin importar si se identificó con contraseña o con Google: la ventana de
+   * gracia de una cuenta eliminada, el aviso de "dispositivo nuevo", y la
+   * emisión de tokens. Antes vivía duplicado dentro de `login()`; con Google
+   * sumando un segundo camino de entrada, mantenerlo en dos lugares es
+   * exactamente el tipo de cosa que diverge sin que nadie lo note.
+   */
+  private async finalizarLogin(
+    medico: { id: string; estado: string; eliminadaAt: Date | null },
+    dispositivoInfo?: string,
+    detalleAuditoria?: string,
+  ): Promise<ParDeTokens> {
+    /*
+     * Entrar es la forma de recuperar una cuenta dada de baja.
+     *
+     * Dentro de los siete días de gracia, el login la revive en vez de
+     * rechazarla: el gesto de arrepentirse ya es exactamente «volver a
+     * entrar», y un flujo aparte —un enlace por correo, una pantalla de
+     * restaurar— sería más trabajo para el médico y más código para nosotros.
+     *
+     * Quien llama ya verificó la identidad (contraseña o token de Google),
+     * así que revivirla acá no abre ninguna puerta que no estuviera abierta.
+     */
+    if (medico.estado === 'ELIMINADO') {
+      const vence =
+        medico.eliminadaAt === null
+          ? 0
+          : medico.eliminadaAt.getTime() + DIAS_DE_GRACIA_BAJA * 24 * 60 * 60 * 1000;
+
+      if (Date.now() > vence) {
+        throw new UnauthorizedException('La cuenta no está activa.');
+      }
+
+      await this.prisma.$transaction([
+        this.prisma.medico.update({
+          where: { id: medico.id },
+          data: { estado: 'ACTIVO', eliminadaAt: null },
+        }),
+        this.prisma.auditLog.create({
+          data: {
+            medicoId: medico.id,
+            accion: 'ADMIN_ACTION',
+            detalle: 'cuenta recuperada dentro de la gracia',
+          },
+        }),
+      ]);
+    } else if (medico.estado !== 'ACTIVO') {
+      throw new UnauthorizedException('La cuenta no está activa.');
+    }
+
+    // Antes de crear la sesión nueva: si ya había otra viva, este login es
+    // "un dispositivo más" y no el primero — ahí sí vale avisar. En el primer
+    // login de la cuenta esto da 0 y no manda nada, que es lo correcto.
+    const otrasActivas = await this.prisma.sesion.count({
+      where: { medicoId: medico.id, revocadaAt: null, expiraAt: { gt: new Date() } },
+    });
+
+    await this.auditar(medico.id, 'LOGIN', detalleAuditoria);
+    await this.prisma.medico.update({
+      where: { id: medico.id },
+      data: { ultimoLoginAt: new Date() },
+    });
+    // El reenganche por inactividad tiene que poder volver a dispararse la
+    // próxima vez que pase un mes sin entrar — sin este reset, quedaría
+    // marcado como "ya avisado" para siempre desde la primera vez.
+    await this.push.resetearReenganche(medico.id);
+
+    if (otrasActivas > 0) {
+      await this.push.enviarAMedico(medico.id, {
+        titulo: 'Se inició sesión desde un dispositivo nuevo',
+        cuerpo: dispositivoInfo ? `Desde ${dispositivoInfo}. Si no fuiste vos, revisá Perfil → Sesiones activas.` : 'Si no fuiste vos, revisá Perfil → Sesiones activas.',
+      });
+    }
+
+    return this.emitirTokens(medico.id, dispositivoInfo);
+  }
+
+  /**
+   * Un `nombreUsuario` derivado del email para cuentas que nacen por Google,
+   * que no pasan por la pantalla de registro y por lo tanto nunca lo eligen.
+   * Determinístico y sin azar: dos altas del mismo email dan el mismo primer
+   * candidato, y sólo se agrega un sufijo si de verdad choca.
+   */
+  private async nombreUsuarioLibre(email: string): Promise<string> {
+    const limpio = (email.split('@')[0] ?? '').toLowerCase().replace(/[^a-z0-9._-]/g, '');
+    const base = (limpio.length >= 3 ? limpio : `medico${limpio}`).slice(0, 26);
+
+    let candidato = base;
+    let sufijo = 1;
+    while (
+      await this.prisma.medico.findUnique({ where: { nombreUsuario: candidato }, select: { id: true } })
+    ) {
+      candidato = `${base}${sufijo}`;
+      sufijo += 1;
+    }
+    return candidato;
+  }
 
   private async emitirTokens(medicoId: string, dispositivoInfo?: string): Promise<ParDeTokens> {
     const refreshToken = this.hash.generarTokenOpaco();

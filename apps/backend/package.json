@@ -19,9 +19,12 @@
     "test:api": "vitest run --config vitest.api.config.ts",
     "start:prod": "tsx src/main.ts",
     "deploy:migrar": "prisma migrate deploy",
-    "dev:cuentas": "tsx prisma/dev-cuentas.ts"
+    "dev:cuentas": "tsx prisma/dev-cuentas.ts",
+    "enviar-broadcast": "tsx prisma/enviar-broadcast.ts"
   },
   "dependencies": {
+    "@fastify/helmet": "^13.1.1",
+    "@gfh/motor-clinico": "workspace:*",
     "@gfh/shared-types": "workspace:*",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.0",
@@ -32,7 +35,9 @@
     "@prisma/client": "^6.3.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
-    "fastify": "^5.2.1",
+    "expo-server-sdk": "^7.2.0",
+    "fastify": "^5.12.3",
+    "google-auth-library": "^9.15.0",
     "hash-wasm": "^4.12.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",

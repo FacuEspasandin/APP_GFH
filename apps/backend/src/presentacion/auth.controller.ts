@@ -17,6 +17,7 @@ import { JwtGuard, MedicoActual, SesionActual } from './comun/medico-actual';
 import {
   AceptarDisclaimerDto,
   CambiarPasswordDto,
+  GoogleLoginDto,
   LoginDto,
   RefreshDto,
   RegistroDto,
@@ -41,6 +42,13 @@ export class AuthController {
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   login(@Cuerpo(LoginDto) dto: LoginDto) {
     return this.auth.login(dto.identificador, dto.password, dto.dispositivoInfo);
+  }
+
+  @Post('google')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  google(@Cuerpo(GoogleLoginDto) dto: GoogleLoginDto) {
+    return this.auth.loginConGoogle(dto.idToken, dto.dispositivoInfo);
   }
 
   @Post('refresh')

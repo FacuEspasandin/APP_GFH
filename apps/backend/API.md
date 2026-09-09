@@ -78,6 +78,7 @@ con el cuerpo entero — para alergias, ahí van las coincidencias.
 | Global | 120 pedidos por minuto |
 | `POST /auth/registro` | 5 por minuto |
 | `POST /auth/login` | 10 por minuto |
+| `POST /auth/google` | 10 por minuto |
 | `POST /auth/refresh` | 30 por minuto |
 | `POST /perfil/eliminar-cuenta` | 3 cada 5 minutos |
 
@@ -101,6 +102,20 @@ Devuelve `accessToken`, `refreshToken` y el médico.
 ```json
 { "identificador": "email o nombre de usuario", "password": "…", "dispositivoInfo": "…" }
 ```
+
+### `POST /auth/google`
+```json
+{ "idToken": "…", "dispositivoInfo": "…" }
+```
+`idToken` es el id_token que devuelve el SDK nativo de Google en el
+teléfono, sin tocar. El backend lo verifica contra la clave pública de
+Google (nunca confía en un email mandado a mano). Resuelve la cuenta por
+`googleId`; si no existe, por `email` (se vincula a una cuenta existente con
+contraseña); si tampoco, crea una cuenta nueva sin contraseña. Devuelve
+`accessToken`/`refreshToken`, igual que `/auth/login`.
+
+Apple queda para cuando esté la cuenta de Apple Developer activada — no hay
+endpoint todavía.
 
 ### `POST /auth/refresh`
 ```json
@@ -174,6 +189,15 @@ El corazón de la app. Corre las cinco verificaciones y devuelve:
 - `hallazgos[]` — cada uno con `categoria` (`INTERACCION`, `CONDICION`, `AJUSTE_RENAL`, `AJUSTE_HEPATICO`), `rango` (0 contraindicado … 3 informativo), texto y `prescripcionIds`
 - `avisos[]` — ausencias de dato, no hallazgos: `SIN_CLCR`, `SIN_CHILD_PUGH`, `SIN_TABLA_HEPATICA`, `SIN_SEMANA_GESTACION`, `FARMACO_LIBRE_CLCR_BAJO`
 - `prescripciones[]` — con `espina` (peor rango que lo toca, `null` si ninguno) y `conteoHallazgos`, **ya ordenadas**: gravedad primero, cantidad para desempatar, los fármacos libres al final
+
+### `GET /pacientes/:pacienteId/cockpit/contexto-offline` · 🔒 · suscripción
+El `ContextoCockpit` crudo (sin evaluar), para que la app lo guarde y corra el
+mismo motor localmente sin señal. No es el resultado del cockpit — eso lo
+calcula el teléfono con `@gfh/motor-clinico`, el mismo paquete que usa el
+backend. Los `Map` del contexto (`gruposAlergenicos`, `ajustesRenales`,
+`ajustesHepaticos`, `curaciones`) viajan como arrays de `[clave, valor]`;
+`fechaNacimiento` y `clcrMedidoAt` como ISO string. 404 para el paciente de
+demostración: no se cachea, ya vive en memoria del servidor.
 
 ### `GET /pacientes/:pacienteId/historial`
 Eventos del paciente, más nuevo primero. `?antesDe=<ISO>` pagina hacia atrás.
@@ -265,9 +289,12 @@ manda el cliente — el sistema no la inventa.
 ### `GET /pacientes/:pacienteId/alternativas-aceptadas`
 
 ### `POST /pacientes/:pacienteId/foto`
-`multipart/form-data`. Devuelve las líneas leídas para revisar una por una.
-**El archivo no se persiste** y ninguna línea se convierte en prescripción sin
-confirmación humana.
+`{ "imagenBase64": "…" }` — no `multipart/form-data`, la imagen viaja en el
+cuerpo JSON como base64. OCR vía Cloud Vision (`DOCUMENT_TEXT_DETECTION`);
+sin `VISION_API_KEY` configurada responde **501**. Devuelve las líneas leídas
+para revisar una por una — **el archivo no se persiste nunca**, ni el texto
+crudo; sólo queda un `AuditLog` con el `pacienteId`. Ninguna línea se
+convierte en prescripción sin confirmación humana.
 
 ### `POST /pacientes/:pacienteId/lineas/matchear`
 Resuelve texto libre contra el catálogo. Lo que no matchea vuelve marcado como
@@ -356,6 +383,8 @@ Cobertura de tabla por fármaco parcial — ver `docs/data/farmacos-ajuste-hepat
 | `GET /perfil/suscripcion` | estado, plan y vencimiento |
 | `POST /perfil/eliminar-cuenta` | pide la contraseña. **204** |
 | `GET /perfil/pacientes/:pacienteId/condiciones-alergias` | las dos listas de un paciente |
+| `POST /perfil/push-token` | `{ "token": "ExponentPushToken[…]", "plataforma": "IOS"\|"ANDROID" }`. **204** |
+| `POST /perfil/push-token/eliminar` | `{ "token": "…" }` — da de baja ese dispositivo. **204**, aunque el token sea de otro médico o no exista |
 
 ### `POST /webhooks/revenuecat`
 **Sin JWT.** La única fuente de verdad de la suscripción: el backend nunca

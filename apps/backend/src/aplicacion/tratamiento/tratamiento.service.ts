@@ -1,6 +1,6 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 
-import { evaluarAlergias, mapearTextoLibreAGrupo } from '../../dominio/clinico/alergias';
+import { evaluarAlergias, mapearTextoLibreAGrupo } from '@gfh/motor-clinico';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import { EventosService } from '../historial/eventos.service';
 import { conUnidad, diferencias, nombreFarmaco, pauta } from '../historial/redaccion';

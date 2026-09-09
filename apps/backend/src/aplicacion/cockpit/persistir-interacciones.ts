@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 
-import type { InteraccionDetectada } from '../../dominio/clinico/interacciones';
+import type { InteraccionDetectada } from '@gfh/motor-clinico';
 
 /**
  * Persiste las interacciones detectadas. Motor §5.4, paso 6.

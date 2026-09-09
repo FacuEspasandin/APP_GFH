@@ -92,7 +92,10 @@ export class PerfilService {
    */
   async eliminarCuenta(medicoId: string, password: string, verificar: (hash: string) => Promise<boolean>) {
     const medico = await this.prisma.medico.findUniqueOrThrow({ where: { id: medicoId } });
-    if (!(await verificar(medico.passwordHash))) {
+    // Una cuenta de sólo Google no tiene contraseña que confirmar: el JWT ya
+    // acreditó la sesión, y pedir una contraseña que nunca existió sólo
+    // bloquearía la baja sin sumar seguridad real.
+    if (medico.passwordHash !== null && !(await verificar(medico.passwordHash))) {
       throw new ConflictException('La contraseña no es correcta.');
     }
 

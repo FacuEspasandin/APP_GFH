@@ -1,5 +1,7 @@
 import { Controller, Get, Inject, NotFoundException, Param, UseGuards } from '@nestjs/common';
 
+import { PrismaService } from '../infraestructura/prisma/prisma.service';
+import { RepositorioCockpitPrisma } from '../infraestructura/repositorios/repositorio-cockpit-prisma';
 import { CockpitService } from '../aplicacion/cockpit/cockpit.service';
 import { DemoService } from '../aplicacion/demo/demo.service';
 import { esDelDemo } from '../aplicacion/demo/paciente-demo';
@@ -11,11 +13,16 @@ import { SuscripcionGuard } from './comun/suscripcion.guard';
 @Controller('pacientes/:pacienteId/cockpit')
 @UseGuards(JwtGuard, SuscripcionGuard)
 export class CockpitController {
+  private readonly repositorioOffline: RepositorioCockpitPrisma;
+
   constructor(
     @Inject(CockpitService) private readonly cockpit: CockpitService,
     @Inject(DemoService) private readonly demo: DemoService,
     @Inject(AccesoService) private readonly acceso: AccesoService,
-  ) {}
+    @Inject(PrismaService) prisma: PrismaService,
+  ) {
+    this.repositorioOffline = new RepositorioCockpitPrisma(prisma);
+  }
 
   /**
    * La pantalla central. Devuelve, en UNA llamada: datos del paciente, la lista
@@ -57,6 +64,42 @@ export class CockpitController {
       hallazgos: r.hallazgos,
       avisos: r.avisos,
       condicionesEfectivas: r.condicionesEfectivasCodigos,
+    };
+  }
+
+  /**
+   * El contexto crudo del paciente, para que el móvil lo guarde y pueda correr
+   * el mismo motor localmente sin señal (modo offline, exclusivo de cuentas
+   * con suscripción vigente por los guards de este controller). Nunca se
+   * llama para el paciente de demostración: no tiene sentido cachearlo, ya
+   * vive en memoria del servidor.
+   */
+  @Get('contexto-offline')
+  async obtenerContextoOffline(
+    @MedicoActual() medicoId: string,
+    @Param('pacienteId', IdPacientePipe) pacienteId: string,
+  ) {
+    if (esDelDemo(pacienteId)) {
+      throw new NotFoundException('Paciente no encontrado.');
+    }
+
+    await this.acceso.exigirSuscripcion(medicoId, 'Guardar este paciente para verlo sin conexión');
+    const contexto = await this.repositorioOffline.cargarContexto(medicoId, pacienteId);
+    if (!contexto) {
+      throw new NotFoundException('Paciente no encontrado.');
+    }
+
+    return {
+      ...contexto,
+      paciente: {
+        ...contexto.paciente,
+        fechaNacimiento: contexto.paciente.fechaNacimiento.toISOString(),
+        clcrMedidoAt: contexto.paciente.clcrMedidoAt?.toISOString() ?? null,
+      },
+      gruposAlergenicos: [...contexto.gruposAlergenicos.entries()],
+      ajustesRenales: [...contexto.ajustesRenales.entries()],
+      ajustesHepaticos: [...contexto.ajustesHepaticos.entries()],
+      curaciones: [...contexto.curaciones.entries()],
     };
   }
 }

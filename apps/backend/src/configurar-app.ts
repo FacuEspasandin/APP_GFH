@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
+import helmet from '@fastify/helmet';
 
 import { FiltroPrisma } from './presentacion/comun/filtro-prisma';
 import { fabricaDeErroresDeValidacion } from './presentacion/comun/mensajes-validacion';
@@ -16,7 +17,11 @@ import { EnvolturaRespuestaInterceptor, FiltroExcepciones } from './presentacion
  * aplastaba los códigos propios, un `content-type` que rompía los DELETE, y una
  * validación que no plegaba tildes.
  */
-export function configurarApp(app: NestFastifyApplication): void {
+export async function configurarApp(app: NestFastifyApplication): Promise<void> {
+  // Headers de seguridad HTTP (HSTS, X-Content-Type-Options, etc.). No hace
+  // falta configurar CSP: es una API JSON, no sirve HTML propio.
+  await app.register(helmet, { contentSecurityPolicy: false });
+
   // Cubre query y params. Los cuerpos NO pasan por acá: van por `@Cuerpo(Dto)`,
   // que declara el tipo explícitamente porque este pipe no puede deducirlo sin
   // la metadata de decoradores que nuestro runtime no emite — ver `comun/cuerpo.ts`.

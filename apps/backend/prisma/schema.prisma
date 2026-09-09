@@ -67,6 +67,28 @@ enum AccionAuditoria {
   ERROR
 }
 
+enum PlataformaPush {
+  IOS
+  ANDROID
+}
+
+/// Cada valor es una notificación que se manda UNA vez por médico — la unicidad
+/// vive en `NotificacionEnviada`. Las de reenganche por inactividad son la
+/// excepción: se borra la fila al volver a entrar, para que puedan volver a
+/// dispararse la próxima vez que se cumpla la condición.
+enum TipoNotificacionPush {
+  ACTIVACION_D1
+  TRIAL_2_DIAS
+  TRIAL_ULTIMO_DIA
+  TRIAL_VENCIDO_WINBACK
+  CANCELACION_WINBACK
+  CUPO_8_DE_10
+  CUPO_AGOTADO
+  INACTIVO_7D
+  INACTIVO_30D
+  CUENTA_GRACIA_AVISO
+}
+
 enum TemaUI {
   CLARO
   OSCURO
@@ -820,9 +842,18 @@ model Medico {
   id            String @id @default(uuid())
   email         String @unique
   nombreUsuario String @unique // el login acepta email O nombreUsuario, indistinto
-  passwordHash  String // Argon2id. Nunca SHA, nunca MD5, nunca texto plano.
-  nombre        String
-  apellido      String
+
+  /// Argon2id. Nunca SHA, nunca MD5, nunca texto plano. Null en una cuenta
+  /// que sólo entra por Google (o, más adelante, Apple) — no tiene
+  /// contraseña propia para verificar.
+  passwordHash String?
+  nombre       String
+  apellido     String
+
+  /// `sub` del id_token de Google. Único: es la identidad real, el email
+  /// puede repetirse entre proveedores si Google lo permitiera (no lo hace,
+  /// pero no vale confiar en eso).
+  googleId String? @unique
 
   /// Opcional, elegida al registrarse de una lista fija (ver
   /// `@gfh/shared-types/especialidad`). Sólo reordena Herramientas por
@@ -844,6 +875,11 @@ model Medico {
   disclaimerVersion    String?
   disclaimerAceptadoAt DateTime?
 
+  /// Para el reenganche por inactividad (7/30 días) — evita escanear
+  /// `AuditLog` entero cada vez que corre el job de notificaciones. Se
+  /// actualiza en cada login exitoso.
+  ultimoLoginAt DateTime?
+
   sesiones                Sesion[]
   suscripcion             Suscripcion?
   configuracion           ConfiguracionUsuario?
@@ -857,12 +893,14 @@ model Medico {
   alternativasAceptadas   AlternativaAceptada[]
   eventos                 EventoPaciente[]
   consultasGratis         ConsultaGratis[]
+  pushTokens              PushToken[]
+  notificacionesEnviadas  NotificacionEnviada[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("medico")
   @@index([eliminadaAt])
+  @@map("medico")
 }
 
 /// Rotacion: cada refresh emite una Sesion NUEVA y marca `revocadaAt` en la
@@ -891,6 +929,23 @@ model Sesion {
   @@map("sesion")
 }
 
+/// Un token de Expo Push por dispositivo. `token` es único y no `(medicoId,
+/// token)`: reinstalar la app en el mismo teléfono puede generar el mismo
+/// token bajo una cuenta distinta, y el registro nuevo tiene que ganar.
+model PushToken {
+  id            String         @id @default(uuid())
+  medicoId      String
+  token         String         @unique
+  plataforma    PlataformaPush
+  creadoAt      DateTime       @default(now())
+  actualizadoAt DateTime       @updatedAt
+
+  medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  @@index([medicoId])
+  @@map("push_token")
+}
+
 /// Se escribe SOLO desde el webhook de RevenueCat (regla no negociable 6).
 /// Ningun endpoint que llame la app puede tocar esta tabla — mismo criterio que
 /// el motor clinico: no confiar en lo que manda el cliente.
@@ -904,6 +959,15 @@ model Suscripcion {
   periodoActualFin DateTime
   actualizadaAt    DateTime          @updatedAt
 
+  /// De `event.period_type` en el webhook de RevenueCat (`TRIAL`/`INTRO` vs
+  /// `NORMAL`). Sin esto, Suscripción no puede avisar "te quedan 3 días de
+  /// prueba" — sólo sabe la fecha de fin, no si ese período es gratis.
+  periodoEsTrial Boolean @default(false)
+  /// No se resetea al terminar el trial: sirve para el push de win-back
+  /// ("¿viste todo lo que podés hacer con GFH?"), que sólo aplica si el
+  /// período que venció era de prueba y no uno pago.
+  tuvoTrial      Boolean @default(false)
+
   /// Idempotencia del webhook: RevenueCat reintenta, y un RENEWAL aplicado dos
   /// veces no debe mover el periodo. Se guarda el ultimo evento procesado.
   ultimoEventoId   String?
@@ -915,6 +979,22 @@ model Suscripcion {
 
   @@index([estado])
   @@map("suscripcion")
+}
+
+/// Idempotencia de las notificaciones push que se disparan por escaneo
+/// periódico (trial por vencer, cupo gratis, inactividad) — mismo patrón que
+/// `ConsultaGratis`: la unicidad del índice es la que garantiza que no se
+/// mande dos veces, no un chequeo aparte antes de escribir.
+model NotificacionEnviada {
+  id        String               @id @default(uuid())
+  medicoId  String
+  tipo      TipoNotificacionPush
+  enviadaAt DateTime             @default(now())
+
+  medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  @@unique([medicoId, tipo])
+  @@map("notificacion_enviada")
 }
 
 model AuditLog {
@@ -1271,11 +1351,11 @@ model AlternativaAceptada {
   aceptadoAt        DateTime @default(now())
   nota              String?
 
-  medico             Medico           @relation(fields: [medicoId], references: [id], onDelete: Cascade)
-  paciente           Paciente         @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
-  prescripcionOrigen Prescripcion?    @relation(fields: [prescripcionOrigenId], references: [id], onDelete: SetNull)
-  paOrigen           PrincipioActivo  @relation("AceptadaOrigen", fields: [paOrigenId], references: [id], onDelete: Restrict)
-  paAlternativa      PrincipioActivo  @relation("AceptadaDestino", fields: [paAlternativaId], references: [id], onDelete: Restrict)
+  medico             Medico             @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  paciente           Paciente           @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  prescripcionOrigen Prescripcion?      @relation(fields: [prescripcionOrigenId], references: [id], onDelete: SetNull)
+  paOrigen           PrincipioActivo    @relation("AceptadaOrigen", fields: [paOrigenId], references: [id], onDelete: Restrict)
+  paAlternativa      PrincipioActivo    @relation("AceptadaDestino", fields: [paAlternativaId], references: [id], onDelete: Restrict)
   productoComercial  ProductoComercial? @relation(fields: [productoComercialId], references: [id], onDelete: SetNull)
 
   @@index([medicoId, pacienteId])

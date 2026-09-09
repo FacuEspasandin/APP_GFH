@@ -5,7 +5,7 @@ import { normalizar, restriccionesDe, seccionesDe } from '@gfh/shared-types';
 import {
   agruparInteracciones,
   interaccionesDe,
-} from '../../dominio/clinico/interacciones';
+} from '@gfh/motor-clinico';
  import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
  import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 

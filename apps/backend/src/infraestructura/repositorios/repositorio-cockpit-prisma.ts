@@ -33,16 +33,16 @@ import type {
   ContextoCockpit,
   PrescripcionActiva,
   RepositorioCockpit,
-} from '../../dominio/clinico/puertos';
+} from '@gfh/motor-clinico';
 import {
   CODIGO_ADULTO_MAYOR,
   CODIGO_EMBARAZO,
   CODIGO_LACTANCIA,
   UMBRAL_ADULTO_MAYOR_DEFAULT,
-} from '../../dominio/clinico/condiciones';
+} from '@gfh/motor-clinico';
 import { edadEnAnios } from '@gfh/shared-types';
-import type { Curacion } from '../../dominio/clinico/interacciones';
-import type { AlergiaPaciente, GrupoAlergenico } from '../../dominio/clinico/alergias';
+import type { Curacion } from '@gfh/motor-clinico';
+import type { AlergiaPaciente, GrupoAlergenico } from '@gfh/motor-clinico';
 
 export class RepositorioCockpitPrisma implements RepositorioCockpit {
   constructor(

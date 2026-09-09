@@ -6,9 +6,9 @@ import {
   CODIGO_EMBARAZO,
   CODIGO_LACTANCIA,
   UMBRAL_ADULTO_MAYOR_DEFAULT,
-} from '../../dominio/clinico/condiciones';
-import type { AlergiaPaciente, GrupoAlergenico } from '../../dominio/clinico/alergias';
-import type { Curacion } from '../../dominio/clinico/interacciones';
+} from '@gfh/motor-clinico';
+import type { AlergiaPaciente, GrupoAlergenico } from '@gfh/motor-clinico';
+import type { Curacion } from '@gfh/motor-clinico';
 import type {
   AjusteHepaticoDeFarmaco,
   AjusteRenalDeFarmaco,
@@ -16,7 +16,7 @@ import type {
   ComponenteConGrupos,
   ContextoCockpit,
   PrescripcionActiva,
-} from '../../dominio/clinico/puertos';
+} from '@gfh/motor-clinico';
 
 /**
  * Carga el contexto clínico de TODOS los pacientes de un médico, en una

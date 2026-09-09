@@ -2,11 +2,11 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 
 import { gradoKdigo, parClave, RANGO_POR_TIPO_AJUSTE , calcularChildPugh, GLOSA_CLASE } from '@gfh/shared-types';
 
-import { elegirRango } from '../../dominio/clinico/ajuste-renal';
-import { elegirRangoPorClase } from '../../dominio/clinico/ajuste-hepatico';
-import { evaluarAlergias, type GrupoAlergenico } from '../../dominio/clinico/alergias';
+import { elegirRango } from '@gfh/motor-clinico';
+import { elegirRangoPorClase } from '@gfh/motor-clinico';
+import { evaluarAlergias, type GrupoAlergenico } from '@gfh/motor-clinico';
 import { calcularClcr, DatoClinicoInvalido } from '@gfh/shared-types';
-import { aplicaEnSemana } from '../../dominio/clinico/condiciones';
+import { aplicaEnSemana } from '@gfh/motor-clinico';
 import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import type {

@@ -34,6 +34,11 @@ export class LoginDto {
   @IsOptional() @IsString() @Length(1, 120) dispositivoInfo?: string;
 }
 
+export class GoogleLoginDto {
+  @IsString() @MinLength(20) idToken!: string;
+  @IsOptional() @IsString() @Length(1, 120) dispositivoInfo?: string;
+}
+
 export class RefreshDto {
   @IsString() @MinLength(20) refreshToken!: string;
   @IsOptional() @IsString() @Length(1, 120) dispositivoInfo?: string;

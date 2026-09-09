@@ -2,11 +2,12 @@ import 'reflect-metadata';
 
 import { Test } from '@nestjs/testing';
 import { ThrottlerStorage } from '@nestjs/throttler';
-import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
+import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { PrismaClient } from '@prisma/client';
 
 import { AppModule } from '../src/app.module';
 import { configurarApp } from '../src/configurar-app';
+import { crearAdaptadorFastify } from '../src/adaptador-fastify';
 
 /**
  * Andamiaje de los tests de integración.
@@ -40,9 +41,18 @@ export interface Contexto {
  * aparte, en `throttling.e2e.test.ts`, que sí lo enciende.
  */
 export async function levantarApp(
-  opciones: { throttling?: boolean } = {},
+  opciones: {
+    throttling?: boolean;
+    /** Reemplaza un provider por un doble — p.ej. `GoogleAuthService` en los
+     *  tests de login con Google, para no pegarle a la red de verdad. */
+    overrides?: Array<{ provider: new (...args: never[]) => unknown; useValue: unknown }>;
+  } = {},
 ): Promise<Contexto> {
   const constructor = Test.createTestingModule({ imports: [AppModule] });
+
+  for (const o of opciones.overrides ?? []) {
+    constructor.overrideProvider(o.provider).useValue(o.useValue);
+  }
 
   if (!opciones.throttling) {
     // Se reemplaza el almacenamiento, no el guard: `APP_GUARD` lo resuelve Nest
@@ -61,8 +71,8 @@ export async function levantarApp(
 
   const modulo = await constructor.compile();
 
-  const app = modulo.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
-  configurarApp(app);
+  const app = modulo.createNestApplication<NestFastifyApplication>(crearAdaptadorFastify());
+  await configurarApp(app);
   await app.init();
   // Fastify necesita esto para que `inject` tenga las rutas listas.
   await app.getHttpAdapter().getInstance().ready();

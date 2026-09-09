@@ -158,7 +158,7 @@ describe('resumen de pacientes', () => {
       await espia.$connect();
 
       const { resumenDeMedico } = await import('../src/aplicacion/pacientes/resumen-pacientes');
-      const { construirCatalogo } = await import('../src/dominio/clinico/interacciones');
+      const { construirCatalogo } = await import('@gfh/motor-clinico');
       await resumenDeMedico(espia, construirCatalogo([]), medicoId);
 
       await espia.$disconnect();

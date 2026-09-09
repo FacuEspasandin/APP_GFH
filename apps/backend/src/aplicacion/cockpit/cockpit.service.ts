@@ -1,49 +1,16 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { ordenarTratamiento } from '@gfh/shared-types';
 
-import { evaluarCockpit, type ResultadoCockpit } from '../../dominio/clinico/evaluar-cockpit';
+import {
+  armarRespuestaCockpit,
+  evaluarCockpit,
+  type RespuestaCockpit,
+} from '@gfh/motor-clinico';
 import { CatalogoInteraccionesService } from '../../infraestructura/catalogo/catalogo-interacciones.service';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import { RepositorioCockpitPrisma } from '../../infraestructura/repositorios/repositorio-cockpit-prisma';
 import { persistirInteracciones } from './persistir-interacciones';
 
-export interface PacienteResumen {
-  id: string;
-  nombre: string;
-  apellido: string;
-  edadAnios: number;
-  sexo: string;
-  pesoKg: number | null;
-  alturaCm: number | null;
-  clcrMlMin: number | null;
-  clcrOrigen: string | null;
-  /** Cuándo y con qué se calculó. La pantalla de función renal sobrescribe el
-   *  Clcr, y hacerlo sin ver la procedencia del que ya estaba es a ciegas. */
-  clcrMedidoAt: string | null;
-  creatininaMgDl: number | null;
-  gradoKdigo: string | null;
-  childPughClase: string | null;
-  semanaGestacion: number | null;
-  estaLactando: boolean | null;
-}
-
-export interface PrescripcionResumen {
-  id: string;
-  nombre: string;
-  dosis: string;
-  frecuencia: string;
-  via: string;
-  esFarmacoLibre: boolean;
-  /** El peor rango que toca a este fármaco. `null` = sin hallazgos, que no es
-   *  lo mismo que rango 3 (informativo). */
-  espina: number | null;
-  conteoHallazgos: number;
-}
-
-export interface RespuestaCockpit extends ResultadoCockpit {
-  paciente: PacienteResumen;
-  prescripciones: PrescripcionResumen[];
-}
+export type { PacienteResumen, PrescripcionResumen, RespuestaCockpit } from '@gfh/motor-clinico';
 
 /**
  * Caso de uso: evaluar el cockpit de un paciente.
@@ -82,42 +49,6 @@ export class CockpitService {
     // médico ya revisó. Es idempotente y nunca toca `vista`.
     await persistirInteracciones(this.prisma, medicoId, pacienteId, resultado.interaccionesDetectadas);
 
-    return {
-      ...resultado,
-      paciente: {
-        id: contexto.paciente.id,
-        nombre: contexto.paciente.nombre,
-        apellido: contexto.paciente.apellido,
-        edadAnios: resultado.edadAnios,
-        sexo: contexto.paciente.sexo,
-        pesoKg: contexto.paciente.pesoKg,
-        alturaCm: contexto.paciente.alturaCm,
-        clcrMlMin: resultado.clcrMlMin,
-        clcrOrigen: resultado.clcrOrigen,
-        clcrMedidoAt: contexto.paciente.clcrMedidoAt?.toISOString() ?? null,
-        creatininaMgDl: contexto.paciente.creatininaMgDl,
-        gradoKdigo: resultado.gradoKdigo,
-        childPughClase: contexto.paciente.childPughClase,
-        semanaGestacion: contexto.paciente.semanaGestacion,
-        estaLactando: contexto.paciente.estaLactando,
-      },
-      // El orden sale de acá y no de la pantalla: el paciente de ejemplo arma su
-      // lista en otro servicio y tiene que quedar igual. Gravedad primero,
-      // cantidad para desempatar — el porqué está en `orden-tratamiento.ts`.
-      prescripciones: ordenarTratamiento(
-        contexto.prescripciones.map((p) => ({
-          id: p.id,
-          nombre: p.nombreMostrado,
-          dosis: p.dosis,
-          frecuencia: p.frecuencia,
-          via: p.via,
-          esFarmacoLibre: p.esFarmacoLibre,
-          // La espina: el peor rango que toca a este fármaco. null = sin hallazgos.
-          espina: resultado.espinaPorPrescripcion.get(p.id) ?? null,
-          conteoHallazgos: resultado.hallazgos.filter((h) => h.prescripcionIds.includes(p.id))
-            .length,
-        })),
-      ),
-    };
+    return armarRespuestaCockpit(contexto, resultado);
   }
 }

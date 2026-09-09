@@ -6,13 +6,14 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 
 import { AppModule } from './app.module';
 import { configurarApp } from './configurar-app';
+import { crearAdaptadorFastify } from './adaptador-fastify';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, crearAdaptadorFastify());
 
   // La misma configuración que usan los tests de integración: si divergen, los
   // tests dejan de probar lo que corre en producción.
-  configurarApp(app);
+  await configurarApp(app);
 
   // CORS restringido: sin esto queda abierto a cualquier origen.
   //
