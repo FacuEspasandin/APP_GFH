@@ -125,12 +125,17 @@ export function Calculadora({
   /** La que el médico abrió para corregir. Gana sobre la primera sin contestar. */
   const [abiertaAMano, setAbiertaAMano] = useState<string | null>(null);
 
+  /* `onCambio` se llama DESPUÉS de `setBorrador`/`setUnidades`, nunca adentro
+     del callback que se les pasa: ese callback tiene que ser puro (React lo
+     puede invocar en cualquier momento, incluso durante el render de otro
+     componente) y `onCambio` dispara el `setState` de quien sea que esté
+     escuchando afuera — mezclar las dos cosas causaba "Cannot update a
+     component while rendering a different component" en cualquier pantalla
+     que usara `onCambio` (ej. riesgo-cardiovascular.tsx). */
   const responder = (clave: string, valor: string) => {
-    setBorrador((p) => {
-      const siguiente = { ...p, [clave]: valor };
-      onCambio?.(siguiente, unidades);
-      return siguiente;
-    });
+    const siguiente = { ...borrador, [clave]: valor };
+    setBorrador(siguiente);
+    onCambio?.(siguiente, unidades);
     // Contestar la que se estaba corrigiendo la cierra; si no, quedaría abierta
     // para siempre y la cascada dejaría de avanzar.
     setAbiertaAMano(null);
@@ -143,21 +148,19 @@ export function Calculadora({
      `:exacto`, y no en un estado aparte: así `onCambio` entrega todo junto y
      la pantalla que guarda no tiene que juntar dos piezas. `puntajeParcial`
      nunca lo mira, porque sólo suma campos declarados. */
-  const responderExacto = (clave: string, valor: string) =>
-    setBorrador((p) => {
-      const siguiente = { ...p, [clave + ':exacto']: valor };
-      onCambio?.(siguiente, unidades);
-      return siguiente;
-    });
+  const responderExacto = (clave: string, valor: string) => {
+    const siguiente = { ...borrador, [clave + ':exacto']: valor };
+    setBorrador(siguiente);
+    onCambio?.(siguiente, unidades);
+  };
 
-  const cambiarUnidad = (clave: string, unidad: string) =>
-    setUnidades((p) => {
-      const siguiente = { ...p, [clave]: unidad };
-      // También avisa: cambiar de unidad no toca lo contestado, pero sí cambia
-      // cómo se interpreta el valor exacto que ya esté escrito.
-      onCambio?.(borrador, siguiente);
-      return siguiente;
-    });
+  const cambiarUnidad = (clave: string, unidad: string) => {
+    const siguiente = { ...unidades, [clave]: unidad };
+    setUnidades(siguiente);
+    // También avisa: cambiar de unidad no toca lo contestado, pero sí cambia
+    // cómo se interpreta el valor exacto que ya esté escrito.
+    onCambio?.(borrador, siguiente);
+  };
 
   const cuerpo =
     molde.modo === 'cascada' ? (
