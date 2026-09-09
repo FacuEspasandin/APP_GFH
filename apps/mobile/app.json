@@ -58,7 +58,13 @@
         }
       ],
       "./plugins/rutas-cortas-windows",
-      "@sentry/react-native",
+      [
+        "@sentry/react-native",
+        {
+          "organization": "gfh-3d",
+          "project": "react-native"
+        }
+      ],
       [
         "@react-native-google-signin/google-signin",
         {
