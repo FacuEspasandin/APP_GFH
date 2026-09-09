@@ -20,6 +20,11 @@ export default defineConfig({
       'expo-device': aqui('test/stub-expo-device.ts'),
       'expo-application': aqui('test/stub-expo-application.ts'),
       '@react-native-async-storage/async-storage': aqui('test/stub-async-storage.ts'),
+      'react-native-purchases-ui': aqui('test/stub-revenuecat-ui.ts'),
+      'react-native-purchases': aqui('test/stub-revenuecat.ts'),
+      'expo-notifications': aqui('test/stub-expo-notifications.ts'),
+      'expo-constants': aqui('test/stub-expo-constants.ts'),
+      '@react-native-google-signin/google-signin': aqui('test/stub-google-signin.ts'),
     },
   },
   test: {

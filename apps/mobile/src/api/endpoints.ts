@@ -1,4 +1,5 @@
 import { api } from './cliente';
+import type { ContextoCockpitSerializado } from './offline-cockpit';
 import type {
   Cockpit,
   Condicion,
@@ -91,6 +92,11 @@ export const borrarGrupo = (id: string) => api.delete<void>(`/grupos/${id}`);
 // --- 6. cockpit e historial --------------------------------------------------
 
 export const cockpit = (pacienteId: string) => api.get<Cockpit>(`/pacientes/${pacienteId}/cockpit`);
+
+/** El contexto crudo para guardar y recalcular sin señal. Sólo se llama con
+ *  suscripción vigente — ver `[id].tsx` y `offline-cockpit.ts`. */
+export const contextoOffline = (pacienteId: string) =>
+  api.get<ContextoCockpitSerializado>(`/pacientes/${pacienteId}/cockpit/contexto-offline`);
 
 export const historial = <T>(
   pacienteId: string,

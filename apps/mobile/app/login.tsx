@@ -7,6 +7,8 @@ import { z } from 'zod';
 
 import { api, iniciarSesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
+import { iniciarSesionGoogle } from '@/api/google-signin';
+import { BotonGoogle } from '@/ui/boton-google';
 import { BotonVolverFlotante } from '@/ui/boton-volver';
 import { Disclaimer } from '@/ui/disclaimer';
 import { Icono, type NombreIcono } from '@/ui/iconos';
@@ -24,6 +26,7 @@ export default function Login() {
 
   const router = useRouter();
   const [errorServidor, setErrorServidor] = useState<string | null>(null);
+  const [entrandoConGoogle, setEntrandoConGoogle] = useState(false);
 
   const {
     control,
@@ -34,27 +37,51 @@ export default function Login() {
     defaultValues: { identificador: '', password: '' },
   });
 
+  // Sin suscripción, se ofrece el plan al entrar. Va con `push` sobre Inicio y
+  // no en lugar de él: el plan gratis es un plan, no una prueba vencida — el
+  // médico tiene que poder cerrarlo y seguir usando la app. Si falla la
+  // consulta no se muestra nada: no vale trabar el ingreso por un dato de
+  // facturación. Compartido por el login con contraseña y el de Google: los
+  // dos terminan en la misma pantalla, con el mismo chequeo.
+  const alEntrar = async () => {
+    router.replace('/(tabs)');
+    try {
+      const plan = await API.plan();
+      if (!plan.vigente) router.push('/paywall');
+    } catch {
+      /* silencio a propósito */
+    }
+  };
+
   const enviar = handleSubmit(async (datos) => {
     setErrorServidor(null);
     try {
       await iniciarSesion(datos.identificador.trim(), datos.password);
-      router.replace('/(tabs)');
-
-      // Sin suscripción, se ofrece el plan al entrar. Va con `push` sobre
-      // Inicio y no en lugar de él: el plan gratis es un plan, no una prueba
-      // vencida — el médico tiene que poder cerrarlo y seguir usando la app.
-      // Si falla la consulta no se muestra nada: no vale trabar el ingreso por
-      // un dato de facturación.
-      try {
-        const plan = await API.plan();
-        if (!plan.vigente) router.push('/paywall');
-      } catch {
-        /* silencio a propósito */
-      }
+      await alEntrar();
     } catch (e) {
       setErrorServidor(e instanceof Error ? e.message : 'No se pudo iniciar sesión.');
     }
   });
+
+  const entrarConGoogle = async () => {
+    setErrorServidor(null);
+    setEntrandoConGoogle(true);
+    try {
+      const resultado = await iniciarSesionGoogle();
+      if (resultado === 'cancelado') return;
+      // La cuenta se acaba de crear con este toque: falta el disclaimer de
+      // primer ingreso, igual que el registro con contraseña.
+      if (resultado === 'nuevo') {
+        router.replace('/disclaimer');
+        return;
+      }
+      await alEntrar();
+    } catch (e) {
+      setErrorServidor(e instanceof Error ? e.message : 'No se pudo iniciar sesión con Google.');
+    } finally {
+      setEntrandoConGoogle(false);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -137,6 +164,14 @@ export default function Login() {
             )}
           </Pressable>
         </View>
+
+        <View className="my-5 flex-row items-center gap-3">
+          <View className="h-px flex-1" style={{ backgroundColor: col.line }} />
+          <Text className="text-meta text-ink-suave">o</Text>
+          <View className="h-px flex-1" style={{ backgroundColor: col.line }} />
+        </View>
+
+        <BotonGoogle onPress={entrarConGoogle} cargando={entrandoConGoogle} />
       </ScrollView>
 
       <Disclaimer />

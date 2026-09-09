@@ -1,12 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import type { CategoriaHallazgo, Cockpit, PrescripcionCockpit } from '@/api/tipos';
 import * as API from '@/api/endpoints';
+import { ErrorApi } from '@/api/cliente';
+import { calcularCockpitOffline, guardarContextoOffline } from '@/api/offline-cockpit';
+import { usePlan } from '@/api/plan';
 import { Skeleton } from '@/ui/estados-sistema';
-import { antiguedad } from '@/ui/fecha';
+import { antiguedad, fechaLarga } from '@/ui/fecha';
+import { useAviso } from '@/ui/aviso';
 import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono, type NombreIcono } from '@/ui/iconos';
 import { AnilloClcr } from '@/ui/anillo-clcr';
@@ -64,6 +68,8 @@ export default function CockpitPaciente() {
 
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const aviso = useAviso();
+  const plan = usePlan();
   // Dos menús, dos verbos. El + crea cosas que no existían; los ··· tocan lo
   // que ya existe. Antes «Editar datos del paciente» vivía adentro del +,
   // que es justo lo que no hace.
@@ -71,9 +77,45 @@ export default function CockpitPaciente() {
 
   const { data, isLoading, error, refetch, isRefetching } = useQuery({
     queryKey: ['cockpit', id],
-    queryFn: () => API.cockpit(id),
+    queryFn: async () => {
+      try {
+        return await API.cockpit(id);
+      } catch (e) {
+        // Sin señal (no un 4xx del backend): si hay una copia local de este
+        // paciente, se recalcula acá. Sin copia, se mantiene el error de
+        // siempre — nunca se inventa un cockpit vacío (Regla 5).
+        if (e instanceof ErrorApi && e.esSinConexion) {
+          const offline = await calcularCockpitOffline(id);
+          if (offline) return offline;
+        }
+        throw e;
+      }
+    },
     enabled: Boolean(id),
   });
+
+  // Guarda en segundo plano el contexto crudo de este paciente, para poder
+  // recalcular el cockpit sin señal más adelante. Sólo con suscripción
+  // vigente (modo offline es exclusivo de cuentas pagas) y nunca para el
+  // paciente de demostración —no tiene sentido cachearlo, vive en memoria del
+  // servidor— ni cuando lo que se está mostrando ya es la copia offline.
+  useEffect(() => {
+    if (!data || data.esDemostracion || data.offline) return;
+    if (!plan.data?.vigente) return;
+
+    let cancelado = false;
+    void (async () => {
+      try {
+        const contexto = await API.contextoOffline(id);
+        if (!cancelado) await guardarContextoOffline(id, contexto);
+      } catch {
+        // Best-effort: si falla, la próxima apertura con señal reintenta.
+      }
+    })();
+    return () => {
+      cancelado = true;
+    };
+  }, [data, plan.data?.vigente, id]);
 
   // La cabecera va afuera del `if`: antes vivía en `Stack.Screen`, que se
   // pinta sin importar el estado de la consulta. Devolverla recién en el
@@ -116,8 +158,16 @@ export default function CockpitPaciente() {
    * abrirse sin pedirle nada al servidor, pero que cuatro toques funcionen y el
    * quinto mande a pagar se lee como que algo se rompió, no como un límite.
    */
-  const abrir = (ruta: string) =>
+  const abrir = (ruta: string) => {
+    // Mismo punto de corte que el paciente de demostración, pero por otro
+    // motivo: acá el médico sí paga, sólo no hay señal ahora mismo. Nunca se
+    // escribe sin conexión (modo offline nivel 2 es sólo lectura).
+    if (data.offline) {
+      aviso.avisar('No se puede editar sin conexión.');
+      return;
+    }
     router.push((data.esDemostracion ? rutaPaywall('paciente') : ruta) as never);
+  };
 
   const destacados = hallazgosDestacados(data.hallazgos);
 
@@ -127,6 +177,21 @@ export default function CockpitPaciente() {
   return (
     <View className="flex-1" style={{ backgroundColor: col.paper }}>
       <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
+
+      {/* Fijo, no un aviso que se va solo: mientras dure el estado offline el
+          médico tiene que poder verlo en cualquier momento, no sólo los
+          primeros segundos. */}
+      {data.offline ? (
+        <View className="border-b border-line px-4 py-2.5" style={{ backgroundColor: col.primaryLight }}>
+          <Text className="text-meta font-medio text-ink">
+            Sin conexión — datos de{' '}
+            {data.calculadoConDatosDe
+              ? `las ${new Date(data.calculadoConDatosDe).toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' })} del ${fechaLarga(data.calculadoConDatosDe)}`
+              : 'la última vez que hubo señal'}
+            . Puede no reflejar cambios hechos en otro dispositivo.
+          </Text>
+        </View>
+      ) : null}
 
       {/* Deslizar para refrescar: el cockpit lo puede cambiar otra pantalla
           —cargar un análisis, aceptar una alternativa— y sin esto la única

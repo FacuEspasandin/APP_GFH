@@ -115,7 +115,7 @@ describe('agrupar', () => {
   it('separa lo que calcula de lo que cruza el catálogo', () => {
     const g = agrupar(HERRAMIENTAS);
     expect(g.map((x) => x.titulo)).toEqual(['Calculadoras', 'Contra el catálogo']);
-    expect(claves(g[0]!.herramientas)).toEqual(['child-pugh', 'clcr', 'ldl', 'riesgo-cv']);
+    expect(claves(g[0]!.herramientas)).toEqual(['child-pugh', 'clcr', 'ldl', 'hba1c', 'imc', 'riesgo-cv']);
   });
 
   it('ordena por TÍTULO y no por clave', () => {
@@ -149,7 +149,7 @@ describe('agrupar', () => {
     // Nefrología sólo tiene 'renal': adelanta el clcr y el ajuste renal, en
     // sus dos secciones, sin sacar nada de la lista.
     const g = agrupar(HERRAMIENTAS, relevantesDe('Nefrología'));
-    expect(claves(g[0]!.herramientas)).toEqual(['clcr', 'child-pugh', 'ldl', 'riesgo-cv']);
+    expect(claves(g[0]!.herramientas)).toEqual(['clcr', 'child-pugh', 'ldl', 'hba1c', 'imc', 'riesgo-cv']);
     expect(claves(g[1]!.herramientas)).toEqual([
       'renal',
       'ajuste-hepatico',

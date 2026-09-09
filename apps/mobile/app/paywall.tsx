@@ -1,9 +1,12 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { PAYWALL_RESULT, presentarPaywall } from '@/api/revenuecat';
 import type { MotivoPaywall } from '@/dominio/plan-gratis';
+import { useAviso } from '@/ui/aviso';
 import { Icono } from '@/ui/iconos';
 import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
@@ -38,23 +41,6 @@ function EncabezadoPaywall({ onCerrar }: { onCerrar: () => void }) {
     </View>
   );
 }
-
-type Plan = 'mensual' | 'anual';
-
-const PRECIO: Record<Plan, { titulo: string; precio: string; detalle: string; boton: string }> = {
-  anual: {
-    titulo: 'Anual',
-    precio: 'USD 69,99',
-    detalle: 'USD 5,83 por mes · dos meses gratis',
-    boton: 'Suscribirme · USD 69,99 al año',
-  },
-  mensual: {
-    titulo: 'Mensual',
-    precio: 'USD 6,99',
-    detalle: 'Se renueva todos los meses',
-    boton: 'Suscribirme · USD 6,99 por mes',
-  },
-};
 
 /**
  * Qué se le dice según de dónde venga.
@@ -97,25 +83,52 @@ const INCLUYE = [
 /**
  * Paywall (1.7). Plan único, mensual o anual.
  *
- * El botón no cobra nada: la compra la hace StoreKit / Play Billing vía
- * RevenueCat, y el backend se entera SOLO por webhook (regla no negociable 6).
- * Hasta que el SDK esté integrado, la pantalla lo dice en vez de fingir.
+ * El precio, la compra, el estado de carga/error y "Restaurar compras" son
+ * el paywall que RevenueCat arma desde su dashboard (`RevenueCatUI.
+ * presentPaywallIfNeeded`) — esta pantalla ya no dibuja ninguno de los dos:
+ * sólo dice POR QUÉ el médico está acá (según `motivo`) y qué se lleva, y
+ * después le entrega el control al SDK. El backend se entera de la compra
+ * SOLO por webhook (regla no negociable 6) — por eso, al volver del paywall,
+ * lo único que hace esta pantalla es invalidar `plan`/`suscripción` y volver:
+ * no asume que ya está activo, deja que la próxima lectura lo confirme.
  *
- * No hay "seguir con el plan gratis" abajo: no es una decisión que se tome acá.
- * El médico llegó desde algo concreto que quería hacer, y el camino de vuelta
- * es cerrar esta pantalla — por eso se abre con `push` y conserva la anterior.
+ * No hay "seguir con el plan gratis" abajo: no es una decisión que se tome
+ * acá. El médico llegó desde algo concreto que quería hacer, y el camino de
+ * vuelta es cerrar esta pantalla — por eso se abre con `push` y conserva la
+ * anterior.
  */
 export default function Paywall() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const { avisar } = useAviso();
   const { motivo } = useLocalSearchParams<{ motivo?: string }>();
-  const [plan, setPlan] = useState<Plan>('anual');
-  const [avisoCobro, setAvisoCobro] = useState(false);
+  const [comprando, setComprando] = useState(false);
 
   const cabecera = ENCABEZADO[(motivo as MotivoPaywall) ?? 'paciente'] ?? ENCABEZADO.paciente;
+  const cerrar = () => (router.canGoBack() ? router.back() : router.replace('/'));
+
+  const verPlanes = async () => {
+    setComprando(true);
+    try {
+      const resultado = await presentarPaywall();
+      if (resultado === PAYWALL_RESULT.PURCHASED || resultado === PAYWALL_RESULT.RESTORED) {
+        // No se pinta "activado" acá: eso lo dice `/perfil/plan` una vez que
+        // el webhook de RevenueCat llegue, que puede tardar unos segundos.
+        await queryClient.invalidateQueries({ queryKey: ['plan'] });
+        await queryClient.invalidateQueries({ queryKey: ['suscripcion'] });
+        cerrar();
+      } else if (resultado === PAYWALL_RESULT.ERROR) {
+        avisar('No se pudo abrir la compra. Probá de nuevo en un momento.');
+      }
+      // CANCELLED y NOT_PRESENTED: el médico se queda en esta pantalla, sin aviso.
+    } finally {
+      setComprando(false);
+    }
+  };
 
   return (
     <View className="flex-1 bg-paper">
-      <EncabezadoPaywall onCerrar={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
+      <EncabezadoPaywall onCerrar={cerrar} />
       <ScrollView contentContainerClassName="px-4 pb-4 pt-5">
         <Text className="text-center text-[28px] leading-9 font-fuerte text-ink">
           {cabecera.titulo}
@@ -133,39 +146,19 @@ export default function Paywall() {
           ))}
         </Superficie>
 
-        {(['anual', 'mensual'] as const).map((p) => (
-          <OpcionPlan key={p} plan={p} activo={plan === p} onPress={() => setPlan(p)} />
-        ))}
-
-        <Superficie elevacion="plana" className="mb-3 mt-1 px-3.5 py-3">
-          <Text className="font-sans text-meta leading-5 text-ink-suave">
-            El cobro todavía no está conectado. La suscripción se gestiona desde la tienda del
-            teléfono y el backend sólo la sincroniza desde ahí.
-          </Text>
-        </Superficie>
-
-        {avisoCobro ? (
-          <Superficie elevacion="plana" className="mb-3 px-3.5 py-3">
-            <Text className="font-sans text-meta leading-5 text-ink-suave">
-              Todavía no se puede cobrar desde acá: falta integrar RevenueCat. Cuando esté, este
-              botón abre la compra de la tienda y el acceso se activa solo.
-            </Text>
-          </Superficie>
-        ) : null}
-
         <Text className="font-sans mb-2 px-1 text-eyebrow leading-4 text-ink-suave">
-          Podés cancelar cuando quieras desde la tienda; el acceso sigue hasta el final del período
-          pago.
+          El precio, mensual o anual, se muestra en el paso siguiente. Podés cancelar cuando
+          quieras desde la tienda; el acceso sigue hasta el final del período pago.
         </Text>
       </ScrollView>
 
       <View className="border-t border-line bg-surface px-4 py-3">
-        {/* El botón dice qué se cobra y cada cuánto. Mientras no exista el SDK
-            explica por qué no pasa nada, en vez de esconder el precio. */}
-        <Boton onPress={() => setAvisoCobro(true)}>{PRECIO[plan].boton}</Boton>
+        <Boton onPress={verPlanes} cargando={comprando}>
+          Ver planes y suscribirme
+        </Boton>
 
         <Pressable
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+          onPress={cerrar}
           accessibilityRole="button"
           className="mt-1 items-center py-2.5"
         >
@@ -181,65 +174,6 @@ function Incluye({ texto }: { texto: string }) {
     <View className="mb-3 flex-row items-start gap-3">
       <Icono nombre="check" tamano={18} color="#22C55E" />
       <Text className="font-sans flex-1 text-body leading-6 text-ink">{texto}</Text>
-    </View>
-  );
-}
-
-function OpcionPlan({
-  plan,
-  activo,
-  onPress,
-}: {
-  plan: Plan;
-  activo: boolean;
-  onPress: () => void;
-}) {
-  const col = useColores();
-  const p = PRECIO[plan];
-  const destacado = plan === 'anual';
-
-  return (
-    <View className="mb-3">
-      {destacado ? (
-        <View
-          className="absolute -top-3 right-4 z-10 rounded-full px-2.5 py-1"
-          style={{ backgroundColor: '#005228' }}
-        >
-          <Text className="font-fuerte text-[10px] uppercase tracking-wider text-white">
-            Mejor valor
-          </Text>
-        </View>
-      ) : null}
-      <Pressable
-        onPress={onPress}
-        accessibilityRole="radio"
-        accessibilityState={{ selected: activo }}
-        className="flex-row items-center justify-between rounded-xl px-4 py-4"
-        style={{
-          backgroundColor: activo && destacado ? '#E6F1EC' : col.surface,
-          borderColor: activo ? '#005228' : col.line,
-          borderWidth: activo ? 2 : 1,
-        }}
-      >
-        <View className="flex-row items-center gap-3">
-          <View
-            className="h-5 w-5 items-center justify-center rounded-full border-2"
-            style={{ borderColor: activo ? '#005228' : col.tenue }}
-          >
-            {activo ? <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#005228' }} /> : null}
-          </View>
-          <View>
-            <Text className="text-fila font-fuerte text-ink">{p.titulo}</Text>
-            <Text className="font-sans mt-0.5 text-meta text-ink-suave">{p.detalle}</Text>
-          </View>
-        </View>
-        <Text
-          className="font-mono-fuerte text-fila"
-          style={{ color: activo ? '#005228' : col.inkSuave, fontVariant: ['tabular-nums'] }}
-        >
-          {p.precio}
-        </Text>
-      </Pressable>
     </View>
   );
 }

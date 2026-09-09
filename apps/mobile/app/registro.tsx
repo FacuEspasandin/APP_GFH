@@ -4,7 +4,9 @@ import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-na
 
 import { api, iniciarSesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
+import { iniciarSesionGoogle } from '@/api/google-signin';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
+import { BotonGoogle } from '@/ui/boton-google';
 import { useVolverAInicio } from '@/ui/boton-volver';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
@@ -29,6 +31,24 @@ export default function Registro() {
   const [especialidad, setEspecialidad] = useState<Especialidad | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
+  const [entrandoConGoogle, setEntrandoConGoogle] = useState(false);
+
+  const entrarConGoogle = async () => {
+    setError(null);
+    setEntrandoConGoogle(true);
+    try {
+      const resultado = await iniciarSesionGoogle();
+      if (resultado === 'cancelado') return;
+      // 'existente': el email de Google ya tenía cuenta en GFH (con
+      // contraseña o de una sesión anterior) y ya había aceptado el
+      // disclaimer — entra directo, sin repetir el paso.
+      router.replace(resultado === 'nuevo' ? '/disclaimer' : '/(tabs)');
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'No se pudo continuar con Google.');
+    } finally {
+      setEntrandoConGoogle(false);
+    }
+  };
 
   const enviar = async () => {
     setError(null);
@@ -67,6 +87,18 @@ export default function Registro() {
       <EncabezadoConTitulo titulo="Crear cuenta" alVolver={volver} />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+        <BotonGoogle
+          texto="Crear cuenta con Google"
+          onPress={entrarConGoogle}
+          cargando={entrandoConGoogle}
+        />
+
+        <View className="my-5 flex-row items-center gap-3">
+          <View className="h-px flex-1" style={{ backgroundColor: col.line }} />
+          <Text className="text-meta text-ink-suave">o completá el formulario</Text>
+          <View className="h-px flex-1" style={{ backgroundColor: col.line }} />
+        </View>
+
         <BloqueFormulario titulo="Quién sos" exigencia="Obligatorio">
           <View className="flex-row gap-3">
             <View className="flex-1">

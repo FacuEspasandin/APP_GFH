@@ -1,6 +1,6 @@
 import '../global.css';
 
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -9,12 +9,17 @@ import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import * as API from '@/api/endpoints';
 import {
   registrarManejadorLimitePlan,
   registrarManejadorSuscripcionVencida,
+  useHaySesion,
 } from '@/api/cliente';
 import { iniciarReporteDeErrores } from '@/api/errores';
+import { configurarGoogleSignIn } from '@/api/google-signin';
+import { sincronizarPushToken } from '@/api/notificaciones';
 import { MS_MAXIMO, opcionesDeshidratado, persistidor } from '@/api/persistencia';
+import { configurarRevenueCat, identificarEnRevenueCat } from '@/api/revenuecat';
 import { rutaPaywall } from '@/dominio/plan-gratis';
 import { ProveedorAviso } from '@/ui/aviso';
 import { useFuentes } from '@/ui/fuentes';
@@ -25,6 +30,14 @@ import { coloresChrome, ProveedorTema, useTema } from '@/ui/tema';
 /* Antes de que se monte nada: un error en el primer render también tiene que
    reportarse. Sin DSN configurado no hace nada — ver `api/errores.ts`. */
 iniciarReporteDeErrores();
+
+/* Mismo criterio: el SDK de compras arranca una sola vez, antes de saber quién
+   es el médico — RevenueCat empieza anónimo y se identifica después (ver
+   `identificarRevenueCatConSesion` más abajo). Sin API key no hace nada. */
+configurarRevenueCat();
+// Igual criterio: sin client id configurado no rompe el arranque, el botón
+// de "Continuar con Google" avisa por consola y queda inerte.
+configurarGoogleSignIn();
 
 export default function LayoutRaiz() {
   useEffect(() => activarPantallaCompletaWeb(), []);
@@ -101,7 +114,7 @@ export default function LayoutRaiz() {
 }
 
 function Navegacion() {
-  const { oscuro } = useTema();
+  const { oscuro, configuracion } = useTema();
   const router = useRouter();
   const c = coloresChrome(oscuro);
 
@@ -119,6 +132,25 @@ function Navegacion() {
       router.push(rutaPaywall(motivo) as never);
     });
   }, [router]);
+
+  // Identifica al SDK de RevenueCat con el médico logueado. `['perfil']` es la
+  // misma query que ya usan Perfil y Herramientas — React Query la deduplica,
+  // así que esto no agrega un request de más. Cubre login fresco (la sesión
+  // aparece y la query se habilita) y app reabierta con sesión guardada.
+  const haySesion = useHaySesion();
+  const { data: perfil } = useQuery({ queryKey: ['perfil'], queryFn: API.yo, enabled: haySesion });
+  useEffect(() => {
+    if (perfil?.id) void identificarEnRevenueCat(perfil.id);
+  }, [perfil?.id]);
+
+  // Mismo criterio: sincroniza el token de push con lo que diga el
+  // interruptor de Perfil → Notificaciones, apenas se conoce la
+  // configuración. Corre de nuevo si el médico lo prende o apaga.
+  useEffect(() => {
+    if (haySesion && configuracion) {
+      void sincronizarPushToken(configuracion.notificacionesPush);
+    }
+  }, [haySesion, configuracion?.notificacionesPush]);
 
   return (
     <View className="flex-1">

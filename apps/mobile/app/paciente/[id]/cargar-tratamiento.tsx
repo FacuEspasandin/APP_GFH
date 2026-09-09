@@ -1,24 +1,24 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { api, ErrorApi } from '@/api/cliente';
+import { ErrorApi } from '@/api/cliente';
 import * as API from '@/api/endpoints';
 import {
   elegidasSinPauta,
   elegirTodas,
-  lineasDelTexto,
   listasParaCrear,
 } from '@/dominio/carga-tratamiento';
-import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { ConsultaPlegada, Veredicto } from '@/ui/herramienta';
 import { Icono } from '@/ui/iconos';
-import { Boton, CampoTexto } from '@/ui/kit';
+import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
-import { COLOR_SEVERIDAD } from '@gfh/shared-types';
+import { COLOR_SEVERIDAD, VIAS_OFRECIDAS, viaCorta } from '@gfh/shared-types';
 
 /** Cerrar + título, blanco — flujo lineal, sin la marca "GFH" ni la barra
  *  inferior (ver `SIN_MENU_SUBRUTA_PACIENTE` en `menu-inferior.tsx`). */
@@ -52,6 +52,9 @@ interface Linea {
   nombreSugerido: string | null;
   dosis: string | null;
   frecuencia: string | null;
+  /** Sugerida por el backend a partir del texto (`extraerVia`, en
+   *  `foto.service.ts`) — `null` cuando no hay ninguna pista. */
+  via: string | null;
   requiereBusquedaManual: boolean;
 }
 
@@ -60,6 +63,15 @@ interface LineaRevisada extends Linea {
   elegida: boolean;
   dosisEditada: string;
   frecuenciaEditada: string;
+  /**
+   * Nunca queda sin valor — a diferencia de dosis/frecuencia, `via` es
+   * obligatoria para crear la prescripción (`CrearPrescripcionDto.via`), así
+   * que sin pista del texto cae en "ORAL" y no en vacío. Es la misma vía que
+   * el motor usa para elegir el ajuste renal/hepático correcto
+   * (`elegirAjustePorVia`): antes de esto, cargar por texto o por foto mandaba
+   * "oral" siempre, sin mirar lo que decía la línea.
+   */
+  viaEditada: string;
 }
 
 /**
@@ -83,30 +95,92 @@ export default function CargarTratamiento() {
   const [crudo, setCrudo] = useState('');
   const [lineas, setLineas] = useState<LineaRevisada[] | null>(null);
   const [errorFoto, setErrorFoto] = useState<string | null>(null);
+  // Sólo para el copy del resumen en el paso 2 — "líneas pegadas" no tiene
+  // sentido cuando vinieron de una foto.
+  const [origen, setOrigen] = useState<'texto' | 'foto'>('texto');
 
   const textos = crudo
     .split('\n')
     .map((t) => t.trim())
     .filter((t) => t.length > 1);
 
+  // Nada viene elegido por default: el médico confirma cada línea. Mismo
+  // punto de entrada para las líneas que salen de pegar texto y las que
+  // salen de una foto — la revisión de la regla 2 no distingue de dónde vino
+  // el texto.
+  const aRevisadas = (ls: Linea[]): LineaRevisada[] =>
+    ls.map((l) => ({
+      ...l,
+      elegida: false,
+      dosisEditada: l.dosis ?? '',
+      frecuenciaEditada: l.frecuencia ?? '',
+      viaEditada: l.via ?? 'ORAL',
+    }));
+
   const matchear = useMutation({
     mutationFn: () => API.matchearLineas<Linea[]>(pacienteId, textos),
-    onSuccess: (r) =>
-      setLineas(
-        r.map((l) => ({
-          ...l,
-          // Nada viene elegido por default: el médico confirma cada línea.
-          elegida: false,
-          dosisEditada: l.dosis ?? '',
-          frecuenciaEditada: l.frecuencia ?? '',
-        })),
-      ),
+    onSuccess: (r) => {
+      setOrigen('texto');
+      setLineas(aRevisadas(r));
+    },
   });
 
-  const probarFoto = useMutation({
-    mutationFn: () => API.subirFoto(pacienteId, ''),
-    onError: (e) => setErrorFoto(e instanceof ErrorApi ? e.message : 'No disponible.'),
+  const subirFoto = useMutation({
+    mutationFn: (imagenBase64: string) => API.subirFoto<Linea[]>(pacienteId, imagenBase64),
+    onMutate: () => setErrorFoto(null),
+    onSuccess: (r) => {
+      setOrigen('foto');
+      setLineas(aRevisadas(r));
+    },
+    onError: (e) =>
+      setErrorFoto(e instanceof ErrorApi ? e.message : 'No se pudo procesar la foto. Cargá el tratamiento a mano.'),
   });
+
+  /**
+   * Cámara o galería → comprimir/redimensionar → mandar al backend.
+   *
+   * El resize a 1600px de ancho no es sólo para que pese menos: una imagen de
+   * tamaño consistente es la que mejor lee el OCR — una foto de 12 Mpx sin
+   * tocar no reconoce más letras, tarda más en subir y en procesarse.
+   */
+  const elegirDesdeFoto = async (origen: 'camara' | 'galeria') => {
+    const permiso =
+      origen === 'camara'
+        ? await ImagePicker.requestCameraPermissionsAsync()
+        : await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permiso.granted) {
+      setErrorFoto('Sin permiso para usar la cámara o la galería. Habilitalo en Ajustes del teléfono.');
+      return;
+    }
+
+    const resultado =
+      origen === 'camara'
+        ? await ImagePicker.launchCameraAsync({ quality: 0.8 })
+        : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8 });
+
+    if (resultado.canceled) return;
+
+    const foto = resultado.assets[0];
+    if (!foto) return;
+
+    setErrorFoto(null);
+    // `manipulateAsync` sigue siendo la forma más simple para un resize +
+    // compresión de una sola vez — la API nueva por contexto (`manipulate`)
+    // está pensada para cadenas de edición más largas, que acá no hacen falta.
+    const comprimida = await ImageManipulator.manipulateAsync(foto.uri, [{ resize: { width: 1600 } }], {
+      compress: 0.7,
+      format: ImageManipulator.SaveFormat.JPEG,
+      base64: true,
+    });
+
+    if (!comprimida.base64) {
+      setErrorFoto('No se pudo leer la foto. Probá de nuevo.');
+      return;
+    }
+
+    subirFoto.mutate(comprimida.base64);
+  };
 
   const confirmar = useMutation({
     mutationFn: async () => {
@@ -118,7 +192,7 @@ export default function CargarTratamiento() {
           // adentro del campo dosis y nadie volvía a mirarla.
           dosis: l.dosisEditada.trim(),
           frecuencia: l.frecuenciaEditada.trim(),
-          via: 'ORAL',
+          via: l.viaEditada,
         });
       }
     },
@@ -155,33 +229,35 @@ export default function CargarTratamiento() {
               style={{ textAlignVertical: 'top' }}
             />
             <Pressable
-              onPress={() => probarFoto.mutate()}
+              onPress={() => void elegirDesdeFoto('camara')}
+              disabled={subirFoto.isPending}
               accessibilityRole="button"
-              accessibilityLabel="Desde una foto — todavía no disponible"
+              accessibilityLabel="Cargar desde una foto"
               className="absolute bottom-3 right-3 flex-row items-center gap-1.5 rounded-full px-3.5 py-2"
               style={{ backgroundColor: col.paper, borderWidth: 1, borderColor: col.line }}
             >
               <Icono nombre="camara" tamano={16} color="#005228" />
               <Text className="font-fuerte text-[11px] uppercase tracking-wider" style={{ color: '#005228' }}>
-                Desde una foto
+                {subirFoto.isPending ? 'Leyendo la foto…' : 'Desde una foto'}
               </Text>
             </Pressable>
           </View>
 
-          {/* Apagado y con el motivo a la vista, no después de tocarlo. */}
-          <BloqueFormulario titulo="Desde una foto" etiqueta="No disponible">
-            <Text className="font-sans text-meta leading-5 text-ink-suave">
-              El reconocimiento de imágenes todavía no está conectado. Cuando lo esté, la foto se
-              procesa y se descarta: no se guarda nunca.
-            </Text>
-            {errorFoto ? (
-              <Text className="font-sans mt-2 text-meta leading-5 text-ink-suave">{errorFoto}</Text>
-            ) : (
-              <Pressable onPress={() => probarFoto.mutate()} accessibilityRole="button" className="mt-2">
-                <Text className="font-medio text-meta text-accent">Probar igual</Text>
-              </Pressable>
-            )}
-          </BloqueFormulario>
+          <Pressable
+            onPress={() => void elegirDesdeFoto('galeria')}
+            disabled={subirFoto.isPending}
+            accessibilityRole="button"
+            className="mb-3 items-center py-1"
+          >
+            <Text className="font-medio text-meta text-accent">O elegir una foto de la galería</Text>
+          </Pressable>
+
+          {/* La foto se procesa y se descarta: no se guarda nunca. */}
+          {errorFoto ? (
+            <Superficie elevacion="plana" className="mb-3 px-3.5 py-3">
+              <Text className="font-sans text-meta leading-5 text-ink-suave">{errorFoto}</Text>
+            </Superficie>
+          ) : null}
         </ScrollView>
 
         <View className="border-t border-line bg-surface px-4 py-3">
@@ -213,7 +289,15 @@ export default function CargarTratamiento() {
       <EncabezadoTransaccional titulo="Cargar Tratamiento" />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ConsultaPlegada
-        titulo={`${lineas.length} ${lineas.length === 1 ? 'línea pegada' : 'líneas pegadas'}`}
+        titulo={`${lineas.length} ${
+          origen === 'foto'
+            ? lineas.length === 1
+              ? 'línea leída de la foto'
+              : 'líneas leídas de la foto'
+            : lineas.length === 1
+              ? 'línea pegada'
+              : 'líneas pegadas'
+        }`}
         detalle={
           sinMatch === 0
             ? 'Todas reconocidas'
@@ -251,6 +335,7 @@ export default function CargarTratamiento() {
             onAlternar={() => actualizar(i, { elegida: !l.elegida })}
             onDosis={(v) => actualizar(i, { dosisEditada: v })}
             onFrecuencia={(v) => actualizar(i, { frecuenciaEditada: v })}
+            onVia={(v) => actualizar(i, { viaEditada: v })}
             onBuscarAMano={() => router.push(`/paciente/${pacienteId}/agregar-farmaco` as never)}
           />
         ))}
@@ -286,12 +371,14 @@ function FilaLinea({
   onAlternar,
   onDosis,
   onFrecuencia,
+  onVia,
   onBuscarAMano,
 }: {
   linea: LineaRevisada;
   onAlternar: () => void;
   onDosis: (v: string) => void;
   onFrecuencia: (v: string) => void;
+  onVia: (v: string) => void;
   onBuscarAMano: () => void;
 }) {
   const col = useColores();
@@ -344,27 +431,42 @@ function FilaLinea({
         <Text className="mt-0.5 text-body font-medio text-ink">{l.nombreSugerido}</Text>
 
         {l.elegida ? (
-          <View className="mt-2.5 flex-row gap-2.5">
-            <View className="flex-1">
-              <CampoTexto
-                etiqueta="Dosis"
-                value={l.dosisEditada}
-                onChangeText={onDosis}
-                placeholder="sin detectar"
-              />
+          <>
+            <View className="mt-2.5 flex-row gap-2.5">
+              <View className="flex-1">
+                <CampoTexto
+                  etiqueta="Dosis"
+                  value={l.dosisEditada}
+                  onChangeText={onDosis}
+                  placeholder="sin detectar"
+                />
+              </View>
+              <View className="flex-1">
+                <CampoTexto
+                  etiqueta="Frecuencia"
+                  value={l.frecuenciaEditada}
+                  onChangeText={onFrecuencia}
+                  placeholder="sin detectar"
+                />
+              </View>
             </View>
-            <View className="flex-1">
-              <CampoTexto
-                etiqueta="Frecuencia"
-                value={l.frecuenciaEditada}
-                onChangeText={onFrecuencia}
-                placeholder="sin detectar"
-              />
+
+            {/* Sin esto, cada línea cargada por texto o por foto quedaba fija
+                en oral — la misma vía que usa el motor para el ajuste renal y
+                hepático correctos. Se ve sólo al elegir la línea, igual que
+                dosis y frecuencia. */}
+            <Text className="mb-1.5 mt-2.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
+              Vía
+            </Text>
+            <View className="flex-row flex-wrap gap-2">
+              {VIAS_OFRECIDAS.map((v) => (
+                <Chip key={v} texto={viaCorta(v)} activo={l.viaEditada === v} onPress={() => onVia(v)} />
+              ))}
             </View>
-          </View>
+          </>
         ) : (
           <Text className="font-sans mt-0.5 text-meta text-ink-suave">
-            {l.dosis ?? 'dosis sin detectar'} · {l.frecuencia ?? 'frecuencia sin detectar'}
+            {viaCorta(l.viaEditada)} · {l.dosis ?? 'dosis sin detectar'} · {l.frecuencia ?? 'frecuencia sin detectar'}
           </Text>
         )}
       </View>

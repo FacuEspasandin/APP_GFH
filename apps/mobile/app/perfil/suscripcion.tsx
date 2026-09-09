@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { presentarCentroDeCliente } from '@/api/revenuecat';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { AvisoNeutro, Boton, Eyebrow, Pantalla } from '@/ui/kit';
@@ -64,7 +65,17 @@ export default function Suscripcion() {
           ) : null}
         </Superficie>
 
-        {!data?.vigente ? <Boton onPress={() => router.push('/paywall')}>Ver planes</Boton> : null}
+        {!data?.vigente ? (
+          <Boton onPress={() => router.push('/paywall')}>Ver planes</Boton>
+        ) : (
+          // Cancelar, cambiar de plan o pedir reembolso (iOS) — el Centro de
+          // Cliente de RevenueCat lo resuelve sin salir de la app. Sólo tiene
+          // sentido con una suscripción vigente: sin eso no hay nada que
+          // gestionar más que "Ver planes", que ya está arriba.
+          <Boton variante="secundario" onPress={() => void presentarCentroDeCliente()}>
+            Gestionar suscripción
+          </Boton>
+        )}
 
         <AvisoNeutro>
           El estado lo define la tienda. Cancelar o cambiar de plan se hace desde App Store o Google

@@ -125,6 +125,10 @@ export interface Cockpit {
   /** El paciente sintético que ve una cuenta sin suscripción. Se mira entero;
    *  no se toca. */
   esDemostracion?: boolean;
+  /** Calculado en el teléfono, sin señal, sobre la última copia guardada. */
+  offline?: boolean;
+  /** ISO de cuándo se guardó esa copia. Sólo tiene sentido si `offline`. */
+  calculadoConDatosDe?: string;
 }
 
 // --- perfil y sesión ---------------------------------------------------------

@@ -43,11 +43,38 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "color": "#1F5E4A"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "GFH usa la cámara para leer una receta o un listado de medicación.",
+          "photosPermission": "GFH accede a tus fotos para leer una receta o un listado de medicación desde una imagen ya guardada.",
+          "microphonePermission": false
+        }
+      ],
       "./plugins/rutas-cortas-windows",
-      "@sentry/react-native"
+      "@sentry/react-native",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.274474907565-vf4gi6322p7u3r3o5v5hmhog3frf5elo"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": false
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "17e8849e-a8a6-4b5d-8150-d239062a7f8b"
+      }
+    },
+    "owner": "facuespasandins-team"
   }
 }

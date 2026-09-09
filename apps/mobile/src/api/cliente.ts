@@ -1,9 +1,12 @@
 import { limpiarCache } from './persistencia';
+import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 
 import type { MotivoPaywall } from '@/dominio/plan-gratis';
 import { infoDeSesion } from '@/ui/dispositivo';
 import { borrar, CLAVE_ACCESS, CLAVE_REFRESH, guardar, leer } from './almacen';
+import { desregistrarPushToken } from './notificaciones';
+import { cerrarSesionRevenueCat } from './revenuecat';
 
 /**
  * Cliente HTTP.
@@ -286,7 +289,42 @@ export async function iniciarSesion(identificador: string, password: string): Pr
   marcarSesion(true);
 }
 
+/** Mismo camino que `iniciarSesion`, con el id_token que ya verificó el SDK
+ *  nativo de Google en vez de email+contraseña — ver `google-signin.ts`.
+ *  Devuelve si la cuenta se acaba de crear, para que la pantalla mande al
+ *  disclaimer de primer ingreso en vez de ir directo a Inicio. */
+export async function iniciarSesionConGoogle(idToken: string): Promise<boolean> {
+  const res = await fetch(`${BASE}/auth/google`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ idToken, dispositivoInfo: infoDeSesion() }),
+  });
+
+  const cuerpo = (await res.json().catch(() => null)) as RespuestaSobre<{
+    accessToken: string;
+    refreshToken: string;
+    esNuevo?: boolean;
+  }> | null;
+
+  if (!res.ok || !cuerpo?.data) {
+    throw new ErrorApi(
+      cuerpo?.error?.code ?? 'ERROR',
+      cuerpo?.error?.message ?? 'No se pudo iniciar sesión con Google.',
+      res.status,
+    );
+  }
+
+  await guardar(CLAVE_ACCESS, cuerpo.data.accessToken);
+  await guardar(CLAVE_REFRESH, cuerpo.data.refreshToken);
+  marcarSesion(true);
+  return cuerpo.data.esNuevo ?? false;
+}
+
 export async function cerrarSesionLocal(): Promise<void> {
+  // Antes de borrar el token: darse de baja del push necesita mandar el
+  // request autenticado, y después de este punto ya no hay con qué.
+  await desregistrarPushToken();
+
   await borrar(CLAVE_ACCESS);
   await borrar(CLAVE_REFRESH);
   // El catálogo que quedó en disco es del médico que lo bajó. No es
@@ -294,6 +332,7 @@ export async function cerrarSesionLocal(): Promise<void> {
   // vendiendo, y dejarlo para el siguiente que entre en este teléfono no
   // tiene ningún sentido.
   await limpiarCache();
+  await cerrarSesionRevenueCat();
   marcarSesion(false);
 }
 
@@ -335,6 +374,20 @@ function marcarSesion(hay: boolean): void {
   if (hayTokenEnMemoria === hay) return;
   hayTokenEnMemoria = hay;
   for (const fn of oyentes) fn(hay);
+}
+
+/**
+ * Versión de hook de `haySesionSincrona`, reactiva a login/logout.
+ *
+ * Existe para poder habilitar una query (`enabled: useHaySesion()`) sin que
+ * el componente tenga que suscribirse a mano — se usa para identificar al
+ * médico ante RevenueCat apenas hay sesión, tanto en un login fresco como al
+ * restaurar una guardada.
+ */
+export function useHaySesion(): boolean {
+  const [hay, setHay] = useState(hayTokenEnMemoria);
+  useEffect(() => suscribirseASesion(setHay), []);
+  return hay;
 }
 
 export { BASE as URL_API };
