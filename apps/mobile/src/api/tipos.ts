@@ -235,6 +235,35 @@ export interface CondicionesYAlergias {
 
 // --- catálogo ----------------------------------------------------------------
 
+export interface PreguntaFrecuente {
+  pregunta: string;
+  respuesta: string;
+}
+
+export type CategoriaProblema =
+  | 'buscador'
+  | 'cuenta'
+  | 'notif'
+  | 'conexion'
+  | 'foto'
+  | 'suscripcion'
+  | 'general';
+
+export interface ProblemaComun {
+  categoria: CategoriaProblema;
+  titulo: string;
+  descripcion: string;
+}
+
+export interface ReporteAyuda {
+  nombre: string;
+  apellido: string;
+  telefono: string;
+  correo: string;
+  tipo: 'ERROR' | 'SUGERENCIA';
+  descripcion: string;
+}
+
 export interface Condicion {
   id: string;
   codigo: string;

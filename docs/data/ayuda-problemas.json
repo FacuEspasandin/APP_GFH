@@ -1,0 +1,57 @@
+[
+  {
+    "categoria": "buscador",
+    "titulo": "No logro encontrar un medicamento en el buscador",
+    "descripcion": "Se recomienda utilizar el principio activo en lugar del nombre comercial (por ejemplo, «losartán» en lugar de la marca). El catálogo aún no incluye la totalidad de los fármacos del mercado; si el producto buscado no aparece, puede reportarlo mediante el formulario disponible a continuación."
+  },
+  {
+    "categoria": "buscador",
+    "titulo": "Un fármaco no aparece en la sección «Similares»",
+    "descripcion": "Ocurre cuando el fármaco todavía no cuenta con código ATC registrado. No corresponde a un error de su parte, sino a contenido pendiente de completar."
+  },
+  {
+    "categoria": "cuenta",
+    "titulo": "He olvidado mi contraseña",
+    "descripcion": "La recuperación automática de contraseña aún no se encuentra disponible. Se solicita escribir a info@gfh.com desde el correo electrónico asociado a la cuenta para gestionar el restablecimiento de forma manual."
+  },
+  {
+    "categoria": "cuenta",
+    "titulo": "No puedo iniciar sesión mediante Google",
+    "descripcion": "Verifique que esté seleccionando la misma cuenta de Google utilizada durante el registro. Si cambió de cuenta, comuníquese con soporte, ya que la vinculación de una nueva cuenta requiere gestión manual."
+  },
+  {
+    "categoria": "notif",
+    "titulo": "No recibo notificaciones",
+    "descripcion": "Verifique dos configuraciones: el interruptor correspondiente en Perfil → Notificaciones, y el permiso de notificaciones otorgado a la aplicación en el sistema operativo del dispositivo."
+  },
+  {
+    "categoria": "conexion",
+    "titulo": "La consulta de un paciente demora considerablemente en cargar",
+    "descripcion": "Si la aplicación no fue utilizada durante un período prolongado, el servidor entra en estado de reposo y la primera solicitud puede demorar hasta dos minutos. Se recomienda reintentar o aguardar; esta demora ocurre una única vez por período de inactividad."
+  },
+  {
+    "categoria": "conexion",
+    "titulo": "El sistema indica ausencia de conexión pese a contar con señal",
+    "descripcion": "Es posible que el inconveniente corresponda al servidor y no a la conexión del dispositivo. Se recomienda aguardar unos minutos y reintentar; si el inconveniente persiste, repórtelo mediante el formulario correspondiente."
+  },
+  {
+    "categoria": "foto",
+    "titulo": "El reconocimiento automático de la fotografía del tratamiento presenta errores",
+    "descripcion": "El resultado mejora con buena iluminación y la receta extendida sobre una superficie plana, sin sombras. En todos los casos, cada línea puede corregirse manualmente antes de confirmar la carga — ningún dato se incorpora sin su revisión previa."
+  },
+  {
+    "categoria": "foto",
+    "titulo": "No puedo acceder a la cámara del dispositivo",
+    "descripcion": "Verifique que la aplicación cuente con el permiso de cámara habilitado en la configuración del sistema operativo."
+  },
+  {
+    "categoria": "suscripcion",
+    "titulo": "Realicé el pago pero mi suscripción no se refleja en la aplicación",
+    "descripcion": "La sincronización con la tienda correspondiente puede demorar algunos minutos. Si transcurrió más de una hora sin actualizarse, comuníquese con soporte indicando el correo utilizado en la compra."
+  },
+  {
+    "categoria": "general",
+    "titulo": "La aplicación presenta lentitud o comportamiento inusual",
+    "descripcion": "Se recomienda cerrar la sesión (Perfil → Cerrar sesión) e iniciar sesión nuevamente. Si el inconveniente persiste, repórtelo mediante el formulario correspondiente; no es necesario reinstalar la aplicación."
+  }
+]

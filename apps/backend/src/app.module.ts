@@ -6,6 +6,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { AlternativasService } from './aplicacion/alternativas/alternativas.service';
 import { AuthService } from './aplicacion/auth/auth.service';
+import { AyudaService } from './aplicacion/ayuda/ayuda.service';
 import { GoogleAuthService } from './aplicacion/auth/google-auth.service';
 import { HashService } from './aplicacion/auth/hash.service';
 import { CatalogoService } from './aplicacion/catalogo/catalogo.service';
@@ -27,6 +28,7 @@ import { PurgaSesionesService } from './infraestructura/mantenimiento/purga-sesi
 import { PrismaModule } from './infraestructura/prisma/prisma.module';
 import { AlternativasController } from './presentacion/alternativas.controller';
 import { AuthController } from './presentacion/auth.controller';
+import { AyudaController } from './presentacion/ayuda.controller';
 import { CockpitController } from './presentacion/cockpit.controller';
 import { PacientesController } from './presentacion/pacientes.controller';
 import { PerfilController, RevenueCatController } from './presentacion/perfil.controller';
@@ -64,6 +66,7 @@ import {
     AlternativasController,
     PerfilController,
     RevenueCatController,
+    AyudaController,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
@@ -88,6 +91,7 @@ import {
     PurgaSesionesService,
     PushService,
     NotificacionesCronService,
+    AyudaService,
   ],
 })
 export class AppModule {}

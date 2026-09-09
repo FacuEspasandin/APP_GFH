@@ -222,7 +222,11 @@ export const CampoTexto = forwardRef<
         placeholderTextColor={col.tenue}
         accessibilityLabel={etiqueta}
         accessibilityHint={rango ? `Entre ${etiquetaRango(rango)}` : undefined}
-        className="h-12 rounded-chip border bg-surface px-3.5 text-body text-ink"
+        className={
+          props.multiline
+            ? 'min-h-[96px] rounded-chip border bg-surface px-3.5 py-3 text-body text-ink'
+            : 'h-12 rounded-chip border bg-surface px-3.5 text-body text-ink'
+        }
         style={{ borderColor: borde, borderWidth: v.estado === 'ok' ? 1 : 1.5 }}
         {...props}
       />

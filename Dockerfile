@@ -45,6 +45,8 @@ COPY apps/backend/ apps/backend/
 # arrancar. La ruta debe quedar en /app/docs/data — es la que resuelve
 # `RUTA_REGLAS_POR_DEFECTO` subiendo cinco niveles desde el loader.
 COPY docs/data/reglas-interaccion.json docs/data/
+COPY docs/data/ayuda-faq.json docs/data/
+COPY docs/data/ayuda-problemas.json docs/data/
 
 RUN pnpm --filter @gfh/backend prisma:generate
 

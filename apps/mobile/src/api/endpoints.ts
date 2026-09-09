@@ -11,6 +11,9 @@ import type {
   Medico,
   Paciente,
   PacienteHepatico,
+  PreguntaFrecuente,
+  ProblemaComun,
+  ReporteAyuda,
   ResultadoChildPugh,
   Sesion,
 } from './tipos';
@@ -229,3 +232,13 @@ export const eliminarCuenta = (password: string) =>
 
 export const condicionesYAlergias = (pacienteId: string) =>
   api.get<CondicionesYAlergias>(`/perfil/pacientes/${pacienteId}/condiciones-alergias`);
+
+// --- 12. ayuda -----------------------------------------------------------
+
+/** Contenido servido desde el backend (`docs/data/`), no del bundle: cambiar
+ *  una pregunta es editar el JSON y redeployar, sin build nuevo de la app. */
+export const ayudaFaq = () => api.get<PreguntaFrecuente[]>('/ayuda/faq');
+
+export const ayudaProblemas = () => api.get<ProblemaComun[]>('/ayuda/problemas');
+
+export const reportarProblema = (datos: ReporteAyuda) => api.post<void>('/ayuda/reportes', datos);

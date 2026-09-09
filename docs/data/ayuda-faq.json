@@ -1,0 +1,42 @@
+[
+  {
+    "pregunta": "¿En qué se basan las recomendaciones clínicas de la aplicación?",
+    "respuesta": "Se basan en tablas y reglas deterministas, trazables a una fuente verificable. Ningún modelo de inteligencia artificial determina la severidad, la dosis ni las interacciones: ante los mismos datos de entrada, el resultado es siempre idéntico."
+  },
+  {
+    "pregunta": "¿Por qué algunas fichas de fármacos figuran como «borrador»?",
+    "respuesta": "Porque el contenido clínico correspondiente aún no fue validado por un farmacéutico. Se presenta de todas formas: ocultar una alerta por falta de revisión resultaría más riesgoso que mostrarla debidamente identificada."
+  },
+  {
+    "pregunta": "¿Por qué no se muestra información de ajuste hepático para un fármaco?",
+    "respuesta": "Porque todavía no existe una tabla de ajuste hepático cargada para ese fármaco. Ante la ausencia de un dato, el sistema indica que no dispone de información, nunca que no existe riesgo."
+  },
+  {
+    "pregunta": "¿Qué ocurre si el paciente no cuenta con un valor de clearance de creatinina (Clcr)?",
+    "respuesta": "El ajuste renal permanece en estado neutro y se notifica esta condición. El sistema no asume una función renal normal ante la ausencia del dato."
+  },
+  {
+    "pregunta": "¿Por qué un fármaco no aparece en la sección «Similares»?",
+    "respuesta": "La sección Similares agrupa los fármacos según su subgrupo químico (código ATC). Si el fármaco todavía no tiene ese código registrado, no se incluye en ningún grupo — esto no implica que carezca de equivalentes terapéuticos."
+  },
+  {
+    "pregunta": "¿Por qué la aplicación se cierra inesperadamente o la pantalla queda en blanco?",
+    "respuesta": "Puede tratarse de un error real de la aplicación. El sistema recibe automáticamente un aviso cuando esto sucede; de todas formas, se recomienda describir lo ocurrido mediante el formulario disponible al final de esta sección, ya que facilita su identificación."
+  },
+  {
+    "pregunta": "¿Por qué una alergia cruzada dentro de una misma familia farmacológica no bloquea la prescripción?",
+    "respuesta": "Únicamente la coincidencia exacta con severidad grave bloquea la prescripción. La reactividad cruzada dentro de una familia farmacológica (por ejemplo, entre dos penicilinas distintas) requiere confirmación profesional, ya que no siempre existe reacción cruzada real."
+  },
+  {
+    "pregunta": "¿Por qué el historial clínico de un paciente registrado con anterioridad aparece vacío?",
+    "respuesta": "El historial registra los cambios realizados a partir de la activación de esta funcionalidad; no reconstruye eventos previos. No se trata de un error, sino de una limitación del período de registro disponible."
+  },
+  {
+    "pregunta": "¿Qué ocurre si se pierde la conexión mientras se consulta un paciente?",
+    "respuesta": "Si la suscripción se encuentra vigente y el paciente fue consultado previamente con conexión activa, el sistema recalcula el resultado clínico en el dispositivo utilizando los últimos datos disponibles, identificándolo como «sin conexión» junto con la hora correspondiente. No es posible cargar ni modificar información sin conexión a internet."
+  },
+  {
+    "pregunta": "¿Por qué la aplicación no utiliza inteligencia artificial para determinar dosis o interacciones?",
+    "respuesta": "Por principio de diseño: ninguna decisión sobre severidad, dosis o interacciones se delega a inteligencia artificial en tiempo real. Toda la información proviene de tablas y reglas verificables, lo que garantiza trazabilidad y auditoría — ante los mismos datos, el resultado es siempre el mismo."
+  }
+]
