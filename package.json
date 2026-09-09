@@ -19,7 +19,8 @@
     "lint": "pnpm -r lint",
     "test:api": "pnpm --filter @gfh/backend test:api",
     "test:todo": "pnpm -r test && pnpm --filter @gfh/backend test:api",
-    "capturas": "node scripts/capturas.js"
+    "capturas": "node scripts/capturas.js",
+    "verificar": "pnpm db:generate && pnpm typecheck && pnpm test && pnpm lint && (pnpm --filter @gfh/mobile run doctor || echo 'expo-doctor marcó algo — revisar arriba antes de descartarlo como ya conocido.')"
   },
   "devDependencies": {
     "typescript": "^5.7.3",

@@ -31,7 +31,7 @@ function version(dir: string): string {
 }
 
 function mayor(v: string): string {
-  return v.replace(/^[~^]/, '').split('.')[0];
+  return v.replace(/^[~^]/, '').split('.')[0] ?? v;
 }
 
 describe('versiones de módulos nativos de Expo', () => {
