@@ -218,20 +218,24 @@ section { padding: clamp(15px, 2.2vw, 26px) 0 clamp(72px, 11vw, 128px); }
 }
 
 .menu { margin-left: auto; display: flex; align-items: center; gap: 4px; }
-.menu a {
+/* `.menu .cta` y no sólo `.menu a`: el botón de "Aviso de lanzamiento" es un
+   <button>, no un <a> — con el selector de tag nomás se quedaba sin padding,
+   radio ni tamaño de letra, y el navegador lo dibujaba con su estilo nativo
+   (por eso se veía "roto", chico y con borde por default). */
+.menu a, .menu .cta {
   color: #B9CCC4; text-decoration: none;
   font-size: 14px; font-weight: 500;
   padding: 9px 13px; border-radius: 9px;
   transition: color .16s ease, background .16s ease;
   white-space: nowrap;
 }
-.menu a:hover { color: #FFFFFF; background: rgba(255,255,255,.07); }
+.menu a:hover, .menu .cta:hover { color: #FFFFFF; background: rgba(255,255,255,.07); }
 .menu a.activo { color: #FFFFFF; }
-.menu a.cta {
+.menu .cta {
   margin-left: 8px;
   background: var(--menta); color: var(--noche); font-weight: 600;
 }
-.menu a.cta:hover { background: #6FE0BB; }
+.menu .cta:hover { background: #6FE0BB; }
 
 /* La hamburguesa: sólo en pantalla chica. */
 .hamb {
@@ -264,8 +268,8 @@ section { padding: clamp(15px, 2.2vw, 26px) 0 clamp(72px, 11vw, 128px); }
     transition: opacity .2s ease, transform .2s ease, visibility .2s;
   }
   .menu.abierto { visibility: visible; opacity: 1; transform: none; }
-  .menu a { padding: 13px 12px; font-size: 16px; }
-  .menu a.cta { margin: 8px 0 0; text-align: center; }
+  .menu a, .menu .cta { padding: 13px 12px; font-size: 16px; }
+  .menu .cta { margin: 8px 0 0; text-align: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
