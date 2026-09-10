@@ -133,6 +133,7 @@ section { padding: clamp(15px, 2.2vw, 26px) 0 clamp(72px, 11vw, 128px); }
 .sube.visible { opacity: 1; transform: none; }
 .sube.d1 { transition-delay: .08s; } .sube.d2 { transition-delay: .16s; }
 .sube.d3 { transition-delay: .24s; } .sube.d4 { transition-delay: .32s; }
+.sube.d5 { transition-delay: .4s; }
 
 @media (prefers-reduced-motion: reduce) {
   .sube { opacity: 1; transform: none; transition: none; }
