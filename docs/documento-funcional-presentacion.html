@@ -93,35 +93,94 @@ td b{color:var(--ink)}
 .aud .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--marca);margin-bottom:5px}
 .aud p{margin:0;font-size:12.5px;color:var(--suave)}
 
-/* ---------- renders / mockups ---------- */
-.galeria{display:flex;gap:22px;overflow-x:auto;padding:6px 2px 26px;margin:0 0 6px}
-.tel{flex:0 0 208px;width:208px;border-radius:22px;border:7px solid var(--ink);background:#fff;overflow:hidden;box-shadow:0 16px 34px -18px rgba(18,42,35,.4)}
-.tel-barra{height:32px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--linea);position:relative;background:#fff}
-.tel-barra .atras{position:absolute;left:10px;font-size:13px;color:var(--ink)}
-.tel-barra .marca{font-weight:800;font-size:10.5px;color:var(--marca);letter-spacing:.02em}
-.tel-barra .avatar{position:absolute;right:9px;width:15px;height:15px;border-radius:999px;background:var(--paper);border:1px solid var(--linea)}
-.tel-cuerpo{padding:9px 9px 44px;min-height:300px;font-size:8.6px;display:flex;flex-direction:column;gap:7px;background:var(--paper)}
-.tel-titulo{font-size:11px;font-weight:700;color:var(--ink);padding:2px 0 1px}
-.tel-fila{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:7px 8px;display:flex;justify-content:space-between;align-items:center;gap:6px}
-.tel-fila .n{font-weight:700;font-size:9px}
-.tel-fila .m{color:var(--suave);font-size:8px}
-.tel-badge{width:14px;height:14px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:700;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
-.tel-grid4{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.tel-cat{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:6px 7px}
-.tel-cat .tt{font-size:7.6px;color:var(--suave);margin-bottom:3px}
-.tel-cat .nn{font-size:12px;font-weight:700;font-family:'IBM Plex Mono',monospace}
-.tel-search{background:var(--surface);border:1px solid var(--linea);border-radius:999px;padding:6px 10px;font-size:8px;color:var(--tenue)}
-.tel-tool{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:7px 6px;text-align:center;font-size:7.6px;font-weight:600}
-.tel-tool .ic{width:18px;height:18px;border-radius:6px;background:var(--marca-suave);margin:0 auto 4px}
-.tel-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.tel-menu{position:absolute;left:7px;right:7px;bottom:8px;height:40px;background:var(--barra);border-radius:14px;display:flex;align-items:center;justify-content:space-around}
-.tel-menu .it{width:5px;height:5px;border-radius:999px;background:rgba(255,255,255,.55)}
-.tel-menu .it.on{background:#fff;width:7px;height:7px}
-.tel-wrap{position:relative}
-.tel-cap{margin-top:10px;font-size:12px;color:var(--suave);text-align:center;max-width:208px}
-.tel-cap b{color:var(--ink);display:block;font-size:12.5px;margin-bottom:2px}
-.tel-item-wrap{display:flex;flex-direction:column;align-items:center;flex:0 0 208px}
+/* ---------- renders / mockups ----------
+   Mismo componente que dibuja el teléfono en la landing (landing/src/estilos.css
+   §TELÉFONO), reusado tal cual — no una versión simplificada — para que la
+   densidad de información sea la real: la misma tarjeta de paciente, el mismo
+   anillo de Clcr, la misma grilla de categorías. */
+.galeria{display:grid;grid-template-columns:1fr 1fr;gap:32px 26px;margin:0 0 10px}
+.tel-item-wrap{display:flex;flex-direction:column;align-items:center}
+.tel{
+  --n0-bg:#DCFCE7; --n0-tx:#166534; --n1-bg:#FEF9C3; --n1-tx:#713F12;
+  --n2-bg:#FFEDD5; --n2-tx:#9A3412; --n3-bg:#FEE2E2; --n3-tx:#991B1B;
+  width:100%;max-width:280px;background:var(--paper);border-radius:28px;
+  border:8px solid var(--ink);box-shadow:0 22px 48px -22px rgba(18,42,35,.45);
+  overflow:hidden;color:var(--ink);font-size:12px;line-height:16px;position:relative;
+}
+.tel-barra{background:var(--surface);color:var(--ink);padding:11px 12px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--linea)}
+.tb-atras,.tb-avatar{width:24px;height:24px;border-radius:999px;display:grid;place-items:center;flex:none}
+.tb-atras{color:var(--ink)}
+.tb-atras svg{width:13px;height:13px}
+.tb-marca{font-weight:700;font-size:15px;letter-spacing:-.02em;color:var(--marca)}
+.tb-avatar{background:var(--linea);color:var(--suave)}
+.tb-avatar svg{width:12px;height:12px}
+.tel-cuerpo{padding:10px 11px 14px;display:flex;flex-direction:column;gap:9px;min-height:340px}
+.tel-titulo{font-size:15px;font-weight:700;padding:2px 1px 2px}
+.tel-eyeb{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--suave);margin:2px 0 -2px}
 
+.cab-pac{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:1px 1px 2px}
+.nom-pac{font-size:15px;font-weight:700;line-height:1.2}
+.edad-pac{font-size:10.5px;color:var(--suave);margin-top:1px}
+.cab-pac .mas{width:26px;height:26px;border-radius:999px;flex:none;background:var(--marca);color:#fff;display:grid;place-items:center;font-size:14px}
+
+.ficha{background:var(--surface);border-radius:12px;padding:11px;box-shadow:0 1px 2px rgba(18,42,35,.06),0 10px 22px -14px rgba(18,42,35,.3);position:relative}
+.ficha .fila{display:flex;align-items:center;gap:11px}
+.aro{position:relative;width:66px;height:66px;flex:none}
+.aro svg{width:66px;height:66px;display:block;transform:rotate(-90deg)}
+.aro .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.aro .cf{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;font-size:16px;font-weight:700;line-height:1}
+.aro .un{font-size:7px;color:var(--suave);margin-top:1px}
+.datos-clcr{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.clcr-lbl{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600}
+.dot-clcr{width:6px;height:6px;border-radius:999px;flex:none}
+.kdigo-chip{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.03em;border-radius:4px;padding:2px 6px}
+.origen-clcr{font-size:8.5px;color:var(--tenue)}
+.chips{margin-top:9px;padding-top:8px;border-top:1px solid var(--linea);display:flex;flex-wrap:wrap;gap:5px}
+.eyeb-chips{width:100%;font-size:7.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--suave);margin-bottom:1px}
+.chip-c{background:var(--marca-suave);color:var(--marca);border-radius:999px;padding:3px 8px;font-size:9px;font-weight:600}
+
+.hall{background:var(--surface);border-radius:10px;padding:9px 10px 9px 11px;border-left:3px solid var(--grave);box-shadow:0 1px 2px rgba(18,42,35,.05),0 8px 18px -14px rgba(18,42,35,.3)}
+.hall .nom{font-size:10.5px;font-weight:600;line-height:14px}
+.hall .txt{font-size:9px;line-height:12.5px;color:var(--suave);margin-top:3px}
+
+.grid-cat{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cat-tile{background:var(--surface);border-radius:9px;padding:8px 9px 9px;border-left:3px solid transparent;box-shadow:0 1px 2px rgba(18,42,35,.05),0 6px 14px -12px rgba(18,42,35,.3)}
+.cat-tile.off{opacity:.68;border-left-color:transparent}
+.cat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.cat-top svg{width:14px;height:14px}
+.cat-n{width:16px;height:16px;border-radius:999px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:grid;place-items:center}
+.cat-n.off{background:var(--linea);color:var(--suave)}
+.cat-lbl{font-size:9px;font-weight:600}
+
+.tel-search{background:var(--surface);border:1px solid var(--linea);border-radius:999px;padding:8px 12px;font-size:10px;color:var(--tenue);display:flex;align-items:center;gap:7px}
+.tel-search svg{width:13px;height:13px;color:var(--tenue);flex:none}
+.tel-fila{background:var(--surface);border:1px solid var(--linea);border-radius:9px;padding:9px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tel-fila .n{font-weight:600;font-size:10.5px}
+.tel-fila .m{color:var(--suave);font-size:9px;margin-top:1px}
+.tel-badge{width:20px;height:20px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+
+.segmentado{background:var(--paper);border-radius:9px;padding:3px;display:flex;gap:2px}
+.segmentado .seg{flex:1;text-align:center;padding:6px 4px;border-radius:7px;font-size:9px;font-weight:600;color:var(--suave)}
+.segmentado .seg.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(18,42,35,.15)}
+
+.tel-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.tel-tool{background:var(--surface);border:1px solid var(--linea);border-radius:9px;padding:9px 6px;text-align:center;font-size:8.5px;font-weight:600}
+.tel-tool .ic{width:24px;height:24px;border-radius:7px;background:var(--marca-suave);color:var(--marca);margin:0 auto 5px;display:grid;place-items:center}
+.tel-tool .ic svg{width:13px;height:13px}
+.tel-tool-pago{background:var(--surface);border:1px solid var(--linea);border-radius:9px;padding:8px 9px;display:flex;align-items:center;gap:8px;font-size:9.5px;font-weight:600;opacity:.85}
+.tel-tool-pago .ic{width:20px;height:20px;border-radius:6px;background:var(--paper);color:var(--suave);display:grid;place-items:center;flex:none}
+.tel-tool-pago .ic svg{width:11px;height:11px}
+.tel-tool-pago .cand{margin-left:auto;font-size:12px;color:var(--tenue)}
+
+.tel-menu{background:var(--barra);min-height:42px;display:flex;align-items:flex-start;padding:7px 4px 5px;position:relative;margin-top:auto;border-radius:11px 11px 0 0}
+.tm-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;color:rgba(255,255,255,.6);font-size:7.5px;font-weight:600}
+.tm-item svg{width:15px;height:15px}
+.tm-item.on{color:#fff}
+.tel-menu .centro{position:absolute;left:50%;top:-18px;transform:translateX(-50%);width:42px;height:42px;border-radius:999px;flex:none;background:#fff;border:3px solid var(--barra);color:var(--barra);display:grid;place-items:center;box-shadow:0 5px 14px rgba(18,42,35,.3)}
+.tel-menu .centro svg{width:16px;height:16px}
+
+.tel-cap{margin-top:12px;font-size:12.5px;color:var(--suave);text-align:center;max-width:260px}
+.tel-cap b{color:var(--ink);display:block;font-size:13px;margin-bottom:2px}
 .nota-render{font-size:12px;color:var(--tenue);font-style:italic;margin:0 0 20px}
 
 /* ---------- glosario ---------- */
@@ -562,76 +621,152 @@ td b{color:var(--ink)}
 
       <div class="galeria">
 
-        <div class="tel-item-wrap">
-          <div class="tel-wrap"><div class="tel">
-            <div class="tel-barra"><span class="atras">‹</span><span class="marca">GFH</span><span class="avatar"></span></div>
-            <div class="tel-cuerpo">
-              <div class="tel-titulo">Pacientes</div>
-              <div class="tel-fila"><div><div class="n">Rodríguez, Ana María</div><div class="m">78 años · Clcr 23,6</div></div><div class="tel-badge" style="background:var(--grave-suave);color:var(--grave)">4</div></div>
-              <div class="tel-fila"><div><div class="n">Pereyra, Julio</div><div class="m">64 años · Clcr 71</div></div><div class="tel-badge" style="background:var(--media-suave);color:#92400E">1</div></div>
-              <div class="tel-fila"><div><div class="n">Fontán, Lucía</div><div class="m">35 años · embarazo 24 sem</div></div><div class="tel-badge" style="background:var(--ok-suave);color:#166534">0</div></div>
-              <div class="tel-menu"><span class="it on"></span><span class="it"></span><span class="it"></span><span class="it"></span></div>
+        <!-- ============ PACIENTES ============ -->
+        <div class="tel-item-wrap"><div class="tel">
+          <div class="tel-barra">
+            <span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span>
+            <span class="tb-marca">GFH</span>
+            <span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span>
+          </div>
+          <div class="tel-cuerpo">
+            <div class="tel-titulo">Pacientes</div>
+            <div class="tel-eyeb">Guardia — hoy</div>
+            <div class="tel-fila"><div><div class="n">Rodríguez, Ana María</div><div class="m">78 años · Clcr 23,6 mL/min</div></div><div class="tel-badge" style="background:var(--n3-bg);color:var(--n3-tx)">4</div></div>
+            <div class="tel-fila"><div><div class="n">Pereyra, Julio</div><div class="m">64 años · Clcr 71 mL/min</div></div><div class="tel-badge" style="background:var(--n1-bg);color:var(--n1-tx)">1</div></div>
+            <div class="tel-eyeb" style="margin-top:2px">Sin grupo</div>
+            <div class="tel-fila"><div><div class="n">Fontán, Lucía</div><div class="m">35 años · embarazo 24 sem</div></div><div class="tel-badge" style="background:var(--n0-bg);color:var(--n0-tx)">0</div></div>
+            <div class="tel-fila"><div><div class="n">Batista, Carlos</div><div class="m">57 años · Clcr 48 mL/min</div></div><div class="tel-badge" style="background:var(--n2-bg);color:var(--n2-tx)">2</div></div>
+            <div class="tel-menu">
+              <div class="tm-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div>
+              <i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div>
             </div>
-          </div></div>
-          <p class="tel-cap"><b>Pacientes</b>lista propia, organizada en grupos</p>
+          </div>
+        </div>
+        <p class="tel-cap"><b>Pacientes</b>lista propia organizada en grupos, con badge de <i>cantidad</i> de hallazgos por fila — escala distinta de la severidad clínica</p>
         </div>
 
-        <div class="tel-item-wrap">
-          <div class="tel-wrap"><div class="tel">
-            <div class="tel-barra"><span class="atras">‹</span><span class="marca">GFH</span><span class="avatar"></span></div>
-            <div class="tel-cuerpo">
-              <div class="tel-titulo">Rodríguez, Ana María · 78</div>
-              <div class="tel-grid4">
-                <div class="tel-cat" style="border-left:3px solid var(--grave)"><div class="tt">Interacciones</div><div class="nn" style="color:var(--grave)">2</div></div>
-                <div class="tel-cat" style="border-left:3px solid var(--media)"><div class="tt">Condiciones</div><div class="nn" style="color:#92400E">3</div></div>
-                <div class="tel-cat" style="border-left:3px solid var(--grave)"><div class="tt">Ajuste renal</div><div class="nn" style="color:var(--grave)">4</div></div>
-                <div class="tel-cat" style="border-left:3px solid var(--tenue)"><div class="tt">Ajuste hepático</div><div class="nn" style="color:var(--tenue)">—</div></div>
+        <!-- ============ COCKPIT DE PACIENTE ============ -->
+        <div class="tel-item-wrap"><div class="tel">
+          <div class="tel-barra">
+            <span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span>
+            <span class="tb-marca">GFH</span>
+            <span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span>
+          </div>
+          <div class="tel-cuerpo">
+            <div class="cab-pac">
+              <div><div class="nom-pac">Rodríguez, Ana María</div><div class="edad-pac">78 años</div></div>
+              <span class="mas">+</span>
+            </div>
+            <div class="ficha">
+              <div class="fila">
+                <div class="aro">
+                  <svg viewBox="0 0 100 100" aria-hidden="true">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#EAEFEB" stroke-width="10"></circle>
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#EF4444" stroke-width="10" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="203"></circle>
+                  </svg>
+                  <div class="mid"><span class="cf" style="color:#EF4444">23,6</span><span class="un">mL/min</span></div>
+                </div>
+                <div class="datos-clcr">
+                  <div class="clcr-lbl" style="color:#EF4444"><i class="dot-clcr" style="background:#EF4444"></i>Clcr Est.</div>
+                  <span class="kdigo-chip" style="color:#EF4444;background:#FEE7E7">KDIGO G4</span>
+                  <div class="origen-clcr">Calculado · hace 2 meses</div>
+                </div>
               </div>
-              <div class="tel-titulo" style="margin-top:2px">Tratamiento</div>
-              <div class="tel-fila"><div class="n">Zocor</div><div class="tel-badge" style="background:var(--grave-suave);color:var(--grave)">2</div></div>
-              <div class="tel-fila"><div class="n">Ibuprofeno</div><div class="tel-badge" style="background:var(--grave-suave);color:var(--grave)">1</div></div>
-              <div class="tel-menu"><span class="it"></span><span class="it"></span><span class="it"></span><span class="it"></span></div>
-            </div>
-          </div></div>
-          <p class="tel-cap"><b>Cockpit de paciente</b>las cinco verificaciones, por categoría</p>
-        </div>
-
-        <div class="tel-item-wrap">
-          <div class="tel-wrap"><div class="tel">
-            <div class="tel-barra"><span class="atras">‹</span><span class="marca">GFH</span><span class="avatar"></span></div>
-            <div class="tel-cuerpo">
-              <div class="tel-search">Buscar fármaco…</div>
-              <div class="tel-titulo">Catálogo</div>
-              <div class="tel-fila"><div class="n">Amoxicilina 500 mg</div></div>
-              <div class="tel-fila"><div class="n">Coumadin 5 mg</div></div>
-              <div class="tel-fila"><div class="n">Digoxina 0,25 mg</div></div>
-              <div class="tel-fila"><div class="n">Enalapril 10 mg</div></div>
-              <div class="tel-menu"><span class="it"></span><span class="it"></span><span class="it on"></span><span class="it"></span></div>
-            </div>
-          </div></div>
-          <p class="tel-cap"><b>Buscador</b>a nivel de producto comercial</p>
-        </div>
-
-        <div class="tel-item-wrap">
-          <div class="tel-wrap"><div class="tel">
-            <div class="tel-barra"><span class="atras">‹</span><span class="marca">GFH</span><span class="avatar"></span></div>
-            <div class="tel-cuerpo">
-              <div class="tel-titulo">Herramientas</div>
-              <div class="tel-grid3">
-                <div class="tel-tool"><div class="ic"></div>Clcr</div>
-                <div class="tel-tool"><div class="ic"></div>Child-Pugh</div>
-                <div class="tel-tool"><div class="ic"></div>Colesterol</div>
-                <div class="tel-tool"><div class="ic"></div>Riesgo CV</div>
-                <div class="tel-tool"><div class="ic"></div>IMC</div>
-                <div class="tel-tool"><div class="ic"></div>HbA1c</div>
+              <div class="chips">
+                <span class="eyeb-chips">Condiciones activas</span>
+                <span class="chip-c">HTA</span>
+                <span class="chip-c">Úlcera</span>
+                <span class="chip-c">Embarazo · 24 sem</span>
               </div>
-              <div class="tel-titulo" style="margin-top:2px">Con suscripción</div>
-              <div class="tel-fila"><div class="n">Interacciones</div></div>
-              <div class="tel-fila"><div class="n">Ajuste renal por fármaco</div></div>
-              <div class="tel-menu"><span class="it"></span><span class="it"></span><span class="it"></span><span class="it"></span></div>
             </div>
-          </div></div>
-          <p class="tel-cap"><b>Herramientas</b>seis libres, cuatro con suscripción</p>
+            <div class="eyeb">Lo más grave</div>
+            <div class="hall"><div class="nom">Zocor — Embarazo</div><div class="txt">Estatina en embarazo: el colesterol es necesario para el desarrollo fetal. Suspender.</div></div>
+            <div class="eyeb">Por categoría</div>
+            <div class="grid-cat">
+              <div class="cat-tile" style="border-left-color:#EF4444"><div class="cat-top"><svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.7" stroke-linecap="round"><path d="M7 7h4a5 5 0 015 5v5"></path><circle cx="5" cy="7" r="2.2"></circle><circle cx="19" cy="17" r="2.2"></circle></svg><span class="cat-n" style="background:var(--n2-bg);color:var(--n2-tx)">2</span></div><div class="cat-lbl">Interacciones</div></div>
+              <div class="cat-tile" style="border-left-color:#F59E0B"><div class="cat-top"><svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3l9-16z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg><span class="cat-n" style="background:var(--n3-bg);color:var(--n3-tx)">3</span></div><div class="cat-lbl">Condiciones</div></div>
+              <div class="cat-tile" style="border-left-color:#EF4444"><div class="cat-top"><svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.4 6 10.4A6 6 0 016 13.4C6 9.4 12 3 12 3z"></path></svg><span class="cat-n" style="background:var(--n3-bg);color:var(--n3-tx)">4</span></div><div class="cat-lbl">Ajuste renal</div></div>
+              <div class="cat-tile off"><div class="cat-top"><svg viewBox="0 0 24 24" fill="none" stroke="#8CA39A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h11c3 0 5 2 5 5 0 4-3 7-7 7H9c-3 0-5-2-5-5V6z"></path><path d="M9 6v5"></path></svg><span class="cat-n off">—</span></div><div class="cat-lbl">Ajuste hepático</div></div>
+            </div>
+            <div class="tel-menu">
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div>
+              <i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div>
+            </div>
+          </div>
+        </div>
+        <p class="tel-cap"><b>Cockpit de paciente</b>anillo de Clcr con grado KDIGO, condiciones activas, hallazgo más grave y las cuatro categorías con su conteo</p>
+        </div>
+
+        <!-- ============ BUSCADOR / FICHA TÉCNICA ============ -->
+        <div class="tel-item-wrap"><div class="tel">
+          <div class="tel-barra">
+            <span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span>
+            <span class="tb-marca">GFH</span>
+            <span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span>
+          </div>
+          <div class="tel-cuerpo">
+            <div class="tel-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Coumadin</div>
+            <div class="tel-titulo" style="font-size:13px">Coumadin 5 mg</div>
+            <div class="tel-eyeb" style="margin-top:-6px">Laboratorio X · comprimidos</div>
+            <div class="segmentado"><span class="seg on">Info</span><span class="seg">Ficha técnica</span><span class="seg">Similares</span></div>
+            <div class="eyeb-chips" style="margin-top:2px">Restricciones de uso</div>
+            <div class="grid-cat">
+              <div class="cat-tile" style="border-left-color:#F59E0B"><div class="cat-lbl">Renal</div><div style="font-size:8.5px;color:var(--suave);margin-top:2px">Ajustar dosis</div></div>
+              <div class="cat-tile off"><div class="cat-lbl">Hepático</div><div style="font-size:8.5px;color:var(--suave);margin-top:2px">Sin datos</div></div>
+              <div class="cat-tile" style="border-left-color:#EF4444"><div class="cat-lbl">Embarazo</div><div style="font-size:8.5px;color:var(--suave);margin-top:2px">Contraindicado</div></div>
+              <div class="cat-tile off"><div class="cat-lbl">Lactancia</div><div style="font-size:8.5px;color:var(--suave);margin-top:2px">Sin restricción</div></div>
+            </div>
+            <div class="tel-fila"><div class="n" style="font-weight:400;color:var(--suave)">Simular interacciones con este fármaco ›</div></div>
+            <div class="tel-menu">
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div>
+              <i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i>
+              <div class="tm-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div>
+            </div>
+          </div>
+        </div>
+        <p class="tel-cap"><b>Buscador — ficha de fármaco</b>producto comercial + laboratorio, pestañas Info/Ficha técnica/Similares y las cuatro restricciones de uso</p>
+        </div>
+
+        <!-- ============ HERRAMIENTAS ============ -->
+        <div class="tel-item-wrap"><div class="tel">
+          <div class="tel-barra">
+            <span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span>
+            <span class="tb-marca">GFH</span>
+            <span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span>
+          </div>
+          <div class="tel-cuerpo">
+            <div class="tel-titulo" style="font-size:13px">Herramientas</div>
+            <div class="tel-eyeb" style="margin-top:-4px">Calculadoras — libres</div>
+            <div class="tel-grid3">
+              <div class="tel-tool"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3s6 6.4 6 10.4A6 6 0 016 13.4C6 9.4 12 3 12 3z"></path></svg></div>Clearance</div>
+              <div class="tel-tool"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h11c3 0 5 2 5 5 0 4-3 7-7 7H9c-3 0-5-2-5-5V6z"></path><path d="M9 6v5"></path></svg></div>Child-Pugh</div>
+              <div class="tel-tool"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h4l3-9 3 13 3-8h3"></path></svg></div>Colesterol</div>
+              <div class="tel-tool"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"></path></svg></div>Riesgo CV</div>
+              <div class="tel-tool"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7v5l3.3 2"></path></svg></div>IMC</div>
+              <div class="tel-tool"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 7.8 6 11.2A6 6 0 016 14.2C6 10.8 9 7 12 3z"></path><path d="M9.5 15h5"></path></svg></div>HbA1c</div>
+            </div>
+            <div class="tel-eyeb">Contra el catálogo — con suscripción</div>
+            <div class="tel-tool-pago"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M7 7h4a5 5 0 015 5v5"></path><circle cx="5" cy="7" r="2.2"></circle><circle cx="19" cy="17" r="2.2"></circle></svg></span>Interacción fármaco-fármaco<span class="cand">🔒</span></div>
+            <div class="tel-tool-pago"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3s6 6.4 6 10.4A6 6 0 016 13.4C6 9.4 12 3 12 3z"></path></svg></span>Ajuste renal por fármaco<span class="cand">🔒</span></div>
+            <div class="tel-tool-pago"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3l9-16z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg></span>Condición y alergia<span class="cand">🔒</span></div>
+            <div class="tel-menu">
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div>
+              <i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div>
+              <div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div>
+            </div>
+          </div>
+        </div>
+        <p class="tel-cap"><b>Herramientas</b>seis calculadoras libres arriba, cuatro que cruzan el catálogo abajo (requieren suscripción), accesibles sin cargar un paciente</p>
         </div>
 
       </div>
