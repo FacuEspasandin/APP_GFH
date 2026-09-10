@@ -45,16 +45,19 @@ export function Pestanas<T extends string>({
             }}
             accessibilityRole="tab"
             accessibilityState={{ selected: esActiva }}
-            className="flex-1 flex-row items-center justify-center px-1.5 pb-2.5 pt-3"
+            className="flex-1 flex-row items-center justify-center px-1 pb-2.5 pt-3"
             style={{
               borderBottomWidth: 2,
               borderBottomColor: esActiva ? col.primary : 'transparent',
             }}
           >
+            {/* Sin límite de líneas: un rótulo largo ("Ficha técnica",
+                "Presentaciones") envuelve a dos en vez de cortarse con
+                puntos suspensivos — las columnas son de igual ancho y
+                React Native ya estira todas a la altura de la más alta. */}
             <Text
-              className="font-medio"
-              numberOfLines={1}
-              style={{ color: esActiva ? col.primary : col.inkSuave, fontSize: 13 }}
+              className="font-medio text-center"
+              style={{ color: esActiva ? col.primary : col.inkSuave, fontSize: 13, lineHeight: 16 }}
             >
               {p.titulo}
             </Text>
