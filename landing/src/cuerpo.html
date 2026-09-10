@@ -660,40 +660,38 @@
   }
 
   /*
-   * Cuatro fármacos con ficha real, tomados de las fichas técnicas
-   * curadas (fuente MONOGRAFIA, no la tabla SEN genérica) — los mismos
-   * cortes de Clcr y el mismo texto que devuelve el motor, consultados
-   * directo contra `AjusteRenalFarmaco`/`RangoClcrFarmaco`. Antes los
-   * cuatro fármacos de este demo compartían el mismo corte inventado
-   * ("≤50 mL/min") sin relación con ninguna ficha real.
+   * Cuatro fármacos de la cola real de curación (31 con ficha técnica
+   * cargada), elegidos porque tienen instrucción concreta en TODAS sus
+   * bandas — nada de un corte pelado sin más detalle que "contraindicada".
+   * Los cortes de Clcr y el texto son los mismos que devuelve el motor,
+   * consultados directo contra `AjusteRenalFarmaco`/`RangoClcrFarmaco`.
    */
   var RENALES = [
-    { n: 'Metformina', rangos: [
-      { min: 90, max: null, tipo: 'SIN_AJUSTE' },
-      { min: 60, max: 89, tipo: 'REDUCIR_DOSIS', p: 'Dosis máxima 3 g/día.' },
-      { min: 45, max: 59, tipo: 'REDUCIR_DOSIS', p: 'Dosis máxima 2 g/día.' },
-      { min: 30, max: 44, tipo: 'REDUCIR_DOSIS', p: 'Dosis máxima 1 g/día.' },
-      { min: null, max: 29, tipo: 'CONTRAINDICADO', p: 'Contraindicada.' }
+    { n: 'Digoxina', rangos: [
+      { min: 50, max: 100, tipo: 'SIN_AJUSTE' },
+      { min: 10, max: 50, tipo: 'REDUCIR_DOSIS_Y_INTERVALO', p: '75–25 % de la dosis, o extender el intervalo a cada 36 h.' },
+      { min: null, max: 10, tipo: 'REDUCIR_DOSIS_Y_INTERVALO', p: '25–10 % de la dosis, o extender el intervalo a cada 48 h.' }
     ]},
-    { n: 'Rosuvastatina', rangos: [
-      { min: 60, max: null, tipo: 'SIN_AJUSTE' },
-      { min: 30, max: 59, tipo: 'REDUCIR_DOSIS', p: 'La dosis de 40 mg/día está contraindicada.' },
-      { min: null, max: 29, tipo: 'CONTRAINDICADO', p: 'Contraindicada.' }
+    { n: 'Metotrexato', rangos: [
+      { min: 50, max: 100, tipo: 'SIN_AJUSTE' },
+      { min: 30, max: 50, tipo: 'REDUCIR_DOSIS', p: '50 % de la dosis habitual.' },
+      { min: 10, max: 30, tipo: 'EVITAR', p: 'Evitar.' },
+      { min: null, max: 10, tipo: 'EVITAR', p: 'Evitar.' }
+    ]},
+    { n: 'Enalapril', rangos: [
+      { min: 50, max: 100, tipo: 'SIN_AJUSTE' },
+      { min: 10, max: 50, tipo: 'REDUCIR_DOSIS', p: '75–100 % de la dosis habitual.' },
+      { min: null, max: 10, tipo: 'REDUCIR_DOSIS', p: '50 % de la dosis habitual.' }
     ]},
     { n: 'Claritromicina', rangos: [
       { min: 30, max: null, tipo: 'SIN_AJUSTE' },
       { min: 10, max: 29, tipo: 'REDUCIR_DOSIS', p: 'Mitad de dosis, igual intervalo.' },
       { min: null, max: 9, tipo: 'REDUCIR_DOSIS_Y_INTERVALO', p: 'Mitad de dosis, una vez al día.' }
-    ]},
-    { n: 'Levofloxacino', rangos: [
-      { min: 51, max: null, tipo: 'SIN_AJUSTE' },
-      { min: 20, max: 50, tipo: 'REDUCIR_DOSIS_Y_INTERVALO', p: 'Reducir de 500 a 250 mg c/24 h; si la dosis indicada es 750 mg, aumentar el intervalo a c/48 h.' },
-      { min: null, max: 19, tipo: 'REDUCIR_DOSIS', p: '125–250 mg c/24 h según gravedad de la infección.' }
     ]}
   ];
 
   var TIPO_SEV = {
-    CONTRAINDICADO: { s: 'Contraindicado', c: 'g' },
+    EVITAR: { s: 'Evitar', c: 'g' },
     REDUCIR_DOSIS: { s: 'Reducir dosis', c: '' },
     REDUCIR_DOSIS_Y_INTERVALO: { s: 'Reducir dosis e intervalo', c: '' }
   };
