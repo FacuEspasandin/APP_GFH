@@ -1,0 +1,744 @@
+<title>Documento funcional — GFH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ink:#122A23; --suave:#5C6B64; --tenue:#8CA39A; --paper:#F3F6F3; --linea:#DDE5E0;
+  --surface:#FFFFFF; --marca:#005228; --marca-suave:#E7F0EA; --barra:#006D37;
+  --grave:#EF4444; --grave-suave:#FEE7E7; --media:#F59E0B; --media-suave:#FEF3C7;
+  --ok:#22C55E; --ok-suave:#DCFCE7; --fondo:#EEF1EC;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--ink);font:15px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.num,.mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+
+.hoja{max-width:920px;margin:0 auto;padding:0 28px 80px}
+
+/* ---------- portada ---------- */
+.portada{padding:80px 28px 60px;text-align:center;background:var(--marca);color:#fff;margin-bottom:0}
+.portada .marca-grande{font-size:15px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin-bottom:34px}
+.portada h1{font-size:40px;line-height:1.2;font-weight:800;letter-spacing:-.5px;margin:0 0 20px;max-width:640px;margin-left:auto;margin-right:auto}
+.portada .lema{font-size:17px;line-height:1.6;opacity:.92;max-width:520px;margin:0 auto 34px}
+.portada .meta{font-size:12.5px;opacity:.72;letter-spacing:.03em}
+.portada .meta b{opacity:1}
+
+/* ---------- índice ---------- */
+.indice{background:var(--surface);border:1px solid var(--linea);border-radius:14px;padding:26px 30px;margin:-40px 0 56px;box-shadow:0 18px 40px -26px rgba(18,42,35,.35)}
+.indice h2{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--tenue);margin:0 0 14px;font-weight:700}
+.indice ol{margin:0;padding-left:20px;columns:2;column-gap:34px}
+.indice li{font-size:13.5px;margin-bottom:9px;break-inside:avoid;color:var(--ink)}
+.indice li b{font-weight:600}
+.indice li span{display:block;font-size:11.5px;color:var(--suave);font-weight:400}
+
+/* ---------- partes y secciones ---------- */
+.parte{margin:64px 0 0;page-break-before:always}
+.parte:first-of-type{page-break-before:auto}
+.parte-tapa{border-left:4px solid var(--marca);padding-left:16px;margin-bottom:26px}
+.parte-eyebrow{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--marca)}
+.parte-tapa h2{font-size:25px;font-weight:700;letter-spacing:-.3px;margin:4px 0 0}
+
+.sec{margin:34px 0 0;page-break-inside:avoid}
+.sec h3{font-size:17px;font-weight:700;margin:0 0 10px;letter-spacing:-.1px}
+.sec h3 .n{color:var(--tenue);font-weight:600;margin-right:7px}
+.sec p{margin:0 0 12px;color:var(--ink)}
+.sec p.suave{color:var(--suave)}
+.sec ul,.sec ol{margin:0 0 12px;padding-left:22px}
+.sec li{margin-bottom:7px}
+
+.cita{background:var(--marca-suave);border-left:3px solid var(--marca);border-radius:0 10px 10px 0;padding:14px 18px;margin:0 0 16px;font-size:15px;font-weight:600;color:var(--marca)}
+
+/* ---------- tablas ---------- */
+.tabla-envoltorio{overflow-x:auto;margin:0 0 18px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--surface);border:1px solid var(--linea);border-radius:10px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--linea);vertical-align:top}
+th{background:var(--paper);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--suave);font-weight:700}
+tr:last-child td{border-bottom:0}
+td b{color:var(--ink)}
+
+/* ---------- tarjetas de verificación ---------- */
+.grid-verif{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:0 0 18px}
+.v-card{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:16px 18px}
+.v-card .tope{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.v-card .num-badge{width:22px;height:22px;border-radius:7px;background:var(--marca);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.v-card h4{margin:0;font-size:14.5px;font-weight:700}
+.v-card p{margin:0;font-size:13px;color:var(--suave)}
+
+/* ---------- reglas no negociables ---------- */
+.reglas{display:flex;flex-direction:column;gap:10px;margin:0 0 18px}
+.regla{display:flex;gap:13px;background:var(--surface);border:1px solid var(--linea);border-radius:10px;padding:13px 16px}
+.regla .num-badge{width:24px;height:24px;border-radius:999px;background:var(--ink);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
+.regla b{display:block;font-size:13.5px;margin-bottom:2px}
+.regla span{font-size:12.5px;color:var(--suave)}
+
+/* ---------- cifras ---------- */
+.cifras{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 18px;padding:0;list-style:none}
+.cifras li{background:var(--surface);border:1px solid var(--linea);border-radius:9px;padding:9px 14px;font-size:12.5px;color:var(--suave)}
+.cifras b{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--ink);font-size:13.5px}
+
+/* ---------- planes ---------- */
+.planes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 18px}
+.plan{background:var(--surface);border:1px solid var(--linea);border-radius:14px;padding:20px}
+.plan.pro{border-color:var(--marca);position:relative}
+.plan.pro::before{content:"PRO";position:absolute;top:-9px;right:16px;background:var(--marca);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;padding:3px 9px;border-radius:999px}
+.plan h4{margin:0 0 2px;font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:var(--tenue)}
+.plan .precio{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;margin:2px 0 10px}
+.plan .precio small{font-size:12px;font-weight:400;color:var(--suave)}
+.plan ul{margin:0;padding-left:18px}
+.plan li{font-size:12.5px;margin-bottom:6px;color:var(--ink)}
+
+/* ---------- audiencias ---------- */
+.audiencias{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:0 0 18px}
+.aud{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:16px 17px}
+.aud .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--marca);margin-bottom:5px}
+.aud p{margin:0;font-size:12.5px;color:var(--suave)}
+
+/* ---------- renders / mockups ---------- */
+.galeria{display:flex;gap:22px;overflow-x:auto;padding:6px 2px 26px;margin:0 0 6px}
+.tel{flex:0 0 208px;width:208px;border-radius:22px;border:7px solid var(--ink);background:#fff;overflow:hidden;box-shadow:0 16px 34px -18px rgba(18,42,35,.4)}
+.tel-barra{height:32px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--linea);position:relative;background:#fff}
+.tel-barra .atras{position:absolute;left:10px;font-size:13px;color:var(--ink)}
+.tel-barra .marca{font-weight:800;font-size:10.5px;color:var(--marca);letter-spacing:.02em}
+.tel-barra .avatar{position:absolute;right:9px;width:15px;height:15px;border-radius:999px;background:var(--paper);border:1px solid var(--linea)}
+.tel-cuerpo{padding:9px 9px 44px;min-height:300px;font-size:8.6px;display:flex;flex-direction:column;gap:7px;background:var(--paper)}
+.tel-titulo{font-size:11px;font-weight:700;color:var(--ink);padding:2px 0 1px}
+.tel-fila{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:7px 8px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.tel-fila .n{font-weight:700;font-size:9px}
+.tel-fila .m{color:var(--suave);font-size:8px}
+.tel-badge{width:14px;height:14px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:700;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+.tel-grid4{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tel-cat{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:6px 7px}
+.tel-cat .tt{font-size:7.6px;color:var(--suave);margin-bottom:3px}
+.tel-cat .nn{font-size:12px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.tel-search{background:var(--surface);border:1px solid var(--linea);border-radius:999px;padding:6px 10px;font-size:8px;color:var(--tenue)}
+.tel-tool{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:7px 6px;text-align:center;font-size:7.6px;font-weight:600}
+.tel-tool .ic{width:18px;height:18px;border-radius:6px;background:var(--marca-suave);margin:0 auto 4px}
+.tel-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tel-menu{position:absolute;left:7px;right:7px;bottom:8px;height:40px;background:var(--barra);border-radius:14px;display:flex;align-items:center;justify-content:space-around}
+.tel-menu .it{width:5px;height:5px;border-radius:999px;background:rgba(255,255,255,.55)}
+.tel-menu .it.on{background:#fff;width:7px;height:7px}
+.tel-wrap{position:relative}
+.tel-cap{margin-top:10px;font-size:12px;color:var(--suave);text-align:center;max-width:208px}
+.tel-cap b{color:var(--ink);display:block;font-size:12.5px;margin-bottom:2px}
+.tel-item-wrap{display:flex;flex-direction:column;align-items:center;flex:0 0 208px}
+
+.nota-render{font-size:12px;color:var(--tenue);font-style:italic;margin:0 0 20px}
+
+/* ---------- glosario ---------- */
+.glosario{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin:0 0 10px}
+.glosario dt{font-weight:700;font-size:13px;font-family:'IBM Plex Mono',monospace;color:var(--marca)}
+.glosario dd{margin:2px 0 12px;font-size:12.5px;color:var(--suave)}
+
+.pie-doc{margin-top:70px;padding-top:20px;border-top:1px solid var(--linea);font-size:11.5px;color:var(--tenue);text-align:center}
+
+@media print{
+  body{background:#fff}
+  .parte{page-break-before:always}
+  .indice{box-shadow:none}
+  .galeria{overflow-x:visible;flex-wrap:wrap}
+}
+@media (max-width:640px){
+  .hoja{padding:0 16px 60px}
+  .indice ol{columns:1}
+  .planes,.audiencias{grid-template-columns:1fr}
+}
+</style>
+
+<div class="portada">
+  <div class="marca-grande">GFH</div>
+  <h1>¿Es seguro este fármaco para este paciente, hoy?</h1>
+  <p class="lema">Documento funcional y de producto — qué es GFH, a quién sirve, qué hace cada parte del sistema y en qué estado se encuentra.</p>
+  <p class="meta"><b>Montevideo, Uruguay</b> · 10 de setiembre de 2026 · versión 1.0</p>
+</div>
+
+<div class="hoja">
+
+  <div class="indice">
+    <h2>Índice</h2>
+    <ol>
+      <li><b>Resumen ejecutivo</b><span>Qué es GFH en una frase</span></li>
+      <li><b>El problema</b><span>Por qué esto no se sostiene de memoria</span></li>
+      <li><b>La solución</b><span>Qué responde GFH y cómo</span></li>
+      <li><b>Objetivos del producto</b><span>Corto y mediano plazo</span></li>
+      <li><b>Estado actual</b><span>Qué está construido, con evidencia</span></li>
+      <li><b>A quién sirve</b><span>Médicos, farmacéuticos, estudiantes</span></li>
+      <li><b>Modelo de negocio</b><span>Freemium, precios reales</span></li>
+      <li><b>Diferenciación</b><span>Por qué esto y no un vademécum</span></li>
+      <li><b>Alcance de la versión actual</b><span>Qué incluye, qué queda afuera a propósito</span></li>
+      <li><b>Mapa de pantallas</b><span>Arquitectura de la app</span></li>
+      <li><b>Las cinco verificaciones</b><span>En detalle, con ejemplo real</span></li>
+      <li><b>Las seis calculadoras</b><span>Herramientas libres, sin paciente</span></li>
+      <li><b>Cockpit de paciente</b><span>La pantalla central</span></li>
+      <li><b>Buscador y ficha técnica</b><span>Nivel producto comercial</span></li>
+      <li><b>Carga de tratamiento</b><span>Manual y por fotografía</span></li>
+      <li><b>Cuenta, seguridad y disponibilidad</b><span>Login, offline, notificaciones</span></li>
+      <li><b>Reglas de negocio no negociables</b><span>Los ocho principios de diseño</span></li>
+      <li><b>Renders de la interfaz</b><span>Pantallas principales</span></li>
+      <li><b>Arquitectura técnica</b><span>Stack, motor clínico, datos, seguridad</span></li>
+      <li><b>Estado actual y visión</b><span>Qué hay hoy, hacia dónde va</span></li>
+      <li><b>Glosario</b><span>Términos clínicos y técnicos</span></li>
+    </ol>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- PARTE 1 — RESUMEN Y CONTEXTO -->
+  <!-- ============================================================= -->
+  <div class="parte">
+    <div class="parte-tapa">
+      <div class="parte-eyebrow">Parte 1</div>
+      <h2>Resumen y contexto</h2>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">1.</span>Resumen ejecutivo</h3>
+      <p>GFH es una aplicación móvil (iOS y Android) de verificación clínica en
+      el punto de atención. Frente a un paciente y su lista de medicación,
+      responde una sola pregunta:</p>
+      <div class="cita">¿Es seguro este fármaco para este paciente, hoy?</div>
+      <p>Lo hace cruzando, en menos de un segundo, cada fármaco del
+      tratamiento contra las interacciones con el resto, la función renal y
+      hepática del paciente, sus condiciones y alergias, y su estado de
+      embarazo o lactancia. El resultado no sale de un modelo de lenguaje:
+      sale siempre de tablas y reglas deterministas, trazables a una fuente
+      — ante los mismos datos, el resultado es siempre el mismo.</p>
+      <p class="suave">GFH está en desarrollo activo. El motor clínico, la
+      cuenta de usuario, el cockpit de paciente, el buscador, las seis
+      calculadoras libres, las suscripciones y buena parte de la capa de
+      producto (notificaciones, carga por foto, modo sin conexión) ya
+      funcionan de punta a punta. Todavía no está publicada en las tiendas.
+      El detalle está en la sección 5.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">2.</span>El problema</h3>
+      <p>Un tratamiento de ocho fármacos no exige ocho verificaciones: exige
+      ochenta y cuatro, cruzadas.</p>
+      <div class="tabla-envoltorio">
+        <table>
+          <tr><th>Cruce</th><th>Cálculo</th><th class="num">Verificaciones</th></tr>
+          <tr><td>Interacciones entre los ocho fármacos</td><td class="num">8 × 7 ÷ 2</td><td class="num"><b>28</b></td></tr>
+          <tr><td>Contra cada condición del paciente (ej. HTA, úlcera, adulto mayor)</td><td class="num">8 × 3</td><td class="num"><b>24</b></td></tr>
+          <tr><td>Contra la alergia registrada</td><td class="num">8 × 1</td><td class="num"><b>8</b></td></tr>
+          <tr><td>Ajuste por función renal</td><td class="num">8</td><td class="num"><b>8</b></td></tr>
+          <tr><td>Embarazo, según semana de gestación</td><td class="num">8</td><td class="num"><b>8</b></td></tr>
+          <tr><td>Lactancia</td><td class="num">8</td><td class="num"><b>8</b></td></tr>
+          <tr><td><b>Total, sobre un solo paciente</b></td><td></td><td class="num"><b>84</b></td></tr>
+        </table>
+      </div>
+      <p class="suave">Y esa serie completa se repite ante cada cambio: una
+      dosis nueva, un análisis que actualiza el Clcr, una condición que se
+      agrega. Sostener ese volumen de memoria en una consulta de quince
+      minutos, o en una guardia con múltiples pacientes a la vez, no es un
+      problema de capacitación — es un problema de volumen que ningún
+      profesional puede sostener de forma confiable, por experimentado que
+      sea.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">3.</span>La solución</h3>
+      <p>GFH corre las cinco verificaciones automáticamente, sobre los datos
+      reales cargados del paciente — no sobre un perfil promedio — y las
+      rehace solas cada vez que algo cambia. Ante la ausencia de un dato
+      (por ejemplo, un Clcr no cargado), la aplicación lo declara en pantalla
+      en lugar de asumir que no hay riesgo: el criterio siempre es mostrar
+      neutro antes que suponer.</p>
+      <p>Además de esto, GFH ofrece seis calculadoras clínicas de uso libre
+      que no requieren cargar un paciente ni tener una suscripción activa, y
+      un buscador con la ficha técnica completa de cada fármaco del
+      catálogo, con el mismo nivel de detalle que un prospecto oficial.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">4.</span>Objetivos del producto</h3>
+      <p>Que un profesional, con la medicación activa, las condiciones y las
+      alergias de un paciente cargadas, vea en una sola pantalla:</p>
+      <ul>
+        <li>Si hace falta ajustar la dosis de algún fármaco por función renal
+        o hepática, y en qué magnitud.</li>
+        <li>Si hay interacciones entre los fármacos que el paciente ya toma.</li>
+        <li>Si alguna condición o alergia contraindica algo del tratamiento.</li>
+        <li>Qué alternativas más seguras existen para lo que da problema, ya
+        evaluadas contra ese mismo paciente.</li>
+      </ul>
+      <p>Y que pueda hacer una verificación puntual, sin crear un paciente,
+      cuando solo necesita chequear algo suelto — o consultar la información
+      completa de un fármaco en general, sin que eso dependa de tener una
+      cuenta con pacientes cargados.</p>
+      <p class="suave">A mediano plazo: ampliar el catálogo clínico curado
+      vía un proveedor farmacéutico externo, completar la cobertura de
+      ajuste hepático por fármaco, publicar en App Store y Google Play para
+      el mercado uruguayo, y evaluar expansión regional una vez validado el
+      producto localmente.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">5.</span>Estado actual</h3>
+      <p>Construido y funcionando de punta a punta, con pruebas
+      automatizadas que lo respaldan:</p>
+      <ul class="cifras">
+        <li><b>225</b> principios activos · <b>232</b> productos comerciales</li>
+        <li><b>29</b> reglas de interacción → <b>638</b> pares cubiertos</li>
+        <li><b>628</b> alertas condición-fármaco</li>
+        <li><b>271</b> alternativas terapéuticas anotadas</li>
+        <li><b>227</b> tablas de ajuste renal · <b>15</b> de ajuste hepático</li>
+        <li><b>31</b> fármacos con ficha técnica curada completa</li>
+        <li><b>727</b> pruebas automatizadas (422 móvil · 196 backend · 109 motor clínico)</li>
+      </ul>
+      <p>Funcionando de punta a punta: cuenta de usuario (con inicio de
+      sesión propio y con Google), el cockpit de paciente con las cinco
+      verificaciones, el buscador con ficha técnica completa, las seis
+      calculadoras libres, suscripciones gestionadas por RevenueCat, carga
+      de tratamiento por fotografía, notificaciones, y un modo de consulta
+      sin conexión para pacientes ya revisados con señal.</p>
+      <p class="suave">Pendiente antes de una publicación pública: ampliar
+      el catálogo clínico curado (hoy 31 fichas técnicas completas de 225
+      fármacos), completar la configuración de las tiendas, y resolver el
+      marco legal de tratamiento de datos de salud aplicable en Uruguay.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- PARTE 2 — MERCADO Y NEGOCIO -->
+  <!-- ============================================================= -->
+  <div class="parte">
+    <div class="parte-tapa">
+      <div class="parte-eyebrow">Parte 2</div>
+      <h2>Mercado y negocio</h2>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">6.</span>A quién sirve</h3>
+      <p>GFH está diseñado en primer lugar para el médico individual, pero
+      su utilidad no se limita a esa audiencia: el mismo motor de
+      verificación resuelve necesidades distintas para tres perfiles
+      profesionales, y para quienes todavía se están formando en ellos.</p>
+      <div class="audiencias">
+        <div class="aud">
+          <div class="eyebrow">Médicos</div>
+          <p>Cualquier especialidad, con el catálogo de herramientas
+          reordenado según la propia (el clearance de creatinina sube
+          primero para nefrología, geriatría y oncología, por ejemplo). Uso
+          en consulta y en guardia, sobre pacientes propios.</p>
+        </div>
+        <div class="aud">
+          <div class="eyebrow">Farmacéuticos</div>
+          <p>Las mismas cinco verificaciones y las seis calculadoras sirven
+          al control de dispensación y a la conciliación de tratamientos:
+          detectar una interacción o una contraindicación antes de
+          entregar un fármaco es exactamente el mismo cruce que corre el
+          motor clínico.</p>
+        </div>
+        <div class="aud">
+          <div class="eyebrow">Estudiantes de medicina y farmacia</div>
+          <p>Las seis calculadoras libres —sin costo, sin necesidad de
+          cuenta paga— funcionan como herramienta de estudio y de práctica
+          clínica supervisada: aplicar Cockcroft-Gault o Child-Pugh sobre un
+          caso de clase con el mismo motor que usa un profesional en
+          ejercicio.</p>
+        </div>
+      </div>
+      <p class="suave">En los tres casos, GFH es una herramienta de apoyo a
+      la decisión: no sustituye el juicio profesional ni reemplaza la
+      supervisión docente en el caso de estudiantes.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">7.</span>Modelo de negocio</h3>
+      <p>Freemium, con un único plan pago y dos ciclos de facturación. La
+      suscripción se gestiona por RevenueCat sobre StoreKit (iOS) y Google
+      Play Billing (Android): GFH nunca cobra por fuera de la tienda, y el
+      backend nunca confía en lo que reporta la app — la verdad de la
+      suscripción llega solo por webhook.</p>
+      <div class="planes">
+        <div class="plan">
+          <h4>Gratuito</h4>
+          <div class="precio">US$ 0</div>
+          <ul>
+            <li>Un paciente de demostración con las cinco verificaciones activas</li>
+            <li>Las seis calculadoras independientes, sin límite de uso</li>
+            <li>Buscador y ficha técnica de cualquier fármaco</li>
+            <li>Diez consultas de restricciones de por vida</li>
+          </ul>
+        </div>
+        <div class="plan pro">
+          <h4>Suscripción</h4>
+          <div class="precio">US$ 6,99<small> /mes</small></div>
+          <p class="suave" style="font-size:12px;margin:-6px 0 10px">o US$ 69,99 al año (dos meses sin cargo)</p>
+          <ul>
+            <li>Pacientes ilimitados, organizados en grupos</li>
+            <li>Ficha clínica completa y las cinco verificaciones recalculadas ante cada cambio</li>
+            <li>Alternativas ya evaluadas contra ese tratamiento</li>
+            <li>Consultas y herramientas del catálogo sin límite</li>
+            <li>Carga de tratamiento por fotografía</li>
+            <li>Historial completo y cockpit disponible sin conexión</li>
+          </ul>
+        </div>
+      </div>
+      <p class="suave">Mercado inicial: Uruguay. RevenueCat resuelve moneda
+      local por tienda de forma automática, lo que deja abierta una
+      expansión de precio por país sin cambios técnicos cuando llegue el
+      momento.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">8.</span>Diferenciación</h3>
+      <p>Un vademécum tradicional informa sobre un fármaco de forma aislada:
+      dosis, indicaciones, contraindicaciones generales. Ninguno sostiene,
+      de forma automática, el cruce completo de un tratamiento real contra
+      un paciente real — eso queda en manos de la memoria del profesional,
+      que es exactamente el problema descrito en la sección 2.</p>
+      <p>GFH no compite en tamaño de catálogo informativo: compite en
+      correr, sin que nadie tenga que pedirlo, las verificaciones cruzadas
+      que un vademécum deja como tarea del lector. El precio de la
+      suscripción se fijó deliberadamente por debajo de referencias del
+      mercado (menos de la mitad de lo que cobran vademécums internacionales
+      comparables por su plan superior) — decisión consciente por la
+      madurez actual del catálogo clínico y por tratarse de un mercado
+      inicial acotado, no una señal de posicionamiento definitivo.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">9.</span>Alcance de la versión actual</h3>
+      <p>Quedan fuera de esta primera versión, por decisión y no por
+      omisión, porque diluirían el foco del producto:</p>
+      <ul>
+        <li>Estudios médicos (subida de archivos, visor, almacenamiento)</li>
+        <li>Notas de evolución clínica narrativas</li>
+        <li>Funcionamiento multi-hospital, áreas, camas o traslados</li>
+        <li>Integración HL7/FHIR con un sistema hospitalario</li>
+        <li>Panel de curación farmacéutica</li>
+        <li>Compartir pacientes o grupos entre distintos profesionales</li>
+        <li>Roles de administración o backoffice</li>
+      </ul>
+      <p class="suave">GFH es, en esta etapa, una herramienta de uso
+      individual: cada profesional gestiona sus propios pacientes, sin
+      capa institucional ni multiusuario por cuenta.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- PARTE 3 — ESPECIFICACIÓN FUNCIONAL -->
+  <!-- ============================================================= -->
+  <div class="parte">
+    <div class="parte-tapa">
+      <div class="parte-eyebrow">Parte 3</div>
+      <h2>Especificación funcional completa</h2>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">10.</span>Mapa de pantallas</h3>
+      <div class="tabla-envoltorio">
+        <table>
+          <tr><th>Sección</th><th>Contenido</th></tr>
+          <tr><td><b>Acceso</b></td><td>Bienvenida, inicio de sesión (usuario/email o Google), registro, recuperar contraseña, disclaimer médico-legal de primer ingreso</td></tr>
+          <tr><td><b>Pacientes</b></td><td>Lista propia, organizada libremente en grupos; crear paciente o grupo; acceso al cockpit de cada uno</td></tr>
+          <tr><td><b>Cockpit de paciente</b></td><td>Ficha del paciente, dashboard de las cinco verificaciones, tratamiento activo, alternativas, historial</td></tr>
+          <tr><td><b>Grupos</b></td><td>Organización de pacientes por consultorio, guardia o criterio propio</td></tr>
+          <tr><td><b>Buscador</b></td><td>Catálogo completo, accesos a herramientas, ficha técnica por producto comercial</td></tr>
+          <tr><td><b>Herramientas</b></td><td>Seis calculadoras libres y cuatro que cruzan el catálogo (con suscripción), sin necesidad de paciente</td></tr>
+          <tr><td><b>Perfil</b></td><td>Cuenta, suscripción, notificaciones, seguridad del dispositivo, ayuda y soporte, cerrar sesión, eliminar cuenta</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">11.</span>Las cinco verificaciones clínicas</h3>
+      <p>Corren siempre juntas sobre el tratamiento activo de un paciente, y
+      se rehacen automáticamente ante cualquier cambio.</p>
+      <div class="grid-verif">
+        <div class="v-card"><div class="tope"><div class="num-badge">1</div><h4>Interacciones</h4></div><p>Todos los pares posibles entre los fármacos del tratamiento, con severidad y conducta sugerida.</p></div>
+        <div class="v-card"><div class="tope"><div class="num-badge">2</div><h4>Ajuste renal</h4></div><p>Clearance estimado por Cockcroft-Gault, grado KDIGO, y qué fármacos requieren ajuste según su tabla propia.</p></div>
+        <div class="v-card"><div class="tope"><div class="num-badge">3</div><h4>Ajuste hepático</h4></div><p>Por clase de Child-Pugh (A, B o C). Sin tabla cargada para un fármaco, la categoría queda en neutro y declarado.</p></div>
+        <div class="v-card"><div class="tope"><div class="num-badge">4</div><h4>Condiciones y alergias</h4></div><p>Cada fármaco contra las comorbilidades y alergias de la ficha. Solo la coincidencia exacta con severidad grave bloquea.</p></div>
+        <div class="v-card"><div class="tope"><div class="num-badge">5</div><h4>Embarazo y lactancia</h4></div><p>Según la semana de gestación o el estado de lactancia cargado, se descartan las alertas que no corresponden.</p></div>
+      </div>
+      <p class="suave"><b>Ejemplo real de ajuste renal</b> — Digoxina: sin
+      ajuste con Clcr entre 50 y 100&nbsp;mL/min; entre 25 y 50&nbsp;% de la
+      dosis (o el intervalo extendido a 36&nbsp;h) entre 10 y 50; entre 10 y
+      25&nbsp;% (o intervalo a 48&nbsp;h) por debajo de 10. Son los mismos
+      cortes y el mismo texto que devuelve el motor en la app, no una
+      simplificación para este documento.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">12.</span>Las seis calculadoras</h3>
+      <p>De uso libre, sin límite, sin necesidad de cargar un paciente ni de
+      tener una suscripción activa.</p>
+      <div class="tabla-envoltorio">
+        <table>
+          <tr><th>Calculadora</th><th>Método</th><th>Resultado</th></tr>
+          <tr><td><b>Clearance de creatinina</b></td><td>Cockcroft-Gault</td><td>mL/min y grado KDIGO</td></tr>
+          <tr><td><b>Child-Pugh</b></td><td>Cinco criterios, respondidos por rango</td><td>Clase A, B o C</td></tr>
+          <tr><td><b>Colesterol LDL y no-HDL</b></td><td>Friedewald + tres alternativas para triglicéridos &gt;400&nbsp;mg/dL</td><td>mg/dL por fracción</td></tr>
+          <tr><td><b>Riesgo cardiovascular</b></td><td>Tablas OMS/ISH, región AMR-B</td><td>% de riesgo a diez años</td></tr>
+          <tr><td><b>Índice de masa corporal</b></td><td>Peso sobre talla al cuadrado</td><td>Clasificación OMS, seis bandas</td></tr>
+          <tr><td><b>HbA1c a glucemia estimada</b></td><td>Fórmula del estudio ADAG (2008)</td><td>mg/dL y mmol/L</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">13.</span>Cockpit de paciente</h3>
+      <p>La pantalla central de la app, con suscripción activa. Muestra una
+      ficha expandible del paciente (edad, sexo, Clcr con su origen), un
+      dashboard con las cinco verificaciones —cada una con un contador de
+      hallazgos, no de gravedad— y el tratamiento activo con dosis,
+      frecuencia y vía por fármaco.</p>
+      <p>Tocar un fármaco muestra sus hallazgos específicos; tocar un
+      hallazgo abre su detalle con las alternativas terapéuticas ya
+      evaluadas contra ese mismo paciente, indicando cuántos problemas
+      nuevos generaría cada una. Un disclaimer médico-legal permanece
+      visible al pie de esta pantalla en todo momento.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">14.</span>Buscador y ficha técnica</h3>
+      <p>La búsqueda opera a nivel de <b>producto comercial</b> (marca,
+      laboratorio y dosis) — un profesional busca el nombre de venta, no el
+      principio activo suelto. El motor clínico resuelve internamente
+      contra el principio activo: un producto combinado dispara la
+      verificación de cada componente que contiene.</p>
+      <p>La ficha de cada fármaco tiene tres pestañas: <b>Info</b>
+      (indicaciones breves y restricciones por renal, hepático, embarazo y
+      lactancia), <b>Ficha técnica</b> (indicaciones, posología,
+      contraindicaciones, reacciones adversas exhaustivas por sistema,
+      igual de detallada que un prospecto oficial) y <b>Similares</b>
+      (misma clase química, vía código ATC).</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">15.</span>Carga de tratamiento</h3>
+      <p>Dos caminos, ambos a nivel de producto comercial. <b>Manual</b>:
+      búsqueda en el catálogo, carga de dosis, frecuencia y vía. <b>Por
+      fotografía</b>: la imagen se procesa para extraer texto y se
+      descarta de inmediato — nunca se guarda —, y cada línea detectada pasa
+      por una pantalla de revisión obligatoria donde se acepta, edita o
+      descarta antes de crear ninguna prescripción real. La foto asiste la
+      carga; nunca decide por sí sola.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">16.</span>Cuenta, seguridad y disponibilidad</h3>
+      <p>Inicio de sesión con usuario y contraseña o con Google (Apple
+      Sign-In pendiente de activación de la cuenta de desarrollador).
+      Sesiones con JWT y rotación de refresh token, contraseñas con
+      Argon2id, bloqueo opcional por huella o reconocimiento facial a nivel
+      de dispositivo. Notificaciones push de captación y retención —nunca
+      clínicas—, y un modo de consulta sin conexión: el cockpit de un
+      paciente ya revisado con señal se recalcula en el propio teléfono y
+      queda disponible para lectura, con la hora de esos datos siempre
+      indicada.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">17.</span>Reglas de negocio no negociables</h3>
+      <div class="reglas">
+        <div class="regla"><div class="num-badge">1</div><div><b>Cero inteligencia artificial en tiempo real para decisiones clínicas.</b><span>Severidad, ajuste de dosis e interacciones salen siempre de tablas y reglas deterministas.</span></div></div>
+        <div class="regla"><div class="num-badge">2</div><div><b>La fotografía solo asiste, nunca decide.</b><span>Toda línea requiere revisión y confirmación humana antes de crear una prescripción; la imagen no se persiste.</span></div></div>
+        <div class="regla"><div class="num-badge">3</div><div><b>Aislamiento estricto por profesional.</b><span>Cada tabla que cuelga de un paciente lleva el identificador del profesional, sin depender de la cadena de relaciones.</span></div></div>
+        <div class="regla"><div class="num-badge">4</div><div><b>Solo la alergia exacta y grave bloquea.</b><span>El cruce por familia alergénica nunca bloquea solo: pide confirmación explícita.</span></div></div>
+        <div class="regla"><div class="num-badge">5</div><div><b>Ante la falta de un dato, se muestra neutro.</b><span>Nunca se infiere seguridad ni se alarma sin motivo por un dato ausente.</span></div></div>
+        <div class="regla"><div class="num-badge">6</div><div><b>La suscripción se sincroniza solo por webhook.</b><span>El backend nunca confía en lo que la aplicación reporta sobre su propio estado de pago.</span></div></div>
+        <div class="regla"><div class="num-badge">7</div><div><b>El buscador y la carga operan por producto comercial.</b><span>El motor clínico resuelve internamente a principio activo, sin exponer esa capa al profesional.</span></div></div>
+        <div class="regla"><div class="num-badge">8</div><div><b>La fuente de las fichas técnicas no se expone en la interfaz.</b><span>Es un dato de proveedor interno, no de producto — el profesional ve el contenido, no de dónde viene.</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- PARTE 4 — RENDERS -->
+  <!-- ============================================================= -->
+  <div class="parte">
+    <div class="parte-tapa">
+      <div class="parte-eyebrow">Parte 4</div>
+      <h2>Renders de la interfaz</h2>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">18.</span>Pantallas principales</h3>
+      <p class="suave">Representación esquemática, fiel a la interfaz real
+      de la aplicación (tipografía, color de marca y estructura de
+      navegación) — no capturas de pantalla.</p>
+
+      <div class="galeria">
+
+        <div class="tel-item-wrap">
+          <div class="tel-wrap"><div class="tel">
+            <div class="tel-barra"><span class="atras">‹</span><span class="marca">GFH</span><span class="avatar"></span></div>
+            <div class="tel-cuerpo">
+              <div class="tel-titulo">Pacientes</div>
+              <div class="tel-fila"><div><div class="n">Rodríguez, Ana María</div><div class="m">78 años · Clcr 23,6</div></div><div class="tel-badge" style="background:var(--grave-suave);color:var(--grave)">4</div></div>
+              <div class="tel-fila"><div><div class="n">Pereyra, Julio</div><div class="m">64 años · Clcr 71</div></div><div class="tel-badge" style="background:var(--media-suave);color:#92400E">1</div></div>
+              <div class="tel-fila"><div><div class="n">Fontán, Lucía</div><div class="m">35 años · embarazo 24 sem</div></div><div class="tel-badge" style="background:var(--ok-suave);color:#166534">0</div></div>
+              <div class="tel-menu"><span class="it on"></span><span class="it"></span><span class="it"></span><span class="it"></span></div>
+            </div>
+          </div></div>
+          <p class="tel-cap"><b>Pacientes</b>lista propia, organizada en grupos</p>
+        </div>
+
+        <div class="tel-item-wrap">
+          <div class="tel-wrap"><div class="tel">
+            <div class="tel-barra"><span class="atras">‹</span><span class="marca">GFH</span><span class="avatar"></span></div>
+            <div class="tel-cuerpo">
+              <div class="tel-titulo">Rodríguez, Ana María · 78</div>
+              <div class="tel-grid4">
+                <div class="tel-cat" style="border-left:3px solid var(--grave)"><div class="tt">Interacciones</div><div class="nn" style="color:var(--grave)">2</div></div>
+                <div class="tel-cat" style="border-left:3px solid var(--media)"><div class="tt">Condiciones</div><div class="nn" style="color:#92400E">3</div></div>
+                <div class="tel-cat" style="border-left:3px solid var(--grave)"><div class="tt">Ajuste renal</div><div class="nn" style="color:var(--grave)">4</div></div>
+                <div class="tel-cat" style="border-left:3px solid var(--tenue)"><div class="tt">Ajuste hepático</div><div class="nn" style="color:var(--tenue)">—</div></div>
+              </div>
+              <div class="tel-titulo" style="margin-top:2px">Tratamiento</div>
+              <div class="tel-fila"><div class="n">Zocor</div><div class="tel-badge" style="background:var(--grave-suave);color:var(--grave)">2</div></div>
+              <div class="tel-fila"><div class="n">Ibuprofeno</div><div class="tel-badge" style="background:var(--grave-suave);color:var(--grave)">1</div></div>
+              <div class="tel-menu"><span class="it"></span><span class="it"></span><span class="it"></span><span class="it"></span></div>
+            </div>
+          </div></div>
+          <p class="tel-cap"><b>Cockpit de paciente</b>las cinco verificaciones, por categoría</p>
+        </div>
+
+        <div class="tel-item-wrap">
+          <div class="tel-wrap"><div class="tel">
+            <div class="tel-barra"><span class="atras">‹</span><span class="marca">GFH</span><span class="avatar"></span></div>
+            <div class="tel-cuerpo">
+              <div class="tel-search">Buscar fármaco…</div>
+              <div class="tel-titulo">Catálogo</div>
+              <div class="tel-fila"><div class="n">Amoxicilina 500 mg</div></div>
+              <div class="tel-fila"><div class="n">Coumadin 5 mg</div></div>
+              <div class="tel-fila"><div class="n">Digoxina 0,25 mg</div></div>
+              <div class="tel-fila"><div class="n">Enalapril 10 mg</div></div>
+              <div class="tel-menu"><span class="it"></span><span class="it"></span><span class="it on"></span><span class="it"></span></div>
+            </div>
+          </div></div>
+          <p class="tel-cap"><b>Buscador</b>a nivel de producto comercial</p>
+        </div>
+
+        <div class="tel-item-wrap">
+          <div class="tel-wrap"><div class="tel">
+            <div class="tel-barra"><span class="atras">‹</span><span class="marca">GFH</span><span class="avatar"></span></div>
+            <div class="tel-cuerpo">
+              <div class="tel-titulo">Herramientas</div>
+              <div class="tel-grid3">
+                <div class="tel-tool"><div class="ic"></div>Clcr</div>
+                <div class="tel-tool"><div class="ic"></div>Child-Pugh</div>
+                <div class="tel-tool"><div class="ic"></div>Colesterol</div>
+                <div class="tel-tool"><div class="ic"></div>Riesgo CV</div>
+                <div class="tel-tool"><div class="ic"></div>IMC</div>
+                <div class="tel-tool"><div class="ic"></div>HbA1c</div>
+              </div>
+              <div class="tel-titulo" style="margin-top:2px">Con suscripción</div>
+              <div class="tel-fila"><div class="n">Interacciones</div></div>
+              <div class="tel-fila"><div class="n">Ajuste renal por fármaco</div></div>
+              <div class="tel-menu"><span class="it"></span><span class="it"></span><span class="it"></span><span class="it"></span></div>
+            </div>
+          </div></div>
+          <p class="tel-cap"><b>Herramientas</b>seis libres, cuatro con suscripción</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- PARTE 5 — ARQUITECTURA TÉCNICA -->
+  <!-- ============================================================= -->
+  <div class="parte">
+    <div class="parte-tapa">
+      <div class="parte-eyebrow">Parte 5</div>
+      <h2>Arquitectura técnica</h2>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">19.</span>Stack y motor clínico</h3>
+      <div class="tabla-envoltorio">
+        <table>
+          <tr><th>Capa</th><th>Tecnología</th></tr>
+          <tr><td><b>Aplicación móvil</b></td><td>React Native + Expo + TypeScript, Expo Router, TanStack Query, React Hook Form + Zod, NativeWind</td></tr>
+          <tr><td><b>Backend</b></td><td>NestJS sobre Fastify, arquitectura hexagonal, Prisma, Argon2id, JWT con rotación de refresh token</td></tr>
+          <tr><td><b>Base de datos y almacenamiento</b></td><td>PostgreSQL y storage vía Supabase (solo como proveedor de infraestructura)</td></tr>
+          <tr><td><b>Suscripciones</b></td><td>RevenueCat sobre StoreKit (iOS) y Google Play Billing (Android)</td></tr>
+        </table>
+      </div>
+      <p>El motor clínico —cerca de 2.800 líneas, sin dependencias de
+      servidor— vive en un paquete propio del monorepo, importado tanto por
+      el backend como por la aplicación móvil: el mismo código decide una
+      severidad en el servidor y en el teléfono sin conexión, nunca dos
+      implementaciones separadas que puedan divergir.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">20.</span>Modelo de datos, en resumen</h3>
+      <p>Dos grandes familias de datos. El <b>catálogo clínico</b> —
+      principios activos, productos comerciales, condiciones, grupos
+      alergénicos, reglas de interacción, tablas de ajuste— es compartido
+      entre todos los profesionales. Los <b>datos de cada profesional</b> —
+      pacientes, grupos, prescripciones, historial— cuelgan siempre de su
+      identificador propio, con aislamiento aplicado en cada tabla y no
+      solo en la cadena de relaciones.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">21.</span>Seguridad</h3>
+      <p>Autenticación con JWT y rotación de refresh token, contraseñas con
+      Argon2id, límite de tasa de peticiones por usuario, cabeceras de
+      seguridad HTTP (Helmet), y comparación de tiempo constante en la
+      verificación del webhook de suscripciones, para que una diferencia de
+      tiempo de respuesta no filtre el secreto compartido con el proveedor
+      de pagos.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- PARTE 6 — ESTADO Y VISIÓN -->
+  <!-- ============================================================= -->
+  <div class="parte">
+    <div class="parte-tapa">
+      <div class="parte-eyebrow">Parte 6</div>
+      <h2>Estado actual y visión</h2>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">22.</span>Qué hay hoy</h3>
+      <p>Aplicación móvil y backend funcionando de punta a punta: cuenta,
+      cockpit clínico con las cinco verificaciones, buscador, seis
+      calculadoras libres, suscripciones, carga por foto, notificaciones y
+      modo sin conexión. Catálogo curado de 225 principios activos, con 31
+      fichas técnicas completas. 727 pruebas automatizadas respaldando el
+      motor clínico y la aplicación. Aún sin publicar en las tiendas.</p>
+    </div>
+
+    <div class="sec">
+      <h3><span class="n">23.</span>Visión a futuro</h3>
+      <p>Ampliar el catálogo clínico curado vía un proveedor farmacéutico
+      externo, publicar en App Store y Google Play para Uruguay, y evaluar
+      expansión regional una vez validado el producto en el mercado
+      inicial.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- GLOSARIO -->
+  <!-- ============================================================= -->
+  <div class="parte">
+    <div class="parte-tapa">
+      <div class="parte-eyebrow">Anexo</div>
+      <h2>Glosario</h2>
+    </div>
+    <div class="sec">
+      <dl class="glosario">
+        <dt>Clcr</dt><dd>Clearance de creatinina — estimación de la función renal, en mL/min.</dd>
+        <dt>KDIGO</dt><dd>Escala internacional de estadios de enfermedad renal crónica (G1 a G5).</dd>
+        <dt>Child-Pugh</dt><dd>Clasificación de la severidad de la enfermedad hepática, en clases A, B o C.</dd>
+        <dt>ATC</dt><dd>Sistema de clasificación anatómica-terapéutica-química de fármacos.</dd>
+        <dt>Cockcroft-Gault</dt><dd>Fórmula estándar para estimar el clearance de creatinina.</dd>
+        <dt>OMS/ISH</dt><dd>Tablas de riesgo cardiovascular de la Organización Mundial de la Salud y la Sociedad Internacional de Hipertensión.</dd>
+        <dt>ADAG</dt><dd>Estudio (2008) que define la fórmula de conversión entre HbA1c y glucemia promedio estimada.</dd>
+        <dt>Webhook</dt><dd>Notificación que un servicio externo (aquí, RevenueCat) envía al backend cuando cambia un estado, sin que la app intervenga.</dd>
+        <dt>JWT</dt><dd>Token firmado que identifica una sesión de usuario ante el backend.</dd>
+        <dt>Producto comercial</dt><dd>Un fármaco tal como se vende: marca, laboratorio y dosis — distinto del principio activo que contiene.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="pie-doc">GFH — Montevideo, Uruguay · documento funcional, versión 1.0 · 10 de setiembre de 2026</div>
+
+</div>

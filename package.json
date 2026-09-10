@@ -21,6 +21,7 @@
     "test:todo": "pnpm -r test && pnpm --filter @gfh/backend test:api",
     "capturas": "node scripts/capturas.js",
     "landing": "node landing/armar.js",
+    "documento:pdf": "node scripts/documento-pdf.js",
     "verificar": "pnpm db:generate && pnpm typecheck && pnpm test && pnpm lint && (pnpm --filter @gfh/mobile run doctor || echo 'expo-doctor marcó algo — revisar arriba antes de descartarlo como ya conocido.')"
   },
   "devDependencies": {

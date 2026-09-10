@@ -35,6 +35,10 @@ Thumbs.db
 
 # Capturas de `pnpm capturas` — se regeneran, no se versionan
 .capturas/
+
+# PDF del documento funcional — se regenera con `pnpm documento:pdf`
+docs/documento-funcional-GFH.pdf
+docs/.documento-completo-temp.html
 /android/
 
 # Volcados de jerarquía de UI de Android (uiautomator), de sesiones de debug.
