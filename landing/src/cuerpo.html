@@ -51,15 +51,29 @@
          animar pieza por pieza. -->
     <div class="sube d2 hero-tel" id="cajaTel">
       <div class="tel" id="telHero">
+        <!-- Barra propia del rediseño de Figma: blanca, con volver a la
+             izquierda, la marca al centro y el avatar a la derecha — la app
+             ya no tiene una barra verde acá, eso quedó del header nativo
+             anterior. -->
         <div class="tel-barra">
-          <span style="flex:1">Rodríguez, Ana María</span>
-          <span class="mas">+</span>
+          <span class="tb-atras" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+          </span>
+          <span class="tb-marca">GFH</span>
+          <span class="tb-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
+          </span>
         </div>
         <div class="tel-cuerpo">
 
-          <div class="vered pieza p3">
-            <div class="t"><i></i> 2 alertas contraindicadas</div>
-            <div class="d">22 hallazgos en total: 2 contraindicados, 11 graves, 9 de atención.</div>
+          <!-- El nombre y la edad son lo primero del CONTENIDO, no de la
+               barra: en la app real la barra sólo lleva la marca. -->
+          <div class="cab-pac pieza p1">
+            <div>
+              <div class="nom-pac">Rodríguez, Ana María</div>
+              <div class="edad-pac">78 años</div>
+            </div>
+            <span class="mas">+</span>
           </div>
 
           <div class="ficha pieza p1">
@@ -73,43 +87,86 @@
                 <div class="mid">
                   <span class="cf" style="color:#EF4444">23.6</span>
                   <span class="un">mL/min</span>
-                  <span class="kd" style="color:#EF4444;background:#FEE7E7">G4</span>
                 </div>
               </div>
-              <div class="datos">
-                <div><div class="r">Edad</div><div class="v">78 años</div></div>
-                <div><div class="r">Sexo</div><div class="v">Mujer</div></div>
-                <div><div class="r">Origen del Clcr</div><div class="v">Calculado</div></div>
+              <div class="datos-clcr">
+                <div class="clcr-lbl" style="color:#EF4444"><i class="dot-clcr" style="background:#EF4444"></i>Clcr Est.</div>
+                <span class="kdigo-chip" style="color:#EF4444;background:#FEE7E7">KDIGO G4</span>
+                <div class="origen-clcr">Calculado · hace 2 meses</div>
               </div>
             </div>
             <div class="chips">
+              <span class="eyeb-chips">Condiciones activas</span>
               <span class="chip-c">HTA</span>
               <span class="chip-c">Úlcera</span>
-              <span class="chip-c der">Adulto mayor</span>
               <span class="chip-c pieza p2">Embarazo · 24 sem</span>
             </div>
           </div>
 
           <div class="eyeb pieza p3">Lo más grave</div>
 
-          <div class="hall pieza p4">
-            <div class="cab">
-              <div class="nom">Zocor — Embarazo</div>
-              <div class="sev">Contraindicado</div>
-            </div>
+          <div class="hall pieza p3">
+            <div class="nom">Zocor — Embarazo</div>
             <div class="txt">Estatina en embarazo: el colesterol es necesario para el desarrollo fetal. Suspender.</div>
           </div>
 
-          <div class="hall pieza p5">
-            <div class="cab">
-              <div class="nom">Ibuprofeno — Embarazo</div>
-              <div class="sev">Contraindicado</div>
-            </div>
+          <div class="hall pieza p4">
+            <div class="nom">Ibuprofeno — Embarazo</div>
             <div class="txt">AINE desde la semana 20: cierre prematuro del ductus arterioso. Usar paracetamol.</div>
           </div>
 
+          <div class="eyeb pieza p4">Por categoría</div>
+          <div class="grid-cat pieza p5">
+            <div class="cat-tile" style="border-left-color:#EF4444">
+              <div class="cat-top">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.7" stroke-linecap="round"><path d="M7 7h4a5 5 0 015 5v5"></path><circle cx="5" cy="7" r="2.2"></circle><circle cx="19" cy="17" r="2.2"></circle></svg>
+                <span class="cat-n" style="background:#EF4444">2</span>
+              </div>
+              <div class="cat-lbl">Interacciones</div>
+            </div>
+            <div class="cat-tile" style="border-left-color:#F59E0B">
+              <div class="cat-top">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3l9-16z"></path><path d="M12 10v4"></path><path d="M12 17h.01"></path></svg>
+                <span class="cat-n" style="background:#F59E0B">3</span>
+              </div>
+              <div class="cat-lbl">Condiciones</div>
+            </div>
+            <div class="cat-tile" style="border-left-color:#EF4444">
+              <div class="cat-top">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.4 6 10.4A6 6 0 016 13.4C6 9.4 12 3 12 3z"></path></svg>
+                <span class="cat-n" style="background:#EF4444">4</span>
+              </div>
+              <div class="cat-lbl">Ajuste renal</div>
+            </div>
+            <div class="cat-tile off">
+              <div class="cat-top">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#8CA39A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h11c3 0 5 2 5 5 0 4-3 7-7 7H9c-3 0-5-2-5-5V6z"></path><path d="M9 6v5"></path></svg>
+                <span class="cat-n off">—</span>
+              </div>
+              <div class="cat-lbl">Ajuste hepático</div>
+            </div>
+          </div>
+
           <div class="tel-menu">
-            <span class="on">Pacientes</span><span>Grupos</span><i class="centro" aria-hidden="true"></i><span>Buscador</span><span>Perfil</span>
+            <div class="tm-item on">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>
+              Pacientes
+            </div>
+            <div class="tm-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path><path d="M15.5 14.3c2.6.3 4.5 2.3 4.5 4.7"></path></svg>
+              Grupos
+            </div>
+            <i class="centro" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </i>
+            <div class="tm-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+              Buscador
+            </div>
+            <div class="tm-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>
+              Perfil
+            </div>
           </div>
         </div>
       </div>

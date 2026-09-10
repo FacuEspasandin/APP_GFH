@@ -315,25 +315,33 @@ section { padding: clamp(15px, 2.2vw, 26px) 0 clamp(72px, 11vw, 128px); }
   position: relative;
 }
 
+/* Barra propia del rediseño de Figma: blanca, no verde — reemplaza al header
+   nativo pantalla por pantalla. Volver a la izquierda, la marca al centro,
+   el avatar a la derecha. Ningún dato del paciente vive acá. */
 .tel-barra {
-  background: linear-gradient(135deg, #24705A 0%, #1B5140 100%);
-  color: #FFFFFF; padding: 14px 14px 13px;
-  display: flex; align-items: center; gap: 10px;
-  font-weight: 700; font-size: 14.5px;
+  background: var(--surface); color: var(--ink);
+  padding: 13px 13px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--line);
 }
-.tel-barra .mas {
-  margin-left: auto; width: 26px; height: 26px; border-radius: 999px; flex: none;
-  background: rgba(255,255,255,.2); display: grid; place-items: center; font-weight: 400; font-size: 17px;
-}
-.tel-barra .volver { width: 17px; height: 17px; flex: none; }
+.tb-atras, .tb-avatar { width: 30px; height: 30px; border-radius: 999px; display: grid; place-items: center; flex: none; }
+.tb-atras { color: var(--ink); }
+.tb-atras svg { width: 16px; height: 16px; }
+.tb-marca { font-weight: 700; font-size: 19px; letter-spacing: -.02em; color: #005228; }
+.tb-avatar { background: var(--line); color: var(--ink-suave); }
+.tb-avatar svg { width: 15px; height: 15px; }
 
 .tel-cuerpo { padding: 12px 13px 16px; display: flex; flex-direction: column; gap: 11px; min-height: 430px; }
 
-/* veredicto */
-.vered { background: #FDECEC; border-radius: 12px; padding: 12px 13px; }
-.vered .t { font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-.vered .t i { width: 8px; height: 8px; border-radius: 999px; background: var(--grave); flex: none; }
-.vered .d { font-size: 11.5px; line-height: 16px; color: var(--ink-suave); margin-top: 3px; }
+/* nombre del paciente y edad: es lo primero del CONTENIDO en la app real,
+   la barra de arriba nunca lo muestra */
+.cab-pac { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 2px 1px 4px; }
+.nom-pac { font-size: 19px; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; }
+.edad-pac { font-size: 12.5px; color: var(--ink-suave); margin-top: 1px; }
+.cab-pac .mas {
+  width: 34px; height: 34px; border-radius: 999px; flex: none;
+  background: #005228; color: #FFFFFF; display: grid; place-items: center; font-size: 18px; font-weight: 400;
+}
 
 /* tarjeta del paciente */
 .ficha {
@@ -350,52 +358,70 @@ section { padding: clamp(15px, 2.2vw, 26px) 0 clamp(72px, 11vw, 128px); }
 .aro .mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .aro .cf { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 600; line-height: 1; letter-spacing: -.02em; }
 .aro .un { font-size: 8.5px; color: var(--ink-suave); margin-top: 1px; }
-.aro .kd { margin-top: 3px; font-family: "IBM Plex Mono", monospace; font-size: 8px; font-weight: 600; border-radius: 999px; padding: 1px 6px; }
+/* al lado del anillo: sólo lo que la app muestra ahí — el Clcr, el KDIGO y
+   de dónde salió. Edad/sexo NO viven en esta tarjeta en la app real. */
+.datos-clcr { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.clcr-lbl { display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; }
+.dot-clcr { width: 7px; height: 7px; border-radius: 999px; flex: none; }
+.kdigo-chip { font-family: "IBM Plex Mono", monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .04em; border-radius: 4px; padding: 2px 7px; }
+.origen-clcr { font-size: 10px; color: var(--tenue); }
 
-.ficha .datos { flex: 1; display: flex; flex-direction: column; gap: 8px; padding-right: 18px; }
-.ficha .datos .r { font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-suave); line-height: 11px; }
-.ficha .datos .v { font-family: "IBM Plex Mono", monospace; font-size: 13.5px; font-weight: 600; line-height: 17px; }
-
-.chips { margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 5px; }
+.chips { margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.eyeb-chips { width: 100%; font-size: 8.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; color: var(--ink-suave); margin-bottom: 2px; }
 .chip-c { background: var(--primary-light); color: var(--primary); border-radius: 999px; padding: 3px 9px; font-size: 10.5px; font-weight: 600; }
 .chip-c.der { background: transparent; border: 1px solid var(--line); }
 
 .eyeb { font-size: 9.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; color: var(--ink-suave); margin-top: 2px; }
 
-/* tarjeta de hallazgo */
+/* tarjeta de hallazgo — franja de color a la izquierda + título + detalle,
+   sin la etiqueta de severidad aparte: en "Lo más grave" la app no repite
+   la palabra, la dice la franja. */
 .hall {
   background: var(--surface); border-radius: 11px; padding: 11px 12px 11px 13px;
   border-left: 4px solid var(--grave);
   box-shadow: 0 1px 2px rgba(18,42,35,.05), 0 8px 18px -14px rgba(18,42,35,.3);
 }
-.hall.at { border-left-color: var(--media); }
-.hall .cab { display: flex; align-items: flex-start; gap: 8px; }
-.hall .nom { flex: 1; font-size: 12.5px; font-weight: 600; line-height: 16px; }
-.hall .sev {
-  font-family: "IBM Plex Mono", monospace; font-size: 8px; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase; color: var(--grave);
-  white-space: nowrap; padding-top: 2px;
-}
-.hall.at .sev { color: #B45309; }
+.hall .nom { font-size: 12.5px; font-weight: 600; line-height: 16px; }
 .hall .txt { font-size: 11px; line-height: 15px; color: var(--ink-suave); margin-top: 4px; }
 
-/* la barra de abajo */
+/* "Por categoría": la grilla 2×2 que resume interacciones, condiciones y
+   los dos ajustes — hoy es el bloque que más cambia el cockpit y no estaba
+   en esta maqueta. */
+.grid-cat { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cat-tile {
+  background: var(--surface); border-radius: 10px; padding: 9px 10px 10px;
+  border-left: 4px solid transparent;
+  box-shadow: 0 1px 2px rgba(18,42,35,.05), 0 6px 14px -12px rgba(18,42,35,.3);
+}
+.cat-tile.off { opacity: .72; border-left-color: transparent; }
+.cat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.cat-top svg { width: 16px; height: 16px; }
+.cat-n {
+  width: 18px; height: 18px; border-radius: 999px; flex: none;
+  color: #FFFFFF; font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 700;
+  display: grid; place-items: center;
+}
+.cat-n.off { background: var(--line); color: var(--ink-suave); }
+.cat-lbl { font-size: 10.5px; font-weight: 600; color: var(--ink); }
+
+/* la barra de abajo — verde de marca fijo (#006D37), distinto del verde de
+   producto (#1F5E4A): en la app real es adrede, es identidad y no chrome. */
 .tel-menu {
-  background: #1F5E4A; height: 46px; display: flex; align-items: center;
-  padding: 0 6px; gap: 2px; margin-top: auto;
+  background: #006D37; min-height: 50px; display: flex; align-items: flex-start;
+  padding: 8px 4px 6px; position: relative; margin-top: auto;
+  border-radius: 12px 12px 0 0;
 }
-.tel-menu span { flex: 1; text-align: center; color: rgba(255,255,255,.6); font-size: 9px; font-weight: 600; }
-.tel-menu span.on { color: #FFFFFF; }
+.tm-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; color: rgba(255,255,255,.6); font-size: 9px; font-weight: 600; }
+.tm-item svg { width: 18px; height: 18px; }
+.tm-item.on { color: #FFFFFF; }
 .tel-menu .centro {
-  width: 26px; height: 26px; border-radius: 999px; flex: none;
-  background: #FFFFFF; border: 2px solid var(--primary);
-  margin: -13px 6px 0;
-  position: relative;
+  position: absolute; left: 50%; top: -22px; transform: translateX(-50%);
+  width: 52px; height: 52px; border-radius: 999px; flex: none;
+  background: #FFFFFF; border: 4px solid #006D37; color: #006D37;
+  display: grid; place-items: center;
+  box-shadow: 0 5px 14px rgba(18,42,35,.3);
 }
-.tel-menu .centro::before {
-  content: ""; position: absolute; inset: 7px 6px;
-  border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary);
-}
+.tel-menu .centro svg { width: 20px; height: 20px; }
 
 /* entrada escalonada de las piezas del cockpit */
 .pieza { opacity: 0; transform: translateY(14px); }
