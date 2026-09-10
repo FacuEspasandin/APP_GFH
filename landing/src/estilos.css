@@ -529,12 +529,19 @@ section { padding: clamp(15px, 2.2vw, 26px) 0 clamp(72px, 11vw, 128px); }
 }
 .verif:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -26px rgba(14,31,26,.45); border-color: #C6D6CC; }
 
-.verif.proxima {
-  background: transparent; border: 1.5px dashed var(--linea); color: var(--tenue);
+.aviso-proxima {
+  margin-top: 16px; display: flex; align-items: center; gap: 14px;
+  border: 1.5px dashed var(--linea); border-radius: var(--curva);
+  padding: 16px 22px; color: var(--tenue);
 }
-.verif.proxima .ic { color: var(--tenue); opacity: .7; }
-.verif.proxima h3 { color: var(--tenue); }
-.verif.proxima:hover { transform: none; box-shadow: none; border-color: var(--linea); }
+.aviso-proxima .ic {
+  width: 36px; height: 36px; border-radius: 10px; flex: none; opacity: .8;
+  background: var(--fondo-alt, transparent); border: 1px dashed var(--linea);
+  display: grid; place-items: center;
+}
+.aviso-proxima .ic svg { width: 18px; height: 18px; }
+.aviso-proxima p { margin: 0; font-size: 14px; line-height: 1.5; }
+.aviso-proxima b { color: var(--ink-suave); }
 
 .verif .ic {
   width: 40px; height: 40px; border-radius: 11px; flex: none;
