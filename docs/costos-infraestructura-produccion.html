@@ -98,7 +98,7 @@ tr.total .num{font-size:15px}
       su plan gratuito con margen real, no al límite.
     </div>
   </div>
-  <p class="fuentes">Sin contar Farmanuario (a cotizar aparte, fuera de tu control) ni Google Play (US$ 25 único, no mensual).</p>
+  <p class="fuentes">Sin contar Farmanuario (a cotizar aparte, fuera de tu control), Google Play (US$ 25 único) ni correo corporativo (opcional, ver sección 2).</p>
 
   <!-- ============================================================ -->
   <h2>1. Cuánta carga es 700 usuarios activos</h2>
@@ -149,6 +149,73 @@ flowchart LR
   <b>US$ 4,59/mes</b> y trae <b>una IP flotante incluida</b>: la migración no
   es solo más barata, resuelve la IP fija gratis en vez de pagarla aparte.</p>
 
+  <h3>Comprar el dominio no activa nada solo</h3>
+  <p>Registrar <code>gfh.app</code> compra el <b>nombre</b>, nada más — es como
+  reservar una dirección postal vacía. Cada uno de los cuatro usos se activa
+  aparte, con un registro DNS (gratis, apunta el nombre a algo) o, en un solo
+  caso, un servicio adicional con costo propio:</p>
+  <div class="tabla-env">
+    <table>
+      <tr><th>Uso</th><th>Qué hace falta además del dominio</th><th>Costo extra</th></tr>
+      <tr>
+        <td><b><code>api.gfh.app</code></b> (backend)</td>
+        <td>1 registro DNS tipo A → IP del VPS. Caddy pide el TLS solo (Let's Encrypt).</td>
+        <td class="num">0</td>
+      </tr>
+      <tr>
+        <td><b>Landing en internet</b></td>
+        <td>1 registro DNS → mismo VPS (Caddy como segundo sitio) o un host estático gratis (Cloudflare Pages/Netlify).</td>
+        <td class="num">0</td>
+      </tr>
+      <tr>
+        <td><b>Resend sin spam</b></td>
+        <td>Los registros SPF/DKIM/DMARC que Resend genera, copiados al DNS. Cambiar el remitente en el código a <code>algo@gfh.app</code>.</td>
+        <td class="num">0</td>
+      </tr>
+      <tr>
+        <td><b>Correo corporativo real</b><br><span class="suave" style="font-weight:400">(recibir/enviar desde <code>vos@gfh.app</code> en Gmail/Outlook)</span></td>
+        <td>Un proveedor de buzón — el dominio no incluye ninguno. Ver comparación abajo.</td>
+        <td class="num">0–7/usuario</td>
+      </tr>
+    </table>
+  </div>
+  <p class="suave">Los primeros tres son configuración pura, sin costo. El
+  cuarto es la única pieza que puede sumar un gasto mensual nuevo, y sólo si
+  se quiere un buzón de verdad — no hace falta para ninguno de los otros tres.</p>
+
+  <h3>Con quién comprarlo</h3>
+  <p><b>Cloudflare Registrar</b> — vende a precio de costo, sin margen ni
+  upsells, y el DNS (donde se cargan los registros de la tabla de arriba)
+  viene incluido gratis en el mismo panel. Un <code>.app</code> ronda
+  <b>US$ 12–17/año</b> ahí, y ese precio no sube al renovar —a diferencia de
+  GoDaddy y similares, que bajan el primer año y disparan la renovación—.
+  Alternativas igual de razonables: Namecheap, Porkbun.</p>
+
+  <h3>Correo corporativo: tres niveles, sólo si hace falta</h3>
+  <div class="tabla-env">
+    <table>
+      <tr><th>Opción</th><th>Qué da</th><th>US$/mes</th></tr>
+      <tr>
+        <td><b>Reenvío de dominio</b></td>
+        <td>Lo que llega a <code>info@gfh.app</code> cae en tu Gmail actual. Sin buzón propio, no aparece como remitente al escribir.</td>
+        <td class="num">0</td>
+      </tr>
+      <tr>
+        <td><b>Zoho Mail Free</b></td>
+        <td>Buzón real, hasta 5 usuarios, 5 GB c/u. Sin IMAP/POP: sólo webmail o la app de Zoho, no Gmail/Outlook.</td>
+        <td class="num">0</td>
+      </tr>
+      <tr>
+        <td><b>Google Workspace Business Starter</b></td>
+        <td>Gmail real con tu dominio, Drive, Calendar — funciona en cualquier cliente de correo.</td>
+        <td class="num">7 (anual) / 8,40 (mensual)</td>
+      </tr>
+    </table>
+  </div>
+  <p class="suave">Para un solo médico fundador, el reenvío gratis alcanza
+  hasta que haga falta <i>enviar</i> como <code>@gfh.app</code> de forma
+  prolija — ahí es cuando vale pagar Workspace por un usuario.</p>
+
   <!-- ============================================================ -->
   <h2>3. Costo mensual, servicio por servicio</h2>
   <div class="tabla-env">
@@ -177,10 +244,17 @@ flowchart LR
       </tr>
       <tr>
         <td><b>Dominio propio</b></td>
-        <td>Email sin caer en spam (Resend) + <code>api.gfh.app</code></td>
-        <td>.app o .com, 1 año</td>
-        <td class="num">~1</td>
+        <td>Landing en internet + <code>api.gfh.app</code> + Resend sin spam</td>
+        <td>.app en Cloudflare Registrar, US$ 12–17/año</td>
+        <td class="num">~1,25</td>
         <td><span class="pill pagar">Pagar</span></td>
+      </tr>
+      <tr>
+        <td><b>Correo corporativo</b></td>
+        <td>Buzón real <code>@gfh.app</code> (opcional — el reenvío gratis alcanza al principio)</td>
+        <td>Google Workspace, 1 usuario</td>
+        <td class="num">0–7</td>
+        <td><span class="pill yaesta">Opcional</span></td>
       </tr>
       <tr>
         <td><b>Apple Developer Program</b></td>
@@ -246,7 +320,7 @@ flowchart LR
         <td><span class="pill ver">Pendiente cotizar</span></td>
       </tr>
       <tr class="total">
-        <td colspan="3">Total mensual (sin Farmanuario)</td>
+        <td colspan="3">Total mensual (sin Farmanuario, sin correo corporativo)</td>
         <td class="num">≈ 34–40</td>
         <td></td>
       </tr>
@@ -278,7 +352,8 @@ flowchart LR
     <div class="cuenta"><div class="top"><span class="nom">Google Play Console</span><span class="pill yaesta">Pendiente</span></div><p>US$ 25 único. Falta inscribirse — no está atado a Apple.</p></div>
     <div class="cuenta"><div class="top"><span class="nom">Expo / EAS</span><span class="pill gratis">Gratis</span></div><p>Builds de producción y desarrollo de la app.</p></div>
     <div class="cuenta"><div class="top"><span class="nom">Hetzner (o similar)</span><span class="pill pagar">Por crear</span></div><p>Todavía no existe la cuenta — es el VPS que reemplaza a Render.</p></div>
-    <div class="cuenta"><div class="top"><span class="nom">Registrador de dominio</span><span class="pill pagar">Por crear</span></div><p>Todavía no existe — desbloquea Resend con dominio propio y <code>api.gfh.app</code>.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Cloudflare Registrar</span><span class="pill pagar">Por crear</span></div><p>Todavía no existe. Registra <code>gfh.app</code> a precio de costo — desbloquea landing, <code>api.gfh.app</code> y Resend sin spam.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Google Workspace</span><span class="pill yaesta">Opcional</span></div><p>Sólo si se quiere un buzón real <code>@gfh.app</code>. El reenvío de dominio a tu Gmail actual es gratis mientras tanto.</p></div>
     <div class="cuenta"><div class="top"><span class="nom">Farmanuario</span><span class="pill ver">A cotizar</span></div><p>Proveedor del catálogo clínico. Costo fuera de este análisis — pedirlo directo.</p></div>
   </div>
 
@@ -290,7 +365,10 @@ flowchart LR
     <a href="https://resend.com/pricing">Resend pricing</a> ·
     <a href="https://cloud.google.com/vision/pricing">Google Cloud Vision pricing</a> ·
     <a href="https://docs.expo.dev/billing/plans/">Expo EAS pricing</a> ·
-    <a href="https://render.com/docs/dedicated-ips">Render dedicated IPs</a>.
+    <a href="https://render.com/docs/dedicated-ips">Render dedicated IPs</a> ·
+    <a href="https://www.cloudflare.com/application-services/products/registrar/buy-app-domains/">Cloudflare Registrar</a> ·
+    <a href="https://workspace.google.com/pricing">Google Workspace pricing</a> ·
+    <a href="https://www.zoho.com/mail/custom-domain-email.html">Zoho Mail</a>.
     Relevado 11/09/2026 — los precios de infraestructura cambian, revisar antes de comprometer presupuesto anual.
   </p>
 </div>
