@@ -1,0 +1,296 @@
+<title>Costos de infraestructura — GFH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ink:#122A23; --suave:#5C6B64; --tenue:#8CA39A; --paper:#F3F6F3; --linea:#DDE5E0;
+  --surface:#FFFFFF; --marca:#005228; --marca-suave:#E7F0EA; --barra:#006D37;
+  --grave:#EF4444; --grave-suave:#FEE7E7; --media:#F59E0B; --media-suave:#FEF3C7;
+  --ok:#22C55E; --ok-suave:#DCFCE7; --fondo:#EEF1EC;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--ink);font:15px/1.65 Inter,system-ui,sans-serif}
+.num{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+.hoja{max-width:960px;margin:0 auto;padding:44px 28px 90px}
+
+h1{font-size:32px;line-height:1.2;font-weight:800;letter-spacing:-.4px;margin:0 0 8px}
+.sello{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--tenue);margin-bottom:16px}
+.bajada{color:var(--suave);font-size:15px;max-width:66ch;margin:0 0 32px}
+
+h2{font-size:21px;font-weight:700;letter-spacing:-.2px;margin:48px 0 6px;padding-top:14px;border-top:1px solid var(--linea)}
+h2:first-of-type{border-top:0;padding-top:0;margin-top:20px}
+.h2-nota{color:var(--suave);font-size:13.5px;margin:0 0 18px;max-width:68ch}
+h3{font-size:15px;font-weight:700;margin:22px 0 8px}
+
+p{margin:0 0 12px}
+.suave{color:var(--suave)}
+
+/* ---- resumen / veredicto grande ---- */
+.veredicto{background:var(--marca);color:#fff;border-radius:16px;padding:26px 28px;margin:0 0 10px;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between}
+.veredicto .cifra{font-family:'IBM Plex Mono',monospace;font-size:38px;font-weight:700;line-height:1}
+.veredicto .cifra small{display:block;font-family:Inter,sans-serif;font-size:12px;font-weight:600;opacity:.75;text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+.veredicto .texto{flex:1;min-width:220px;font-size:14px;line-height:1.6;opacity:.95}
+
+/* ---- tabla ---- */
+.tabla-env{overflow-x:auto;margin:0 0 20px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--surface);border:1px solid var(--linea);border-radius:10px;overflow:hidden}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--linea);vertical-align:top}
+th{background:var(--paper);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--suave);font-weight:700}
+tr:last-child td{border-bottom:0}
+td b{color:var(--ink)}
+.si{color:#166534;font-weight:700}
+.no{color:var(--tenue);font-weight:700}
+.ver{color:#9A3412;font-weight:700}
+tr.total td{background:var(--marca-suave);font-weight:700}
+tr.total .num{font-size:15px}
+
+/* ---- pill de estado ---- */
+.pill{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:3px 9px;border-radius:999px}
+.pill.pagar{background:var(--grave-suave);color:#991B1B}
+.pill.gratis{background:var(--ok-suave);color:#166534}
+.pill.yaesta{background:var(--linea);color:var(--suave)}
+
+/* ---- inventario de cuentas ---- */
+.cuentas{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 20px}
+.cuenta{background:var(--surface);border:1px solid var(--linea);border-radius:10px;padding:13px 15px}
+.cuenta .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.cuenta .nom{font-weight:700;font-size:14px}
+.cuenta p{margin:0;font-size:12.5px;color:var(--suave)}
+
+/* ---- escenarios ---- */
+.escenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 18px}
+.esc{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:16px}
+.esc .rot{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--tenue)}
+.esc .n{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;margin:4px 0}
+.esc .mtr{font-size:13px;color:var(--suave)}
+.esc.ok{border-color:#86EFAC;background:#F0FDF4}
+
+/* ---- triggers ---- */
+.triggers{display:flex;flex-direction:column;gap:8px;margin:0 0 10px}
+.trigger{display:flex;gap:11px;background:var(--surface);border:1px solid var(--linea);border-radius:9px;padding:11px 14px;font-size:13px}
+.trigger .flecha{color:var(--marca);font-weight:700;flex:none}
+
+.mermaid{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:18px;margin:0 0 20px}
+
+.fuentes{font-size:11.5px;color:var(--tenue);margin-top:6px}
+.fuentes a{color:var(--tenue)}
+
+@media(max-width:700px){.cuentas,.escenarios{grid-template-columns:1fr}}
+</style>
+
+<div class="hoja">
+  <div class="sello">Costos y estructura de infraestructura · GFH</div>
+  <h1>Qué pagar, qué no, y por qué — a 700 usuarios activos</h1>
+  <p class="bajada">
+    Precios reales relevados en setiembre de 2026. El supuesto que mueve todo
+    el resto de este documento: de 700 usuarios activos, no todos pagan — la
+    sección de escenarios calcula cuántos PRO hacen falta para que algo deje
+    de ser gratis.
+  </p>
+
+  <div class="veredicto">
+    <div class="cifra">US$ 34<small>por mes, aprox.</small></div>
+    <div class="texto">
+      Es lo que vas a pagar de infraestructura propia a esta escala: VPS +
+      backups + Supabase + dominio + la cuota de Apple prorrateada. Todo lo
+      demás —Sentry, RevenueCat, Resend, Google Vision, EAS— se mantiene en
+      su plan gratuito con margen real, no al límite.
+    </div>
+  </div>
+  <p class="fuentes">Sin contar Farmanuario (a cotizar aparte, fuera de tu control) ni Google Play (US$ 25 único, no mensual).</p>
+
+  <!-- ============================================================ -->
+  <h2>1. Cuánta carga es 700 usuarios activos</h2>
+  <p class="h2-nota">Todo lo que sigue depende de esto. Los tres escenarios asumen distinta conversión a PRO (US$ 6,99/mes) sobre el total de usuarios activos.</p>
+
+  <div class="escenarios">
+    <div class="esc">
+      <div class="rot">Conservador</div>
+      <div class="n">70 PRO</div>
+      <div class="mtr">10% conversión · MTR ≈ US$ 489</div>
+    </div>
+    <div class="esc">
+      <div class="rot">Moderado</div>
+      <div class="n">140 PRO</div>
+      <div class="mtr">20% conversión · MTR ≈ US$ 978</div>
+    </div>
+    <div class="esc ok">
+      <div class="rot">Optimista</div>
+      <div class="n">245 PRO</div>
+      <div class="mtr">35% conversión · MTR ≈ US$ 1.712</div>
+    </div>
+  </div>
+  <p class="suave">Incluso en un escenario agresivo de 50% de conversión (350 PRO), el MTR ronda <b>US$ 2.447</b> — todavía por debajo del umbral de US$ 2.500 donde RevenueCat empieza a cobrar. A 700 usuarios activos, tendría que convertir más de la mitad de la base a PRO para que la suscripción a RevenueCat deje de ser gratis.</p>
+
+  <!-- ============================================================ -->
+  <h2>2. Arquitectura recomendada</h2>
+  <p class="h2-nota">Un solo servidor propio con IP fija (resuelve Farmanuario sin pagar addon aparte) hablando con servicios gestionados para todo lo que no vale la pena auto-alojar.</p>
+
+  <pre class="mermaid">
+flowchart LR
+    APP["App móvil<br/>(Expo / React Native)"] -->|HTTPS| VPS
+    subgraph VPS["VPS propio — IP fija"]
+        CADDY["Caddy<br/>(TLS automático)"] --> API["Backend NestJS"]
+    end
+    API --> SUPA[("Supabase<br/>Postgres + Storage")]
+    API --> RC["RevenueCat<br/>(webhook suscripciones)"]
+    API --> RESEND["Resend<br/>(email)"]
+    API --> VISION["Google Cloud Vision<br/>(OCR de foto)"]
+    API -->|IP fija whitelisteada| FARMA["API Farmanuario"]
+    APP --> SENTRY["Sentry<br/>(errores)"]
+    API --> SENTRY
+  </pre>
+
+  <h3>Por qué VPS y no Render</h3>
+  <p>Render cobra <b>US$ 100/mes</b> por un set de IPs salientes dedicadas —el
+  único camino para que Farmanuario reciba siempre la misma IP—. Un VPS chico
+  en Hetzner (2 vCPU, 4 GB RAM, 40 GB NVMe, 20 TB de tráfico) sale
+  <b>US$ 4,59/mes</b> y trae <b>una IP flotante incluida</b>: la migración no
+  es solo más barata, resuelve la IP fija gratis en vez de pagarla aparte.</p>
+
+  <!-- ============================================================ -->
+  <h2>3. Costo mensual, servicio por servicio</h2>
+  <div class="tabla-env">
+    <table>
+      <tr><th>Servicio</th><th>Para qué</th><th>Plan a 700 usuarios</th><th>US$/mes</th><th>Veredicto</th></tr>
+      <tr>
+        <td><b>VPS (Hetzner CX22 o similar)</b></td>
+        <td>Backend + Caddy (TLS) + la IP fija de Farmanuario</td>
+        <td>2 vCPU / 4 GB / 40 GB NVMe</td>
+        <td class="num">4,59</td>
+        <td><span class="pill pagar">Pagar</span></td>
+      </tr>
+      <tr>
+        <td><b>Backup del VPS</b></td>
+        <td>Snapshot diario automático</td>
+        <td>+20% del servidor</td>
+        <td class="num">~1</td>
+        <td><span class="pill pagar">Pagar</span></td>
+      </tr>
+      <tr>
+        <td><b>Supabase</b></td>
+        <td>Postgres + storage de fotos/documentos</td>
+        <td>Pro — 8 GB DB, 100 GB storage, 100k MAU incluidos</td>
+        <td class="num">25</td>
+        <td><span class="pill pagar">Pagar</span></td>
+      </tr>
+      <tr>
+        <td><b>Dominio propio</b></td>
+        <td>Email sin caer en spam (Resend) + <code>api.gfh.app</code></td>
+        <td>.app o .com, 1 año</td>
+        <td class="num">~1</td>
+        <td><span class="pill pagar">Pagar</span></td>
+      </tr>
+      <tr>
+        <td><b>Apple Developer Program</b></td>
+        <td>Publicar en App Store + Sign in with Apple</td>
+        <td>US$ 99/año, ya pagado</td>
+        <td class="num">8,25</td>
+        <td><span class="pill yaesta">Ya pagado</span></td>
+      </tr>
+      <tr>
+        <td><b>Sentry</b></td>
+        <td>Errores en producción</td>
+        <td>Developer — 5.000 errores/mes, 1 usuario</td>
+        <td class="num">0</td>
+        <td><span class="pill gratis">Gratis alcanza</span></td>
+      </tr>
+      <tr>
+        <td><b>RevenueCat</b></td>
+        <td>Sincronizar suscripciones con las tiendas</td>
+        <td>Free — hasta US$ 2.500 MTR</td>
+        <td class="num">0</td>
+        <td><span class="pill gratis">Gratis alcanza</span></td>
+      </tr>
+      <tr>
+        <td><b>Resend</b></td>
+        <td>Email de Ayuda (y futuro recuperar contraseña)</td>
+        <td>Free — 3.000 emails/mes</td>
+        <td class="num">0</td>
+        <td><span class="pill gratis">Gratis alcanza</span></td>
+      </tr>
+      <tr>
+        <td><b>Google Cloud Vision</b></td>
+        <td>OCR de la carga de tratamiento por foto</td>
+        <td>Free — 1.000 imágenes/mes, luego US$ 1,50/1.000</td>
+        <td class="num">0–5</td>
+        <td><span class="pill gratis">Gratis alcanza</span></td>
+      </tr>
+      <tr>
+        <td><b>Expo / EAS</b></td>
+        <td>Builds de producción (iOS y Android)</td>
+        <td>Free — 30 builds/mes (15+15)</td>
+        <td class="num">0</td>
+        <td><span class="pill gratis">Gratis alcanza</span></td>
+      </tr>
+      <tr>
+        <td><b>Monitor de uptime</b></td>
+        <td>Aviso si el backend se cae</td>
+        <td>UptimeRobot o Better Uptime, plan free</td>
+        <td class="num">0</td>
+        <td><span class="pill gratis">Gratis alcanza</span></td>
+      </tr>
+      <tr>
+        <td><b>Google Play Console</b></td>
+        <td>Publicar en Google Play</td>
+        <td>US$ 25 único (no mensual)</td>
+        <td class="num">—</td>
+        <td><span class="pill yaesta">Pago único</span></td>
+      </tr>
+      <tr>
+        <td><b>Farmanuario API</b></td>
+        <td>Catálogo clínico curado</td>
+        <td>A cotizar directo con el proveedor</td>
+        <td class="num">?</td>
+        <td><span class="pill ver">Pendiente cotizar</span></td>
+      </tr>
+      <tr class="total">
+        <td colspan="3">Total mensual (sin Farmanuario)</td>
+        <td class="num">≈ 34–40</td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>4. Cuándo cada gratuito deja de alcanzar</h2>
+  <p class="h2-nota">Ninguno de estos triggers se dispara a 700 usuarios — quedan acá para no tener que volver a investigar cuando la app crezca.</p>
+  <div class="triggers">
+    <div class="trigger"><span class="flecha">→</span><span><b>RevenueCat</b> empieza a cobrar 1% cuando el MTR supera US$ 2.500 — a US$ 6,99/mes, eso son <b>~358 suscriptores PRO</b> simultáneos, más de la mitad de los 700 usuarios totales de este análisis.</span></div>
+    <div class="trigger"><span class="flecha">→</span><span><b>Sentry</b> pide el plan Team (US$ 26/mes) al superar 5.000 errores/mes de forma sostenida, o el día que sume un segundo desarrollador con acceso.</span></div>
+    <div class="trigger"><span class="flecha">→</span><span><b>Supabase</b> pide más que Pro (Team, US$ 599/mes) sólo por encima de 8 GB de base o 100 GB de storage — con el catálogo clínico actual y datos de 700 médicos, está lejos.</span></div>
+    <div class="trigger"><span class="flecha">→</span><span><b>EAS</b> pide el plan Production (US$ 199/mes) si se superan 30 builds/mes o hace falta build prioritario/concurrente — un equipo de una persona con releases cada tanto no lo toca.</span></div>
+    <div class="trigger"><span class="flecha">→</span><span><b>Google Cloud Vision</b> empieza a cobrar (US$ 1,50 cada 1.000 imágenes) si "cargar por foto" se usa más de ~33 veces por día en todo el parque de usuarios.</span></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>5. Inventario completo de cuentas abiertas</h2>
+  <p class="h2-nota">Todas las cuentas que hoy tocan a GFH, para no perder el hilo de cuál es cuál.</p>
+  <div class="cuentas">
+    <div class="cuenta"><div class="top"><span class="nom">Render</span><span class="pill yaesta">Migrando afuera</span></div><p>Backend actual. Se retira al mudar al VPS — no renovar el addon de IP fija ahí.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Supabase</span><span class="pill pagar">Pagar</span></div><p>Postgres + storage. Es la única base de datos real del sistema.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Sentry</span><span class="pill gratis">Gratis</span></div><p>Org <code>gfh-3d</code>, proyecto <code>react-native</code>. Errores de app y backend.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">RevenueCat</span><span class="pill gratis">Gratis</span></div><p>Sincroniza suscripciones de App Store y Google Play con el backend.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Resend</span><span class="pill gratis">Gratis</span></div><p>Envío del formulario de Ayuda. Necesita dominio propio para no caer en spam.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Google Cloud Platform</span><span class="pill gratis">Gratis</span></div><p>Vision API (OCR de foto) + credenciales OAuth de "Continuar con Google".</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Apple Developer Program</span><span class="pill yaesta">Pagado</span></div><p>US$ 99/año. Requisito para publicar en App Store y para Sign in with Apple.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Google Play Console</span><span class="pill yaesta">Pendiente</span></div><p>US$ 25 único. Falta inscribirse — no está atado a Apple.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Expo / EAS</span><span class="pill gratis">Gratis</span></div><p>Builds de producción y desarrollo de la app.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Hetzner (o similar)</span><span class="pill pagar">Por crear</span></div><p>Todavía no existe la cuenta — es el VPS que reemplaza a Render.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Registrador de dominio</span><span class="pill pagar">Por crear</span></div><p>Todavía no existe — desbloquea Resend con dominio propio y <code>api.gfh.app</code>.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Farmanuario</span><span class="pill ver">A cotizar</span></div><p>Proveedor del catálogo clínico. Costo fuera de este análisis — pedirlo directo.</p></div>
+  </div>
+
+  <p class="fuentes">
+    Fuentes: <a href="https://www.hetzner.com/cloud/regular-performance/">Hetzner Cloud pricing</a> ·
+    <a href="https://supabase.com/pricing">Supabase pricing</a> ·
+    <a href="https://sentry.io/pricing/">Sentry pricing</a> ·
+    <a href="https://www.revenuecat.com/pricing/">RevenueCat pricing</a> ·
+    <a href="https://resend.com/pricing">Resend pricing</a> ·
+    <a href="https://cloud.google.com/vision/pricing">Google Cloud Vision pricing</a> ·
+    <a href="https://docs.expo.dev/billing/plans/">Expo EAS pricing</a> ·
+    <a href="https://render.com/docs/dedicated-ips">Render dedicated IPs</a>.
+    Relevado 11/09/2026 — los precios de infraestructura cambian, revisar antes de comprometer presupuesto anual.
+  </p>
+</div>
