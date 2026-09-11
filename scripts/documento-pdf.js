@@ -57,7 +57,7 @@ const SALIDA = path.resolve(__dirname, '..', 'docs', 'documento-funcional-GFH.pd
     path: SALIDA,
     format: 'A4',
     printBackground: true,
-    margin: { top: '0', bottom: '18mm', left: '0', right: '0' },
+    margin: { top: '16mm', bottom: '18mm', left: '16mm', right: '16mm' },
   });
 
   await browser.close();

@@ -11,12 +11,14 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--fondo);color:var(--ink);font:15px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+p,li{orphans:3;widows:3}
+.parte-tapa{page-break-after:avoid}
 .num,.mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
 
 .hoja{max-width:920px;margin:0 auto;padding:0 28px 80px}
 
 /* ---------- portada ---------- */
-.portada{padding:80px 28px 60px;text-align:center;background:var(--marca);color:#fff;margin-bottom:0}
+.portada{padding:70px 28px 50px;text-align:center;background:var(--marca);color:#fff;margin-bottom:0;border-radius:18px}
 .portada .marca-grande{font-size:15px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin-bottom:34px}
 .portada h1{font-size:40px;line-height:1.2;font-weight:800;letter-spacing:-.5px;margin:0 0 20px;max-width:640px;margin-left:auto;margin-right:auto}
 .portada .lema{font-size:17px;line-height:1.6;opacity:.92;max-width:520px;margin:0 auto 34px}
@@ -24,7 +26,8 @@ body{margin:0;background:var(--fondo);color:var(--ink);font:15px/1.65 Inter,syst
 .portada .meta b{opacity:1}
 
 /* ---------- índice ---------- */
-.indice{background:var(--surface);border:1px solid var(--linea);border-radius:14px;padding:26px 30px;margin:-40px 0 56px;box-shadow:0 18px 40px -26px rgba(18,42,35,.35)}
+.indice{background:var(--surface);border:1px solid var(--linea);border-radius:14px;padding:26px 30px;margin:-40px 0 56px;box-shadow:0 18px 40px -26px rgba(18,42,35,.35);page-break-inside:avoid}
+@media print{.indice{margin-top:24px}}
 .indice h2{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--tenue);margin:0 0 14px;font-weight:700}
 .indice ol{margin:0;padding-left:20px;columns:2;column-gap:34px}
 .indice li{font-size:13.5px;margin-bottom:9px;break-inside:avoid;color:var(--ink)}
@@ -38,19 +41,20 @@ body{margin:0;background:var(--fondo);color:var(--ink);font:15px/1.65 Inter,syst
 .parte-eyebrow{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--marca)}
 .parte-tapa h2{font-size:25px;font-weight:700;letter-spacing:-.3px;margin:4px 0 0}
 
-.sec{margin:34px 0 0;page-break-inside:avoid}
-.sec h3{font-size:17px;font-weight:700;margin:0 0 10px;letter-spacing:-.1px}
+.sec{margin:34px 0 0}
+.sec h3{font-size:17px;font-weight:700;margin:0 0 10px;letter-spacing:-.1px;page-break-after:avoid}
 .sec h3 .n{color:var(--tenue);font-weight:600;margin-right:7px}
 .sec p{margin:0 0 12px;color:var(--ink)}
 .sec p.suave{color:var(--suave)}
 .sec ul,.sec ol{margin:0 0 12px;padding-left:22px}
 .sec li{margin-bottom:7px}
 
-.cita{background:var(--marca-suave);border-left:3px solid var(--marca);border-radius:0 10px 10px 0;padding:14px 18px;margin:0 0 16px;font-size:15px;font-weight:600;color:var(--marca)}
+.cita{background:var(--marca-suave);border-left:3px solid var(--marca);border-radius:0 10px 10px 0;padding:14px 18px;margin:0 0 16px;font-size:15px;font-weight:600;color:var(--marca);page-break-inside:avoid}
 
 /* ---------- tablas ---------- */
-.tabla-envoltorio{overflow-x:auto;margin:0 0 18px}
+.tabla-envoltorio{overflow-x:auto;margin:0 0 18px;page-break-inside:avoid}
 table{width:100%;border-collapse:collapse;font-size:13px;background:var(--surface);border:1px solid var(--linea);border-radius:10px;overflow:hidden}
+tr{page-break-inside:avoid}
 th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--linea);vertical-align:top}
 th{background:var(--paper);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--suave);font-weight:700}
 tr:last-child td{border-bottom:0}
@@ -58,7 +62,7 @@ td b{color:var(--ink)}
 
 /* ---------- tarjetas de verificación ---------- */
 .grid-verif{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:0 0 18px}
-.v-card{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:16px 18px}
+.v-card{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:16px 18px;page-break-inside:avoid}
 .v-card .tope{display:flex;align-items:center;gap:9px;margin-bottom:8px}
 .v-card .num-badge{width:22px;height:22px;border-radius:7px;background:var(--marca);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .v-card h4{margin:0;font-size:14.5px;font-weight:700}
@@ -66,7 +70,7 @@ td b{color:var(--ink)}
 
 /* ---------- reglas no negociables ---------- */
 .reglas{display:flex;flex-direction:column;gap:10px;margin:0 0 18px}
-.regla{display:flex;gap:13px;background:var(--surface);border:1px solid var(--linea);border-radius:10px;padding:13px 16px}
+.regla{display:flex;gap:13px;background:var(--surface);border:1px solid var(--linea);border-radius:10px;padding:13px 16px;page-break-inside:avoid}
 .regla .num-badge{width:24px;height:24px;border-radius:999px;background:var(--ink);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
 .regla b{display:block;font-size:13.5px;margin-bottom:2px}
 .regla span{font-size:12.5px;color:var(--suave)}
@@ -78,7 +82,7 @@ td b{color:var(--ink)}
 
 /* ---------- planes ---------- */
 .planes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 18px}
-.plan{background:var(--surface);border:1px solid var(--linea);border-radius:14px;padding:20px}
+.plan{background:var(--surface);border:1px solid var(--linea);border-radius:14px;padding:20px;page-break-inside:avoid}
 .plan.pro{border-color:var(--marca);position:relative}
 .plan.pro::before{content:"PRO";position:absolute;top:-9px;right:16px;background:var(--marca);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;padding:3px 9px;border-radius:999px}
 .plan h4{margin:0 0 2px;font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:var(--tenue)}
@@ -89,7 +93,7 @@ td b{color:var(--ink)}
 
 /* ---------- audiencias ---------- */
 .audiencias{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:0 0 18px}
-.aud{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:16px 17px}
+.aud{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:16px 17px;page-break-inside:avoid}
 .aud .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--marca);margin-bottom:5px}
 .aud p{margin:0;font-size:12.5px;color:var(--suave)}
 
@@ -99,7 +103,7 @@ td b{color:var(--ink)}
    densidad de información sea la real: la misma tarjeta de paciente, el mismo
    anillo de Clcr, la misma grilla de categorías. */
 .galeria{display:grid;grid-template-columns:1fr 1fr;gap:32px 26px;margin:0 0 10px}
-.tel-item-wrap{display:flex;flex-direction:column;align-items:center}
+.tel-item-wrap{display:flex;flex-direction:column;align-items:center;page-break-inside:avoid}
 .tel{
   --n0-bg:#DCFCE7; --n0-tx:#166534; --n1-bg:#FEF9C3; --n1-tx:#713F12;
   --n2-bg:#FFEDD5; --n2-tx:#9A3412; --n3-bg:#FEE2E2; --n3-tx:#991B1B;
