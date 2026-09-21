@@ -1,0 +1,248 @@
+<title>Renders agente de IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ink:#122A23; --suave:#5C6B64; --tenue:#8CA39A; --paper:#F3F6F3; --linea:#DDE5E0;
+  --surface:#FFFFFF; --marca:#005228; --marca-suave:#E7F0EA; --barra:#006D37;
+  --fondo:#EEF1EC;
+  --ok:#22C55E; --media:#F59E0B; --grave:#EF4444; --neutro:#8CA39A;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--ink);font:15px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.hoja{max-width:1100px;margin:0 auto;padding:44px 28px 90px}
+
+h1{font-size:29px;line-height:1.2;font-weight:800;letter-spacing:-.4px;margin:0 0 8px}
+.sello{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--tenue);margin-bottom:16px}
+.bajada{color:var(--suave);font-size:15px;max-width:74ch;margin:0 0 30px}
+
+.decisiones{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:16px 20px;margin:0 0 40px}
+.decisiones h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--marca);margin:0 0 10px;font-weight:700}
+.decisiones ul{margin:0;padding-left:18px}
+.decisiones li{font-size:13px;color:var(--suave);margin-bottom:6px;line-height:1.5}
+.decisiones b{color:var(--ink)}
+
+h2.tit{font-size:19px;font-weight:700;margin:48px 0 4px;padding-top:20px;border-top:1px solid var(--linea)}
+h2.tit:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.tit-nota{color:var(--suave);font-size:13.5px;margin:0 0 20px;max-width:72ch}
+
+/* ---------- teléfono real ---------- */
+.galeria{display:flex;gap:26px;flex-wrap:wrap;margin:0 0 6px}
+.tel-item-wrap{display:flex;flex-direction:column;align-items:center;flex:0 0 270px}
+.tel{width:100%;max-width:270px;background:var(--paper);border-radius:30px;border:9px solid var(--ink);box-shadow:0 24px 50px -22px rgba(18,42,35,.45);overflow:hidden;color:var(--ink);font-size:12px;line-height:16px;position:relative}
+.tel-barra{background:var(--surface);color:var(--ink);padding:11px 12px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--linea)}
+.tb-atras,.tb-avatar{width:24px;height:24px;border-radius:999px;display:grid;place-items:center;flex:none}
+.tb-atras{color:var(--ink)}
+.tb-atras svg{width:13px;height:13px}
+.tb-marca{font-weight:700;font-size:15px;letter-spacing:-.02em;color:var(--marca)}
+.tb-avatar{background:var(--linea);color:var(--suave)}
+.tb-avatar svg{width:12px;height:12px}
+.tel-cuerpo{padding:10px 11px 0;display:flex;flex-direction:column;gap:8px;min-height:400px;position:relative}
+.tel-titulo{font-size:16px;font-weight:700;padding:3px 1px 0}
+
+/* segmentado, mismo patrón real del design-tokens: paper de fondo, activo = surface + sombra */
+.segmentado{background:var(--linea);border-radius:9px;padding:3px;display:flex;gap:2px;margin:2px 0 2px}
+.segmentado .seg{flex:1;text-align:center;padding:7px 4px;border-radius:7px;font-size:10.5px;font-weight:700;color:var(--suave)}
+.segmentado .seg.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(18,42,35,.18)}
+
+/* fila de paciente, lista plana */
+.fila-pac{background:var(--surface);border:1px solid var(--linea);border-radius:9px;padding:9px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fila-pac .n{font-weight:700;font-size:11px}
+.fila-pac .m{color:var(--suave);font-size:9px;margin-top:1px}
+.badge-conteo{width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;font-family:'IBM Plex Mono',monospace;flex:none}
+
+/* tarjeta de grupo */
+.tarjeta-grupo{background:var(--surface);border:1px solid var(--linea);border-radius:10px;padding:10px 11px}
+.tarjeta-grupo .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.tarjeta-grupo .nombre{font-weight:700;font-size:11.5px}
+.tarjeta-grupo .n-pac{font-size:9px;color:var(--suave)}
+.comp-barra{height:6px;border-radius:999px;overflow:hidden;display:flex;margin-bottom:6px}
+.comp-barra span{height:100%}
+.tarjeta-grupo .datos{display:flex;gap:10px;font-size:8.6px;color:var(--suave)}
+.tarjeta-grupo .datos b{color:var(--ink);font-family:'IBM Plex Mono',monospace}
+
+/* navbar real: 2+2 con botón central flotante */
+.tel-menu-real{position:absolute;left:0;right:0;bottom:0;background:var(--barra);min-height:56px;display:flex;padding:9px 8px 8px}
+.tel-menu-real .lado{flex:1;display:flex;justify-content:space-around}
+.tm-real{display:flex;flex-direction:column;align-items:center;gap:2px;color:rgba(255,255,255,.62);font-size:8px;font-weight:700}
+.tm-real.on{color:#fff}
+.tm-real svg{width:17px;height:17px}
+.centro-real{position:absolute;left:50%;top:-24px;transform:translateX(-50%);width:52px;height:52px;border-radius:999px;display:grid;place-items:center;border:4px solid var(--barra);box-shadow:0 5px 14px rgba(18,42,35,.3)}
+.centro-real.off{background:#fff;color:var(--barra)}
+.centro-real.on{background:var(--barra);color:#fff}
+.centro-real svg{width:21px;height:21px}
+.tel-cuerpo-navbar{padding-bottom:76px}
+
+/* chat */
+.msj{max-width:82%;padding:8px 11px;border-radius:12px;font-size:10.5px;line-height:1.4}
+.msj.usuario{align-self:flex-end;background:var(--marca);color:#fff;border-bottom-right-radius:3px}
+.msj.asistente{align-self:flex-start;background:var(--surface);border:1px solid var(--linea);border-bottom-left-radius:3px}
+.hilo-chat{display:flex;flex-direction:column;gap:8px;flex:1;overflow:hidden;padding-bottom:8px}
+.chip-fuente{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;background:var(--marca-suave);color:var(--marca);font-size:8.4px;font-weight:700;padding:4px 8px;border-radius:999px;margin-top:2px}
+.pensando{align-self:flex-start;display:flex;gap:4px;padding:8px 11px}
+.pensando span{width:5px;height:5px;border-radius:999px;background:var(--tenue)}
+.input-chat{position:absolute;left:9px;right:9px;bottom:9px;background:var(--surface);border:1px solid var(--linea);border-radius:999px;padding:9px 12px;font-size:10px;color:var(--tenue);display:flex;align-items:center;justify-content:space-between}
+.input-chat .enviar{width:22px;height:22px;border-radius:999px;background:var(--marca);color:#fff;display:grid;place-items:center;flex:none}
+.input-chat .enviar svg{width:11px;height:11px}
+
+.tel-cap{margin-top:14px;font-size:12.5px;color:var(--suave);text-align:center;max-width:270px}
+.tel-cap b{color:var(--ink);display:block;font-size:13px;margin-bottom:3px}
+
+.flecha-cambio{display:flex;align-items:center;justify-content:center;color:var(--tenue);font-size:26px;padding:0 4px}
+</style>
+
+<div class="hoja">
+  <div class="sello">Renders · antes de programar</div>
+  <h1>Navbar nuevo, fusión Pacientes/Grupos, y pantalla de chat</h1>
+  <p class="bajada">
+    Sobre <code>gfh-agente-ia-chat.md</code>. Mismo componente de teléfono,
+    tipografía e íconos reales de la app — nada de esquema aparte. El botón
+    central real mide 58×58, borde de 4px del mismo verde de la barra
+    (<code>#006D37</code>), con sombra propia — replicado tal cual, no a ojo.
+  </p>
+
+  <div class="decisiones">
+    <h2>Decisiones ya tomadas antes de este render</h2>
+    <ul>
+      <li><b>Se fusionan Pacientes y Grupos</b> con un selector segmentado arriba ("Todos" / "Por grupo") que alterna entre las dos vistas que ya existen y funcionan — no se inventa una tercera forma de mostrar los datos, no se pierde ninguna de las dos preguntas que cada una responde hoy.</li>
+      <li><b>Herramientas pasa a la 2ª posición</b> como tab normal — la pantalla ya es autónoma, no necesita cambios propios.</li>
+      <li><b>El botón central pasa a ser el chat de IA</b> — mismo tratamiento visual elevado que tenía Herramientas, ícono nuevo (burbuja de chat, no existía ninguno parecido en el set).</li>
+      <li><b>v1 del chat sin streaming</b>: respuesta completa con estado "pensando…", nunca aparece palabra por palabra todavía.</li>
+      <li><b>Cada respuesta que usó una tool</b> lleva un chip de fuente debajo, tocable — nunca una afirmación sin decir de dónde salió.</li>
+    </ul>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 class="tit">1 · El navbar, antes y después</h2>
+  <p class="tit-nota">2+2 con botón central flotante en los dos casos — cambia qué hay en cada posición, no la estructura.</p>
+  <div class="galeria" style="align-items:center">
+    <div class="tel-item-wrap">
+      <div class="tel" style="max-width:250px">
+        <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+        <div class="tel-cuerpo tel-cuerpo-navbar" style="min-height:220px">
+          <div class="tel-menu-real">
+            <div class="lado">
+              <div class="tm-real on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.2"/><path d="M22 20v-2a4 4 0 0 0-3-3.8"/><path d="M16.5 4.2a4 4 0 0 1 0 5.6"/></svg>Pacientes</div>
+              <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="5" rx="2"/><rect x="3" y="12" width="18" height="5" rx="2"/><path d="M6 20h12"/></svg>Grupos</div>
+            </div>
+            <div class="centro-real off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></div>
+            <div class="lado">
+              <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Buscador</div>
+              <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-4 4-6 7.5-6s6.3 2 7.5 6"/></svg>Perfil</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="tel-cap"><b>Hoy</b>Pacientes · Grupos · Herramientas (centro) · Buscador · Perfil</p>
+    </div>
+
+    <div class="flecha-cambio">→</div>
+
+    <div class="tel-item-wrap">
+      <div class="tel" style="max-width:250px">
+        <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+        <div class="tel-cuerpo tel-cuerpo-navbar" style="min-height:220px">
+          <div class="tel-menu-real">
+            <div class="lado">
+              <div class="tm-real on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.2"/><path d="M22 20v-2a4 4 0 0 0-3-3.8"/><path d="M16.5 4.2a4 4 0 0 1 0 5.6"/></svg>Pacientes</div>
+              <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>Herramientas</div>
+            </div>
+            <div class="centro-real on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4.5 4v-4H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg></div>
+            <div class="lado">
+              <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Buscador</div>
+              <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-4 4-6 7.5-6s6.3 2 7.5 6"/></svg>Perfil</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="tel-cap"><b>Propuesto</b>Pacientes (fusionado) · Herramientas · IA (centro) · Buscador · Perfil</p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 class="tit">2 · Pacientes fusionado con Grupos</h2>
+  <p class="tit-nota">Selector segmentado arriba — las dos vistas de abajo son exactamente las que ya existen hoy, sin rediseñarlas.</p>
+  <div class="galeria">
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-marca" style="margin:0 auto">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo tel-cuerpo-navbar">
+        <div class="tel-titulo">Pacientes</div>
+        <div class="segmentado"><span class="seg on">Todos</span><span class="seg">Por grupo</span></div>
+        <div class="fila-pac"><div><div class="n">Rodríguez, Ana María</div><div class="m">78 años · Clcr 23,6 · Consultorio</div></div><div class="badge-conteo" style="background:#FEE2E2;color:#991B1B">4</div></div>
+        <div class="fila-pac"><div><div class="n">Batista, Carlos</div><div class="m">57 años · Clcr 48 · CTI</div></div><div class="badge-conteo" style="background:#FFEDD5;color:#9A3412">2</div></div>
+        <div class="fila-pac"><div><div class="n">Fontán, Lucía</div><div class="m">35 años · embarazo 24 sem · Sin grupo</div></div><div class="badge-conteo" style="background:#DCFCE7;color:#166534">0</div></div>
+        <div class="tel-menu-real">
+          <div class="lado">
+            <div class="tm-real on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.2"/><path d="M22 20v-2a4 4 0 0 0-3-3.8"/><path d="M16.5 4.2a4 4 0 0 1 0 5.6"/></svg>Pacientes</div>
+            <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>Herramientas</div>
+          </div>
+          <div class="centro-real off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4.5 4v-4H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg></div>
+          <div class="lado">
+            <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Buscador</div>
+            <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-4 4-6 7.5-6s6.3 2 7.5 6"/></svg>Perfil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>"Todos"</b>la pantalla actual de Pacientes tal cual — lista plana por gravedad</p>
+    </div>
+
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-marca" style="margin:0 auto">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo tel-cuerpo-navbar">
+        <div class="tel-titulo">Pacientes</div>
+        <div class="segmentado"><span class="seg">Todos</span><span class="seg on">Por grupo</span></div>
+        <div class="tarjeta-grupo">
+          <div class="top"><span class="nombre">Consultorio</span><span class="n-pac">5 pacientes</span></div>
+          <div class="comp-barra"><span style="width:60%;background:var(--grave)"></span><span style="width:20%;background:var(--media)"></span><span style="width:20%;background:var(--ok)"></span></div>
+          <div class="datos"><span><b>3</b> graves</span><span><b>1</b> atención</span><span><b>1</b> sin hallazgos</span></div>
+        </div>
+        <div class="tarjeta-grupo">
+          <div class="top"><span class="nombre">CTI</span><span class="n-pac">2 pacientes</span></div>
+          <div class="comp-barra"><span style="width:50%;background:var(--media)"></span><span style="width:50%;background:var(--ok)"></span></div>
+          <div class="datos"><span><b>1</b> atención</span><span><b>1</b> sin hallazgos</span></div>
+        </div>
+        <div class="tarjeta-grupo" style="opacity:.75">
+          <div class="top"><span class="nombre">Sin grupo</span><span class="n-pac">1 paciente</span></div>
+          <div class="comp-barra"><span style="width:100%;background:var(--ok)"></span></div>
+        </div>
+        <div class="tel-menu-real">
+          <div class="lado">
+            <div class="tm-real on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.2"/><path d="M22 20v-2a4 4 0 0 0-3-3.8"/><path d="M16.5 4.2a4 4 0 0 1 0 5.6"/></svg>Pacientes</div>
+            <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>Herramientas</div>
+          </div>
+          <div class="centro-real off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4.5 4v-4H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg></div>
+          <div class="lado">
+            <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Buscador</div>
+            <div class="tm-real"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-4 4-6 7.5-6s6.3 2 7.5 6"/></svg>Perfil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>"Por grupo"</b>la pantalla actual de Grupos tal cual — tarjetas con composición de riesgo, incluye "Sin grupo"</p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 class="tit">3 · Pantalla de chat</h2>
+  <p class="tit-nota">Sin streaming en v1: respuesta completa, con un estado "pensando…" mientras corre el tool-calling. Cada respuesta que usó una tool lleva su chip de fuente.</p>
+  <div class="galeria">
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">Asistente</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo" style="padding-bottom:64px">
+        <div class="hilo-chat">
+          <div class="msj usuario">¿Warfarina y paracetamol interactúan?</div>
+          <div class="msj asistente">Sí — hay una interacción documentada. El uso concomitante puede potenciar el efecto anticoagulante y aumentar el riesgo de sangrado, especialmente con dosis altas o uso prolongado de paracetamol.</div>
+          <span class="chip-fuente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h11"/><polyline points="12 5 15 8 12 11"/><path d="M20 16H9"/><polyline points="12 13 9 16 12 19"/></svg>Interacciones — Warfarina</span>
+          <div class="msj usuario">¿Y con un Clcr de 35?</div>
+          <div class="pensando"><span></span><span></span><span></span></div>
+        </div>
+        <div class="input-chat">Escribí tu pregunta…<span class="enviar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>Chat</b>burbujas usuario/asistente, chip de fuente tocable, "pensando…" mientras se ejecuta la tool</p>
+    </div>
+  </div>
+
+</div>
