@@ -53,6 +53,9 @@ describe('el catálogo', () => {
       'condiciones',
       'dosis',
       'laboratorio',
+      'cardiovascular',
+      'neurologico',
+      'criticos',
     ]);
   });
 });
@@ -107,7 +110,11 @@ describe('buscar', () => {
   });
 
   it('sin coincidencias devuelve vacío', () => {
-    expect(buscar(HERRAMIENTAS, 'warfarina')).toEqual([]);
+    expect(buscar(HERRAMIENTAS, 'wxyz-no-existe')).toEqual([]);
+  });
+
+  it('encuentra HAS-BLED por "warfarina", aunque no esté en el título', () => {
+    expect(claves(buscar(HERRAMIENTAS, 'warfarina'))).toEqual(['has-bled']);
   });
 });
 
@@ -115,7 +122,20 @@ describe('agrupar', () => {
   it('separa lo que calcula de lo que cruza el catálogo', () => {
     const g = agrupar(HERRAMIENTAS);
     expect(g.map((x) => x.titulo)).toEqual(['Calculadoras', 'Contra el catálogo']);
-    expect(claves(g[0]!.herramientas)).toEqual(['child-pugh', 'clcr', 'ldl', 'hba1c', 'imc', 'riesgo-cv']);
+    expect(claves(g[0]!.herramientas)).toEqual([
+      'child-pugh',
+      'clcr',
+      'ldl',
+      'glasgow',
+      'has-bled',
+      'hba1c',
+      'imc',
+      'qsofa',
+      'qtc',
+      'riesgo-cv',
+      'sofa',
+      'superficie-corporal',
+    ]);
   });
 
   it('ordena por TÍTULO y no por clave', () => {
@@ -149,7 +169,20 @@ describe('agrupar', () => {
     // Nefrología sólo tiene 'renal': adelanta el clcr y el ajuste renal, en
     // sus dos secciones, sin sacar nada de la lista.
     const g = agrupar(HERRAMIENTAS, relevantesDe('Nefrología'));
-    expect(claves(g[0]!.herramientas)).toEqual(['clcr', 'child-pugh', 'ldl', 'hba1c', 'imc', 'riesgo-cv']);
+    expect(claves(g[0]!.herramientas)).toEqual([
+      'clcr',
+      'child-pugh',
+      'ldl',
+      'glasgow',
+      'has-bled',
+      'hba1c',
+      'imc',
+      'qsofa',
+      'qtc',
+      'riesgo-cv',
+      'sofa',
+      'superficie-corporal',
+    ]);
     expect(claves(g[1]!.herramientas)).toEqual([
       'renal',
       'ajuste-hepatico',

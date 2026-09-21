@@ -63,7 +63,13 @@ export type NombreIcono =
   | 'ayuda'
   | 'ojo'
   | 'ojoCerrado'
-  | 'correo';
+  | 'correo'
+  // Calculadoras nuevas: 'sangrado' es la gota del riñón con una franja, para
+  // distinguirla del riñón mismo a 18 px; 'superficie-corporal' es una regla;
+  // 'glasgow' es un contorno de cerebro simplificado.
+  | 'sangrado'
+  | 'superficie-corporal'
+  | 'glasgow';
 
 interface Props {
   nombre: NombreIcono;
@@ -423,6 +429,30 @@ function trazos(nombre: NombreIcono, c: Comun) {
         <>
           <Rect x="2" y="4" width="20" height="16" rx="2" {...c} />
           <Polyline points="2 6 12 13 22 6" {...c} />
+        </>
+      );
+    case 'sangrado':
+      return (
+        <>
+          <Path d="M12 3c3.5 3.2 5.5 6 5.5 9a5.5 5.5 0 0 1-11 0c0-3 2-5.8 5.5-9Z" {...c} />
+          <Path d="M8.7 13h6.6" {...c} />
+        </>
+      );
+    case 'superficie-corporal':
+      return (
+        <>
+          <Rect x="3" y="9.5" width="18" height="5" rx="1" {...c} />
+          <Path d="M6.5 9.5v2.3M10 9.5v1.6M13.5 9.5v2.3M17 9.5v1.6" {...c} />
+        </>
+      );
+    case 'glasgow':
+      return (
+        <>
+          <Path
+            d="M8 4.8c-2.4 0-4 1.8-4 3.9 0 .9-1 1.5-1 3.3s1 2.4 1 3.3c0 2.1 1.6 3.9 4 3.9h8c2.4 0 4-1.8 4-3.9 0-.9 1-1.5 1-3.3s-1-2.4-1-3.3c0-2.1-1.6-3.9-4-3.9-1 0-1.5.5-2 .5s-1-.5-2-.5-1.5.5-2 .5-1-.5-2-.5Z"
+            {...c}
+          />
+          <Path d="M12 4.8v14.4" {...c} />
         </>
       );
   }

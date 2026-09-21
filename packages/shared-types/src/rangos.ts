@@ -89,6 +89,16 @@ export const RANGOS = {
   // eso la traducción a glucemia promedio deja de estar validada, no sólo de
   // ser rara. ----------------------------------------------------------------
   hba1cPorcentaje: { min: 3, max: 20, decimales: 1, habitual: { min: 4, max: 15 } },
+
+  // --- QTc (Bazett/Fridericia) -----------------------------------------------
+  qtMs: { min: 100, max: 800, decimales: 0, habitual: { min: 250, max: 600 } },
+  frecuenciaCardiacaLpm: { min: 20, max: 300, decimales: 0, habitual: { min: 30, max: 220 } },
+
+  // --- SOFA, sólo el valor exacto opcional de los dos criterios de laboratorio
+  // que no reusan un rango que ya existe (renal reusa creatininaMgDl, hepático
+  // reusa bilirrubinaMgDl). ---------------------------------------------------
+  pao2Fio2: { min: 0, max: 700, decimales: 0, habitual: { min: 40, max: 500 } },
+  plaquetasMiles: { min: 0, max: 2000, decimales: 0, habitual: { min: 5, max: 700 } },
 } as const satisfies Record<string, Rango>;
 
 export type CampoConRango = keyof typeof RANGOS;

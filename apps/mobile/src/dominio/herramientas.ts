@@ -33,6 +33,9 @@ export const CATEGORIAS = [
   'condiciones',
   'dosis',
   'laboratorio',
+  'cardiovascular',
+  'neurologico',
+  'criticos',
 ] as const;
 
 export type CategoriaHerramienta = (typeof CATEGORIAS)[number];
@@ -45,6 +48,9 @@ export const NOMBRE_CATEGORIA: Record<CategoriaHerramienta, string> = {
   condiciones: 'Condiciones',
   dosis: 'Dosis',
   laboratorio: 'Laboratorio',
+  cardiovascular: 'Cardiovascular',
+  neurologico: 'Neurológico',
+  criticos: 'Cuidados críticos',
 };
 
 // --- el catálogo -------------------------------------------------------------
@@ -133,6 +139,66 @@ export const HERRAMIENTAS: readonly Herramienta[] = [
     categorias: ['laboratorio'],
     icono: 'calculadora',
     busca: ['hemoglobina glicosilada', 'glucemia promedio', 'eag', 'diabetes', 'adag'],
+  },
+  {
+    clave: 'has-bled',
+    titulo: 'HAS-BLED',
+    detalle: 'Riesgo de sangrado mayor a 1 año, en anticoagulados',
+    ruta: '/herramientas/has-bled',
+    cruza: false,
+    categorias: ['cardiovascular'],
+    icono: 'sangrado',
+    busca: ['sangrado', 'anticoagulacion', 'warfarina', 'acenocumarol', 'acod', 'fibrilacion auricular'],
+  },
+  {
+    clave: 'qtc',
+    titulo: 'QTc corregido',
+    detalle: 'Bazett y Fridericia, según sexo y frecuencia cardíaca',
+    ruta: '/herramientas/qtc',
+    cruza: false,
+    categorias: ['cardiovascular'],
+    icono: 'pulso',
+    busca: ['qt', 'bazett', 'fridericia', 'arritmia', 'torsion de puntas', 'ecg'],
+  },
+  {
+    clave: 'superficie-corporal',
+    titulo: 'Superficie corporal',
+    detalle: 'Fórmula de Mosteller · insumo para dosis por m²',
+    ruta: '/herramientas/superficie-corporal',
+    cruza: false,
+    categorias: ['dosis'],
+    icono: 'superficie-corporal',
+    busca: ['mosteller', 'bsa', 'area de superficie corporal', 'dosis por m2'],
+  },
+  {
+    clave: 'glasgow',
+    titulo: 'Escala de Glasgow',
+    detalle: 'Apertura ocular, respuesta verbal y motora · nivel de conciencia',
+    ruta: '/herramientas/glasgow',
+    cruza: false,
+    categorias: ['neurologico'],
+    icono: 'glasgow',
+    busca: ['gcs', 'conciencia', 'trauma', 'coma'],
+  },
+  {
+    clave: 'qsofa',
+    titulo: 'qSOFA',
+    detalle: 'Screening de sepsis, a la cabecera',
+    ruta: '/herramientas/qsofa',
+    cruza: false,
+    categorias: ['criticos'],
+    icono: 'alerta',
+    busca: ['sepsis', 'screening', 'infeccion'],
+  },
+  {
+    clave: 'sofa',
+    titulo: 'SOFA completo',
+    detalle: 'Disfunción orgánica en 6 sistemas, seguimiento evolutivo',
+    ruta: '/herramientas/sofa',
+    cruza: false,
+    categorias: ['criticos'],
+    icono: 'alerta',
+    busca: ['sofa', 'uci', 'uti', 'disfuncion organica', 'sepsis'],
   },
   {
     clave: 'renal',
@@ -252,7 +318,7 @@ export interface GrupoHerramientas {
  */
 const CATEGORIAS_POR_ESPECIALIDAD: Record<Especialidad, readonly CategoriaHerramienta[]> = {
   'Clínica médica': [],
-  Cardiología: ['laboratorio'],
+  Cardiología: ['laboratorio', 'cardiovascular'],
   Nefrología: ['renal'],
   Hepatología: ['hepatico'],
   // El clearance también es de geriatría y oncología, no sólo de nefrología:
