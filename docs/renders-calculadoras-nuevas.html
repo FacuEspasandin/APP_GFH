@@ -1,0 +1,261 @@
+<title>Nuevas calculadoras GFH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ink:#122A23; --suave:#5C6B64; --tenue:#8CA39A; --paper:#F3F6F3; --linea:#DDE5E0;
+  --surface:#FFFFFF; --marca:#005228; --marca-suave:#E7F0EA; --barra:#006D37;
+  --fondo:#EEF1EC;
+  --rb:#0D7068; --rb-suave:#E1F1EE;
+  --rm:#B45309; --rm-suave:#FDF0DC;
+  --ra:#9F1239; --ra-suave:#FFE4E6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--ink);font:15px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.hoja{max-width:1080px;margin:0 auto;padding:44px 28px 90px}
+
+h1{font-size:30px;line-height:1.2;font-weight:800;letter-spacing:-.4px;margin:0 0 8px}
+.sello{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--tenue);margin-bottom:16px}
+.bajada{color:var(--suave);font-size:15px;max-width:70ch;margin:0 0 20px}
+
+.decisiones{background:var(--surface);border:1px solid var(--linea);border-radius:12px;padding:16px 20px;margin:0 0 40px}
+.decisiones h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--marca);margin:0 0 10px;font-weight:700}
+.decisiones ul{margin:0;padding-left:18px}
+.decisiones li{font-size:13px;color:var(--suave);margin-bottom:6px;line-height:1.5}
+.decisiones b{color:var(--ink)}
+
+h2.tit{font-size:19px;font-weight:700;margin:44px 0 4px;padding-top:18px;border-top:1px solid var(--linea)}
+h2.tit:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.tit-nota{color:var(--suave);font-size:13.5px;margin:0 0 18px;max-width:68ch}
+
+/* ---------- teléfono (mismo componente real de la app, ver documento-funcional-presentacion.html) ---------- */
+.galeria{display:flex;gap:22px;flex-wrap:wrap;margin:0 0 6px}
+.tel-item-wrap{display:flex;flex-direction:column;align-items:center;flex:0 0 280px}
+.tel{
+  width:100%;max-width:280px;background:var(--paper);border-radius:28px;
+  border:8px solid var(--ink);box-shadow:0 22px 48px -22px rgba(18,42,35,.45);
+  overflow:hidden;color:var(--ink);font-size:12px;line-height:16px;position:relative;
+}
+.tel-barra{background:var(--surface);color:var(--ink);padding:11px 12px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--linea)}
+.tb-atras,.tb-avatar{width:24px;height:24px;border-radius:999px;display:grid;place-items:center;flex:none}
+.tb-atras{color:var(--ink)}
+.tb-atras svg{width:13px;height:13px}
+.tb-marca{font-weight:700;font-size:15px;letter-spacing:-.02em;color:var(--marca)}
+.tb-avatar{background:var(--linea);color:var(--suave)}
+.tb-avatar svg{width:12px;height:12px}
+.tel-cuerpo{padding:10px 11px 14px;display:flex;flex-direction:column;gap:7px;min-height:360px}
+.tel-titulo{font-size:14.5px;font-weight:700;padding:2px 1px 0}
+.tel-eyeb{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--suave);margin:0 0 1px}
+
+/* toggles */
+.t-toggle{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:6.5px 9px}
+.t-toggle .tx{flex:1;min-width:0}
+.t-toggle .tx b{display:block;font-size:9.5px;font-weight:600;line-height:1.25}
+.t-toggle .tx span{display:block;font-size:7.8px;color:var(--suave);line-height:1.25;margin-top:1px}
+.sw{width:24px;height:14px;border-radius:999px;position:relative;flex:none}
+.sw.on{background:var(--marca)}
+.sw.off{background:var(--linea)}
+.sw i{position:absolute;top:2px;width:10px;height:10px;border-radius:999px;background:#fff}
+.sw.on i{right:2px}
+.sw.off i{left:2px}
+
+/* inputs */
+.t-input{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:7px 10px}
+.t-input .lbl{font-size:7.8px;color:var(--suave);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.t-input .val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;margin-top:1px}
+.t-input .val small{font-family:Inter,sans-serif;font-size:9px;font-weight:400;color:var(--suave)}
+
+/* picker de opción larga (Glasgow) */
+.t-pick{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:7px 9px}
+.t-pick .lbl{font-size:8px;font-weight:700;color:var(--marca);text-transform:uppercase;letter-spacing:.04em}
+.t-pick .opt{display:flex;align-items:center;gap:6px;margin-top:3px;background:var(--marca-suave);border-radius:6px;padding:5px 7px}
+.t-pick .opt .n{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:10px;color:var(--marca);flex:none}
+.t-pick .opt .d{font-size:8.6px;color:var(--ink);line-height:1.2}
+
+/* resultado */
+.t-res{border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-top:auto}
+.t-res .n{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;line-height:1}
+.t-res .n small{font-family:Inter,sans-serif;font-size:8.5px;font-weight:600;display:block;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.t-res .tx{flex:1;font-size:9.5px;font-weight:600;line-height:1.3}
+.t-res .tx span{display:block;font-size:8px;font-weight:400;margin-top:2px;opacity:.85}
+.t-res.rb{background:var(--rb-suave);color:var(--rb)}
+.t-res.rm{background:var(--rm-suave);color:var(--rm)}
+.t-res.ra{background:var(--ra-suave);color:var(--ra)}
+.t-res.neutro{background:var(--surface);border:1px solid var(--linea);color:var(--ink)}
+
+.t-res-doble{display:flex;gap:7px}
+.t-res-doble .c{flex:1;border-radius:9px;padding:8px 9px;text-align:center}
+.t-res-doble .c .fx{font-size:7.6px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.t-res-doble .c .n{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;margin:2px 0}
+.t-res-doble .c .cat{font-size:7.6px;font-weight:600}
+
+.t-chip{display:inline-block;font-size:7.6px;font-weight:600;padding:2px 7px;border-radius:999px;margin:0 4px 4px 0}
+
+/* SOFA: filas de sistema compactas */
+.t-sys{display:flex;justify-content:space-between;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--linea);border-radius:7px;padding:5px 8px}
+.t-sys .nm{font-size:8.6px;font-weight:600}
+.t-sys .vv{font-size:7.6px;color:var(--suave)}
+.t-sys .pt{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--marca);flex:none}
+.t-sys.na .pt{color:var(--tenue);font-size:7.6px;font-family:Inter,sans-serif;font-weight:700}
+
+.tel-menu{background:var(--barra);min-height:40px;display:flex;align-items:flex-start;padding:7px 4px 5px;position:relative;margin-top:6px;border-radius:11px 11px 0 0}
+.tm-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;color:rgba(255,255,255,.6);font-size:7.5px;font-weight:600}
+.tm-item svg{width:15px;height:15px}
+.tm-item.on{color:#fff}
+.tel-menu .centro{position:absolute;left:50%;top:-18px;transform:translateX(-50%);width:40px;height:40px;border-radius:999px;flex:none;background:#fff;border:3px solid var(--barra);color:var(--barra);display:grid;place-items:center;box-shadow:0 5px 14px rgba(18,42,35,.3)}
+.tel-menu .centro svg{width:15px;height:15px}
+
+.tel-cap{margin-top:12px;font-size:12.5px;color:var(--suave);text-align:center;max-width:280px}
+.tel-cap b{color:var(--ink);display:block;font-size:13px;margin-bottom:3px}
+</style>
+
+<div class="hoja">
+  <div class="sello">Renders · antes de programar</div>
+  <h1>Seis calculadoras nuevas — HAS-BLED, QTc, superficie corporal, Glasgow, qSOFA y SOFA</h1>
+  <p class="bajada">
+    Sobre <code>gfh-calculadoras-clinicas.md</code>. Mismo componente de
+    teléfono, tipografía (Inter + IBM Plex Mono para números) y colores reales
+    de la app — no un esquema aparte. Las seis van como <b>libres, sin
+    paciente ni suscripción</b> (<code>cruza: false</code>): son fórmulas y
+    criterios publicados, mismo criterio ya aplicado a Clcr, Child-Pugh, IMC
+    y el resto del catálogo actual.
+  </p>
+
+  <div class="decisiones">
+    <h2>Decisiones tomadas antes de este render</h2>
+    <ul>
+      <li><b>Categorías nuevas:</b> <code>cardiovascular</code> (HAS-BLED, QTc), <code>neurologico</code> (Glasgow), <code>criticos</code> (qSOFA, SOFA) — ninguna de las 7 existentes encajaba.</li>
+      <li><b>Por especialidad:</b> no se toca el enum <code>Especialidad</code> ahora — es una decisión más grande y aparte. Se extiende sólo <code>Cardiología</code> para incluir <code>cardiovascular</code>, que ya existía. El resto queda sin mapear, igual que "Clínica médica" hoy: entra solo cuando haya una especialidad que lo pida.</li>
+      <li><b>Glasgow</b> se construye como pieza de dominio reutilizable, no sólo pantalla — qSOFA y SOFA la consumen.</li>
+      <li><b>qSOFA</b> usa un toggle directo ("¿Glasgow &lt;15?"), no abre el selector completo E/V/M — mantiene el espíritu de screening rápido a la cabecera. El selector completo vive en la pantalla de Glasgow y dentro de SOFA.</li>
+      <li><b>Paleta de riesgo propia</b> (verde azulado / ámbar tierra / burdeos) para los badges de estas seis — nunca la escala reservada de severidad clínica de los hallazgos reales, mismo criterio que Riesgo cardiovascular e IMC.</li>
+    </ul>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 class="tit">1 · HAS-BLED</h2>
+  <p class="tit-nota">Checklist de 9 ítems (H, A×2, S, B, L, E, D×2), puntaje 0–9. El resultado nombra los factores modificables presentes, para poder sugerirlos como "a corregir".</p>
+  <div class="galeria">
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">HAS-BLED</div>
+        <div class="tel-eyeb">Riesgo de sangrado a 1 año</div>
+        <div class="t-toggle"><div class="tx"><b>H · Hipertensión no controlada</b><span>PAS sostenida &gt;160 mmHg</span></div><div class="sw on"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>A · Función renal anormal</b><span>Diálisis, trasplante o Cr &gt;2,26 mg/dL</span></div><div class="sw off"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>A · Función hepática anormal</b><span>Hepatopatía crónica o bilirrubina/enzimas elevadas</span></div><div class="sw off"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>S · ACV previo</b></div><div class="sw off"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>B · Sangrado previo</b><span>O predisposición (ej. anemia)</span></div><div class="sw off"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>L · INR lábil</b><span>TRT &lt;60% — no aplica con ACOD</span></div><div class="sw off"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>E · Edad &gt;65</b></div><div class="sw on"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>D · Antiagregantes o AINEs</b></div><div class="sw on"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>D · Alcohol ≥8 unid./semana</b></div><div class="sw off"><i></i></div></div>
+        <div class="t-res rm"><div class="n">3<small>de 9</small></div><div class="tx">Riesgo alto<span>A corregir: PA, AINEs concomitantes</span></div></div>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>HAS-BLED</b>9 toggles, puntaje total, corte en 3, factores modificables listados</p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 class="tit">2 · QTc corregido</h2>
+  <p class="tit-nota">Bazett y Fridericia lado a lado — nunca una sola. Sexo requerido para clasificar.</p>
+  <div class="galeria">
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">QTc corregido</div>
+        <div class="tel-eyeb">Bazett y Fridericia</div>
+        <div class="t-input"><div class="lbl">QT medido</div><div class="val">420 <small>ms</small></div></div>
+        <div class="t-input"><div class="lbl">Frecuencia cardíaca</div><div class="val">110 <small>lpm</small></div></div>
+        <div class="t-input"><div class="lbl">Sexo</div><div class="val" style="font-size:11px">Femenino</div></div>
+        <div class="t-res-doble">
+          <div class="c" style="background:var(--rm-suave)"><div class="fx" style="color:var(--rm)">Bazett</div><div class="n" style="color:var(--rm)">478</div><div class="cat" style="color:var(--rm)">Límite</div></div>
+          <div class="c" style="background:var(--rb-suave)"><div class="fx" style="color:var(--rb)">Fridericia</div><div class="n" style="color:var(--rb)">449</div><div class="cat" style="color:var(--rb)">Normal</div></div>
+        </div>
+        <p style="font-size:7.6px;color:var(--suave);line-height:1.35;margin:0">FC &gt;100: Bazett sobrecorrige. Fridericia es más confiable acá.</p>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>QTc</b>ambas fórmulas siempre visibles, con la nota de cuál confiar según FC</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">Superficie corporal</div>
+        <div class="tel-eyeb">Fórmula de Mosteller</div>
+        <div class="t-input"><div class="lbl">Peso</div><div class="val">70 <small>kg</small></div></div>
+        <div class="t-input"><div class="lbl">Talla</div><div class="val">170 <small>cm</small></div></div>
+        <div class="t-res neutro" style="justify-content:center;text-align:center"><div class="n" style="font-size:28px">1,82<small>m²</small></div></div>
+        <p style="font-size:7.6px;color:var(--suave);line-height:1.35;margin:0;text-align:center">Sin categoría — es un insumo para dosis por m², no un hallazgo clínico.</p>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>Superficie corporal</b>mismo patrón "cifras" de HbA1c — sólo el número, sin badge</p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 class="tit">3 · Escala de Glasgow (GCS)</h2>
+  <p class="tit-nota">Texto completo por opción, nunca sólo el número. Componente reutilizable — qSOFA y SOFA lo consumen.</p>
+  <div class="galeria">
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">Escala de Glasgow</div>
+        <div class="tel-eyeb">Nivel de conciencia</div>
+        <div class="t-pick"><div class="lbl">Apertura ocular</div><div class="opt"><span class="n">4</span><span class="d">Espontánea</span></div></div>
+        <div class="t-pick"><div class="lbl">Respuesta verbal</div><div class="opt"><span class="n">5</span><span class="d">Orientado</span></div></div>
+        <div class="t-pick"><div class="lbl">Respuesta motora</div><div class="opt"><span class="n">6</span><span class="d">Obedece órdenes</span></div></div>
+        <div class="t-res rb"><div class="n">15<small>E4 V5 M6</small></div><div class="tx">Leve<span>Conciencia normal</span></div></div>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>Glasgow</b>desglose E/V/M siempre visible junto al total — nunca sólo el número</p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 class="tit">4 · qSOFA</h2>
+  <p class="tit-nota">Screening de 3 ítems. El del sensorio es un toggle directo, no abre el Glasgow completo.</p>
+  <div class="galeria">
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">qSOFA</div>
+        <div class="tel-eyeb">Screening de sepsis, a la cabecera</div>
+        <div class="t-toggle"><div class="tx"><b>Frecuencia respiratoria ≥22</b></div><div class="sw on"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>Alteración del sensorio</b><span>Glasgow &lt;15</span></div><div class="sw on"><i></i></div></div>
+        <div class="t-toggle"><div class="tx"><b>PA sistólica ≤100 mmHg</b></div><div class="sw off"><i></i></div></div>
+        <div class="t-res ra"><div class="n">2<small>de 3</small></div><div class="tx">Mayor riesgo<span>Evaluar lactato, hemocultivos, SOFA completo</span></div></div>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>qSOFA</b>3 toggles, corte en 2 — el sensorio es directo, sin abrir Glasgow completo</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">SOFA completo</div>
+        <div class="tel-eyeb">Disfunción orgánica, 6 sistemas</div>
+        <div class="t-sys"><div><div class="nm">Respiratorio</div><div class="vv">PaO₂/FiO₂ 280</div></div><div class="pt">1</div></div>
+        <div class="t-sys"><div><div class="nm">Coagulación</div><div class="vv">Plaquetas 90k</div></div><div class="pt">2</div></div>
+        <div class="t-sys"><div><div class="nm">Hepático</div><div class="vv">Bilirrubina 1,6</div></div><div class="pt">1</div></div>
+        <div class="t-sys na"><div><div class="nm">Cardiovascular</div><div class="vv">Sin datos de UTI</div></div><div class="pt">N/A</div></div>
+        <div class="t-sys"><div><div class="nm">Neurológico</div><div class="vv">Glasgow 13 (reusa arriba)</div></div><div class="pt">1</div></div>
+        <div class="t-sys"><div><div class="nm">Renal</div><div class="vv">Creatinina 2,1</div></div><div class="pt">2</div></div>
+        <div class="t-res neutro"><div class="n" style="font-size:20px">7<small>de 24</small></div><div class="tx">Sin categoría fija<span>El valor evolutivo importa más que el número aislado</span></div></div>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>SOFA completo</b>6 sistemas, cardiovascular puede marcarse "no aplica", neurológico reusa Glasgow</p>
+    </div>
+  </div>
+
+</div>
