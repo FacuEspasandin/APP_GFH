@@ -48,30 +48,35 @@ h2.tit:first-of-type{border-top:0;padding-top:0;margin-top:0}
 .tel-titulo{font-size:14.5px;font-weight:700;padding:2px 1px 0}
 .tel-eyeb{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--suave);margin:0 0 1px}
 
-/* toggles */
-.t-toggle{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:6.5px 9px}
-.t-toggle .tx{flex:1;min-width:0}
-.t-toggle .tx b{display:block;font-size:9.5px;font-weight:600;line-height:1.25}
-.t-toggle .tx span{display:block;font-size:7.8px;color:var(--suave);line-height:1.25;margin-top:1px}
-.sw{width:24px;height:14px;border-radius:999px;position:relative;flex:none}
-.sw.on{background:var(--marca)}
-.sw.off{background:var(--linea)}
-.sw i{position:absolute;top:2px;width:10px;height:10px;border-radius:999px;background:#fff}
-.sw.on i{right:2px}
-.sw.off i{left:2px}
+/* cascada — mismo modo que Child-Pugh/Riesgo cardiovascular en calculadora.tsx:
+   una pregunta abierta por vez, barra de progreso, contestadas plegadas. */
+.casc-barra{display:flex;align-items:center;gap:3px;margin:1px 0 1px}
+.casc-seg{height:3px;border-radius:999px;flex:1}
+.casc-seg.on{background:var(--marca)}
+.casc-seg.off{background:var(--linea)}
+.casc-n{font-family:'IBM Plex Mono',monospace;font-size:7.6px;font-weight:700;color:var(--suave);flex:none;margin-left:3px}
+
+.casc-plegado{display:flex;justify-content:space-between;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:6px 9px}
+.casc-plegado .lb{font-size:8.4px;font-weight:600;color:var(--ink);line-height:1.25}
+.casc-plegado .vv{display:flex;align-items:center;gap:5px;flex:none}
+.casc-plegado .vv b{font-size:8.4px;color:var(--marca);font-weight:700}
+.casc-plegado .vv .pt{font-family:'IBM Plex Mono',monospace;font-size:7.4px;color:var(--suave)}
+
+.casc-abierta{background:var(--surface);border:1.5px solid var(--marca);border-radius:9px;padding:9px 10px}
+.casc-abierta .tit{font-size:10.8px;font-weight:700;line-height:1.3}
+.casc-abierta .ayuda{font-size:7.6px;color:var(--suave);line-height:1.3;margin-top:2px}
+.casc-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.casc-chip{font-size:8.2px;font-weight:600;padding:5px 10px;border-radius:999px;border:1px solid var(--linea);background:var(--surface);color:var(--ink)}
+.casc-chip.on{background:var(--marca);border-color:var(--marca);color:#fff}
+
+.casc-despues{border:1px dashed var(--linea);border-radius:9px;padding:6px 10px;font-size:7.8px;color:var(--tenue)}
+.casc-despues b{color:var(--tenue);font-weight:600}
 
 /* inputs */
 .t-input{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:7px 10px}
 .t-input .lbl{font-size:7.8px;color:var(--suave);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
 .t-input .val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;margin-top:1px}
 .t-input .val small{font-family:Inter,sans-serif;font-size:9px;font-weight:400;color:var(--suave)}
-
-/* picker de opción larga (Glasgow) */
-.t-pick{background:var(--surface);border:1px solid var(--linea);border-radius:8px;padding:7px 9px}
-.t-pick .lbl{font-size:8px;font-weight:700;color:var(--marca);text-transform:uppercase;letter-spacing:.04em}
-.t-pick .opt{display:flex;align-items:center;gap:6px;margin-top:3px;background:var(--marca-suave);border-radius:6px;padding:5px 7px}
-.t-pick .opt .n{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:10px;color:var(--marca);flex:none}
-.t-pick .opt .d{font-size:8.6px;color:var(--ink);line-height:1.2}
 
 /* resultado */
 .t-res{border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-top:auto}
@@ -91,13 +96,6 @@ h2.tit:first-of-type{border-top:0;padding-top:0;margin-top:0}
 .t-res-doble .c .cat{font-size:7.6px;font-weight:600}
 
 .t-chip{display:inline-block;font-size:7.6px;font-weight:600;padding:2px 7px;border-radius:999px;margin:0 4px 4px 0}
-
-/* SOFA: filas de sistema compactas */
-.t-sys{display:flex;justify-content:space-between;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--linea);border-radius:7px;padding:5px 8px}
-.t-sys .nm{font-size:8.6px;font-weight:600}
-.t-sys .vv{font-size:7.6px;color:var(--suave)}
-.t-sys .pt{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--marca);flex:none}
-.t-sys.na .pt{color:var(--tenue);font-size:7.6px;font-family:Inter,sans-serif;font-weight:700}
 
 .tel-menu{background:var(--barra);min-height:40px;display:flex;align-items:flex-start;padding:7px 4px 5px;position:relative;margin-top:6px;border-radius:11px 11px 0 0}
 .tm-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;color:rgba(255,255,255,.6);font-size:7.5px;font-weight:600}
@@ -130,32 +128,56 @@ h2.tit:first-of-type{border-top:0;padding-top:0;margin-top:0}
       <li><b>Glasgow</b> se construye como pieza de dominio reutilizable, no sólo pantalla — qSOFA y SOFA la consumen.</li>
       <li><b>qSOFA</b> usa un toggle directo ("¿Glasgow &lt;15?"), no abre el selector completo E/V/M — mantiene el espíritu de screening rápido a la cabecera. El selector completo vive en la pantalla de Glasgow y dentro de SOFA.</li>
       <li><b>Paleta de riesgo propia</b> (verde azulado / ámbar tierra / burdeos) para los badges de estas seis — nunca la escala reservada de severidad clínica de los hallazgos reales, mismo criterio que Riesgo cardiovascular e IMC.</li>
+      <li><b>Modo cascada para las cuatro que son checklist/criterio</b> (HAS-BLED, Glasgow, qSOFA, SOFA) — el de <code>calculadora.tsx</code> que ya usan Child-Pugh y Riesgo cardiovascular: una pregunta abierta por vez, barra de progreso, las contestadas se pliegan, y el resultado recién sale al final. <b>QTc y superficie corporal quedan como formulario plano</b> (2–3 inputs numéricos visibles juntos) — es el mismo patrón que ya usan Clcr, IMC y HbA1c, que tampoco son cascada: la cascada es para decisiones de a una, no para juntar unos pocos números.</li>
     </ul>
   </div>
 
   <!-- ============================================================ -->
   <h2 class="tit">1 · HAS-BLED</h2>
-  <p class="tit-nota">Checklist de 9 ítems (H, A×2, S, B, L, E, D×2), puntaje 0–9. El resultado nombra los factores modificables presentes, para poder sugerirlos como "a corregir".</p>
+  <p class="tit-nota">Modo cascada (el de Child-Pugh/Riesgo cardiovascular): 9 preguntas de a una, sí/no en chips. Se abre la siguiente sola al contestar; tocar una plegada la reabre para corregirla. El resultado recién aparece con las 9 contestadas.</p>
   <div class="galeria">
     <div class="tel-item-wrap"><div class="tel">
       <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
       <div class="tel-cuerpo">
         <div class="tel-titulo">HAS-BLED</div>
         <div class="tel-eyeb">Riesgo de sangrado a 1 año</div>
-        <div class="t-toggle"><div class="tx"><b>H · Hipertensión no controlada</b><span>PAS sostenida &gt;160 mmHg</span></div><div class="sw on"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>A · Función renal anormal</b><span>Diálisis, trasplante o Cr &gt;2,26 mg/dL</span></div><div class="sw off"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>A · Función hepática anormal</b><span>Hepatopatía crónica o bilirrubina/enzimas elevadas</span></div><div class="sw off"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>S · ACV previo</b></div><div class="sw off"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>B · Sangrado previo</b><span>O predisposición (ej. anemia)</span></div><div class="sw off"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>L · INR lábil</b><span>TRT &lt;60% — no aplica con ACOD</span></div><div class="sw off"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>E · Edad &gt;65</b></div><div class="sw on"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>D · Antiagregantes o AINEs</b></div><div class="sw on"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>D · Alcohol ≥8 unid./semana</b></div><div class="sw off"><i></i></div></div>
+        <div class="casc-barra">
+          <span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg off"></span><span class="casc-seg off"></span><span class="casc-seg off"></span><span class="casc-seg off"></span><span class="casc-seg off"></span><span class="casc-seg off"></span>
+          <span class="casc-n">3 / 9</span>
+        </div>
+        <div class="casc-plegado"><div class="lb">H · Hipertensión no controlada</div><div class="vv"><b>Sí</b><span class="pt">+1</span></div></div>
+        <div class="casc-plegado"><div class="lb">A · Función renal anormal</div><div class="vv"><b>No</b><span class="pt">+0</span></div></div>
+        <div class="casc-plegado"><div class="lb">A · Función hepática anormal</div><div class="vv"><b>No</b><span class="pt">+0</span></div></div>
+        <div class="casc-abierta">
+          <div class="tit">S · ¿Antecedente de ACV?</div>
+          <div class="ayuda">Cualquier accidente cerebrovascular previo, isquémico o hemorrágico.</div>
+          <div class="casc-chips"><span class="casc-chip on">Sí</span><span class="casc-chip">No</span></div>
+        </div>
+        <div class="casc-despues"><b>Después:</b> B · Sangrado previo</div>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>HAS-BLED, a mitad de camino</b>3 de 9 contestadas y plegadas, la 4ª abierta, la 5ª anticipada</p>
+    </div>
+
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">HAS-BLED</div>
+        <div class="tel-eyeb">Riesgo de sangrado a 1 año</div>
+        <div class="casc-barra">
+          <span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span>
+          <span class="casc-n">9 / 9</span>
+        </div>
+        <div class="casc-plegado"><div class="lb">H · Hipertensión no controlada</div><div class="vv"><b>Sí</b><span class="pt">+1</span></div></div>
+        <div class="casc-plegado"><div class="lb">E · Edad &gt;65</div><div class="vv"><b>Sí</b><span class="pt">+1</span></div></div>
+        <div class="casc-plegado"><div class="lb">D · Antiagregantes o AINEs</div><div class="vv"><b>Sí</b><span class="pt">+1</span></div></div>
+        <p style="font-size:7.4px;color:var(--tenue);text-align:center;margin:0">— 6 preguntas más contestadas, plegadas —</p>
         <div class="t-res rm"><div class="n">3<small>de 9</small></div><div class="tx">Riesgo alto<span>A corregir: PA, AINEs concomitantes</span></div></div>
         <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
       </div>
     </div>
-    <p class="tel-cap"><b>HAS-BLED</b>9 toggles, puntaje total, corte en 3, factores modificables listados</p>
+    <p class="tel-cap"><b>HAS-BLED, completo</b>las 9 contestadas y plegadas, resultado con factores a corregir</p>
     </div>
   </div>
 
@@ -201,41 +223,86 @@ h2.tit:first-of-type{border-top:0;padding-top:0;margin-top:0}
 
   <!-- ============================================================ -->
   <h2 class="tit">3 · Escala de Glasgow (GCS)</h2>
-  <p class="tit-nota">Texto completo por opción, nunca sólo el número. Componente reutilizable — qSOFA y SOFA lo consumen.</p>
+  <p class="tit-nota">Cascada de 3 preguntas, texto completo por opción (nunca sólo el número). Componente de dominio reutilizable — qSOFA y SOFA lo consumen.</p>
   <div class="galeria">
     <div class="tel-item-wrap"><div class="tel">
       <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
       <div class="tel-cuerpo">
         <div class="tel-titulo">Escala de Glasgow</div>
         <div class="tel-eyeb">Nivel de conciencia</div>
-        <div class="t-pick"><div class="lbl">Apertura ocular</div><div class="opt"><span class="n">4</span><span class="d">Espontánea</span></div></div>
-        <div class="t-pick"><div class="lbl">Respuesta verbal</div><div class="opt"><span class="n">5</span><span class="d">Orientado</span></div></div>
-        <div class="t-pick"><div class="lbl">Respuesta motora</div><div class="opt"><span class="n">6</span><span class="d">Obedece órdenes</span></div></div>
+        <div class="casc-barra"><span class="casc-seg on"></span><span class="casc-seg off"></span><span class="casc-seg off"></span><span class="casc-n">1 / 3</span></div>
+        <div class="casc-plegado"><div class="lb">Apertura ocular</div><div class="vv"><b>Espontánea</b><span class="pt">4</span></div></div>
+        <div class="casc-abierta">
+          <div class="tit">Respuesta verbal</div>
+          <div class="casc-chips">
+            <span class="casc-chip on">Orientado</span>
+            <span class="casc-chip">Confuso / desorientado</span>
+            <span class="casc-chip">Palabras inapropiadas</span>
+            <span class="casc-chip">Sonidos incomprensibles</span>
+            <span class="casc-chip">Ninguna</span>
+            <span class="casc-chip">No evaluable (intubado)</span>
+          </div>
+        </div>
+        <div class="casc-despues"><b>Después:</b> Respuesta motora</div>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>Glasgow, contestando</b>apertura ocular ya plegada, respuesta verbal abierta con el texto completo por opción, incluye "no evaluable (intubado)"</p>
+    </div>
+
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">Escala de Glasgow</div>
+        <div class="tel-eyeb">Nivel de conciencia</div>
+        <div class="casc-barra"><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-n">3 / 3</span></div>
+        <div class="casc-plegado"><div class="lb">Apertura ocular</div><div class="vv"><b>Espontánea</b><span class="pt">4</span></div></div>
+        <div class="casc-plegado"><div class="lb">Respuesta verbal</div><div class="vv"><b>Orientado</b><span class="pt">5</span></div></div>
+        <div class="casc-plegado"><div class="lb">Respuesta motora</div><div class="vv"><b>Obedece órdenes</b><span class="pt">6</span></div></div>
         <div class="t-res rb"><div class="n">15<small>E4 V5 M6</small></div><div class="tx">Leve<span>Conciencia normal</span></div></div>
         <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
       </div>
     </div>
-    <p class="tel-cap"><b>Glasgow</b>desglose E/V/M siempre visible junto al total — nunca sólo el número</p>
+    <p class="tel-cap"><b>Glasgow, completo</b>desglose E/V/M plegado junto al total — nunca sólo el número</p>
     </div>
   </div>
 
   <!-- ============================================================ -->
   <h2 class="tit">4 · qSOFA</h2>
-  <p class="tit-nota">Screening de 3 ítems. El del sensorio es un toggle directo, no abre el Glasgow completo.</p>
+  <p class="tit-nota">Cascada de 3 preguntas — screening a la cabecera. La del sensorio es sí/no directo, no abre el Glasgow completo (eso vive en SOFA y en la pantalla de Glasgow).</p>
   <div class="galeria">
     <div class="tel-item-wrap"><div class="tel">
       <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
       <div class="tel-cuerpo">
         <div class="tel-titulo">qSOFA</div>
         <div class="tel-eyeb">Screening de sepsis, a la cabecera</div>
-        <div class="t-toggle"><div class="tx"><b>Frecuencia respiratoria ≥22</b></div><div class="sw on"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>Alteración del sensorio</b><span>Glasgow &lt;15</span></div><div class="sw on"><i></i></div></div>
-        <div class="t-toggle"><div class="tx"><b>PA sistólica ≤100 mmHg</b></div><div class="sw off"><i></i></div></div>
+        <div class="casc-barra"><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg off"></span><span class="casc-n">2 / 3</span></div>
+        <div class="casc-plegado"><div class="lb">Frecuencia respiratoria ≥22</div><div class="vv"><b>Sí</b><span class="pt">+1</span></div></div>
+        <div class="casc-plegado"><div class="lb">Alteración del sensorio (Glasgow &lt;15)</div><div class="vv"><b>Sí</b><span class="pt">+1</span></div></div>
+        <div class="casc-abierta">
+          <div class="tit">PA sistólica ≤100 mmHg</div>
+          <div class="casc-chips"><span class="casc-chip">Sí</span><span class="casc-chip on">No</span></div>
+        </div>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>qSOFA, última pregunta</b>última tarjeta abierta, sin "después" porque es la final</p>
+    </div>
+
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">qSOFA</div>
+        <div class="tel-eyeb">Screening de sepsis, a la cabecera</div>
+        <div class="casc-barra"><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-n">3 / 3</span></div>
+        <div class="casc-plegado"><div class="lb">Frecuencia respiratoria ≥22</div><div class="vv"><b>Sí</b><span class="pt">+1</span></div></div>
+        <div class="casc-plegado"><div class="lb">Alteración del sensorio (Glasgow &lt;15)</div><div class="vv"><b>Sí</b><span class="pt">+1</span></div></div>
+        <div class="casc-plegado"><div class="lb">PA sistólica ≤100 mmHg</div><div class="vv"><b>No</b><span class="pt">+0</span></div></div>
         <div class="t-res ra"><div class="n">2<small>de 3</small></div><div class="tx">Mayor riesgo<span>Evaluar lactato, hemocultivos, SOFA completo</span></div></div>
         <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
       </div>
     </div>
-    <p class="tel-cap"><b>qSOFA</b>3 toggles, corte en 2 — el sensorio es directo, sin abrir Glasgow completo</p>
+    <p class="tel-cap"><b>qSOFA, completo</b>corte en 2 — "mayor riesgo", evaluar más a fondo</p>
     </div>
 
     <!-- ============================================================ -->
@@ -244,17 +311,38 @@ h2.tit:first-of-type{border-top:0;padding-top:0;margin-top:0}
       <div class="tel-cuerpo">
         <div class="tel-titulo">SOFA completo</div>
         <div class="tel-eyeb">Disfunción orgánica, 6 sistemas</div>
-        <div class="t-sys"><div><div class="nm">Respiratorio</div><div class="vv">PaO₂/FiO₂ 280</div></div><div class="pt">1</div></div>
-        <div class="t-sys"><div><div class="nm">Coagulación</div><div class="vv">Plaquetas 90k</div></div><div class="pt">2</div></div>
-        <div class="t-sys"><div><div class="nm">Hepático</div><div class="vv">Bilirrubina 1,6</div></div><div class="pt">1</div></div>
-        <div class="t-sys na"><div><div class="nm">Cardiovascular</div><div class="vv">Sin datos de UTI</div></div><div class="pt">N/A</div></div>
-        <div class="t-sys"><div><div class="nm">Neurológico</div><div class="vv">Glasgow 13 (reusa arriba)</div></div><div class="pt">1</div></div>
-        <div class="t-sys"><div><div class="nm">Renal</div><div class="vv">Creatinina 2,1</div></div><div class="pt">2</div></div>
-        <div class="t-res neutro"><div class="n" style="font-size:20px">7<small>de 24</small></div><div class="tx">Sin categoría fija<span>El valor evolutivo importa más que el número aislado</span></div></div>
+        <div class="casc-barra"><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg off"></span><span class="casc-seg off"></span><span class="casc-seg off"></span><span class="casc-n">3 / 6</span></div>
+        <div class="casc-plegado"><div class="lb">Respiratorio · PaO₂/FiO₂</div><div class="vv"><b>280</b><span class="pt">+1</span></div></div>
+        <div class="casc-plegado"><div class="lb">Coagulación · plaquetas</div><div class="vv"><b>90k</b><span class="pt">+2</span></div></div>
+        <div class="casc-plegado"><div class="lb">Hepático · bilirrubina</div><div class="vv"><b>1,6</b><span class="pt">+1</span></div></div>
+        <div class="casc-abierta">
+          <div class="tit">Cardiovascular · PAM / vasopresores</div>
+          <div class="ayuda">Sin datos de UTI disponibles, marcar "No aplica".</div>
+          <div class="casc-chips"><span class="casc-chip">PAM ≥70</span><span class="casc-chip">PAM &lt;70</span><span class="casc-chip">Dopamina/dobutamina</span><span class="casc-chip on">No aplica</span></div>
+        </div>
+        <div class="casc-despues"><b>Después:</b> Neurológico · reusa Glasgow</div>
         <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
       </div>
     </div>
-    <p class="tel-cap"><b>SOFA completo</b>6 sistemas, cardiovascular puede marcarse "no aplica", neurológico reusa Glasgow</p>
+    <p class="tel-cap"><b>SOFA, a mitad de camino</b>3 sistemas plegados, cardiovascular abierto con "no aplica" disponible, neurológico anticipado</p>
+    </div>
+
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">GFH</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo">
+        <div class="tel-titulo">SOFA completo</div>
+        <div class="tel-eyeb">Disfunción orgánica, 6 sistemas</div>
+        <div class="casc-barra"><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-seg on"></span><span class="casc-n">6 / 6</span></div>
+        <div class="casc-plegado"><div class="lb">Respiratorio</div><div class="vv"><b>PaO₂/FiO₂ 280</b><span class="pt">+1</span></div></div>
+        <div class="casc-plegado"><div class="lb">Coagulación</div><div class="vv"><b>90k plaq.</b><span class="pt">+2</span></div></div>
+        <div class="casc-plegado"><div class="lb">Cardiovascular</div><div class="vv"><b>No aplica</b><span class="pt">N/A</span></div></div>
+        <div class="casc-plegado"><div class="lb">Neurológico</div><div class="vv"><b>Glasgow 13</b><span class="pt">+1</span></div></div>
+        <div class="casc-plegado"><div class="lb">Renal</div><div class="vv"><b>Creat. 2,1</b><span class="pt">+2</span></div></div>
+        <div class="t-res neutro"><div class="n" style="font-size:20px">7<small>de 24</small></div><div class="tx">Sin categoría fija<span>Importa la tendencia en el tiempo, no el número aislado</span></div></div>
+        <div class="tel-menu"><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Pacientes</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3"></circle><circle cx="16" cy="9.5" r="2.4"></circle><path d="M3 19c0-3.3 2.5-5.5 5.5-5.5S14 15.7 14 19"></path></svg>Grupos</div><i class="centro" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></i><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>Buscador</div><div class="tm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"></path></svg>Perfil</div></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>SOFA, completo</b>6 sistemas plegados, cardiovascular "no aplica" y neurológico con el Glasgow reusado</p>
     </div>
   </div>
 
