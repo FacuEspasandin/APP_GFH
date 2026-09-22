@@ -7,6 +7,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AlternativasService } from './aplicacion/alternativas/alternativas.service';
 import { AuthService } from './aplicacion/auth/auth.service';
 import { AyudaService } from './aplicacion/ayuda/ayuda.service';
+import { ChatIaService } from './aplicacion/chat-ia/chat-ia.service';
 import { GoogleAuthService } from './aplicacion/auth/google-auth.service';
 import { HashService } from './aplicacion/auth/hash.service';
 import { CatalogoService } from './aplicacion/catalogo/catalogo.service';
@@ -22,13 +23,16 @@ import { EventosService } from './aplicacion/historial/eventos.service';
 import { PushService } from './aplicacion/notificaciones/push.service';
 import { PacientesService } from './aplicacion/pacientes/pacientes.service';
 import { TratamientoService } from './aplicacion/tratamiento/tratamiento.service';
+import { ClienteAnthropic } from './infraestructura/anthropic/cliente-anthropic';
 import { CatalogoInteraccionesService } from './infraestructura/catalogo/catalogo-interacciones.service';
 import { NotificacionesCronService } from './infraestructura/mantenimiento/notificaciones-cron.service';
 import { PurgaSesionesService } from './infraestructura/mantenimiento/purga-sesiones.service';
 import { PrismaModule } from './infraestructura/prisma/prisma.module';
+import { RagService } from './infraestructura/rag/rag.service';
 import { AlternativasController } from './presentacion/alternativas.controller';
 import { AuthController } from './presentacion/auth.controller';
 import { AyudaController } from './presentacion/ayuda.controller';
+import { ChatIaController } from './presentacion/chat-ia.controller';
 import { CockpitController } from './presentacion/cockpit.controller';
 import { PacientesController } from './presentacion/pacientes.controller';
 import { PerfilController, RevenueCatController } from './presentacion/perfil.controller';
@@ -67,6 +71,7 @@ import {
     PerfilController,
     RevenueCatController,
     AyudaController,
+    ChatIaController,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
@@ -92,6 +97,9 @@ import {
     PushService,
     NotificacionesCronService,
     AyudaService,
+    ClienteAnthropic,
+    RagService,
+    ChatIaService,
   ],
 })
 export class AppModule {}

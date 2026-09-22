@@ -13,6 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
+import { AlternativasService } from '../aplicacion/alternativas/alternativas.service';
 import { CatalogoService } from '../aplicacion/catalogo/catalogo.service';
 import { HerramientasService } from '../aplicacion/herramientas/herramientas.service';
 import { TratamientoService } from '../aplicacion/tratamiento/tratamiento.service';
@@ -252,7 +253,10 @@ export class CatalogoController {
 @Controller('herramientas')
 @UseGuards(JwtGuard)
 export class HerramientasController {
-  constructor(@Inject(HerramientasService) private readonly herramientas: HerramientasService) {}
+  constructor(
+    @Inject(HerramientasService) private readonly herramientas: HerramientasService,
+    @Inject(AlternativasService) private readonly alternativas: AlternativasService,
+  ) {}
 
   @DePago('Cruzar interacciones entre fármacos')
   @Post('interacciones')
@@ -286,5 +290,16 @@ export class HerramientasController {
   @HttpCode(200)
   ajusteHepatico(@Cuerpo(HerramientaHepaticaDto) dto: HerramientaHepaticaDto) {
     return this.herramientas.ajusteHepatico(dto);
+  }
+
+  /**
+   * Alternativas SIN paciente — a diferencia de `AlternativasController`, que
+   * siempre pide `pacienteId`. Existe para el chat con IA, que nunca tiene un
+   * paciente cargado (regla no negociable 1).
+   */
+  @DePago('Ver alternativas terapéuticas de un fármaco')
+  @Get('alternativas')
+  alternativasDelCatalogo(@Query('principioActivoId', ParseUUIDPipe) principioActivoId: string) {
+    return this.alternativas.delCatalogo(principioActivoId);
   }
 }

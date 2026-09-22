@@ -262,6 +262,38 @@ export class AlternativasService {
     };
   }
 
+  /**
+   * Alternativas crudas del catálogo para un principio activo, SIN contexto
+   * de paciente — para el chat con IA, que nunca tiene un paciente cargado
+   * (regla no negociable 1: no decide nada sobre un paciente).
+   *
+   * A diferencia de `paraPrescripcion`/`paraCandidato`, no anota contra
+   * interacciones, alergias ni condiciones: esa anotación pide un
+   * `pacienteId` real (motor §8), que acá no existe. Devuelve el catálogo tal
+   * cual — razón y evidencia, sin viable/descartada.
+   */
+  async delCatalogo(principioActivoId: string) {
+    const pa = await this.prisma.principioActivo.findUnique({
+      where: { id: principioActivoId },
+      select: { nombre: true },
+    });
+    if (!pa) throw new NotFoundException('Principio activo no encontrado.');
+
+    const alternativas = await this.prisma.alternativaTerapeutica.findMany({
+      where: { paOrigenId: principioActivoId },
+      include: { paAlternativa: { select: { nombre: true } } },
+    });
+
+    return {
+      farmacoOrigen: pa.nombre,
+      alternativas: alternativas.map((a) => ({
+        nombre: a.paAlternativa.nombre,
+        razon: a.razon,
+        evidencia: a.evidencia,
+      })),
+    };
+  }
+
   /** Las ya aceptadas, para marcarlas con "✓ Documentada" en la lista. */
   async aceptadas(medicoId: string, pacienteId: string) {
     return this.prisma.alternativaAceptada.findMany({
