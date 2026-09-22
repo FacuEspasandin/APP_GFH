@@ -52,6 +52,7 @@ export function chipsDeFuente(toolsUsadas: ToolUsadaChat[]): ChipFuente[] {
   for (const tool of toolsUsadas) {
     const etiquetaBase = ETIQUETA_POR_TOOL[tool.tool];
     if (!etiquetaBase) continue;
+    if (tool.encontrado === false) continue;
 
     const detalle = detalleDe(tool);
     const etiqueta = detalle ? `${etiquetaBase} — ${detalle}` : etiquetaBase;

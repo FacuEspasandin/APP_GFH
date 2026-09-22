@@ -30,6 +30,7 @@ function usoDeTool(id: string, name: string, input: unknown) {
 function construirServicio(opts: {
   enviarMensaje: ReturnType<typeof vi.fn>;
   interacciones?: ReturnType<typeof vi.fn>;
+  ragBuscar?: ReturnType<typeof vi.fn>;
   chatSessionCreate?: ReturnType<typeof vi.fn>;
   chatSessionFindFirst?: ReturnType<typeof vi.fn>;
   chatMessageFindMany?: ReturnType<typeof vi.fn>;
@@ -39,7 +40,7 @@ function construirServicio(opts: {
   const catalogo = {} as unknown as CatalogoService;
   const herramientas = { interacciones: opts.interacciones ?? vi.fn() } as unknown as HerramientasService;
   const alternativas = {} as unknown as AlternativasService;
-  const rag = {} as unknown as RagService;
+  const rag = { buscar: opts.ragBuscar ?? vi.fn() } as unknown as RagService;
 
   const chatSessionCreate =
     opts.chatSessionCreate ?? vi.fn().mockResolvedValue({ id: SESSION_ID, medicoId: MEDICO_ID, titulo: null });
@@ -114,6 +115,42 @@ describe('ChatIaService.responder', () => {
     expect(ultimoMensaje.role).toBe('user');
     expect(ultimoMensaje.content[0]!.type).toBe('tool_result');
     expect(ultimoMensaje.content[0]!.tool_use_id).toBe('tool-1');
+  });
+
+  it('ficha_tecnica con un fragmento relevante (distancia baja), marca encontrado:true', async () => {
+    const ragBuscar = vi.fn().mockResolvedValue([
+      { principioActivoId: ID_VALIDO, nombrePrincipioActivo: 'Metformina', textoChunk: 'posología...', distancia: 0.3 },
+    ]);
+    const enviarMensaje = vi
+      .fn()
+      .mockImplementationOnce(async () => usoDeTool('tool-1', 'ficha_tecnica', { pregunta: 'posología metformina' }))
+      .mockImplementationOnce(async () => textoFinal('Dosis inicial 500mg.'));
+
+    const { servicio } = construirServicio({ enviarMensaje, ragBuscar });
+
+    const resultado = await servicio.responder(MEDICO_ID, { pregunta: '¿dosis de metformina?' });
+
+    expect(resultado.toolsUsadas).toEqual([
+      { tool: 'ficha_tecnica', input: { pregunta: 'posología metformina' }, encontrado: true },
+    ]);
+  });
+
+  it('ficha_tecnica sin ningún fragmento relevante (todas las distancias altas), marca encontrado:false', async () => {
+    const ragBuscar = vi.fn().mockResolvedValue([
+      { principioActivoId: ID_VALIDO, nombrePrincipioActivo: 'Warfarina', textoChunk: 'irrelevante...', distancia: 1.8 },
+    ]);
+    const enviarMensaje = vi
+      .fn()
+      .mockImplementationOnce(async () => usoDeTool('tool-1', 'ficha_tecnica', { pregunta: 'ibuprofeno indicaciones' }))
+      .mockImplementationOnce(async () => textoFinal('No tengo ficha técnica de ibuprofeno indexada.'));
+
+    const { servicio } = construirServicio({ enviarMensaje, ragBuscar });
+
+    const resultado = await servicio.responder(MEDICO_ID, { pregunta: 'contame sobre el ibuprofeno' });
+
+    expect(resultado.toolsUsadas).toEqual([
+      { tool: 'ficha_tecnica', input: { pregunta: 'ibuprofeno indicaciones' }, encontrado: false },
+    ]);
   });
 
   it('si la tool falla, el modelo recibe un tool_result de error y la conversación sigue (no crashea)', async () => {

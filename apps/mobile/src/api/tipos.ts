@@ -293,6 +293,9 @@ export interface GrupoAlergenico {
 export interface ToolUsadaChat {
   tool: string;
   input: Record<string, unknown>;
+  /** Sólo viene en `ficha_tecnica`: si ninguno de los fragmentos encontrados
+   *  fue relevante, la tool igual se llamó pero no hay fuente citable. */
+  encontrado?: boolean;
 }
 
 export interface RespuestaChat {

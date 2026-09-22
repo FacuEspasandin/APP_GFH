@@ -49,7 +49,22 @@ const VENTANA_HISTORIAL_MENSAJES = 10;
 export interface RespuestaChat {
   sessionId: string;
   respuesta: string;
-  toolsUsadas: Array<{ tool: string; input: unknown }>;
+  toolsUsadas: Array<{ tool: string; input: unknown; encontrado?: boolean }>;
+}
+
+/** Sólo para `ficha_tecnica`: la tool devuelve siempre los 5 fragmentos más
+ *  cercanos del índice completo (`RagService.buscar`, sin umbral ciego — el
+ *  modelo decide relevancia mirando la distancia real). Pero el chip de
+ *  fuente en la app necesita SU PROPIO corte: es una decisión de UI ("¿hubo
+ *  algo citable?"), no clínica, así que un umbral fijo acá no pisa la regla
+ *  de no filtrar a ciegas el resultado que ve el modelo. */
+const DISTANCIA_MAXIMA_PARA_CHIP = 1.2;
+
+function huboFichaRelevante(output: unknown): boolean {
+  if (!Array.isArray(output)) return false;
+  return output.some(
+    (r) => typeof r === 'object' && r !== null && 'distancia' in r && (r as { distancia: number }).distancia < DISTANCIA_MAXIMA_PARA_CHIP,
+  );
 }
 
 @Injectable()
@@ -180,7 +195,11 @@ export class ChatIaService {
     return {
       sessionId: chatSession.id,
       respuesta: respuestaFinal,
-      toolsUsadas: toolsUsadas.map((t) => ({ tool: t.tool, input: t.input })),
+      toolsUsadas: toolsUsadas.map((t) => ({
+        tool: t.tool,
+        input: t.input,
+        ...(t.tool === 'ficha_tecnica' ? { encontrado: huboFichaRelevante(t.output) } : {}),
+      })),
     };
   }
 
