@@ -234,6 +234,46 @@ describe('ChatIaService.responder', () => {
     ]);
   });
 
+  it('con 2+ intercambios previos (turno 3+), cachea el último mensaje del historial reenviado', async () => {
+    const chatSessionFindFirst = vi
+      .fn()
+      .mockResolvedValue({ id: SESSION_ID, medicoId: MEDICO_ID, titulo: 'anterior' });
+    const chatMessageFindMany = vi.fn().mockResolvedValue([
+      { rol: 'ASISTENTE', contenido: 'Con ClCr 35, ajustar a la mitad.' },
+      { rol: 'USUARIO', contenido: '¿Y con un ClCr de 35?' },
+      { rol: 'ASISTENTE', contenido: 'Sí, interactúan, severidad ALTA.' },
+      { rol: 'USUARIO', contenido: '¿Warfarina y amiodarona interactúan?' },
+    ]);
+    let mensajesEnLlamado: unknown[] = [];
+    const enviarMensaje = vi.fn().mockImplementationOnce(async (params: { mensajes: unknown[] }) => {
+      mensajesEnLlamado = structuredClone(params.mensajes);
+      return textoFinal('También hay que vigilar la función hepática.');
+    });
+
+    const { servicio } = construirServicio({ enviarMensaje, chatSessionFindFirst, chatMessageFindMany });
+
+    await servicio.responder(MEDICO_ID, { sessionId: SESSION_ID, pregunta: '¿Algo más a vigilar?' });
+
+    // Sólo el ÚLTIMO mensaje del historial lleva el breakpoint — la pregunta
+    // nueva queda afuera del bloque cacheado, es la parte fresca de este turno.
+    expect(mensajesEnLlamado).toEqual([
+      { role: 'user', content: '¿Warfarina y amiodarona interactúan?' },
+      { role: 'assistant', content: 'Sí, interactúan, severidad ALTA.' },
+      { role: 'user', content: '¿Y con un ClCr de 35?' },
+      {
+        role: 'assistant',
+        content: [
+          {
+            type: 'text',
+            text: 'Con ClCr 35, ajustar a la mitad.',
+            cache_control: { type: 'ephemeral', ttl: '1h' },
+          },
+        ],
+      },
+      { role: 'user', content: '¿Algo más a vigilar?' },
+    ]);
+  });
+
   it('sin sessionId (primera pregunta), no hay historial que reenviar', async () => {
     const chatMessageFindMany = vi.fn();
     let mensajesEnLlamado: unknown[] = [];

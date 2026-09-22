@@ -46,6 +46,14 @@ const MAX_VUELTAS_TOOL_USE = 6;
  *  llegó al dato. */
 const VENTANA_HISTORIAL_MENSAJES = 10;
 
+/** A partir de qué tamaño de historial se cachea (2+ intercambios previos =
+ *  turno 3+). Menos que esto y la sesión más común (1-2 turnos) pagaría un
+ *  cache write que nunca llega a leerse — negativo neto. Desde el turno 3,
+ *  el historial reenviado ya es texto estable (mismo query a la DB, mismo
+ *  mapeo) entre esta llamada y la siguiente: cachearlo ahorra reenviarlo
+ *  fresco en cada pregunta nueva de una conversación larga. */
+const UMBRAL_MENSAJES_HISTORIAL_PARA_CACHE = 4;
+
 export interface RespuestaChat {
   sessionId: string;
   respuesta: string;
@@ -109,15 +117,22 @@ export class ChatIaService {
         ).reverse()
       : [];
 
-    const mensajes: MessageParam[] = [
-      ...historialPrevio.map(
-        (m): MessageParam => ({
-          role: m.rol === 'USUARIO' ? 'user' : 'assistant',
-          content: m.contenido,
-        }),
-      ),
-      { role: 'user', content: params.pregunta },
-    ];
+    const mensajesHistorial: MessageParam[] = historialPrevio.map(
+      (m): MessageParam => ({
+        role: m.rol === 'USUARIO' ? 'user' : 'assistant',
+        content: m.contenido,
+      }),
+    );
+
+    if (mensajesHistorial.length >= UMBRAL_MENSAJES_HISTORIAL_PARA_CACHE) {
+      const ultimo = mensajesHistorial[mensajesHistorial.length - 1]!;
+      mensajesHistorial[mensajesHistorial.length - 1] = {
+        ...ultimo,
+        content: [{ type: 'text', text: ultimo.content as string, cache_control: { type: 'ephemeral', ttl: '1h' } }],
+      };
+    }
+
+    const mensajes: MessageParam[] = [...mensajesHistorial, { role: 'user', content: params.pregunta }];
     const toolsUsadas: Array<{ tool: string; input: unknown; output: unknown }> = [];
 
     let respuestaFinal = '';
