@@ -11,10 +11,9 @@ export const fichaTecnica: DefinicionTool = {
   definicion: {
     name: 'ficha_tecnica',
     description:
-      'Busca en las fichas técnicas indexadas (sólo ~30 fármacos de desarrollo, NO el vademécum ' +
-      'completo). Devuelve los fragmentos más cercanos con su distancia (0 = idéntico, 2 = opuesto) — ' +
-      'si ninguno es realmente relevante a la pregunta, no hay ficha cargada para eso: decilo así, ' +
-      'nunca completes con conocimiento propio del modelo.',
+      'Busca en las ~30 fichas técnicas indexadas (no el vademécum completo). Devuelve fragmentos con ' +
+      'su distancia (0=idéntico, 2=opuesto) — si ninguno es relevante, no hay ficha para eso: decilo, ' +
+      'nunca completes de memoria.',
     input_schema: {
       type: 'object',
       properties: {

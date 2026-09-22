@@ -18,10 +18,8 @@ import { validarEntradaTool } from './validar';
 import { resolverPrincipioActivoId, resolverPrincipiosActivoIds } from './resolver-farmaco';
 
 const DESCRIPCION_NOMBRE_O_ID =
-  'Pasá "principioActivoNombres" directo con el/los nombres (ej. ["warfarina", "amiodarona"]) si ya los ' +
-  'tenés — se resuelven solos, no hace falta llamar "buscar_farmaco" antes salvo que el nombre sea ' +
-  'ambiguo o no matchee nada (la tool te lo va a decir). Si ya tenés los ids de una tool anterior, pasá ' +
-  '"principioActivoIds" en su lugar.';
+  'Aceptá "principioActivoNombres" (se resuelven solos) o "principioActivoIds" si ya los tenés — ' +
+  'ambiguo o sin match, la tool te avisa.';
 
 class InteraccionesFarmacoFarmacoDto {
   @IsOptional() @IsArray() @ArrayMinSize(2) @ArrayMaxSize(20) @IsUUID('4', { each: true })
@@ -34,9 +32,7 @@ class InteraccionesFarmacoFarmacoDto {
 export const interaccionesFarmacoFarmaco: DefinicionTool = {
   definicion: {
     name: 'interacciones_farmaco_farmaco',
-    description:
-      `Interacciones entre 2 y 20 principios activos puntuales. ${DESCRIPCION_NOMBRE_O_ID} Devuelve ` +
-      'severidad y texto por cada par, determinista, del motor clínico de GFH.',
+    description: `Interacciones entre 2 y 20 principios activos puntuales. ${DESCRIPCION_NOMBRE_O_ID} Devuelve severidad y texto por par.`,
     input_schema: {
       type: 'object',
       properties: {
@@ -65,11 +61,9 @@ export const condicionAlergia: DefinicionTool = {
   definicion: {
     name: 'condicion_alergia',
     description:
-      'Alertas de un principio activo contra condiciones clínicas y/o alergias. Para el fármaco, pasá ' +
-      '"principioActivoId" o "principioActivoNombre" (se resuelve solo). Para condición/alergia usá ' +
-      '"listar_condiciones_clinicas"/"listar_grupos_alergenicos" primero para encontrar el id. Sólo una ' +
-      'coincidencia EXACTA de alergia con severidad grave bloquea — un cruce de familia nunca bloquea, ' +
-      'sólo pide confirmación (regla no negociable del motor clínico).',
+      'Alertas de un fármaco contra condiciones/alergias. Fármaco: id o nombre. Condición/alergia: usá ' +
+      '"listar_condiciones_clinicas"/"listar_grupos_alergenicos" para el id. Sólo alergia EXACTA + ' +
+      'grave bloquea — cruce de familia nunca bloquea, sólo pide confirmación.',
     input_schema: {
       type: 'object',
       properties: {
@@ -111,10 +105,9 @@ export const ajusteRenal: DefinicionTool = {
   definicion: {
     name: 'ajuste_renal',
     description:
-      `Ajuste renal para 1-20 principios activos. ${DESCRIPCION_NOMBRE_O_ID} Aceptá "clcrMlMin" directo ` +
-      'si el usuario lo dio, o "edadAnios" + "pesoKg" + "creatininaMgDl" + "sexo" para calcularlo ' +
-      '(Cockcroft-Gault). Si un fármaco no tiene tabla de ajuste cargada, la respuesta lo dice explícito ' +
-      '— nunca lo inventes.',
+      `Ajuste renal para 1-20 principios activos. ${DESCRIPCION_NOMBRE_O_ID} Aceptá "clcrMlMin" directo, ` +
+      'o edad+peso+creatinina+sexo para calcularlo (Cockcroft-Gault). Sin tabla cargada, la respuesta lo ' +
+      'dice — nunca lo inventes.',
     input_schema: {
       type: 'object',
       properties: {
@@ -157,9 +150,8 @@ export const ajusteHepatico: DefinicionTool = {
   definicion: {
     name: 'ajuste_hepatico',
     description:
-      `Ajuste hepático (Child-Pugh) para hasta 20 principios activos (opcional — sin fármacos calcula ` +
-      `sólo la clase). ${DESCRIPCION_NOMBRE_O_ID} Aceptá "clase" directo (A/B/C) o los 5 criterios de ` +
-      'Child-Pugh para calcularla. Si un fármaco no tiene tabla cargada, la respuesta lo dice explícito.',
+      `Ajuste hepático (Child-Pugh) para hasta 20 principios activos (opcional). ${DESCRIPCION_NOMBRE_O_ID} ` +
+      'Aceptá "clase" directo o los 5 criterios para calcularla. Sin tabla cargada, la respuesta lo dice.',
     input_schema: {
       type: 'object',
       properties: {

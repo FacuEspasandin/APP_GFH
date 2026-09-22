@@ -12,10 +12,9 @@ export const buscarFarmaco: DefinicionTool = {
   definicion: {
     name: 'buscar_farmaco',
     description:
-      'Busca principios activos por nombre (aproximado, sin distinguir mayúsculas ni acentos). Devuelve ' +
-      'id, nombre y si tiene tabla de ajuste renal/hepático. Usala para EXPLORAR (el médico no está ' +
-      'seguro del nombre exacto, o una tool te dijo que hay varias coincidencias) — si ya tenés un ' +
-      'nombre claro, la mayoría de las tools lo aceptan directo sin pasar por acá primero.',
+      'Busca principios activos por nombre aproximado. Devuelve id, nombre y si tiene tabla de ajuste ' +
+      'renal/hepático. Usala sólo para EXPLORAR (nombre incierto, o una tool avisó ambigüedad) — el ' +
+      'resto de las tools acepta el nombre directo.',
     input_schema: {
       type: 'object',
       properties: {
@@ -43,12 +42,9 @@ export const interaccionesDeUnFarmaco: DefinicionTool = {
   definicion: {
     name: 'interacciones_de_un_farmaco',
     description:
-      'TODAS las interacciones conocidas de UN fármaco, sin necesitar un segundo para comparar. Pasá ' +
-      '"principioActivoNombre" directo (ej. "warfarina") — se resuelve solo salvo ambigüedad, no hace ' +
-      'falta "buscar_farmaco" antes. Devuelve "grupos" ya ordenados de más grave a menos grave ' +
-      '(CONTRAINDICADA → ALTA → INFORMATIVA), cada uno con su severidad, el texto de la regla real del ' +
-      'motor clínico, y con qué fármacos/familias aplica. Usá ESTA tool (no "interacciones_farmaco_farmaco") ' +
-      'cuando te pregunten "¿con qué interactúa X?" en general, sin un segundo fármaco puntual.',
+      'TODAS las interacciones de UN fármaco, sin un segundo para comparar — usala para "¿con qué ' +
+      'interactúa X?" (no "interacciones_farmaco_farmaco", que pide 2+). Pasá "principioActivoNombre" ' +
+      'directo. Devuelve "grupos" ordenados de más a menos grave.',
     input_schema: {
       type: 'object',
       properties: {
@@ -67,9 +63,7 @@ export const interaccionesDeUnFarmaco: DefinicionTool = {
 export const listarCondicionesClinicas: DefinicionTool = {
   definicion: {
     name: 'listar_condiciones_clinicas',
-    description:
-      'Lista TODAS las condiciones clínicas del catálogo (id + nombre). Usala para encontrar el id ' +
-      'correcto antes de llamar "condicion_alergia" — esa tool pide ids, no nombres.',
+    description: 'Lista las condiciones clínicas del catálogo (id + nombre), para "condicionIds" de "condicion_alergia".',
     input_schema: { type: 'object', properties: {} },
   },
   async ejecutar(deps: DependenciasTools) {
@@ -81,9 +75,7 @@ export const listarCondicionesClinicas: DefinicionTool = {
 export const listarGruposAlergenicos: DefinicionTool = {
   definicion: {
     name: 'listar_grupos_alergenicos',
-    description:
-      'Lista TODOS los grupos alergénicos del catálogo (id + nombre). Usala para encontrar el id ' +
-      'correcto antes de llamar "condicion_alergia" cuando la pregunta menciona una alergia.',
+    description: 'Lista los grupos alergénicos del catálogo (id + nombre), para "grupoAlergenicoIds" de "condicion_alergia".',
     input_schema: { type: 'object', properties: {} },
   },
   async ejecutar(deps: DependenciasTools) {

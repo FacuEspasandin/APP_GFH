@@ -13,9 +13,8 @@ export const alternativasTerapeuticas: DefinicionTool = {
   definicion: {
     name: 'alternativas_terapeuticas',
     description:
-      'Alternativas terapéuticas del catálogo para un principio activo. Pasá "principioActivoNombre" ' +
-      'directo — se resuelve solo salvo ambigüedad. Sin contexto de paciente: no está anotado contra ' +
-      'interacciones ni alergias, es el catálogo crudo — razón y evidencia por cada alternativa.',
+      'Alternativas terapéuticas del catálogo para un fármaco (id o nombre). Sin contexto de paciente: ' +
+      'catálogo crudo, no anotado contra interacciones/alergias.',
     input_schema: {
       type: 'object',
       properties: {
