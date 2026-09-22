@@ -2,9 +2,11 @@ import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common'
 import Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam, Tool } from '@anthropic-ai/sdk/resources/messages';
 
-/** Confirmado vigente para esto: Sonnet 5. Haiku 4.5 se probó en vivo y
- *  alucinó una severidad de interacción inexistente — ver decisión en el
- *  historial del chat con el médico. */
+/** Confirmado vigente para esto: Sonnet 5. Haiku 4.5 se probó en vivo dos
+ *  veces — alucinó una severidad de interacción inexistente, y por
+ *  separado, para preguntas de sólo ficha_tecnica, en 3 de 4 intentos NO
+ *  llamó la tool disponible y respondió "no tengo esa información" cuando
+ *  sí estaba indexada. Descartado en los dos casos. */
 const MODELO = 'claude-sonnet-5';
 const MAX_TOKENS_RESPUESTA = 1024;
 
