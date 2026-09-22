@@ -13,6 +13,12 @@ import type { DefinicionTool, DependenciasTools } from './tipos';
 
 export type { DependenciasTools } from './tipos';
 
+// Probado bakear condiciones/grupos alergénicos en el system prompt (28+13
+// filas) en vez de tools — medido en vivo: infló el bloque cacheado en
+// +2119 tokens, pagados en CADA consulta la use o no. El ahorro real estaba
+// en sacar el "buscar_farmaco" previo (eso sí se quedó, ver
+// resolver-farmaco.ts) — como tools chicas, éstas sólo cuestan cuando se
+// llaman, así que se quedan así.
 const TODAS: DefinicionTool[] = [
   buscarFarmaco,
   interaccionesDeUnFarmaco,

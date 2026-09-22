@@ -61,6 +61,39 @@ describe('ejecutarTool — dispatcher', () => {
     expect(interaccionesDeUnFarmaco).toHaveBeenCalledWith(ID_VALIDO);
   });
 
+  it('"interacciones_de_un_farmaco" con nombre (sin id) lo resuelve solo, sin pasar por "buscar_farmaco"', async () => {
+    const buscarPrincipiosActivos = vi.fn().mockResolvedValue([{ id: ID_VALIDO, nombre: 'Warfarina' }]);
+    const interaccionesDeUnFarmaco = vi.fn().mockResolvedValue({ farmaco: 'Warfarina', total: 33, grupos: [] });
+    const deps = depsFalsas({ catalogo: { buscarPrincipiosActivos, interaccionesDeUnFarmaco } });
+
+    await ejecutarTool('interacciones_de_un_farmaco', { principioActivoNombre: 'warfarina' }, deps);
+
+    expect(buscarPrincipiosActivos).toHaveBeenCalledWith('warfarina', 5);
+    expect(interaccionesDeUnFarmaco).toHaveBeenCalledWith(ID_VALIDO);
+  });
+
+  it('nombre ambiguo (2+ coincidencias) tira error claro, nunca adivina cuál', async () => {
+    const buscarPrincipiosActivos = vi
+      .fn()
+      .mockResolvedValue([{ id: ID_VALIDO, nombre: 'Losartán' }, { id: ID_VALIDO_2, nombre: 'Losartán/HCTZ' }]);
+    const interaccionesDeUnFarmaco = vi.fn();
+    const deps = depsFalsas({ catalogo: { buscarPrincipiosActivos, interaccionesDeUnFarmaco } });
+
+    await expect(
+      ejecutarTool('interacciones_de_un_farmaco', { principioActivoNombre: 'losartan' }, deps),
+    ).rejects.toThrow(/varias coincidencias/);
+    expect(interaccionesDeUnFarmaco).not.toHaveBeenCalled();
+  });
+
+  it('nombre sin ningún match tira error claro, nunca inventa un id', async () => {
+    const buscarPrincipiosActivos = vi.fn().mockResolvedValue([]);
+    const deps = depsFalsas({ catalogo: { buscarPrincipiosActivos } });
+
+    await expect(
+      ejecutarTool('alternativas_terapeuticas', { principioActivoNombre: 'farmaco-inexistente' }, deps),
+    ).rejects.toThrow(/No encontré/);
+  });
+
   it('"interacciones_farmaco_farmaco" no reimplementa nada: llama directo a HerramientasService.interacciones', async () => {
     const interacciones = vi.fn().mockResolvedValue({ pares: [] });
     const deps = depsFalsas({ herramientas: { interacciones } });
@@ -72,6 +105,39 @@ describe('ejecutarTool — dispatcher', () => {
     );
 
     expect(interacciones).toHaveBeenCalledWith({ principioActivoIds: [ID_VALIDO, ID_VALIDO_2] });
+  });
+
+  it('"interacciones_farmaco_farmaco" con nombres (array) resuelve cada uno antes de llamar al motor', async () => {
+    const buscarPrincipiosActivos = vi.fn().mockImplementation((consulta: string) => {
+      if (consulta === 'warfarina') return Promise.resolve([{ id: ID_VALIDO, nombre: 'Warfarina' }]);
+      return Promise.resolve([{ id: ID_VALIDO_2, nombre: 'Amiodarona' }]);
+    });
+    const interacciones = vi.fn().mockResolvedValue({ pares: [] });
+    const deps = depsFalsas({ catalogo: { buscarPrincipiosActivos }, herramientas: { interacciones } });
+
+    await ejecutarTool(
+      'interacciones_farmaco_farmaco',
+      { principioActivoNombres: ['warfarina', 'amiodarona'] },
+      deps,
+    );
+
+    expect(interacciones).toHaveBeenCalledWith({ principioActivoIds: [ID_VALIDO, ID_VALIDO_2] });
+  });
+
+  it('"condicion_alergia" con nombre resuelve el id y NO manda "principioActivoNombre" al servicio real', async () => {
+    const buscarPrincipiosActivos = vi.fn().mockResolvedValue([{ id: ID_VALIDO, nombre: 'Ibuprofeno' }]);
+    const condicionAlergiaMock = vi.fn().mockResolvedValue({ alertas: [] });
+    const deps = depsFalsas({
+      catalogo: { buscarPrincipiosActivos },
+      herramientas: { condicionAlergia: condicionAlergiaMock },
+    });
+
+    await ejecutarTool('condicion_alergia', { principioActivoNombre: 'ibuprofeno' }, deps);
+
+    expect(condicionAlergiaMock).toHaveBeenCalledWith(
+      expect.not.objectContaining({ principioActivoNombre: expect.anything() }),
+    );
+    expect(condicionAlergiaMock).toHaveBeenCalledWith(expect.objectContaining({ principioActivoId: ID_VALIDO }));
   });
 
   it('"alternativas_terapeuticas" llama a AlternativasService.delCatalogo, no a paraPrescripcion/paraCandidato', async () => {
