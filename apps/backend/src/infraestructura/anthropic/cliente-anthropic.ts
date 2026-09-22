@@ -2,7 +2,9 @@ import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common'
 import Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam, Tool } from '@anthropic-ai/sdk/resources/messages';
 
-/** Mismo modelo que confirmamos vigente para esto: Sonnet 5. */
+/** Confirmado vigente para esto: Sonnet 5. Haiku 4.5 se probó en vivo y
+ *  alucinó una severidad de interacción inexistente — ver decisión en el
+ *  historial del chat con el médico. */
 const MODELO = 'claude-sonnet-5';
 const MAX_TOKENS_RESPUESTA = 1024;
 
@@ -27,6 +29,16 @@ export class ClienteAnthropic {
     return this.cliente;
   }
 
+  /**
+   * `sistema` va como bloque con `cache_control` — es idéntico en TODAS las
+   * llamadas (mismo texto, mismas tools) para TODOS los médicos, así que
+   * cachearlo es directo. El orden real del request es `tools` → `system` →
+   * `messages`, así que UN solo breakpoint acá alcanza para cachear las 10
+   * tools completas también (cachea todo el prefijo, no sólo este bloque).
+   * TTL 1 hora (`ttl: '1h'`) en vez del default de 5 min: con tráfico real
+   * de consultorio (huecos entre consultas) mantiene la caché caliente sin
+   * pagar el "cache write" de nuevo cada rato.
+   */
   async enviarMensaje(params: {
     sistema: string;
     mensajes: MessageParam[];
@@ -38,7 +50,13 @@ export class ClienteAnthropic {
       return await cliente.messages.create({
         model: MODELO,
         max_tokens: MAX_TOKENS_RESPUESTA,
-        system: params.sistema,
+        system: [
+          {
+            type: 'text',
+            text: params.sistema,
+            cache_control: { type: 'ephemeral', ttl: '1h' },
+          },
+        ],
         messages: params.mensajes,
         tools: params.tools,
       });

@@ -13,14 +13,17 @@ const ID_VALIDO_2 = '22222222-2222-4222-8222-222222222222';
 const MEDICO_ID = 'medico-1';
 const SESSION_ID = 'sesion-1';
 
+const USO_FALSO = { input_tokens: 10, output_tokens: 10, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 };
+
 function textoFinal(texto: string) {
-  return { content: [{ type: 'text', text: texto }], stop_reason: 'end_turn' as const };
+  return { content: [{ type: 'text', text: texto }], stop_reason: 'end_turn' as const, usage: USO_FALSO };
 }
 
 function usoDeTool(id: string, name: string, input: unknown) {
   return {
     content: [{ type: 'tool_use', id, name, input }],
     stop_reason: 'tool_use' as const,
+    usage: USO_FALSO,
   };
 }
 

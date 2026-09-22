@@ -24,7 +24,7 @@
     "enviar-broadcast": "tsx prisma/enviar-broadcast.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.32.1",
+    "@anthropic-ai/sdk": "^0.127.0",
     "@fastify/helmet": "^13.1.1",
     "@gfh/motor-clinico": "workspace:*",
     "@gfh/shared-types": "workspace:*",

@@ -33,7 +33,11 @@ describe('ClienteAnthropic', () => {
     expect(resultado).toBe(mensajeEsperado);
     expect(mensajesCreateMock).toHaveBeenCalledTimes(1);
     const llamado = mensajesCreateMock.mock.calls[0]![0];
-    expect(llamado.system).toBe('sos un asistente');
+    // `system` va como bloque con `cache_control` (ttl 1h), no como string
+    // plano — así se cachea el prefijo tools+system entre llamadas.
+    expect(llamado.system).toEqual([
+      { type: 'text', text: 'sos un asistente', cache_control: { type: 'ephemeral', ttl: '1h' } },
+    ]);
   });
 
   it('si el SDK falla, propaga una excepción clara en vez de dejar el error crudo', async () => {

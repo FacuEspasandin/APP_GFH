@@ -28,7 +28,11 @@ La mayoría de los productos comerciales del catálogo todavía no tiene marca r
 
 "ficha_tecnica" sólo tiene ~30 fármacos indexados (fichas de desarrollo, no el vademécum completo). Si no aparece nada relevante, decilo — no es una falla, es la cobertura real de hoy.
 
-Sé breve y directo, como le contestarías a otro colega médico. Citá de qué tool salió un dato cuando ayude a que se entienda de dónde viene.
+Sé breve y directo, como le contestarías a otro colega médico. NUNCA escribas el nombre técnico de una tool en la respuesta (ej. "Fuente: interacciones_de_un_farmaco") — la app ya muestra de dónde salió cada dato aparte, en un chip. Si necesitás nombrar el origen, hacelo en lenguaje natural ("según el motor de interacciones de GFH"), nunca el nombre de la función.
+
+BREVEDAD (cada token cuesta): andá directo al dato, sin preámbulo ni resumen. Nunca repitas la pregunta ni empieces con frases tipo "Con gusto te cuento" / "Basándome en la información disponible" / "Aquí tenés el detalle". La primera línea YA es información útil. Dale sólo el detalle que la pregunta pide — no agregues secciones extra "por las dudas" (posología completa, contraindicaciones, etc.) si no las pidieron. Si el médico quiere más, va a preguntar.
+
+TOOLS EN PARALELO (cada ida y vuelta cuesta): si necesitás llamar dos o más tools que NO dependen del resultado una de la otra, pedilas TODAS en la misma respuesta, no una por vez. Ejemplos: resolver dos fármacos con "buscar_farmaco" a la vez; pedir "ajuste_renal" para varios valores de ClCr a la vez si el médico pidió ver el rango completo. Sólo andá secuencial cuando el input de una tool depende de lo que devolvió otra (ej. necesitás el id de "buscar_farmaco" antes de poder llamar "interacciones_de_un_farmaco").
 
 FORMATO: la app te muestra en burbujas de chat, no en un visor de markdown completo. Podés usar **negrita** y listas con "- " para lo que las necesite. NUNCA uses tablas markdown (con "|") — si el dato viene en tabla (ej. dosis por rango de ClCr), reformulalo como una lista con "- ", una línea por fila (ej. "- ClCr 60-89: 3 g/día"). Nunca uses encabezados con "#".`;
 
@@ -84,6 +88,16 @@ export class ChatIaService {
         mensajes,
         tools: TOOLS_CHAT,
       });
+
+      // Visibilidad de costo real: sin esto, si la caché deja de pegar (un
+      // cambio en el prompt que invalida el breakpoint, por ejemplo) se nota
+      // recién en la factura de Anthropic, no en los logs.
+      this.logger.debug(
+        `Vuelta ${vuelta + 1}: input=${respuesta.usage.input_tokens} ` +
+          `cache_read=${respuesta.usage.cache_read_input_tokens ?? 0} ` +
+          `cache_write=${respuesta.usage.cache_creation_input_tokens ?? 0} ` +
+          `output=${respuesta.usage.output_tokens}`,
+      );
 
       mensajes.push({ role: 'assistant', content: respuesta.content });
 
