@@ -90,38 +90,40 @@ tr.total .num{font-size:15px}
   </p>
 
   <div class="veredicto">
-    <div class="cifra">US$ 34<small>por mes, aprox.</small></div>
+    <div class="cifra">US$ 34<small>infra fija / mes, aprox.</small></div>
     <div class="texto">
-      Es lo que vas a pagar de infraestructura propia a esta escala: VPS +
-      backups + Supabase + dominio + la cuota de Apple prorrateada. Todo lo
-      demás —Sentry, RevenueCat, Resend, Google Vision, EAS— se mantiene en
-      su plan gratuito con margen real, no al límite.
+      Es lo que vas a pagar de infraestructura propia a esta escala, sin importar
+      cuántos médicos usen Vera: VPS + backups + Supabase + dominio + la cuota
+      de Apple prorrateada. Todo lo demás —Sentry, RevenueCat, Resend, Google
+      Vision, EAS— se mantiene en su plan gratuito con margen real, no al
+      límite. El chat con IA (Vera) es aparte porque escala con la cantidad de
+      médicos PRO, no es un costo fijo — ver sección 3bis.
     </div>
   </div>
   <p class="fuentes">Sin contar Farmanuario (a cotizar aparte, fuera de tu control), Google Play (US$ 25 único) ni correo corporativo (opcional, ver sección 2).</p>
 
   <!-- ============================================================ -->
   <h2>1. Cuánta carga es 700 usuarios activos</h2>
-  <p class="h2-nota">Todo lo que sigue depende de esto. Los tres escenarios asumen distinta conversión a PRO (US$ 6,99/mes) sobre el total de usuarios activos.</p>
+  <p class="h2-nota">Todo lo que sigue depende de esto. Los tres escenarios asumen distinta conversión a PRO sobre el total de usuarios activos. <b>Precio de PRO actualizado a US$ 8,99/mes</b> (era US$ 6,99) — el aumento es en parte para absorber el costo de Vera, el chat con IA (ver sección 3bis). "IA" en cada tarjeta es el costo de Vera a esa cantidad de médicos PRO — sólo ellos tienen acceso, está gateado por suscripción.</p>
 
   <div class="escenarios">
     <div class="esc">
       <div class="rot">Conservador</div>
       <div class="n">70 PRO</div>
-      <div class="mtr">10% conversión · MTR ≈ US$ 489</div>
+      <div class="mtr">10% conversión · MTR ≈ US$ 629 · IA ≈ US$ 139</div>
     </div>
     <div class="esc">
       <div class="rot">Moderado</div>
       <div class="n">140 PRO</div>
-      <div class="mtr">20% conversión · MTR ≈ US$ 978</div>
+      <div class="mtr">20% conversión · MTR ≈ US$ 1.259 · IA ≈ US$ 278</div>
     </div>
     <div class="esc ok">
       <div class="rot">Optimista</div>
       <div class="n">245 PRO</div>
-      <div class="mtr">35% conversión · MTR ≈ US$ 1.712</div>
+      <div class="mtr">35% conversión · MTR ≈ US$ 2.203 · IA ≈ US$ 487</div>
     </div>
   </div>
-  <p class="suave">Incluso en un escenario agresivo de 50% de conversión (350 PRO), el MTR ronda <b>US$ 2.447</b> — todavía por debajo del umbral de US$ 2.500 donde RevenueCat empieza a cobrar. A 700 usuarios activos, tendría que convertir más de la mitad de la base a PRO para que la suscripción a RevenueCat deje de ser gratis.</p>
+  <p class="suave">Con el precio nuevo, un escenario de 50% de conversión (350 PRO) da un MTR ≈ <b>US$ 3.147</b> — a diferencia del análisis con el precio viejo, este SÍ cruza el umbral de US$ 2.500 donde RevenueCat empieza a cobrar 1%. El umbral pasa a tocarse a partir de <b>~278 suscriptores PRO</b> (era ~358 con US$ 6,99) — ver sección 4.</p>
 
   <!-- ============================================================ -->
   <h2>2. Arquitectura recomendada</h2>
@@ -313,6 +315,13 @@ flowchart LR
         <td><span class="pill yaesta">Pago único</span></td>
       </tr>
       <tr>
+        <td><b>Anthropic + Voyage AI</b></td>
+        <td>Vera — chat con IA (sólo médicos PRO)</td>
+        <td>Escala con médicos PRO — ver sección 3bis</td>
+        <td class="num">139–487</td>
+        <td><span class="pill pagar">Pagar (variable)</span></td>
+      </tr>
+      <tr>
         <td><b>Farmanuario API</b></td>
         <td>Catálogo clínico curado</td>
         <td>A cotizar directo con el proveedor</td>
@@ -320,18 +329,77 @@ flowchart LR
         <td><span class="pill ver">Pendiente cotizar</span></td>
       </tr>
       <tr class="total">
-        <td colspan="3">Total mensual (sin Farmanuario, sin correo corporativo)</td>
+        <td colspan="3">Total infra fija (sin IA, sin Farmanuario, sin correo corporativo)</td>
         <td class="num">≈ 34–40</td>
         <td></td>
       </tr>
     </table>
   </div>
+  <p class="suave">La fila de IA queda aparte del total: a diferencia del resto, no es un costo fijo — depende de cuántos médicos PRO usan Vera y cuánto preguntan. El rango US$ 139–487 son los 3 escenarios de la sección 1 (Conservador a Optimista).</p>
+
+  <!-- ============================================================ -->
+  <h2>3bis. Costo de Vera (chat con IA)</h2>
+  <p class="h2-nota">Único costo de esta lista que escala con el uso, no fijo — medido en vivo contra el backend real, no estimado a ciegas.</p>
+
+  <div class="veredicto" style="background:var(--barra)">
+    <div class="cifra">US$ 0,0078<small>por consulta, medido</small></div>
+    <div class="texto">
+      Modelo Sonnet 5 (Anthropic), con prompt caching, resolución de fármaco por
+      nombre (sin ida y vuelta extra para buscar el id), tools en paralelo y
+      respuestas sin relleno — el costo sin ninguna de estas optimizaciones
+      hubiera sido <b>US$ 0,019/consulta</b>, 2,4× más. Incluye el historial de
+      conversación (últimos 5 intercambios), para que un "¿y con este otro
+      dato?" tenga contexto real.
+    </div>
+  </div>
+
+  <div class="tabla-env">
+    <table>
+      <tr><th>Escenario</th><th>Médicos PRO</th><th>A 8,5 consultas/médico/día</th><th>US$/mes</th></tr>
+      <tr>
+        <td><b>Conservador</b></td>
+        <td class="num">70</td>
+        <td class="num">595 consultas/día</td>
+        <td class="num">≈ 139</td>
+      </tr>
+      <tr>
+        <td><b>Moderado</b></td>
+        <td class="num">140</td>
+        <td class="num">1.190 consultas/día</td>
+        <td class="num">≈ 278</td>
+      </tr>
+      <tr>
+        <td><b>Optimista</b></td>
+        <td class="num">245</td>
+        <td class="num">2.083 consultas/día</td>
+        <td class="num">≈ 487</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>Se evaluó y se descartó bajar de modelo</h3>
+  <p>Haiku 4.5 cuesta la mitad (US$ 1/5 por millón de tokens vs. US$ 2/10 de
+  Sonnet 5), pero en la primera prueba real alucinó una severidad de
+  interacción que no existe en el catálogo — inventó "26 interacciones
+  adicionales de severidad inferior" en un fármaco donde las 33 interacciones
+  reales son todas de severidad ALTA (verificado contra el dato real,
+  consultando el motor sin pasar por el modelo). Descartado: el 50% de ahorro
+  no vale el riesgo de una respuesta clínica mal fundada.</p>
+
+  <h3>Por qué el precio de PRO subió a US$ 8,99</h3>
+  <p>Antes de Vera, la suscripción PRO no tenía un costo variable por usuario
+  —Supabase, VPS y el resto son fijos, no importa cuánto los use cada médico—.
+  Vera rompe eso: cada consulta cuesta de verdad. El aumento de US$ 6,99 a
+  US$ 8,99 (+US$ 2/mes por suscriptor) cubre el costo de IA de un médico
+  promedio (≈US$ 1,99/mes a 8,5 consultas/día) con margen, sin que el chat se
+  coma el margen de la suscripción.</p>
 
   <!-- ============================================================ -->
   <h2>4. Cuándo cada gratuito deja de alcanzar</h2>
   <p class="h2-nota">Ninguno de estos triggers se dispara a 700 usuarios — quedan acá para no tener que volver a investigar cuando la app crezca.</p>
   <div class="triggers">
-    <div class="trigger"><span class="flecha">→</span><span><b>RevenueCat</b> empieza a cobrar 1% cuando el MTR supera US$ 2.500 — a US$ 6,99/mes, eso son <b>~358 suscriptores PRO</b> simultáneos, más de la mitad de los 700 usuarios totales de este análisis.</span></div>
+    <div class="trigger"><span class="flecha">→</span><span><b>RevenueCat</b> empieza a cobrar 1% cuando el MTR supera US$ 2.500 — a US$ 8,99/mes, eso son <b>~278 suscriptores PRO</b> simultáneos (era ~358 con el precio viejo de US$ 6,99) — el escenario Optimista (245 PRO) queda cerca, no lo cruza todavía.</span></div>
+    <div class="trigger"><span class="flecha">→</span><span><b>Vera</b> no tiene un trigger de plan gratuito —es 100% variable desde el primer médico—, pero si el costo real medido se aleja mucho de US$ 0,0078/consulta (cambio de precios de Anthropic, uso mucho más alto de lo esperado por médico), vale remedir con el log de debug de <code>ChatIaService</code> antes de asumir que el margen de los US$ 2 sigue alcanzando.</span></div>
     <div class="trigger"><span class="flecha">→</span><span><b>Sentry</b> pide el plan Team (US$ 26/mes) al superar 5.000 errores/mes de forma sostenida, o el día que sume un segundo desarrollador con acceso.</span></div>
     <div class="trigger"><span class="flecha">→</span><span><b>Supabase</b> pide más que Pro (Team, US$ 599/mes) sólo por encima de 8 GB de base o 100 GB de storage — con el catálogo clínico actual y datos de 700 médicos, está lejos.</span></div>
     <div class="trigger"><span class="flecha">→</span><span><b>EAS</b> pide el plan Production (US$ 199/mes) si se superan 30 builds/mes o hace falta build prioritario/concurrente — un equipo de una persona con releases cada tanto no lo toca.</span></div>
@@ -368,7 +436,11 @@ flowchart LR
     <a href="https://render.com/docs/dedicated-ips">Render dedicated IPs</a> ·
     <a href="https://www.cloudflare.com/application-services/products/registrar/buy-app-domains/">Cloudflare Registrar</a> ·
     <a href="https://workspace.google.com/pricing">Google Workspace pricing</a> ·
-    <a href="https://www.zoho.com/mail/custom-domain-email.html">Zoho Mail</a>.
-    Relevado 11/09/2026 — los precios de infraestructura cambian, revisar antes de comprometer presupuesto anual.
+    <a href="https://www.zoho.com/mail/custom-domain-email.html">Zoho Mail</a> ·
+    <a href="https://www.anthropic.com/pricing">Anthropic API pricing</a> ·
+    <a href="https://www.voyageai.com/pricing">Voyage AI pricing</a>.
+    Relevado 11/09/2026, sección de IA y precio de PRO actualizados 22/09/2026 —
+    los precios de infraestructura cambian, revisar antes de comprometer
+    presupuesto anual.
   </p>
 </div>
