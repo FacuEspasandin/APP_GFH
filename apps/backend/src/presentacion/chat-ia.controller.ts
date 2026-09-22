@@ -4,6 +4,7 @@ import { IsOptional, IsString, IsUUID, Length } from 'class-validator';
 
 import { ChatIaService } from '../aplicacion/chat-ia/chat-ia.service';
 import { Cuerpo } from './comun/cuerpo';
+import { LimiteChatDiarioGuard } from './comun/limite-chat-diario.guard';
 import { JwtGuard, MedicoActual } from './comun/medico-actual';
 import { DePago } from './comun/requiere-suscripcion';
 
@@ -26,6 +27,7 @@ export class ChatIaController {
   constructor(@Inject(ChatIaService) private readonly chat: ChatIaService) {}
 
   @DePago('Vera')
+  @UseGuards(LimiteChatDiarioGuard)
   @Post('mensajes')
   @HttpCode(200)
   @Throttle({ default: { limit: 15, ttl: 60_000 } })

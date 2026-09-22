@@ -19,6 +19,7 @@ import { SuscripcionService } from './aplicacion/suscripcion/suscripcion.service
 import { DemoService } from './aplicacion/demo/demo.service';
 import { AccesoService } from './aplicacion/suscripcion/acceso.service';
 import { PlanGuard } from './presentacion/comun/requiere-suscripcion';
+import { LimiteChatDiarioGuard } from './presentacion/comun/limite-chat-diario.guard';
 import { EventosService } from './aplicacion/historial/eventos.service';
 import { PushService } from './aplicacion/notificaciones/push.service';
 import { PacientesService } from './aplicacion/pacientes/pacientes.service';
@@ -82,6 +83,7 @@ import {
     CockpitService,
     AccesoService,
     PlanGuard,
+    LimiteChatDiarioGuard,
     DemoService,
     EventosService,
     PacientesService,
