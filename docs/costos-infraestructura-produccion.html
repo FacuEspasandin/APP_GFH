@@ -104,26 +104,26 @@ tr.total .num{font-size:15px}
 
   <!-- ============================================================ -->
   <h2>1. Cuánta carga es 700 usuarios activos</h2>
-  <p class="h2-nota">Todo lo que sigue depende de esto. Los tres escenarios asumen distinta conversión a PRO sobre el total de usuarios activos. <b>Precio de PRO actualizado a US$ 8,99/mes</b> (era US$ 6,99) — el aumento es en parte para absorber el costo de Vera, el chat con IA (ver sección 3bis). "IA" en cada tarjeta es el costo de Vera a esa cantidad de médicos PRO — sólo ellos tienen acceso, está gateado por suscripción.</p>
+  <p class="h2-nota">Todo lo que sigue depende de esto. Los tres escenarios asumen distinta conversión a PRO sobre el total de usuarios activos. <b>Precio de PRO actualizado a US$ 7,99/mes</b> (era US$ 6,99) — el aumento es en parte para absorber el costo de Vera, el chat con IA (ver sección 3bis). "IA" en cada tarjeta es el costo de Vera a esa cantidad de médicos PRO — sólo ellos tienen acceso, está gateado por suscripción.</p>
 
   <div class="escenarios">
     <div class="esc">
       <div class="rot">Conservador</div>
       <div class="n">70 PRO</div>
-      <div class="mtr">10% conversión · MTR ≈ US$ 629 · IA ≈ US$ 139</div>
+      <div class="mtr">10% conversión · MTR ≈ US$ 559 · IA ≈ US$ 139</div>
     </div>
     <div class="esc">
       <div class="rot">Moderado</div>
       <div class="n">140 PRO</div>
-      <div class="mtr">20% conversión · MTR ≈ US$ 1.259 · IA ≈ US$ 278</div>
+      <div class="mtr">20% conversión · MTR ≈ US$ 1.119 · IA ≈ US$ 278</div>
     </div>
     <div class="esc ok">
       <div class="rot">Optimista</div>
       <div class="n">245 PRO</div>
-      <div class="mtr">35% conversión · MTR ≈ US$ 2.203 · IA ≈ US$ 487</div>
+      <div class="mtr">35% conversión · MTR ≈ US$ 1.958 · IA ≈ US$ 487</div>
     </div>
   </div>
-  <p class="suave">Con el precio nuevo, un escenario de 50% de conversión (350 PRO) da un MTR ≈ <b>US$ 3.147</b> — a diferencia del análisis con el precio viejo, este SÍ cruza el umbral de US$ 2.500 donde RevenueCat empieza a cobrar 1%. El umbral pasa a tocarse a partir de <b>~278 suscriptores PRO</b> (era ~358 con US$ 6,99) — ver sección 4.</p>
+  <p class="suave">Con el precio nuevo, un escenario de 50% de conversión (350 PRO) da un MTR ≈ <b>US$ 2.797</b> — a diferencia del análisis con el precio viejo, este SÍ cruza el umbral de US$ 2.500 donde RevenueCat empieza a cobrar 1%. El umbral pasa a tocarse a partir de <b>~313 suscriptores PRO</b> (era ~358 con US$ 6,99) — ver sección 4.</p>
 
   <!-- ============================================================ -->
   <h2>2. Arquitectura recomendada</h2>
@@ -386,19 +386,23 @@ flowchart LR
   consultando el motor sin pasar por el modelo). Descartado: el 50% de ahorro
   no vale el riesgo de una respuesta clínica mal fundada.</p>
 
-  <h3>Por qué el precio de PRO subió a US$ 8,99</h3>
+  <h3>Por qué el precio de PRO subió a US$ 7,99 — y una aclaración</h3>
   <p>Antes de Vera, la suscripción PRO no tenía un costo variable por usuario
   —Supabase, VPS y el resto son fijos, no importa cuánto los use cada médico—.
   Vera rompe eso: cada consulta cuesta de verdad. El aumento de US$ 6,99 a
-  US$ 8,99 (+US$ 2/mes por suscriptor) cubre el costo de IA de un médico
-  promedio (≈US$ 1,99/mes a 8,5 consultas/día) con margen, sin que el chat se
-  coma el margen de la suscripción.</p>
+  US$ 7,99 es sólo <b>+US$ 1/mes por suscriptor</b> — contra un costo real de
+  IA de <b>≈US$ 1,99/médico/mes</b> (8,5 consultas/día), el aumento cubre
+  poco más de la mitad, no con margen. A este precio, cada médico PRO que usa
+  Vera le resta ≈US$ 1/mes de margen a la suscripción en vez de sumarlo — no
+  es necesariamente un problema (el margen puede venir de otro lado, o
+  aceptarse como costo de adquisición), pero vale tenerlo claro antes de
+  fijar el precio en definitivo.</p>
 
   <!-- ============================================================ -->
   <h2>4. Cuándo cada gratuito deja de alcanzar</h2>
   <p class="h2-nota">Ninguno de estos triggers se dispara a 700 usuarios — quedan acá para no tener que volver a investigar cuando la app crezca.</p>
   <div class="triggers">
-    <div class="trigger"><span class="flecha">→</span><span><b>RevenueCat</b> empieza a cobrar 1% cuando el MTR supera US$ 2.500 — a US$ 8,99/mes, eso son <b>~278 suscriptores PRO</b> simultáneos (era ~358 con el precio viejo de US$ 6,99) — el escenario Optimista (245 PRO) queda cerca, no lo cruza todavía.</span></div>
+    <div class="trigger"><span class="flecha">→</span><span><b>RevenueCat</b> empieza a cobrar 1% cuando el MTR supera US$ 2.500 — a US$ 7,99/mes, eso son <b>~313 suscriptores PRO</b> simultáneos (era ~358 con el precio viejo de US$ 6,99) — el escenario Optimista (245 PRO) queda por debajo todavía.</span></div>
     <div class="trigger"><span class="flecha">→</span><span><b>Vera</b> no tiene un trigger de plan gratuito —es 100% variable desde el primer médico—, pero si el costo real medido se aleja mucho de US$ 0,0078/consulta (cambio de precios de Anthropic, uso mucho más alto de lo esperado por médico), vale remedir con el log de debug de <code>ChatIaService</code> antes de asumir que el margen de los US$ 2 sigue alcanzando.</span></div>
     <div class="trigger"><span class="flecha">→</span><span><b>Sentry</b> pide el plan Team (US$ 26/mes) al superar 5.000 errores/mes de forma sostenida, o el día que sume un segundo desarrollador con acceso.</span></div>
     <div class="trigger"><span class="flecha">→</span><span><b>Supabase</b> pide más que Pro (Team, US$ 599/mes) sólo por encima de 8 GB de base o 100 GB de storage — con el catálogo clínico actual y datos de 700 médicos, está lejos.</span></div>
@@ -419,6 +423,8 @@ flowchart LR
     <div class="cuenta"><div class="top"><span class="nom">Apple Developer Program</span><span class="pill yaesta">Pagado</span></div><p>US$ 99/año. Requisito para publicar en App Store y para Sign in with Apple.</p></div>
     <div class="cuenta"><div class="top"><span class="nom">Google Play Console</span><span class="pill yaesta">Pendiente</span></div><p>US$ 25 único. Falta inscribirse — no está atado a Apple.</p></div>
     <div class="cuenta"><div class="top"><span class="nom">Expo / EAS</span><span class="pill gratis">Gratis</span></div><p>Builds de producción y desarrollo de la app.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Anthropic</span><span class="pill pagar">Pagar</span></div><p>Modelo Sonnet 5 para Vera. Pago por uso, sin plan fijo — ~US$ 0,0078/consulta, ver sección 3bis.</p></div>
+    <div class="cuenta"><div class="top"><span class="nom">Voyage AI</span><span class="pill pagar">Pagar</span></div><p>Embeddings del RAG de fichas técnicas de Vera. Pago por uso, prácticamente despreciable (~US$ 0,02/millón de tokens).</p></div>
     <div class="cuenta"><div class="top"><span class="nom">Hetzner (o similar)</span><span class="pill pagar">Por crear</span></div><p>Todavía no existe la cuenta — es el VPS que reemplaza a Render.</p></div>
     <div class="cuenta"><div class="top"><span class="nom">Cloudflare Registrar</span><span class="pill pagar">Por crear</span></div><p>Todavía no existe. Registra <code>gfh.app</code> a precio de costo — desbloquea landing, <code>api.gfh.app</code> y Resend sin spam.</p></div>
     <div class="cuenta"><div class="top"><span class="nom">Google Workspace</span><span class="pill yaesta">Opcional</span></div><p>Sólo si se quiere un buzón real <code>@gfh.app</code>. El reenvío de dominio a tu Gmail actual es gratis mientras tanto.</p></div>
