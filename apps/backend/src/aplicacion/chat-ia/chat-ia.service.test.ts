@@ -117,7 +117,7 @@ describe('ChatIaService.responder', () => {
     expect(ultimoMensaje.content[0]!.tool_use_id).toBe('tool-1');
   });
 
-  it('ficha_tecnica con un fragmento relevante (distancia baja), marca encontrado:true', async () => {
+  it('ficha_tecnica con un fragmento cuyo nombre aparece en la pregunta, marca encontrado:true', async () => {
     const ragBuscar = vi.fn().mockResolvedValue([
       { principioActivoId: ID_VALIDO, nombrePrincipioActivo: 'Metformina', textoChunk: 'posología...', distancia: 0.3 },
     ]);
@@ -135,9 +135,9 @@ describe('ChatIaService.responder', () => {
     ]);
   });
 
-  it('ficha_tecnica sin ningún fragmento relevante (todas las distancias altas), marca encontrado:false', async () => {
+  it('ficha_tecnica sin ningún fragmento cuyo nombre aparezca en la pregunta, marca encontrado:false — AUNQUE la distancia sea baja (medido en vivo: un match irrelevante puede dar ~0,39, no sirve como corte)', async () => {
     const ragBuscar = vi.fn().mockResolvedValue([
-      { principioActivoId: ID_VALIDO, nombrePrincipioActivo: 'Warfarina', textoChunk: 'irrelevante...', distancia: 1.8 },
+      { principioActivoId: ID_VALIDO, nombrePrincipioActivo: 'Warfarina', textoChunk: 'irrelevante...', distancia: 0.39 },
     ]);
     const enviarMensaje = vi
       .fn()

@@ -61,18 +61,32 @@ export interface RespuestaChat {
 }
 
 /** Sólo para `ficha_tecnica`: la tool devuelve siempre los 5 fragmentos más
- *  cercanos del índice completo (`RagService.buscar`, sin umbral ciego — el
- *  modelo decide relevancia mirando la distancia real). Pero el chip de
- *  fuente en la app necesita SU PROPIO corte: es una decisión de UI ("¿hubo
- *  algo citable?"), no clínica, así que un umbral fijo acá no pisa la regla
- *  de no filtrar a ciegas el resultado que ve el modelo. */
-const DISTANCIA_MAXIMA_PARA_CHIP = 1.2;
-
-function huboFichaRelevante(output: unknown): boolean {
+ *  cercanos del índice completo (`RagService.buscar`), relevantes o no. El
+ *  chip de fuente en la app necesita saber si hubo algo citable — pero un
+ *  corte por distancia NO sirve para eso: medido en vivo, una búsqueda
+ *  irrelevante ("ibuprofeno" contra un índice sin ibuprofeno) da distancia
+ *  ~0,39, y una relevante ("metformina" contra Metformina) da ~0,29-0,32 —
+ *  los rangos se pisan, no hay umbral que los separe. En cambio, si el
+ *  NOMBRE del principio activo que devolvió la búsqueda aparece en el texto
+ *  de la pregunta, es una señal determinista de que sí se está hablando de
+ *  ese fármaco — sin usar la distancia para nada. */
+function huboFichaRelevante(output: unknown, pregunta: string): boolean {
   if (!Array.isArray(output)) return false;
+  const preguntaNormalizada = normalizarTexto(pregunta);
   return output.some(
-    (r) => typeof r === 'object' && r !== null && 'distancia' in r && (r as { distancia: number }).distancia < DISTANCIA_MAXIMA_PARA_CHIP,
+    (r) =>
+      typeof r === 'object' &&
+      r !== null &&
+      typeof (r as { nombrePrincipioActivo?: unknown }).nombrePrincipioActivo === 'string' &&
+      preguntaNormalizada.includes(normalizarTexto((r as { nombrePrincipioActivo: string }).nombrePrincipioActivo)),
   );
+}
+
+function normalizarTexto(texto: string): string {
+  return texto
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
 }
 
 @Injectable()
@@ -213,7 +227,16 @@ export class ChatIaService {
       toolsUsadas: toolsUsadas.map((t) => ({
         tool: t.tool,
         input: t.input,
-        ...(t.tool === 'ficha_tecnica' ? { encontrado: huboFichaRelevante(t.output) } : {}),
+        ...(t.tool === 'ficha_tecnica'
+          ? {
+              encontrado: huboFichaRelevante(
+                t.output,
+                typeof t.input === 'object' && t.input !== null && 'pregunta' in t.input
+                  ? String((t.input as { pregunta: unknown }).pregunta)
+                  : '',
+              ),
+            }
+          : {}),
       })),
     };
   }
