@@ -32,6 +32,7 @@ function construirServicio(opts: {
   interacciones?: ReturnType<typeof vi.fn>;
   chatSessionCreate?: ReturnType<typeof vi.fn>;
   chatSessionFindFirst?: ReturnType<typeof vi.fn>;
+  chatMessageFindMany?: ReturnType<typeof vi.fn>;
   transaction?: ReturnType<typeof vi.fn>;
 }) {
   const cliente = { enviarMensaje: opts.enviarMensaje } as unknown as ClienteAnthropic;
@@ -43,11 +44,12 @@ function construirServicio(opts: {
   const chatSessionCreate =
     opts.chatSessionCreate ?? vi.fn().mockResolvedValue({ id: SESSION_ID, medicoId: MEDICO_ID, titulo: null });
   const chatSessionFindFirst = opts.chatSessionFindFirst ?? vi.fn().mockResolvedValue(null);
+  const chatMessageFindMany = opts.chatMessageFindMany ?? vi.fn().mockResolvedValue([]);
   const transaction = opts.transaction ?? vi.fn().mockResolvedValue(undefined);
 
   const prisma = {
     chatSession: { create: chatSessionCreate, findFirst: chatSessionFindFirst },
-    chatMessage: { create: vi.fn((args: unknown) => args) },
+    chatMessage: { create: vi.fn((args: unknown) => args), findMany: chatMessageFindMany },
     $transaction: transaction,
   } as unknown as PrismaService;
 
@@ -55,6 +57,7 @@ function construirServicio(opts: {
     servicio: new ChatIaService(cliente, catalogo, herramientas, alternativas, rag, prisma),
     chatSessionCreate,
     chatSessionFindFirst,
+    chatMessageFindMany,
     transaction,
   };
 }
@@ -154,6 +157,60 @@ describe('ChatIaService.responder', () => {
     expect(chatSessionFindFirst).toHaveBeenCalledWith({ where: { id: SESSION_ID, medicoId: MEDICO_ID } });
     expect(chatSessionCreate).not.toHaveBeenCalled();
     expect(resultado.sessionId).toBe(SESSION_ID);
+  });
+
+  it('con sesión existente, reenvía el historial previo ANTES de la pregunta nueva (sin esto, un followup no tiene contexto)', async () => {
+    const chatSessionFindFirst = vi
+      .fn()
+      .mockResolvedValue({ id: SESSION_ID, medicoId: MEDICO_ID, titulo: 'anterior' });
+    // Guardados más nuevo primero, como los devuelve la query real — el
+    // servicio tiene que invertirlos antes de mandarlos.
+    const chatMessageFindMany = vi.fn().mockResolvedValue([
+      { rol: 'ASISTENTE', contenido: 'Sí, interactúan, severidad ALTA.' },
+      { rol: 'USUARIO', contenido: '¿Warfarina y amiodarona interactúan?' },
+    ]);
+    let mensajesEnLlamado: unknown[] = [];
+    const enviarMensaje = vi.fn().mockImplementationOnce(async (params: { mensajes: unknown[] }) => {
+      mensajesEnLlamado = structuredClone(params.mensajes);
+      return textoFinal('Con ClCr 35, ajustar a la mitad.');
+    });
+
+    const { servicio } = construirServicio({
+      enviarMensaje,
+      chatSessionFindFirst,
+      chatMessageFindMany,
+    });
+
+    await servicio.responder(MEDICO_ID, { sessionId: SESSION_ID, pregunta: '¿Y con un ClCr de 35?' });
+
+    expect(chatMessageFindMany).toHaveBeenCalledWith({
+      where: { chatSessionId: SESSION_ID },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+      select: { rol: true, contenido: true },
+    });
+
+    expect(mensajesEnLlamado).toEqual([
+      { role: 'user', content: '¿Warfarina y amiodarona interactúan?' },
+      { role: 'assistant', content: 'Sí, interactúan, severidad ALTA.' },
+      { role: 'user', content: '¿Y con un ClCr de 35?' },
+    ]);
+  });
+
+  it('sin sessionId (primera pregunta), no hay historial que reenviar', async () => {
+    const chatMessageFindMany = vi.fn();
+    let mensajesEnLlamado: unknown[] = [];
+    const enviarMensaje = vi.fn().mockImplementationOnce(async (params: { mensajes: unknown[] }) => {
+      mensajesEnLlamado = structuredClone(params.mensajes);
+      return textoFinal('Hola.');
+    });
+
+    const { servicio } = construirServicio({ enviarMensaje, chatMessageFindMany });
+
+    await servicio.responder(MEDICO_ID, { pregunta: 'primera pregunta' });
+
+    expect(chatMessageFindMany).not.toHaveBeenCalled();
+    expect(mensajesEnLlamado).toEqual([{ role: 'user', content: 'primera pregunta' }]);
   });
 
   it('si el modelo no termina en 6 vueltas, devuelve un mensaje de fallback en vez de colgarse', async () => {

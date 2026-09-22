@@ -36,6 +36,16 @@ FORMATO: la app te muestra en burbujas de chat, no en un visor de markdown compl
  *  modelo insiste en pedir tools sin llegar nunca a una respuesta final. */
 const MAX_VUELTAS_TOOL_USE = 6;
 
+/** Ventana de historial que se reenvía en cada mensaje de una sesión
+ *  existente — últimos 5 intercambios (usuario+asistente). Sin esto, un
+ *  "¿y con ClCr 35?" no sabe de qué fármaco se venía hablando (bug real,
+ *  encontrado probando la app). Con ventana y no historial completo: una
+ *  sesión larga no hace crecer el costo de cada mensaje sin límite. Se
+ *  reenvía el texto final de cada turno, no los tool_use/tool_result
+ *  intermedios — alcanza para dar contexto, no hace falta repetir cómo se
+ *  llegó al dato. */
+const VENTANA_HISTORIAL_MENSAJES = 10;
+
 export interface RespuestaChat {
   sessionId: string;
   respuesta: string;
@@ -73,7 +83,26 @@ export class ChatIaService {
         data: { medicoId, titulo: params.pregunta.slice(0, 80) },
       }));
 
-    const mensajes: MessageParam[] = [{ role: 'user', content: params.pregunta }];
+    const historialPrevio = sesionExistente
+      ? (
+          await this.prisma.chatMessage.findMany({
+            where: { chatSessionId: sesionExistente.id },
+            orderBy: { createdAt: 'desc' },
+            take: VENTANA_HISTORIAL_MENSAJES,
+            select: { rol: true, contenido: true },
+          })
+        ).reverse()
+      : [];
+
+    const mensajes: MessageParam[] = [
+      ...historialPrevio.map(
+        (m): MessageParam => ({
+          role: m.rol === 'USUARIO' ? 'user' : 'assistant',
+          content: m.contenido,
+        }),
+      ),
+      { role: 'user', content: params.pregunta },
+    ];
     const toolsUsadas: Array<{ tool: string; input: unknown; output: unknown }> = [];
 
     let respuestaFinal = '';
