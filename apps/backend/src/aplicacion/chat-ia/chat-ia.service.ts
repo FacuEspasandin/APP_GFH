@@ -37,14 +37,21 @@ FORMATO: la app te muestra en burbujas de chat, no en un visor de markdown compl
 const MAX_VUELTAS_TOOL_USE = 6;
 
 /** Ventana de historial que se reenvía en cada mensaje de una sesión
- *  existente — últimos 5 intercambios (usuario+asistente). Sin esto, un
+ *  existente — últimos 10 intercambios (usuario+asistente). Sin esto, un
  *  "¿y con ClCr 35?" no sabe de qué fármaco se venía hablando (bug real,
  *  encontrado probando la app). Con ventana y no historial completo: una
  *  sesión larga no hace crecer el costo de cada mensaje sin límite. Se
  *  reenvía el texto final de cada turno, no los tool_use/tool_result
  *  intermedios — alcanza para dar contexto, no hace falta repetir cómo se
- *  llegó al dato. */
-const VENTANA_HISTORIAL_MENSAJES = 10;
+ *  llegó al dato.
+ *
+ *  20 y no 10: medido en vivo, el breakpoint de caché de abajo (`UMBRAL_...
+ *  PARA_CACHE`) sólo lee incremental mientras la ventana NO se corre — en
+ *  cuanto se llena y empieza a descartar los mensajes más viejos, el
+ *  prefijo cacheado deja de matchear y cada turno paga un cache write
+ *  completo de nuevo. Con 20, una consulta típica (rara vez pasa de 10
+ *  intercambios) nunca llega a correr la ventana. */
+const VENTANA_HISTORIAL_MENSAJES = 20;
 
 /** A partir de qué tamaño de historial se cachea (2+ intercambios previos =
  *  turno 3+). Menos que esto y la sesión más común (1-2 turnos) pagaría un

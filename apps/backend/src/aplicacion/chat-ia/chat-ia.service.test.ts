@@ -223,7 +223,7 @@ describe('ChatIaService.responder', () => {
     expect(chatMessageFindMany).toHaveBeenCalledWith({
       where: { chatSessionId: SESSION_ID },
       orderBy: { createdAt: 'desc' },
-      take: 10,
+      take: 20,
       select: { rol: true, contenido: true },
     });
 

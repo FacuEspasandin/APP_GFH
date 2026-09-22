@@ -29,9 +29,14 @@ export async function resolverPrincipioActivoId(
     );
   }
   if (resultados.length > 1) {
-    const nombres = resultados.map((r) => r.nombre).join(', ');
+    // Con el id de cada opción ACÁ MISMO (no sólo el nombre): el modelo
+    // reintenta la misma tool con el id correcto en la próxima vuelta, sin
+    // una ida y vuelta extra a "buscar_farmaco" — visto en vivo, sin esto el
+    // modelo reintentaba el mismo nombre en texto una y otra vez hasta
+    // agotar las vueltas disponibles, sin resolver nunca la ambigüedad.
+    const opciones = resultados.map((r) => `${r.nombre} (id: ${r.id})`).join(', ');
     throw new Error(
-      `Hay varias coincidencias para "${input.principioActivoNombre}": ${nombres}. Usá "buscar_farmaco" para elegir el id correcto.`,
+      `Hay varias coincidencias para "${input.principioActivoNombre}": ${opciones}. Reintentá con el "principioActivoId" que corresponda.`,
     );
   }
 
