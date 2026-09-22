@@ -13,8 +13,8 @@ export class EnviarMensajeChatDto {
 }
 
 /**
- * Chat con IA — responde apoyándose en las tools deterministas del motor
- * clínico, nunca en conocimiento propio del modelo (regla no negociable 1).
+ * Vera — responde apoyándose en las tools deterministas del motor clínico,
+ * nunca en conocimiento propio del modelo (regla no negociable 1).
  *
  * Throttle bajo: un solo mensaje puede disparar varias llamadas a Claude
  * (loop de tool-use) y tiene costo real por token — mismo criterio que
@@ -25,7 +25,7 @@ export class EnviarMensajeChatDto {
 export class ChatIaController {
   constructor(@Inject(ChatIaService) private readonly chat: ChatIaService) {}
 
-  @DePago('Chat con IA')
+  @DePago('Vera')
   @Post('mensajes')
   @HttpCode(200)
   @Throttle({ default: { limit: 15, ttl: 60_000 } })

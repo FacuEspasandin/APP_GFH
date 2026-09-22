@@ -201,7 +201,7 @@ export function MenuInferior() {
             <Pressable
               onPress={() => ir('/(tabs)/chat')}
               accessibilityRole="tab"
-              accessibilityLabel="Chat con IA"
+              accessibilityLabel="Vera"
               accessibilityState={{ selected: enChat }}
               className="items-center justify-center rounded-full"
               style={{

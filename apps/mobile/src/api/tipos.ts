@@ -286,3 +286,17 @@ export interface GrupoAlergenico {
   nivelCruce: string;
   sinonimos: string[];
 }
+
+/** Una tool que Vera llamó para responder — ver `dominio/chat.ts` para qué
+ *  nombres importan como "fuente" de la respuesta y cuáles son sólo
+ *  resolución de id. */
+export interface ToolUsadaChat {
+  tool: string;
+  input: Record<string, unknown>;
+}
+
+export interface RespuestaChat {
+  sessionId: string;
+  respuesta: string;
+  toolsUsadas: ToolUsadaChat[];
+}

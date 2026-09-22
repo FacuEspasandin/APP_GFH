@@ -15,6 +15,7 @@ import type {
   ProblemaComun,
   ReporteAyuda,
   ResultadoChildPugh,
+  RespuestaChat,
   Sesion,
 } from './tipos';
 
@@ -242,3 +243,8 @@ export const ayudaFaq = () => api.get<PreguntaFrecuente[]>('/ayuda/faq');
 export const ayudaProblemas = () => api.get<ProblemaComun[]>('/ayuda/problemas');
 
 export const reportarProblema = (datos: ReporteAyuda) => api.post<void>('/ayuda/reportes', datos);
+
+// --- 13. Vera (chat con IA) ---------------------------------------------------
+
+export const enviarMensajeChat = (datos: { sessionId?: string; pregunta: string }) =>
+  api.post<RespuestaChat>('/chat/mensajes', datos);

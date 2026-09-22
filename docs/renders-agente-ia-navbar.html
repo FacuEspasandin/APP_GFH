@@ -75,16 +75,29 @@ h2.tit:first-of-type{border-top:0;padding-top:0;margin-top:0}
 .tel-cuerpo-navbar{padding-bottom:76px}
 
 /* chat */
-.msj{max-width:82%;padding:8px 11px;border-radius:12px;font-size:10.5px;line-height:1.4}
+.msj{max-width:88%;padding:9px 11px;border-radius:12px;font-size:10.3px;line-height:1.48}
 .msj.usuario{align-self:flex-end;background:var(--marca);color:#fff;border-bottom-right-radius:3px}
 .msj.asistente{align-self:flex-start;background:var(--surface);border:1px solid var(--linea);border-bottom-left-radius:3px}
-.hilo-chat{display:flex;flex-direction:column;gap:8px;flex:1;overflow:hidden;padding-bottom:8px}
-.chip-fuente{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;background:var(--marca-suave);color:var(--marca);font-size:8.4px;font-weight:700;padding:4px 8px;border-radius:999px;margin-top:2px}
+.hilo-chat{display:flex;flex-direction:column;gap:7px;flex:1;overflow:hidden;padding-bottom:8px}
+.chip-fuente{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;background:var(--marca-suave);color:var(--marca);font-size:8.4px;font-weight:700;padding:4px 8px;border-radius:999px;margin-top:1px}
+.chips-fila{display:flex;flex-wrap:wrap;gap:4px}
 .pensando{align-self:flex-start;display:flex;gap:4px;padding:8px 11px}
 .pensando span{width:5px;height:5px;border-radius:999px;background:var(--tenue)}
 .input-chat{position:absolute;left:9px;right:9px;bottom:9px;background:var(--surface);border:1px solid var(--linea);border-radius:999px;padding:9px 12px;font-size:10px;color:var(--tenue);display:flex;align-items:center;justify-content:space-between}
 .input-chat .enviar{width:22px;height:22px;border-radius:999px;background:var(--marca);color:#fff;display:grid;place-items:center;flex:none}
 .input-chat .enviar svg{width:11px;height:11px}
+
+/* markdown-lite DENTRO de la burbuja: sólo negrita + listas + subtítulo.
+   Nunca tablas — se reformulan como filas rótulo→valor (ver .fila-dato). */
+.msj b{font-weight:700}
+.msj .sub{display:block;font-weight:700;color:var(--marca);margin:6px 0 2px;font-size:10.3px}
+.msj .sub:first-child{margin-top:0}
+.msj ul{margin:2px 0 0;padding-left:14px}
+.msj li{margin-bottom:2px}
+.msj .fila-dato{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--linea);font-family:'IBM Plex Mono',monospace;font-size:9.6px}
+.msj .fila-dato:last-child{border-bottom:0}
+.msj .fila-dato b{color:var(--marca)}
+.msj .fila-dato.destacada b{color:var(--grave)}
 
 .tel-cap{margin-top:14px;font-size:12.5px;color:var(--suave);text-align:center;max-width:270px}
 .tel-cap b{color:var(--ink);display:block;font-size:13px;margin-bottom:3px}
@@ -226,22 +239,67 @@ h2.tit:first-of-type{border-top:0;padding-top:0;margin-top:0}
 
   <!-- ============================================================ -->
   <h2 class="tit">3 · Pantalla de chat</h2>
-  <p class="tit-nota">Sin streaming en v1: respuesta completa, con un estado "pensando…" mientras corre el tool-calling. Cada respuesta que usó una tool lleva su chip de fuente.</p>
+  <p class="tit-nota">Contenido real de este render: son las respuestas que ya probamos contra el backend funcionando (misma sesión, mismas tools), no texto inventado.</p>
+
+  <div class="decisiones" style="margin-bottom:30px">
+    <h2>Decisión de diseño que resuelve este render</h2>
+    <ul>
+      <li><b>Markdown-lite propio, sin librería.</b> Las respuestas reales usan negrita y listas por familia — <code>Text</code> de React Native no interpreta <code>**</code> ni <code>-</code>. Un parser chico (propio, ~40 líneas) traduce <b>negrita</b> y listas a estilos reales. No es una dependencia nueva.</li>
+      <li><b>Nunca tablas.</b> El motor renal/hepático a veces contesta con una tabla markdown (ClCr → dosis). Se reformula como filas rótulo→valor apiladas (ver segundo teléfono) — se ve mejor en una pantalla angosta y es más fácil de escanear que una tabla comprimida.</li>
+      <li><b>El chip de fuente sólo cuenta las tools que "deciden" algo clínico</b> (interacciones, ajustes, condición/alergia, alternativas, ficha técnica) — <code>buscar_farmaco</code> y los listados de condiciones/alergias son sólo resolución de nombre→id, no aparecen como fuente.</li>
+    </ul>
+  </div>
+
   <div class="galeria">
     <div class="tel-item-wrap"><div class="tel">
-      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">Asistente</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">Vera</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
       <div class="tel-cuerpo" style="padding-bottom:64px">
         <div class="hilo-chat">
-          <div class="msj usuario">¿Warfarina y paracetamol interactúan?</div>
-          <div class="msj asistente">Sí — hay una interacción documentada. El uso concomitante puede potenciar el efecto anticoagulante y aumentar el riesgo de sangrado, especialmente con dosis altas o uso prolongado de paracetamol.</div>
+          <div class="msj usuario">¿Con qué interactúa la warfarina?</div>
+          <div class="msj asistente">
+            Warfarina interactúa con 33 fármacos/familias, todas severidad <b>ALTA</b> — no hay contraindicadas.
+            <span class="sub">Riesgo de sangrado / potenciación de INR</span>
+            <ul>
+              <li><b>AINES</b> (13) — daño de mucosa + antiagregación. Preferir paracetamol, vigilar INR.</li>
+              <li><b>Quinolonas</b> (6) — potencian efecto anticoagulante.</li>
+              <li><b>Azoles</b> (5) — inhiben metabolismo, elevan INR.</li>
+              <li><b>Amiodarona</b> — inhibe metabolismo, eleva INR durante semanas.</li>
+            </ul>
+            <span class="sub">Reducción de eficacia</span>
+            <ul><li><b>Rifampicina</b> — inductor enzimático, reduce eficacia.</li></ul>
+          </div>
           <span class="chip-fuente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h11"/><polyline points="12 5 15 8 12 11"/><path d="M20 16H9"/><polyline points="12 13 9 16 12 19"/></svg>Interacciones — Warfarina</span>
-          <div class="msj usuario">¿Y con un Clcr de 35?</div>
+          <div class="msj usuario">¿Y la posología de la Metformina?</div>
           <div class="pensando"><span></span><span></span><span></span></div>
         </div>
         <div class="input-chat">Escribí tu pregunta…<span class="enviar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></div>
       </div>
     </div>
-    <p class="tel-cap"><b>Chat</b>burbujas usuario/asistente, chip de fuente tocable, "pensando…" mientras se ejecuta la tool</p>
+    <p class="tel-cap"><b>Interacciones de un fármaco</b>agrupado por familia (igual que la ficha real), negrita real, "pensando…" mientras corre la próxima tool</p>
+    </div>
+
+    <div class="tel-item-wrap"><div class="tel">
+      <div class="tel-barra"><span class="tb-atras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tb-marca">Vera</span><span class="tb-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span></div>
+      <div class="tel-cuerpo" style="padding-bottom:64px">
+        <div class="hilo-chat">
+          <div class="msj usuario">¿Cuál es la posología de la Metformina?</div>
+          <div class="msj asistente">
+            <span class="sub">Metformina — Posología</span>
+            Vía oral, con las comidas o inmediatamente después.<br>Adultos: inicio 500-850 mg c/8-12h. <b>Dosis máx: 3 g/día</b>.
+            <span class="sub">Ajuste por función renal</span>
+            <div class="fila-dato"><span>ClCr 60-89</span><b>3 g/día</b></div>
+            <div class="fila-dato"><span>ClCr 45-59</span><b>2 g/día</b></div>
+            <div class="fila-dato"><span>ClCr 30-44</span><b>1 g/día</b></div>
+            <div class="fila-dato destacada"><span>ClCr &lt;30</span><b>Contraindicada</b></div>
+          </div>
+          <div class="chips-fila">
+            <span class="chip-fuente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Ficha técnica — Metformina</span>
+          </div>
+        </div>
+        <div class="input-chat">Escribí tu pregunta…<span class="enviar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></div>
+      </div>
+    </div>
+    <p class="tel-cap"><b>Tabla reformulada</b>el ajuste por ClCr venía como tabla markdown — se muestra como filas rótulo→valor, con el corte "Contraindicada" resaltado en rojo</p>
     </div>
   </div>
 

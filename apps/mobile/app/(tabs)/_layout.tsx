@@ -42,7 +42,7 @@ export default function LayoutTabs() {
       <Tabs.Screen name="herramientas" options={{ title: 'Herramientas' }} />
       <Tabs.Screen name="buscador" options={{ title: 'Buscador' }} />
       <Tabs.Screen name="perfil" options={{ title: 'Perfil' }} />
-      <Tabs.Screen name="chat" options={{ title: 'Chat con IA' }} />
+      <Tabs.Screen name="chat" options={{ title: 'Vera' }} />
     </Tabs>
   );
 }

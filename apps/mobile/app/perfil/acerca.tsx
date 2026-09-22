@@ -53,7 +53,7 @@ export default function Acerca() {
             <Text className="mb-1 text-body font-medio text-ink">Decisiones clínicas, siempre trazables</Text>
             <Text className="font-sans text-meta leading-5 text-ink-suave">
               Severidad, ajuste de dosis e interacciones nunca salen de un modelo de lenguaje —
-              siempre de tablas y reglas deterministas. El chat de la app responde preguntas
+              siempre de tablas y reglas deterministas. Vera, el chat de la app, responde preguntas
               generales apoyándose en esa misma base, pero nunca decide nada sobre un paciente.
             </Text>
           </View>
