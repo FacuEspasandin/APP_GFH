@@ -22,22 +22,45 @@ import { obtenerFuenteFichas } from '../src/infraestructura/rag/fuente-fichas-lo
 const VOYAGE_URL = 'https://api.voyageai.com/v1/embeddings';
 const MODELO_EMBEDDING = 'voyage-3-lite';
 
+/** Sin método de pago cargado en Voyage, el límite es 3 requests/minuto —
+ *  se espera esto entre fármaco y fármaco para no pisarlo, y ante un 429 se
+ *  reintenta con backoff en vez de abortar todo el reindexado. */
+const ESPERA_ENTRE_FARMACOS_MS = 21_000;
+const REINTENTOS_MAXIMOS = 5;
+
 const prisma = new PrismaClient();
+
+function esperar(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 async function embeberDocumentos(textos: string[]): Promise<number[][]> {
   const claveApi = process.env.VOYAGE_API_KEY;
   if (!claveApi) throw new Error('Falta VOYAGE_API_KEY.');
 
-  const respuesta = await fetch(VOYAGE_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${claveApi}` },
-    body: JSON.stringify({ input: textos, model: MODELO_EMBEDDING, input_type: 'document' }),
-  });
-  if (!respuesta.ok) {
+  for (let intento = 1; intento <= REINTENTOS_MAXIMOS; intento++) {
+    const respuesta = await fetch(VOYAGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${claveApi}` },
+      body: JSON.stringify({ input: textos, model: MODELO_EMBEDDING, input_type: 'document' }),
+    });
+
+    if (respuesta.ok) {
+      const datos = (await respuesta.json()) as { data: { embedding: number[] }[] };
+      return datos.data.map((d) => d.embedding);
+    }
+
+    if (respuesta.status === 429 && intento < REINTENTOS_MAXIMOS) {
+      const esperaMs = Number(respuesta.headers.get('retry-after')) * 1000 || intento * 20_000;
+      console.warn(`  ⏳ Rate limit de Voyage — reintento ${intento}/${REINTENTOS_MAXIMOS} en ${esperaMs / 1000}s`);
+      await esperar(esperaMs);
+      continue;
+    }
+
     throw new Error(`Voyage respondió ${respuesta.status}: ${await respuesta.text()}`);
   }
-  const datos = (await respuesta.json()) as { data: { embedding: number[] }[] };
-  return datos.data.map((d) => d.embedding);
+
+  throw new Error('Voyage: se agotaron los reintentos por rate limit.');
 }
 
 async function main() {
@@ -67,7 +90,13 @@ async function main() {
 
     await prisma.$executeRaw`DELETE FROM ficha_embedding WHERE "principioActivoId" = ${principioActivo.id}`;
 
-    const textosParaEmbeber = ficha.secciones.map((s) => `${s.titulo}: ${s.texto}`);
+    // El nombre del fármaco VA en el texto embebido, no sólo en la columna:
+    // sin él, "Posología: Por V/O..." de Metformina y de Warfarina embeben
+    // casi idéntico (misma estructura, sin nada que las distinga) y la
+    // búsqueda termina devolviendo el fármaco equivocado.
+    const textosParaEmbeber = ficha.secciones.map(
+      (s) => `${ficha.nombrePrincipioActivo} — ${s.titulo}: ${s.texto}`,
+    );
     const embeddings = await embeberDocumentos(textosParaEmbeber);
 
     for (let i = 0; i < ficha.secciones.length; i++) {
@@ -83,6 +112,8 @@ async function main() {
 
     console.log(`✓ ${ficha.nombrePrincipioActivo} — ${ficha.secciones.length} chunks`);
     indexadas++;
+
+    await esperar(ESPERA_ENTRE_FARMACOS_MS);
   }
 
   console.log(`\nListo: ${indexadas} fichas indexadas, ${saltadas} salteadas.`);
