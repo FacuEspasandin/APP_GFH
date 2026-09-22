@@ -7,18 +7,21 @@ import { Icono, type NombreIcono } from '@/ui/iconos';
 import { coloresChrome, useTema } from '@/ui/tema';
 
 /**
- * El menú principal: cuatro secciones y el botón de herramientas al centro.
+ * El menú principal: cuatro secciones y el botón de chat de IA al centro.
  *
  * No es la barra de `Tabs`: esa sólo existe mientras la pantalla activa está
  * dentro del grupo `(tabs)`, y se pierde apenas se abre un paciente o un
  * detalle — que es donde el médico pasa la mayor parte del tiempo. Acá se
  * dibuja en el layout raíz, por fuera del `Stack`, así que está siempre.
  *
- * El botón central lleva a la pantalla de Herramientas, y se marca como activo
- * mientras estás ahí. Antes abría una hoja inferior con su propia lista de
- * cuatro herramientas escrita a mano: sin la calculadora de Clcr, sin candados
- * y sin buscador. Eran dos catálogos para lo mismo, y agregar una herramienta
- * era acordarse de los dos.
+ * El botón central lleva al chat de IA, y se marca como activo mientras
+ * estás ahí. Antes llevaba a Herramientas — esa pasó a la 2da posición como
+ * un tab normal, ya que la pantalla es autónoma (buscador, filtros y
+ * candados propios) y no necesitaba el lugar más prominente de la barra.
+ * Pacientes absorbió a Grupos: son la misma sección con un selector interno
+ * (`Pestanas`, "Todos" / "Por grupo") en vez de dos solapas separadas —
+ * liberar ese lugar es lo que permitió sumar el chat sin agregar una
+ * posición nueva.
  */
 
 /** Alto de la zona con íconos, sin contar el área segura del teléfono. */
@@ -33,7 +36,7 @@ interface Destino {
 
 const IZQUIERDA: Destino[] = [
   { clave: 'index', ruta: '/(tabs)', titulo: 'Pacientes', icono: 'pacientes' },
-  { clave: 'grupos', ruta: '/(tabs)/grupos', titulo: 'Grupos', icono: 'grupos' },
+  { clave: 'herramientas', ruta: '/(tabs)/herramientas', titulo: 'Herramientas', icono: 'herramientas' },
 ];
 
 const DERECHA: Destino[] = [
@@ -77,7 +80,9 @@ function seccionActiva(segmentos: string[]): string {
   const primero = segmentos[0] ?? '';
 
   if (primero === '(tabs)') return segmentos[1] ?? 'index';
-  if (primero === 'grupo') return 'grupos';
+  // Grupos quedó absorbido por Pacientes (selector interno "Todos"/"Por
+  // grupo"): el detalle de un grupo resalta la misma solapa que un paciente.
+  if (primero === 'grupo') return 'index';
   if (primero === 'farmaco') return 'buscador';
   if (primero === 'perfil') return 'perfil';
   // Las pantallas de cada herramienta cuelgan de `/herramientas/…` y no del
@@ -122,7 +127,7 @@ export function MenuInferior() {
   const respiro = insets.bottom > 0 ? insets.bottom - 10 : 8;
 
   const activa = seccionActiva(segmentos);
-  const enHerramientas = activa === 'herramientas';
+  const enChat = activa === 'chat';
 
   const ir = (ruta: string) => {
     // `navigate` y no `push`: si la sección ya está en el historial vuelve a
@@ -194,10 +199,10 @@ export function MenuInferior() {
             style={{ position: 'absolute', left: 0, right: 0, top: -24, alignItems: 'center' }}
           >
             <Pressable
-              onPress={() => ir('/(tabs)/herramientas')}
+              onPress={() => ir('/(tabs)/chat')}
               accessibilityRole="tab"
-              accessibilityLabel="Herramientas"
-              accessibilityState={{ selected: enHerramientas }}
+              accessibilityLabel="Chat con IA"
+              accessibilityState={{ selected: enChat }}
               className="items-center justify-center rounded-full"
               style={{
                 width: 58,
@@ -205,7 +210,7 @@ export function MenuInferior() {
                 // Estando ahí se rellena de verde, como los rótulos de los
                 // costados se ponen blancos: es el mismo idioma para decir
                 // «acá estás».
-                backgroundColor: enHerramientas ? VERDE_BARRA : '#FFFFFF',
+                backgroundColor: enChat ? VERDE_BARRA : '#FFFFFF',
                 borderWidth: 4,
                 borderColor: VERDE_BARRA,
                 shadowColor: '#122A23',
@@ -215,7 +220,7 @@ export function MenuInferior() {
                 elevation: 14,
               }}
             >
-              <Icono nombre="barras" tamano={23} color={enHerramientas ? '#FFFFFF' : VERDE_BARRA} />
+              <Icono nombre="chat" tamano={23} color={enChat ? '#FFFFFF' : VERDE_BARRA} />
             </Pressable>
           </View>
         </View>

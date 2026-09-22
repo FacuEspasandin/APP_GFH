@@ -13,8 +13,10 @@ import { EncabezadoApp } from '@/ui/encabezado-app';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Icono } from '@/ui/iconos';
 import { CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { Pestanas } from '@/ui/pestanas';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { Superficie } from '@/ui/superficie';
+import { ListaGrupos } from './grupos';
 import {
   claveColorPorClcr,
   colorEspina,
@@ -24,20 +26,28 @@ import {
 } from '@gfh/shared-types';
 
 /**
- * Pacientes (2.x). Lista PLANA, no agrupada.
+ * Pacientes (2.x + fusión con Grupos). "Todos" es lista PLANA, no agrupada.
  *
  * El orden lo decide el backend: peor gravedad primero, después cantidad de
  * hallazgos, recién ahí alfabético. Un paciente con una interacción
  * contraindicada tiene que estar arriba aunque su apellido empiece con Z.
  *
- * Los grupos no encabezan la lista: aparecen como dato de cada fila y tienen
- * su propia pantalla. Con 40 pacientes en 3 grupos, los encabezados obligaban
- * a scrollear entre secciones para encontrar a uno.
+ * Los grupos no encabezan la lista de "Todos": aparecen como dato de cada
+ * fila. Con 40 pacientes en 3 grupos, los encabezados obligaban a scrollear
+ * entre secciones para encontrar a uno.
+ *
+ * "Por grupo" es la vista que antes era la solapa Grupos del navbar
+ * (`ListaGrupos`, de `./grupos.tsx`), ahora un segundo segmento de esta misma
+ * pantalla en vez de un tab aparte — se liberó ese lugar del navbar para el
+ * chat de IA. Ninguna de las dos vistas se reescribió: siguen respondiendo
+ * cada una su propia pregunta ("¿a quién tengo que mirar?" vs. "¿cómo viene
+ * cada lugar donde trabajo?"), sólo cambia cómo se llega a la segunda.
  */
 export default function Pacientes() {
   const router = useRouter();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [consulta, setConsulta] = useState('');
+  const [vista, setVista] = useState<'todos' | 'grupos'>('todos');
 
   // Una sola consulta, sin `q`: `/inicio` ya trae la lista entera con el motor
   // corrido —es de donde salen los hallazgos de cada fila— así que filtrar acá
@@ -91,59 +101,78 @@ export default function Pacientes() {
           </Pressable>
         </View>
 
-        <CampoTexto
-          value={consulta}
-          onChangeText={setConsulta}
-          placeholder="Buscar por nombre o apellido"
-          autoCapitalize="none"
-          autoCorrect={false}
-          accessibilityLabel="Buscar paciente"
+        <Pestanas
+          pestanas={[
+            { clave: 'todos', titulo: 'Todos' },
+            { clave: 'grupos', titulo: 'Por grupo', conteo: data?.grupos?.filter((g) => g.id !== null).length },
+          ]}
+          activa={vista}
+          onCambiar={setVista}
         />
 
-        <ResultadoConsulta
-          cargando={isLoading}
-          error={error}
-          onReintentar={() => void refetch()}
-          filasSkeleton={3}
-        >
-          {pacientes.length === 0 && buscando ? (
-            <Estado
-              titulo="Sin coincidencias"
-              detalle={`Ningún paciente coincide con «${texto}».`}
-            />
-          ) : null}
-
-          {pacientes.length === 0 && !buscando ? (
-            <Estado
-              titulo="Todavía no cargaste pacientes"
-              detalle="Creá uno para ver interacciones, ajuste renal y alertas."
-              accion="Crear paciente"
-              onAccion={() => router.push(rutaNueva as never)}
-            />
-          ) : null}
-
-          {conHallazgos.length > 0 ? (
-            <>
-              <Eyebrow>Requieren atención · {conHallazgos.length}</Eyebrow>
-              {conHallazgos.map((p, i) => (
-                <FilaAnimada key={p.id} indice={i}>
-                  <Fila paciente={p} />
-                </FilaAnimada>
-              ))}
-            </>
-          ) : null}
-
-          {limpios.length > 0 ? (
-            <View className={conHallazgos.length > 0 ? 'mt-4' : ''}>
-              <Eyebrow>Sin hallazgos · {limpios.length}</Eyebrow>
-              {limpios.map((p, i) => (
-                <FilaAnimada key={p.id} indice={i}>
-                  <Fila paciente={p} />
-                </FilaAnimada>
-              ))}
+        {vista === 'grupos' ? (
+          <View className="mt-3">
+            <ListaGrupos />
+          </View>
+        ) : (
+          <>
+            <View className="mt-3">
+              <CampoTexto
+                value={consulta}
+                onChangeText={setConsulta}
+                placeholder="Buscar por nombre o apellido"
+                autoCapitalize="none"
+                autoCorrect={false}
+                accessibilityLabel="Buscar paciente"
+              />
             </View>
-          ) : null}
-        </ResultadoConsulta>
+
+            <ResultadoConsulta
+              cargando={isLoading}
+              error={error}
+              onReintentar={() => void refetch()}
+              filasSkeleton={3}
+            >
+              {pacientes.length === 0 && buscando ? (
+                <Estado
+                  titulo="Sin coincidencias"
+                  detalle={`Ningún paciente coincide con «${texto}».`}
+                />
+              ) : null}
+
+              {pacientes.length === 0 && !buscando ? (
+                <Estado
+                  titulo="Todavía no cargaste pacientes"
+                  detalle="Creá uno para ver interacciones, ajuste renal y alertas."
+                  accion="Crear paciente"
+                  onAccion={() => router.push(rutaNueva as never)}
+                />
+              ) : null}
+
+              {conHallazgos.length > 0 ? (
+                <>
+                  <Eyebrow>Requieren atención · {conHallazgos.length}</Eyebrow>
+                  {conHallazgos.map((p, i) => (
+                    <FilaAnimada key={p.id} indice={i}>
+                      <Fila paciente={p} />
+                    </FilaAnimada>
+                  ))}
+                </>
+              ) : null}
+
+              {limpios.length > 0 ? (
+                <View className={conHallazgos.length > 0 ? 'mt-4' : ''}>
+                  <Eyebrow>Sin hallazgos · {limpios.length}</Eyebrow>
+                  {limpios.map((p, i) => (
+                    <FilaAnimada key={p.id} indice={i}>
+                      <Fila paciente={p} />
+                    </FilaAnimada>
+                  ))}
+                </View>
+              ) : null}
+            </ResultadoConsulta>
+          </>
+        )}
       </Pantalla>
 
       <HojaInferior visible={menuAbierto} onCerrar={() => setMenuAbierto(false)}>

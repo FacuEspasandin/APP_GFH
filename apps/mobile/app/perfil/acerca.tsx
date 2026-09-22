@@ -50,10 +50,11 @@ export default function Acerca() {
         >
           <Icono nombre="prohibido" tamano={20} color="#0EA5E9" />
           <View className="flex-1">
-            <Text className="mb-1 text-body font-medio text-ink">Garantía Cero-IA</Text>
+            <Text className="mb-1 text-body font-medio text-ink">Decisiones clínicas, siempre trazables</Text>
             <Text className="font-sans text-meta leading-5 text-ink-suave">
-              Cero decisiones clínicas salen de un modelo de lenguaje. Severidad, ajuste de dosis e
-              interacciones salen siempre de tablas y reglas deterministas.
+              Severidad, ajuste de dosis e interacciones nunca salen de un modelo de lenguaje —
+              siempre de tablas y reglas deterministas. El chat de la app responde preguntas
+              generales apoyándose en esa misma base, pero nunca decide nada sobre un paciente.
             </Text>
           </View>
         </Superficie>

@@ -30,14 +30,19 @@ export default function LayoutTabs() {
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Pacientes' }} />
-      <Tabs.Screen name="grupos" options={{ title: 'Grupos' }} />
+      {/* Grupos ya no es una solapa propia: quedó absorbida por Pacientes
+          (selector "Todos" / "Por grupo" dentro de la misma pantalla). La
+          ruta sigue existiendo por si algo navega ahí directo, pero no
+          cuelga del navbar. */}
+      <Tabs.Screen name="grupos" options={{ href: null, title: 'Grupos' }} />
+      {/* Con `title` explícito: sin él Expo Router cae al nombre del archivo y
+          la barra decía «herramientas» en minúscula al lado de «Pacientes».
+          Ya no lleva `href: null`: pasó a ser un tab normal, en 2da
+          posición — el botón central ahora es el chat de IA. */}
+      <Tabs.Screen name="herramientas" options={{ title: 'Herramientas' }} />
       <Tabs.Screen name="buscador" options={{ title: 'Buscador' }} />
       <Tabs.Screen name="perfil" options={{ title: 'Perfil' }} />
-      {/* Sigue existiendo como ruta pero fuera de la barra: al menú de
-          herramientas se llega por el botón central. */}
-      {/* Con `title` explícito: sin él Expo Router cae al nombre del archivo y
-          la barra decía «herramientas» en minúscula al lado de «Pacientes». */}
-      <Tabs.Screen name="herramientas" options={{ href: null, title: 'Herramientas' }} />
+      <Tabs.Screen name="chat" options={{ title: 'Chat con IA' }} />
     </Tabs>
   );
 }
