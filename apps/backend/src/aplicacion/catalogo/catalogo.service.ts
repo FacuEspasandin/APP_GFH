@@ -396,6 +396,29 @@ export class CatalogoService {
    * contra el catálogo ATC/DDD de la OMS. Se devuelve el motivo para que la UI
    * lo diga en vez de mostrar una lista vacía sin explicación.
    */
+  /**
+   * Interacciones conocidas de UN fármaco, sin necesidad de un segundo para
+   * comparar — la misma composición que ya arma `detalleDeProducto()` para la
+   * ficha (`interaccionesDe` + dedupe + `agruparInteracciones`, nunca
+   * reimplementa el motor). Para el chat con IA: "¿con qué interactúa X?" no
+   * tiene respuesta con la tool de pares, que necesita un segundo fármaco.
+   */
+  async interaccionesDeUnFarmaco(principioActivoId: string) {
+    const pa = await this.prisma.principioActivo.findUnique({
+      where: { id: principioActivoId },
+      select: { nombre: true },
+    });
+    if (!pa) throw new NotFoundException('Principio activo no encontrado.');
+
+    const interacciones = unicasPorFarmaco(interaccionesDe(pa.nombre, this.catalogoInteracciones.obtener()));
+
+    return {
+      farmaco: pa.nombre,
+      total: interacciones.length,
+      grupos: agruparInteracciones(interacciones, this.catalogoInteracciones.listas()),
+    };
+  }
+
   async similares(principioActivoId: string) {
     const pa = await this.prisma.principioActivo.findUnique({
       where: { id: principioActivoId },

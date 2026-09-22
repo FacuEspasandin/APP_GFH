@@ -1,4 +1,4 @@
-import { IsString, Length } from 'class-validator';
+import { IsString, IsUUID, Length } from 'class-validator';
 
 import type { DefinicionTool, DependenciasTools } from './tipos';
 import { validarEntradaTool } from './validar';
@@ -30,6 +30,32 @@ export const buscarFarmaco: DefinicionTool = {
       return { sinResultados: true, mensaje: `Ningún principio activo coincide con "${input.consulta}".` };
     }
     return resultados;
+  },
+};
+
+class InteraccionesDeUnFarmacoDto {
+  @IsUUID() principioActivoId!: string;
+}
+
+export const interaccionesDeUnFarmaco: DefinicionTool = {
+  definicion: {
+    name: 'interacciones_de_un_farmaco',
+    description:
+      'TODAS las interacciones conocidas de UN fármaco (por id, resolvelo con "buscar_farmaco"), sin ' +
+      'necesitar un segundo fármaco para comparar. Devuelve "grupos" ya ordenados de más grave a menos ' +
+      'grave (CONTRAINDICADA → ALTA → INFORMATIVA), cada uno con su severidad, el texto de la regla real ' +
+      'del motor clínico, y con qué fármacos/familias aplica. Usá ESTA tool (no ' +
+      '"interacciones_farmaco_farmaco") cuando te pregunten "¿con qué interactúa X?" en general, sin un ' +
+      'segundo fármaco puntual.',
+    input_schema: {
+      type: 'object',
+      properties: { principioActivoId: { type: 'string', format: 'uuid' } },
+      required: ['principioActivoId'],
+    },
+  },
+  async ejecutar(deps: DependenciasTools, inputCrudo: unknown) {
+    const input = await validarEntradaTool(InteraccionesDeUnFarmacoDto, inputCrudo);
+    return deps.catalogo.interaccionesDeUnFarmaco(input.principioActivoId);
   },
 };
 

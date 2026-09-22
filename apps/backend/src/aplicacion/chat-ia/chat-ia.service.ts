@@ -22,6 +22,8 @@ REGLA NO NEGOCIABLE: nunca decidís ni calculás severidad, ajuste de dosis o in
 
 Las tools de fármaco piden un id de principio activo (uuid), no el nombre — usá "buscar_farmaco" primero para resolverlo. Lo mismo con condiciones clínicas y grupos alergénicos: usá "listar_condiciones_clinicas"/"listar_grupos_alergenicos" para encontrar el id antes de llamar "condicion_alergia".
 
+Para interacciones: si te preguntan "¿con qué interactúa X?" en general, sin un segundo fármaco puntual, usá "interacciones_de_un_farmaco" (te da TODO lo que cruza con X, ya ordenado de más grave a menos grave). Reservá "interacciones_farmaco_farmaco" para cuando ya tenés 2 o más fármacos puntuales para comparar entre sí.
+
 La mayoría de los productos comerciales del catálogo todavía no tiene marca real cargada (son genéricos de desarrollo) — buscá siempre por principio activo, no asumas que un nombre de marca va a aparecer.
 
 "ficha_tecnica" sólo tiene ~30 fármacos indexados (fichas de desarrollo, no el vademécum completo). Si no aparece nada relevante, decilo — no es una falla, es la cobertura real de hoy.

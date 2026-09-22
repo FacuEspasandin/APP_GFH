@@ -19,10 +19,11 @@ function depsFalsas(sobrescribir: Partial<{ [K in keyof DependenciasTools]: unkn
 }
 
 describe('catálogo de tools del chat', () => {
-  it('expone las 9 tools con nombres únicos', () => {
+  it('expone las 10 tools con nombres únicos', () => {
     const nombres = TOOLS_CHAT.map((t) => t.name);
     expect(nombres).toEqual([
       'buscar_farmaco',
+      'interacciones_de_un_farmaco',
       'listar_condiciones_clinicas',
       'listar_grupos_alergenicos',
       'interacciones_farmaco_farmaco',
@@ -49,6 +50,15 @@ describe('ejecutarTool — dispatcher', () => {
 
     expect(buscarPrincipiosActivos).toHaveBeenCalledWith('enalapril', 10);
     expect(resultado).toEqual([{ id: ID_VALIDO, nombre: 'Enalapril' }]);
+  });
+
+  it('"interacciones_de_un_farmaco" llama a CatalogoService.interaccionesDeUnFarmaco, no pide un segundo fármaco', async () => {
+    const interaccionesDeUnFarmaco = vi.fn().mockResolvedValue({ farmaco: 'Paracetamol', total: 0, grupos: [] });
+    const deps = depsFalsas({ catalogo: { interaccionesDeUnFarmaco } });
+
+    await ejecutarTool('interacciones_de_un_farmaco', { principioActivoId: ID_VALIDO }, deps);
+
+    expect(interaccionesDeUnFarmaco).toHaveBeenCalledWith(ID_VALIDO);
   });
 
   it('"interacciones_farmaco_farmaco" no reimplementa nada: llama directo a HerramientasService.interacciones', async () => {

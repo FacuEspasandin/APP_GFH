@@ -1,7 +1,12 @@
 import type { Tool } from '@anthropic-ai/sdk/resources/messages';
 
 import { alternativasTerapeuticas } from './alternativas.tools';
-import { buscarFarmaco, listarCondicionesClinicas, listarGruposAlergenicos } from './catalogo.tools';
+import {
+  buscarFarmaco,
+  interaccionesDeUnFarmaco,
+  listarCondicionesClinicas,
+  listarGruposAlergenicos,
+} from './catalogo.tools';
 import { fichaTecnica } from './ficha-tecnica.tools';
 import { ajusteHepatico, ajusteRenal, condicionAlergia, interaccionesFarmacoFarmaco } from './herramientas.tools';
 import type { DefinicionTool, DependenciasTools } from './tipos';
@@ -10,6 +15,7 @@ export type { DependenciasTools } from './tipos';
 
 const TODAS: DefinicionTool[] = [
   buscarFarmaco,
+  interaccionesDeUnFarmaco,
   listarCondicionesClinicas,
   listarGruposAlergenicos,
   interaccionesFarmacoFarmaco,
