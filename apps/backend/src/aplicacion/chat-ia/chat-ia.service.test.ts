@@ -77,6 +77,37 @@ describe('ChatIaService.responder', () => {
     expect(transaction).toHaveBeenCalledTimes(1);
   });
 
+  it('respuesta terminada normal, no reintenta (evita costo extra en el caso común)', async () => {
+    const enviarMensaje = vi.fn().mockResolvedValue(textoFinal('Dosis inicial 500mg cada 8h.'));
+    const { servicio } = construirServicio({ enviarMensaje });
+
+    const resultado = await servicio.responder(MEDICO_ID, { pregunta: '¿dosis de metformina?' });
+
+    expect(enviarMensaje).toHaveBeenCalledTimes(1);
+    expect(resultado.respuesta).toBe('Dosis inicial 500mg cada 8h.');
+  });
+
+  it('respuesta cortada a mitad de oración (termina en preposición), reintenta una vez y completa el texto', async () => {
+    const enviarMensaje = vi
+      .fn()
+      .mockImplementationOnce(async () => textoFinal('Cambiar a una estatina no dependiente de'))
+      .mockImplementationOnce(async (params: { mensajes: unknown[] }) => {
+        const ultimoMensaje = params.mensajes[params.mensajes.length - 1] as { role: string; content: string };
+        expect(ultimoMensaje.role).toBe('user');
+        expect(ultimoMensaje.content).toMatch(/cortada/i);
+        return textoFinal('CYP3A4, como pravastatina o rosuvastatina.');
+      });
+
+    const { servicio } = construirServicio({ enviarMensaje });
+
+    const resultado = await servicio.responder(MEDICO_ID, { pregunta: '¿interactúan simvastatina y diltiazem?' });
+
+    expect(enviarMensaje).toHaveBeenCalledTimes(2);
+    expect(resultado.respuesta).toBe(
+      'Cambiar a una estatina no dependiente de CYP3A4, como pravastatina o rosuvastatina.',
+    );
+  });
+
   it('con tool_use, ejecuta la tool real y le devuelve el resultado al modelo antes de la respuesta final', async () => {
     const interacciones = vi.fn().mockResolvedValue({ pares: [{ severidad: 'ALTA' }] });
     const mensajesEnSegundoLlamado: unknown[] = [];

@@ -157,6 +157,7 @@ export class ChatIaService {
     const toolsUsadas: Array<{ tool: string; input: unknown; output: unknown }> = [];
 
     let respuestaFinal = '';
+    let reintentoPorCorteHecho = false;
 
     for (let vuelta = 0; vuelta < MAX_VUELTAS_TOOL_USE; vuelta++) {
       const respuesta = await this.cliente.enviarMensaje({
@@ -178,7 +179,26 @@ export class ChatIaService {
       mensajes.push({ role: 'assistant', content: respuesta.content });
 
       if (respuesta.stop_reason !== 'tool_use') {
-        respuestaFinal = this.extraerTexto(respuesta);
+        const texto = this.extraerTexto(respuesta);
+
+        // Visto en vivo (dos veces seguidas, misma pregunta): el modelo
+        // termina con stop_reason "end_turn" a mitad de una oración — no es
+        // max_tokens, el modelo mismo decide que terminó. Un dato clínico
+        // cortado ("cambiar a una estatina no dependiente de...") es peor
+        // que no decirlo, así que se reintenta UNA vez pidiendo que
+        // complete, en vez de mandarlo así al médico.
+        if (!reintentoPorCorteHecho && this.pareceCortada(texto)) {
+          reintentoPorCorteHecho = true;
+          respuestaFinal = texto;
+          mensajes.push({
+            role: 'user',
+            content:
+              'Tu respuesta anterior quedó cortada a mitad de oración. Continuá EXACTAMENTE desde donde quedó, sin repetir nada de lo ya dicho.',
+          });
+          continue;
+        }
+
+        respuestaFinal = reintentoPorCorteHecho ? `${respuestaFinal} ${texto}`.trim() : texto;
         break;
       }
 
@@ -254,5 +274,28 @@ export class ChatIaService {
       .map((b) => b.text)
       .join('\n')
       .trim();
+  }
+
+  /** Heurística angosta a propósito: NO exige terminar en punto (una
+   *  respuesta corta tipo "Dosis: 500mg cada 8h" es válida sin punto final),
+   *  sólo detecta que la ÚLTIMA palabra sea una que en español nunca cierra
+   *  una oración (preposición, artículo, conjunción) — la misma familia de
+   *  palabra en la que se cortó el caso real que motivó esto ("...no
+   *  dependiente de"). */
+  private pareceCortada(texto: string): boolean {
+    const PALABRAS_QUE_NUNCA_TERMINAN_UNA_ORACION = new Set([
+      'de', 'a', 'en', 'con', 'para', 'por', 'sin', 'sobre', 'entre', 'hacia', 'según',
+      'durante', 'mediante', 'y', 'o', 'u', 'e', 'ni', 'que', 'el', 'la', 'los', 'las',
+      'un', 'una', 'unos', 'unas', 'del', 'al', 'su', 'sus', 'como',
+    ]);
+
+    const lineas = texto.trim().split('\n').filter((l) => l.trim().length > 0);
+    const ultimaLinea = lineas[lineas.length - 1] ?? '';
+    const palabras = ultimaLinea.trim().split(/\s+/);
+    const ultimaPalabra = (palabras[palabras.length - 1] ?? '')
+      .toLowerCase()
+      .replace(/[.,;:!?"')\]]+$/, '');
+
+    return PALABRAS_QUE_NUNCA_TERMINAN_UNA_ORACION.has(ultimaPalabra);
   }
 }
