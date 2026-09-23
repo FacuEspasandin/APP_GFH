@@ -30,7 +30,7 @@ import {
 import { Espina } from '@/ui/severidad';
 import {
   claveColorPorClcr,
-  claveColorPorRango,
+  colorEspina,
   COLOR_SEVERIDAD,
   RANGO_ETIQUETA,
   type RangoGravedad,
@@ -349,7 +349,7 @@ export default function CockpitPaciente() {
                   className="mb-2 flex-row items-center gap-3 py-3 pl-4 pr-3"
                   style={{
                     borderLeftWidth: 4,
-                    borderLeftColor: COLOR_SEVERIDAD[claveColorPorRango(h.rango)],
+                    borderLeftColor: colorEspina(h.rango),
                     borderTopLeftRadius: 0,
                     borderBottomLeftRadius: 0,
                   }}
@@ -392,7 +392,7 @@ export default function CockpitPaciente() {
             const n = data.dashboard[cat];
             const rangoCat = peorPorCategoria[cat] ?? null;
             const sinEvaluar = cat === 'AJUSTE_HEPATICO' && hepaticoNoEvaluable;
-            const color = rangoCat !== null ? COLOR_SEVERIDAD[claveColorPorRango(rangoCat)] : null;
+            const color = rangoCat !== null ? colorEspina(rangoCat) : null;
             return (
               // Las que tienen hallazgos se elevan; las que están en cero
               // quedan planas. Con cuatro tarjetas idénticas el ojo tiene que
@@ -561,7 +561,7 @@ function FilaTratamiento({
   const conHallazgos = prescripcion.conteoHallazgos > 0;
 
   const rango = prescripcion.espina as RangoGravedad | null;
-  const color = rango !== null ? COLOR_SEVERIDAD[claveColorPorRango(rango)] : null;
+  const color = rango !== null ? colorEspina(rango) : null;
 
   return (
     <SuperficieTocable

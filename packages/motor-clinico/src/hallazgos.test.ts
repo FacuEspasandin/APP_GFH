@@ -62,7 +62,7 @@ describe('escala unificada', () => {
       ajustesRenales: [ajuste({ tipo: 'EVITAR' })],
     });
     const porCategoria = Object.fromEntries(r.hallazgos.map((h) => [h.categoria, h.rango]));
-    expect(porCategoria).toEqual({ INTERACCION: 0, CONDICION: 2, AJUSTE_RENAL: 1 });
+    expect(porCategoria).toEqual({ INTERACCION: 0, CONDICION: 4, AJUSTE_RENAL: 3 });
   });
 
   it('ordena por gravedad, el más grave primero', () => {
@@ -71,7 +71,7 @@ describe('escala unificada', () => {
       interacciones: [interaccion({ severidad: 'INFORMATIVA' })],
       alertas: [alerta({ severidad: 'CONTRAINDICADO' })],
     });
-    expect(r.hallazgos.map((h) => h.rango)).toEqual([0, 3]);
+    expect(r.hallazgos.map((h) => h.rango)).toEqual([0, 5]);
   });
 
   it('SIN_AJUSTE y VACIO no generan hallazgo', () => {
@@ -128,11 +128,11 @@ describe('la espina de un fármaco es el PEOR rango que lo toca', () => {
 
   it('una interacción pinta la espina de los DOS fármacos', () => {
     const r = unificarHallazgos({ ...vacio, interacciones: [interaccion({ severidad: 'ALTA' })] });
-    expect(r.espinaPorPrescripcion.get('p1')).toBe(1);
-    expect(r.espinaPorPrescripcion.get('p2')).toBe(1);
+    expect(r.espinaPorPrescripcion.get('p1')).toBe(2);
+    expect(r.espinaPorPrescripcion.get('p2')).toBe(2);
   });
 
-  it('un fármaco sin hallazgos no aparece: sin hallazgos ≠ rango 3', () => {
+  it('un fármaco sin hallazgos no aparece: sin hallazgos ≠ rango 5', () => {
     const r = unificarHallazgos({ ...vacio, alertas: [alerta({ prescripcionId: 'p1' })] });
     expect(r.espinaPorPrescripcion.has('p2')).toBe(false);
   });

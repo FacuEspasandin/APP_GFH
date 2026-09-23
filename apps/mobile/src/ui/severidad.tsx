@@ -1,6 +1,5 @@
 import { Text, View } from 'react-native';
 
-import { Icono, type NombreIcono } from '@/ui/iconos';
 import {
   claveColorPorConteo,
   colorEspina,
@@ -42,30 +41,20 @@ export function BadgeConteo({ n }: { n: number }) {
   );
 }
 
-/** Un ícono por rango: los dos peores comparten "alerta", el informativo es otro. */
-const ICONO_RANGO: Record<RangoGravedad, NombreIcono> = {
-  0: 'alerta',
-  1: 'alerta',
-  2: 'alerta',
-  3: 'info',
-};
-
 /**
  * Pill con la etiqueta escrita: el color nunca es el único portador.
  *
- * Fondo sólido + texto blanco — la misma pastilla que ya usan la fila de
- * paciente (Pacientes, Detalle del Grupo) y "Lo más grave" del cockpit. Antes
- * esta versión oscurecía el texto en vez de ponerlo blanco, y quedaba como la
- * única pastilla de severidad distinta de las demás.
+ * Fondo sólido + texto blanco, SIN ícono — con 6 niveles, un ícono compartido
+ * entre varios (como pasaba con "alerta" en los tres primeros) no aportaba
+ * nada que el color y la palabra no dijeran ya.
  */
 export function ChipSeveridad({ rango }: { rango: RangoGravedad }) {
   const color = colorEspina(rango);
   return (
     <View
-      className="flex-row items-center gap-1 rounded-full px-2.5 py-1"
+      className="flex-row items-center rounded-full px-2.5 py-1"
       style={{ backgroundColor: color }}
     >
-      <Icono nombre={ICONO_RANGO[rango]} tamano={12} color="#FFFFFF" />
       <Text className="text-eyebrow font-fuerte uppercase text-white">
         {RANGO_ETIQUETA[rango]}
       </Text>
