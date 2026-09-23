@@ -29,14 +29,16 @@ export function TextoMarkdownLite({ texto, color }: { texto: string; color: stri
           return (
             <View key={i} className="gap-1">
               {bloque.items.map((runs, j) => (
-                <View key={j} className="flex-row gap-1.5">
-                  <Text className="text-body leading-5" style={{ color }}>
-                    •
-                  </Text>
-                  <Text className="flex-1 text-body leading-5" style={{ color }}>
-                    <Runs runs={runs} />
-                  </Text>
-                </View>
+                // Un solo Text (viñeta + contenido), no un View flex-row con
+                // dos Text separados — un Text con flex-1 dentro de una fila
+                // puede NO ajustar línea en Android y cortar el contenido en
+                // vez de pasar a la siguiente línea (bug real, visto en vivo:
+                // el segundo ítem de una lista larga se cortaba a mitad de
+                // oración aunque el texto llegara completo del backend).
+                <Text key={j} className="text-body leading-5" style={{ color }}>
+                  {'•  '}
+                  <Runs runs={runs} />
+                </Text>
               ))}
             </View>
           );
