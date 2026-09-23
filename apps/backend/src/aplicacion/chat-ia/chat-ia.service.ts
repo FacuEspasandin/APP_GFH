@@ -230,6 +230,14 @@ export class ChatIaService {
       respuestaFinal = 'No pude terminar de responder esta vez — probá reformular la pregunta.';
     }
 
+    // Con esto se puede comparar lo que el backend REALMENTE mandó contra lo
+    // que la app terminó mostrando — sin el texto completo acá, un corte que
+    // reporta el médico no se puede distinguir entre "lo generó cortado" y
+    // "la app lo cortó al renderizar".
+    this.logger.debug(
+      `Respuesta final: ${respuestaFinal.length} caracteres, termina en "${respuestaFinal.slice(-30)}"`,
+    );
+
     await this.prisma.$transaction([
       this.prisma.chatMessage.create({
         data: { chatSessionId: chatSession.id, medicoId, rol: 'USUARIO', contenido: params.pregunta },
