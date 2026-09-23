@@ -10,6 +10,26 @@
 export const SEVERIDAD_INTERACCION = ['INFORMATIVA', 'ALTA', 'CONTRAINDICADA'] as const;
 export type SeveridadInteraccion = (typeof SEVERIDAD_INTERACCION)[number];
 
+/**
+ * La escala de 6 niveles que ve el médico — reemplaza el 0-3 anterior.
+ * Único campo que decide color/etiqueta en pantalla: interacciones, alertas
+ * de condición/alergia y ajuste renal/hepático cargan esto EXPLÍCITO en su
+ * propio registro (no se deriva más de `SeveridadInteraccion`/`SeveridadAlerta`/
+ * `TipoRangoAjuste` con una tabla fija) — esos enums siguen existiendo para lo
+ * que codifican además de gravedad (ej. `TipoRangoAjuste` también dice QUÉ
+ * acción tomar, no sólo qué tan grave es). Orden = orden de gravedad, de peor
+ * a mejor.
+ */
+export const NIVEL_GRAVEDAD = [
+  'CONTRAINDICADA',
+  'GRAVE',
+  'ALTA',
+  'EVITAR',
+  'ATENCION',
+  'INFORMATIVA',
+] as const;
+export type NivelGravedad = (typeof NIVEL_GRAVEDAD)[number];
+
 export const SEVERIDAD_ALERTA = ['INFO', 'PRECAUCION', 'EVITAR', 'CONTRAINDICADO'] as const;
 export type SeveridadAlerta = (typeof SEVERIDAD_ALERTA)[number];
 

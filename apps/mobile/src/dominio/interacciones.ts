@@ -20,8 +20,10 @@ export interface ParConSeveridad {
 const ADJETIVO: Record<RangoGravedad, [string, string]> = {
   0: ['contraindicada', 'contraindicadas'],
   1: ['grave', 'graves'],
-  2: ['de atención', 'de atención'],
-  3: ['informativa', 'informativas'],
+  2: ['alta', 'altas'],
+  3: ['a evitar', 'a evitar'],
+  4: ['de atención', 'de atención'],
+  5: ['informativa', 'informativas'],
 };
 
 /** El titular del resultado: la peor gravedad y cuántas hay de ésa. */

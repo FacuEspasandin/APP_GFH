@@ -99,7 +99,7 @@ export type TipoRiesgoInteraccion =
 export interface Hallazgo {
   clave: string;
   categoria: CategoriaHallazgo;
-  rango: 0 | 1 | 2 | 3;
+  rango: 0 | 1 | 2 | 3 | 4 | 5;
   titulo: string;
   /** Desambigua el título cuando dos hallazgos lo comparten (productos combinados). */
   subtitulo?: string;

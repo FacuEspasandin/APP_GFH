@@ -11,7 +11,7 @@
  * opción que rechazaría al elegirla.
  */
 
-import { parClave, type RangoGravedad } from '@gfh/shared-types';
+import { esGrave, parClave } from '@gfh/shared-types';
 
 import {
   evaluarAlergias,
@@ -143,11 +143,14 @@ export function anotarAlternativas(
       descartadas.push({ ...idNombre(cand), motivo: 'ALERGIA_BLOQUEA' });
       continue;
     }
-    // §8.3 — un cruce de familia que da rango 0 SÍ descarta la alternativa,
-    // aunque §7.3 diga que nunca bloquea una prescripción. Son dos acciones
-    // distintas sobre el mismo hecho: ofrecerle otra penicilina a quien tiene
-    // alergia grave a una no tiene sentido, pero si él la elige, decide él.
-    if (peorAlergia !== null && peorAlergia.rango === (0 as RangoGravedad)) {
+    // §8.3 — un cruce de familia que da un rango grave (Contraindicada o
+    // Grave) SÍ descarta la alternativa, aunque §7.3 diga que nunca bloquea
+    // una prescripción. Son dos acciones distintas sobre el mismo hecho:
+    // ofrecerle otra penicilina a quien tiene alergia grave a una no tiene
+    // sentido, pero si él la elige, decide él. `esGrave` y no `=== 0`: la
+    // alergia GRAVE por coincidencia exacta cae en "Grave" (rango 1), no en
+    // "Contraindicada" (rango 0) — ese es un nombre propio, no un sinónimo.
+    if (peorAlergia !== null && esGrave(peorAlergia.rango)) {
       descartadas.push({ ...idNombre(cand), motivo: 'CRUCE_FAMILIA_CONTRAINDICADO' });
       continue;
     }
