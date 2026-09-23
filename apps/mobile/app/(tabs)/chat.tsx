@@ -99,14 +99,10 @@ export default function ChatIa() {
   return (
     <View className="flex-1 bg-paper">
       <Stack.Screen options={{ headerShown: false }} />
-      <EncabezadoApp ocultarVolver />
+      <EncabezadoApp ocultarVolver titulo="Vera" />
 
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View className="flex-1 px-4 pt-3">
-          <Text className="mb-2 text-[32px] font-fuerte" style={{ color: '#005228' }}>
-            Vera
-          </Text>
-
           {!hayHilo ? (
             <View className="flex-1 items-center justify-center px-6">
               <Icono nombre="chat" tamano={32} color={col.tenue} />
