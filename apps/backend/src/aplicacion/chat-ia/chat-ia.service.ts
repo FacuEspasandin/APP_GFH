@@ -169,7 +169,7 @@ export class ChatIaService {
       // cambio en el prompt que invalida el breakpoint, por ejemplo) se nota
       // recién en la factura de Anthropic, no en los logs.
       this.logger.debug(
-        `Vuelta ${vuelta + 1}: input=${respuesta.usage.input_tokens} ` +
+        `Vuelta ${vuelta + 1}: stop_reason=${respuesta.stop_reason} input=${respuesta.usage.input_tokens} ` +
           `cache_read=${respuesta.usage.cache_read_input_tokens ?? 0} ` +
           `cache_write=${respuesta.usage.cache_creation_input_tokens ?? 0} ` +
           `output=${respuesta.usage.output_tokens}`,
