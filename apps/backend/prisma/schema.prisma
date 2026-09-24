@@ -14,13 +14,15 @@
 // ============================================================================
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
 }
 
 // ============================================================================
@@ -398,6 +400,7 @@ model PrincipioActivo {
   interaccionesComoB           InteraccionDetectada[]             @relation("InteraccionPaB")
   alternativasAceptadasOrigen  AlternativaAceptada[]              @relation("AceptadaOrigen")
   alternativasAceptadasDestino AlternativaAceptada[]              @relation("AceptadaDestino")
+  fichaEmbeddings              FichaEmbedding[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -796,6 +799,35 @@ model AlternativaTerapeutica {
   @@map("alternativa_terapeutica")
 }
 
+/// Chunks embebidos de las fichas tecnicas para el RAG del chat con IA.
+/// Catalogo compartido, sin medicoId — igual criterio que el resto de §1.
+///
+/// La fuente de las fichas esta abstraida (`fuente-fichas.ts`): hoy son las
+/// ~30 fichas de desarrollo (`monografias-texto.json`), manana puede ser la
+/// API de Farmanuario sin tocar esta tabla ni el resto del pipeline.
+///
+/// `embedding` es `Unsupported` porque Prisma Client todavia no tipa
+/// `vector` de pgvector — la columna la crea la migracion (ver
+/// `reindexar-fichas.ts`) y se consulta con `$queryRaw` (distancia coseno).
+model FichaEmbedding {
+  id                String @id @default(uuid())
+  principioActivoId String
+
+  /// Indice del chunk dentro de la ficha completa — una ficha se parte en
+  /// varios chunks, cada uno con su propio embedding.
+  chunkIndice Int
+  textoChunk  String @db.Text
+
+  embedding Unsupported("vector(512)")
+
+  principioActivo PrincipioActivo @relation(fields: [principioActivoId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([principioActivoId, chunkIndice])
+  @@map("ficha_embedding")
+}
+
 // --- §1.7 Interacciones: NO hay tabla de pares ------------------------------
 //
 // El catalogo de interacciones vive en CODIGO, como listas por clase
@@ -895,6 +927,8 @@ model Medico {
   consultasGratis         ConsultaGratis[]
   pushTokens              PushToken[]
   notificacionesEnviadas  NotificacionEnviada[]
+  chatSessiones           ChatSession[]
+  chatMensajes            ChatMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1326,6 +1360,52 @@ model EventoPaciente {
 
   @@index([medicoId, pacienteId, createdAt])
   @@map("evento_paciente")
+}
+
+/// Una conversación del chat con IA. Sin datos de paciente en ningún campo —
+/// el agente no tiene acceso a eso en ningún punto (§ regla no negociable 1).
+model ChatSession {
+  id       String @id @default(uuid())
+  medicoId String
+
+  /// Título corto para la lista de conversaciones — la primera pregunta,
+  /// recortada. Null hasta el primer mensaje.
+  titulo String?
+
+  createdAt DateTime @default(now())
+
+  medico   Medico        @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  mensajes ChatMessage[]
+
+  @@index([medicoId, createdAt])
+  @@map("chat_session")
+}
+
+model ChatMessage {
+  id            String @id @default(uuid())
+  chatSessionId String
+  medicoId      String
+
+  rol       RolMensajeChat
+  contenido String         @db.Text
+
+  /// Qué tool se llamó y con qué input/output, si el mensaje vino de una.
+  /// Json porque cada tool tiene una forma distinta — igual criterio que
+  /// `EventoPaciente.cambios`.
+  toolLlamada Json?
+
+  createdAt DateTime @default(now())
+
+  chatSession ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
+  medico      Medico      @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  @@index([chatSessionId, createdAt])
+  @@map("chat_message")
+}
+
+enum RolMensajeChat {
+  USUARIO
+  ASISTENTE
 }
 
 model AlternativaAceptada {

@@ -12,6 +12,7 @@
     "prisma:seed": "tsx prisma/seed.ts",
     "dev:datos": "tsx prisma/dev-datos.ts",
     "db:genericos": "tsx prisma/importar-genericos.ts",
+    "reindexar-fichas": "tsx prisma/reindexar-fichas.ts",
     "dev": "tsx watch src/main.ts",
     "start": "tsx src/main.ts",
     "typecheck": "tsc --noEmit",
@@ -23,6 +24,7 @@
     "enviar-broadcast": "tsx prisma/enviar-broadcast.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.127.0",
     "@fastify/helmet": "^13.1.1",
     "@gfh/motor-clinico": "workspace:*",
     "@gfh/shared-types": "workspace:*",

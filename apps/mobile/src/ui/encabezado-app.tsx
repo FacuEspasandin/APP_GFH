@@ -26,6 +26,7 @@ export function EncabezadoApp({
   alVolver,
   ocultarVolver,
   derecha,
+  titulo = 'GFH',
 }: {
   alVolver?: () => void;
   /** Para los pasos obligatorios (el disclaimer de primer ingreso) donde no
@@ -33,6 +34,10 @@ export function EncabezadoApp({
    *  serlo. */
   ocultarVolver?: boolean;
   derecha?: ReactNode;
+  /** Sólo para Vera: reemplaza la marca "GFH" del centro por "Vera" en vez
+   *  de repetir el nombre en un título aparte debajo, que sólo restaba
+   *  espacio sin aportar nada. El resto de las pantallas no lo pasa. */
+  titulo?: string;
 }) {
   const router = useRouter();
   const col = useColores();
@@ -66,7 +71,7 @@ export function EncabezadoApp({
       )}
 
       <Text className="font-fuerte text-[32px] tracking-[-0.8px]" style={{ color: '#005228' }}>
-        GFH
+        {titulo}
       </Text>
 
       <View className="h-10 w-10 items-center justify-center">{derecha}</View>

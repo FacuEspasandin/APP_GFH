@@ -69,7 +69,11 @@ export type NombreIcono =
   // 'glasgow' es un contorno de cerebro simplificado.
   | 'sangrado'
   | 'superficie-corporal'
-  | 'glasgow';
+  | 'glasgow'
+  // Botón central del navbar, chat de IA: burbuja de diálogo con tres puntos.
+  | 'chat'
+  // Botón de enviar del composer del chat: flecha simple.
+  | 'enviar';
 
 interface Props {
   nombre: NombreIcono;
@@ -453,6 +457,20 @@ function trazos(nombre: NombreIcono, c: Comun) {
             {...c}
           />
           <Path d="M12 4.8v14.4" {...c} />
+        </>
+      );
+    case 'chat':
+      return (
+        <>
+          <Path d="M4 5.5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4.5 4v-4H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Z" {...c} />
+          <Path d="M8 10.5h.01M12 10.5h.01M16 10.5h.01" {...c} />
+        </>
+      );
+    case 'enviar':
+      return (
+        <>
+          <Path d="M5 12h14" {...c} />
+          <Path d="M13 6l6 6-6 6" {...c} />
         </>
       );
   }

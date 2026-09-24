@@ -18,14 +18,22 @@ import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 /**
  * Grupos: un resumen por ámbito de trabajo, no otra lista de pacientes.
  *
- * Pacientes responde "¿a quién tengo que mirar?"; esta pantalla responde
- * "¿cómo viene cada lugar donde trabajo?". Si fuera una lista de pacientes
- * agrupada serían dos caminos al mismo lado.
+ * Pacientes responde "¿a quién tengo que mirar?"; esta vista responde "¿cómo
+ * viene cada lugar donde trabajo?". Si fuera una lista de pacientes agrupada
+ * serían dos caminos al mismo lado — por eso, al fusionarse en una sola
+ * solapa del navbar, sigue siendo un selector ("Todos" / "Por grupo") y no
+ * una única lista con encabezados de sección.
  *
  * Lo que la hace valer la pena es la barra de composición: se ve que en CTI la
  * mitad tiene hallazgos sin abrir nada.
+ *
+ * `ListaGrupos` es el contenido reusable — lo consume `app/(tabs)/index.tsx`
+ * dentro de la solapa fusionada de Pacientes, sin su propio header (el de
+ * Pacientes ya cubre esa función). El `default export` de más abajo sigue
+ * siendo una pantalla standalone completa, por si algo navega a `/grupos`
+ * directo — no se le quitó nada.
  */
-export default function Grupos() {
+export function ListaGrupos() {
   const router = useRouter();
   const { data: plan } = usePlan();
 
@@ -49,41 +57,52 @@ export default function Grupos() {
   const conNombre = grupos.filter((g) => g.id !== null);
 
   return (
+    <ResultadoConsulta
+      cargando={isLoading}
+      error={error}
+      onReintentar={() => void refetch()}
+      filasSkeleton={3}
+    >
+      {conNombre.length === 0 ? (
+        <Estado
+          titulo="Todavía no tenés grupos"
+          detalle="Sirven para separar consultorio, CTI o guardia. Un paciente puede estar en uno solo."
+          accion="Crear grupo"
+          onAccion={() => abrir('/crear-grupo')}
+        />
+      ) : null}
+
+      {grupos.map((g, i) => (
+        <FilaAnimada key={g.id ?? 'sin-grupo'} indice={i}>
+          <TarjetaGrupo
+            grupo={g}
+            onPress={() => abrir(g.id === null ? '/grupo/sin-grupo' : `/grupo/${g.id}`)}
+            conCandado={esDePago(plan)}
+          />
+        </FilaAnimada>
+      ))}
+    </ResultadoConsulta>
+  );
+}
+
+/** Pantalla standalone — ya no cuelga del navbar (ver `_layout.tsx`), pero
+ *  sigue siendo una ruta válida completa. */
+export default function Grupos() {
+  const router = useRouter();
+  const { data: plan } = usePlan();
+  const abrir = (ruta: string) =>
+    router.push((esDePago(plan) ? rutaPaywall('grupo') : ruta) as never);
+
+  return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp
-        ocultarVolver
         derecha={<BotonMas onPress={() => abrir('/crear-grupo')} etiqueta="Crear grupo" />}
       />
 
       <Pantalla>
         <Text className="mb-4 text-fila font-fuerte text-ink">Mis Grupos</Text>
-
-        <ResultadoConsulta
-          cargando={isLoading}
-          error={error}
-          onReintentar={() => void refetch()}
-          filasSkeleton={3}
-        >
-          {conNombre.length === 0 ? (
-            <Estado
-              titulo="Todavía no tenés grupos"
-              detalle="Sirven para separar consultorio, CTI o guardia. Un paciente puede estar en uno solo."
-              accion="Crear grupo"
-              onAccion={() => abrir('/crear-grupo')}
-            />
-          ) : null}
-
-          {grupos.map((g, i) => (
-            <FilaAnimada key={g.id ?? 'sin-grupo'} indice={i}>
-              <TarjetaGrupo
-                grupo={g}
-                onPress={() => abrir(g.id === null ? '/grupo/sin-grupo' : `/grupo/${g.id}`)}
-                conCandado={esDePago(plan)}
-              />
-            </FilaAnimada>
-          ))}
-        </ResultadoConsulta>
+        <ListaGrupos />
       </Pantalla>
     </>
   );
