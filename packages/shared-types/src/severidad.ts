@@ -19,6 +19,7 @@
 import type {
   CategoriaHallazgo,
   NivelCruce,
+  NivelGravedad,
   SeveridadAlergia,
   SeveridadAlerta,
   SeveridadInteraccion,
@@ -31,20 +32,41 @@ import type {
 // ---------------------------------------------------------------------------
 
 /**
- * Rango 0-3. Las verificaciones usan escalas distintas; para la UI se unifican
- * porque el medico piensa por farmaco y no por tipo de verificacion.
+ * Rango 0-5 — de peor a mejor. Es el número interno que ordena/colorea; el
+ * dato que se carga y se lee en las tablas es `NivelGravedad` (el nombre).
+ * Un solo lugar hace la conversión entre los dos: `RANGO_POR_NIVEL` más abajo.
  *
- *   0 contraindicado · 1 grave/evitar · 2 atencion · 3 informativo
+ *   0 Contraindicada · 1 Grave · 2 Alta · 3 Evitar · 4 Atención · 5 Informativa
  *
- * Rango <= 1 es "grave": exige accion. 2 y 3 son contexto.
+ * Reemplaza la escala anterior de 0-3: interacciones, alertas de
+ * condición/alergia y ajuste renal/hepático cargan su `NivelGravedad`
+ * EXPLÍCITO en el propio registro — no se deriva más de una tabla fija por
+ * tipo de verificación, así una interacción, una alerta o un ajuste pueden
+ * terminar en cualquiera de los 6 niveles según lo que decidamos al cargar
+ * el dato (o, a futuro, lo que traiga Farmanuario).
  */
-export type RangoGravedad = 0 | 1 | 2 | 3;
+export type RangoGravedad = 0 | 1 | 2 | 3 | 4 | 5;
 
 export const RANGO_ETIQUETA: Record<RangoGravedad, string> = {
-  0: 'Contraindicado',
+  0: 'Contraindicada',
   1: 'Grave',
-  2: 'Atención',
-  3: 'Informativo',
+  2: 'Alta',
+  3: 'Evitar',
+  4: 'Atención',
+  5: 'Informativa',
+};
+
+/** Conversión fija nombre → número. El nombre es lo que vive en los datos
+ *  (JSON de reglas, columnas de Prisma); el número es lo que ordena/colorea
+ *  en la UI. No hay una segunda tabla por tipo de verificación — ésta es la
+ *  única. */
+export const RANGO_POR_NIVEL: Record<NivelGravedad, RangoGravedad> = {
+  CONTRAINDICADA: 0,
+  GRAVE: 1,
+  ALTA: 2,
+  EVITAR: 3,
+  ATENCION: 4,
+  INFORMATIVA: 5,
 };
 
 /**
@@ -88,71 +110,65 @@ export function esGrave(rango: RangoGravedad): boolean {
   return rango <= 1;
 }
 
-/** El peor de una lista. `null` = sin hallazgos (que NO es lo mismo que rango 3). */
+/** El peor de una lista. `null` = sin hallazgos (que NO es lo mismo que rango 5). */
 export function peorRango(rangos: readonly RangoGravedad[]): RangoGravedad | null {
   if (rangos.length === 0) return null;
-  return rangos.reduce<RangoGravedad>((peor, r) => (r < peor ? r : peor), 3);
+  return rangos.reduce<RangoGravedad>((peor, r) => (r < peor ? r : peor), 5);
 }
 
 // ---------------------------------------------------------------------------
 // 2. Mapeo desde cada escala del dominio
+//
+// DEPRECADO — reemplazado por `NivelGravedad` cargado explícito en cada
+// registro (interacción, alerta, ajuste). Estas tres tablas quedan sólo
+// mientras `@gfh/motor-clinico` termina de migrarse; no agregar nuevos usos.
 // ---------------------------------------------------------------------------
 
-/** motor §9 — tabla textual del documento. */
+/** @deprecated usar `NivelGravedad` explícito en el dato, ver `RANGO_POR_NIVEL`. */
 export const RANGO_POR_SEVERIDAD_INTERACCION: Record<SeveridadInteraccion, RangoGravedad> = {
   CONTRAINDICADA: 0,
-  ALTA: 1,
-  INFORMATIVA: 3,
+  ALTA: 2,
+  INFORMATIVA: 5,
 };
 
-/** motor §9 — tabla textual del documento. */
+/** @deprecated usar `NivelGravedad` explícito en el dato, ver `RANGO_POR_NIVEL`. */
 export const RANGO_POR_SEVERIDAD_ALERTA: Record<SeveridadAlerta, RangoGravedad> = {
   CONTRAINDICADO: 0,
-  EVITAR: 1,
-  PRECAUCION: 2,
-  INFO: 3,
+  EVITAR: 3,
+  PRECAUCION: 4,
+  INFO: 5,
 };
 
-/**
- * PROPUESTO — no esta en ningun documento.
- *
- * motor §9 mapea a 0-3 solo las interacciones y las alertas condicion/alergia,
- * pero la clave estable `ren:<prescripcion_id>:<rango_id>` prueba que el ajuste
- * renal SI produce hallazgos, y el cockpit tiene una categoria propia para el
- * hepatico. Sin este mapeo la espina de un farmaco con ajuste renal no tiene
- * color.
- *
- * Ojo, no confundir con la BANDA KDIGO de mas abajo: eso colorea la funcion
- * renal DEL PACIENTE; esto colorea la gravedad del hallazgo de ESE farmaco.
- *
- * `null` = no genera hallazgo (no es un hallazgo informativo: es que no hay
- * nada que decir).
- */
+/** @deprecated usar `NivelGravedad` explícito en el dato, ver `RANGO_POR_NIVEL`.
+ *  `null` = no genera hallazgo (SIN_AJUSTE, VACIO). */
 export const RANGO_POR_TIPO_AJUSTE: Record<TipoRangoAjuste, RangoGravedad | null> = {
   CONTRAINDICADO: 0,
-  EVITAR: 1,
-  PRECAUCION: 2,
-  CONDICIONAL: 2,
-  REDUCIR_DOSIS: 2,
-  AUMENTAR_INTERVALO: 2,
-  REDUCIR_DOSIS_Y_INTERVALO: 2,
-  NOTA_AL_PIE: 3,
+  EVITAR: 3,
+  PRECAUCION: 4,
+  CONDICIONAL: 4,
+  REDUCIR_DOSIS: 4,
+  AUMENTAR_INTERVALO: 4,
+  REDUCIR_DOSIS_Y_INTERVALO: 4,
+  NOTA_AL_PIE: 5,
   SIN_AJUSTE: null,
   VACIO: null,
 };
 
 /**
- * PROPUESTO — motor §7.3 dice "combina severidad × nivel_cruce" pero no da la
- * matriz.
- *
- * Base por severidad de la alergia, atenuada segun cuan lejos esta la
- * coincidencia. El `nivelCruce` que entra es el del grupo para CRUCE_FAMILIA y
- * el del grupo PADRE para CRUCE_FAMILIA_AMPLIA (motor §7.2).
+ * Base por severidad de la alergia, atenuada según cuán lejos está la
+ * coincidencia — motor §7.3 combina "severidad × nivel_cruce" sin dar la
+ * matriz exacta, esto sigue siendo la interpretación propia de siempre,
+ * reparametrizada sobre los 6 niveles en vez de 4. `GRAVE` (alergia) mapea
+ * directo a "Grave" (nivel 1) por nombre — MODERADA y LEVE no tienen
+ * contraparte de nombre directo, así que se ubican por criterio clínico:
+ * MODERADA en "Evitar" (hay que evitar la combinación), LEVE en "Atención"
+ * (alcanza con vigilar). El `nivelCruce` que entra es el del grupo para
+ * CRUCE_FAMILIA y el del grupo PADRE para CRUCE_FAMILIA_AMPLIA (motor §7.2).
  */
 const BASE_POR_SEVERIDAD_ALERGIA: Record<SeveridadAlergia, RangoGravedad> = {
-  GRAVE: 0,
-  MODERADA: 1,
-  LEVE: 2,
+  GRAVE: 1,
+  MODERADA: 3,
+  LEVE: 4,
 };
 
 const ATENUACION_POR_NIVEL_CRUCE: Record<NivelCruce, number> = {
@@ -173,7 +189,7 @@ export function rangoPorAlergia(
     ATENUACION_POR_NIVEL_CRUCE[nivelCruce ?? 'MODERADO'] +
     (coincidencia === 'CRUCE_FAMILIA_AMPLIA' ? 1 : 0);
 
-  return Math.min(3, base + atenuacion) as RangoGravedad;
+  return Math.min(5, base + atenuacion) as RangoGravedad;
 }
 
 /**
@@ -231,19 +247,27 @@ export const COLOR_SEVERIDAD = {
 
 export type ClaveColorSeveridad = keyof typeof COLOR_SEVERIDAD;
 
-/** `null` = sin hallazgos → verde. Distinto de rango 3 (informativo) → gris. */
-export function claveColorPorRango(rango: RangoGravedad | null): ClaveColorSeveridad {
-  if (rango === null) return 'ok';
-  if (rango <= 1) return 'grave';
-  if (rango === 2) return 'media';
-  return 'neutro';
-}
+/**
+ * Un color POR NIVEL, no un balde de 4 — con 6 niveles, agrupar en
+ * "grave/media/ok/neutro" perdía la distinción que todo este cambio pedía
+ * (Alta y Evitar, por ejemplo, quedaban indistinguibles). Gradiente rojo →
+ * gris, ninguno amarillo puro, todos legibles con texto blanco encima.
+ */
+export const COLOR_POR_RANGO: Record<RangoGravedad, string> = {
+  0: '#991B1B',
+  1: '#DC2626',
+  2: '#EA580C',
+  3: '#D97706',
+  4: '#CD9404',
+  5: '#78716C',
+};
 
 /** El color de la espina de un farmaco es el PEOR rango que lo toca. Barra de
  *  3-4px en el borde izquierdo: es la firma visual del sistema y no se aplica a
- *  nada que no sea gravedad clinica real. */
+ *  nada que no sea gravedad clinica real. `null` = sin hallazgos → verde de
+ *  "ok" (reusa `COLOR_SEVERIDAD`, no es un 7mo nivel de gravedad). */
 export function colorEspina(rango: RangoGravedad | null): string {
-  return COLOR_SEVERIDAD[claveColorPorRango(rango)];
+  return rango === null ? COLOR_SEVERIDAD.ok : COLOR_POR_RANGO[rango];
 }
 
 // ---------------------------------------------------------------------------

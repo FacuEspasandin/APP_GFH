@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  RANGO_POR_NIVEL,
   RANGO_POR_SEVERIDAD_ALERTA,
   RANGO_POR_SEVERIDAD_INTERACCION,
   RANGO_POR_TIPO_AJUSTE,
@@ -9,7 +10,6 @@ import {
   claveColorPorClcr,
   partesClaveAlerta,
   claveColorPorConteo,
-  claveColorPorRango,
   esGrave,
   gradoKdigo,
   peorRango,
@@ -19,38 +19,47 @@ import {
 import { TIPO_RANGO_AJUSTE } from './enums';
 import { normalizar, parClave } from './texto';
 
-describe('escala unificada 0-3 (motor §9)', () => {
-  it('mapea las interacciones tal cual la tabla del documento', () => {
+describe('escala unificada 0-5', () => {
+  it('mapea las interacciones (deprecado, ver RANGO_POR_NIVEL)', () => {
     expect(RANGO_POR_SEVERIDAD_INTERACCION).toEqual({
       CONTRAINDICADA: 0,
-      ALTA: 1,
-      INFORMATIVA: 3,
+      ALTA: 2,
+      INFORMATIVA: 5,
     });
   });
 
-  it('mapea las alertas condición/alergia tal cual la tabla del documento', () => {
+  it('mapea las alertas condición/alergia (deprecado, ver RANGO_POR_NIVEL)', () => {
     expect(RANGO_POR_SEVERIDAD_ALERTA).toEqual({
       CONTRAINDICADO: 0,
-      EVITAR: 1,
-      PRECAUCION: 2,
-      INFO: 3,
+      EVITAR: 3,
+      PRECAUCION: 4,
+      INFO: 5,
     });
   });
 
-  it('rango <= 1 es grave, 2 y 3 son contexto', () => {
+  it('RANGO_POR_NIVEL cubre los 6 nombres, en orden de gravedad', () => {
+    expect(RANGO_POR_NIVEL).toEqual({
+      CONTRAINDICADA: 0,
+      GRAVE: 1,
+      ALTA: 2,
+      EVITAR: 3,
+      ATENCION: 4,
+      INFORMATIVA: 5,
+    });
+  });
+
+  it('rango <= 1 es grave (Contraindicada/Grave), el resto es contexto', () => {
     expect([0, 1].every((r) => esGrave(r as 0 | 1))).toBe(true);
-    expect([2, 3].some((r) => esGrave(r as 2 | 3))).toBe(false);
+    expect([2, 3, 4, 5].some((r) => esGrave(r as 2 | 3 | 4 | 5))).toBe(false);
   });
 
   it('la espina de un fármaco es el PEOR rango que lo toca', () => {
-    expect(peorRango([3, 1, 2])).toBe(1);
-    expect(peorRango([2, 0, 3])).toBe(0);
+    expect(peorRango([5, 1, 2])).toBe(1);
+    expect(peorRango([2, 0, 5])).toBe(0);
   });
 
-  it('sin hallazgos es null, que NO es lo mismo que rango 3', () => {
+  it('sin hallazgos es null, que NO es lo mismo que rango 5', () => {
     expect(peorRango([])).toBeNull();
-    expect(claveColorPorRango(null)).toBe('ok');
-    expect(claveColorPorRango(3)).toBe('neutro');
   });
 });
 
@@ -66,10 +75,10 @@ describe('mapeo del ajuste renal/hepático — PROPUESTO, no está en los docs',
     expect(RANGO_POR_TIPO_AJUSTE.VACIO).toBeNull();
   });
 
-  it('las tres formas de ajustar dosis son "atención", no "grave"', () => {
-    expect(RANGO_POR_TIPO_AJUSTE.REDUCIR_DOSIS).toBe(2);
-    expect(RANGO_POR_TIPO_AJUSTE.AUMENTAR_INTERVALO).toBe(2);
-    expect(RANGO_POR_TIPO_AJUSTE.REDUCIR_DOSIS_Y_INTERVALO).toBe(2);
+  it('las formas de ajustar dosis son "atención" (4), no "grave"', () => {
+    expect(RANGO_POR_TIPO_AJUSTE.REDUCIR_DOSIS).toBe(4);
+    expect(RANGO_POR_TIPO_AJUSTE.AUMENTAR_INTERVALO).toBe(4);
+    expect(RANGO_POR_TIPO_AJUSTE.REDUCIR_DOSIS_Y_INTERVALO).toBe(4);
   });
 });
 
@@ -93,19 +102,28 @@ describe('alergias (motor §7.3)', () => {
    * (ofrecerle otra penicilina a quien tiene alergia grave a una). Son dos
    * acciones distintas sobre el mismo hecho.
    */
-  it('un cruce de familia ALTO con alergia grave da rango 0 sin bloquear', () => {
-    expect(rangoPorAlergia('GRAVE', 'CRUCE_FAMILIA', 'ALTO')).toBe(0);
+  it('un cruce de familia ALTO con alergia grave da rango 1 (Grave) sin bloquear', () => {
+    expect(rangoPorAlergia('GRAVE', 'CRUCE_FAMILIA', 'ALTO')).toBe(1);
     expect(bloqueaPrescripcion('GRAVE', 'CRUCE_FAMILIA')).toBe(false);
   });
 
   it('se atenúa según nivelCruce y otra vez al saltar a la familia amplia', () => {
-    expect(rangoPorAlergia('GRAVE', 'CRUCE_FAMILIA', 'MODERADO')).toBe(1);
-    expect(rangoPorAlergia('GRAVE', 'CRUCE_FAMILIA', 'BAJO')).toBe(2);
-    expect(rangoPorAlergia('GRAVE', 'CRUCE_FAMILIA_AMPLIA', 'BAJO')).toBe(3);
+    expect(rangoPorAlergia('GRAVE', 'CRUCE_FAMILIA', 'MODERADO')).toBe(2);
+    expect(rangoPorAlergia('GRAVE', 'CRUCE_FAMILIA', 'BAJO')).toBe(3);
+    expect(rangoPorAlergia('GRAVE', 'CRUCE_FAMILIA_AMPLIA', 'BAJO')).toBe(4);
   });
 
-  it('nunca se pasa de 3', () => {
-    expect(rangoPorAlergia('LEVE', 'CRUCE_FAMILIA_AMPLIA', 'BAJO')).toBe(3);
+  it('nunca se pasa de 5', () => {
+    expect(rangoPorAlergia('LEVE', 'CRUCE_FAMILIA_AMPLIA', 'BAJO')).toBe(5);
+  });
+
+  it('alergia GRAVE con coincidencia exacta mapea directo a "Grave" (nivel 1), no a Contraindicada', () => {
+    expect(rangoPorAlergia('GRAVE', 'EXACTA')).toBe(1);
+  });
+
+  it('MODERADA exacta cae en "Evitar" (3), LEVE exacta en "Atención" (4)', () => {
+    expect(rangoPorAlergia('MODERADA', 'EXACTA')).toBe(3);
+    expect(rangoPorAlergia('LEVE', 'EXACTA')).toBe(4);
   });
 });
 

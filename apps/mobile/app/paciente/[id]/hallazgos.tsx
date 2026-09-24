@@ -25,7 +25,6 @@ import { Superficie } from '@/ui/superficie';
 import { ChipSeveridad, Espina } from '@/ui/severidad';
 import {
   CATEGORIA_HALLAZGO,
-  claveColorPorRango,
   colorEspina,
   COLOR_SEVERIDAD,
   viaLegible,
@@ -250,7 +249,7 @@ function PorCategoria({
             null,
           );
           const activo = i === actual;
-          const color = peor !== null ? COLOR_SEVERIDAD[claveColorPorRango(peor)] : null;
+          const color = peor !== null ? colorEspina(peor) : null;
 
           return (
             <Pressable

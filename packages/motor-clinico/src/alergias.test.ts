@@ -81,13 +81,13 @@ describe('qué bloquea y qué no (motor §7.3)', () => {
 
   /**
    * La distinción que es fácil colapsar: §7.3 dice que el cruce de familia
-   * nunca bloquea una prescripción, pero §8.3 dice que un cruce que da rango 0
-   * SÍ descarta esa opción de la lista de alternativas. Son dos acciones
-   * distintas sobre el mismo hecho.
+   * nunca bloquea una prescripción, pero §8.3 dice que un cruce que da un
+   * rango grave (Contraindicada o Grave) SÍ descarta esa opción de la lista
+   * de alternativas. Son dos acciones distintas sobre el mismo hecho.
    */
-  it('un cruce de familia ALTO con alergia grave da rango 0 sin bloquear', () => {
+  it('un cruce de familia ALTO con alergia grave da rango 1 (Grave) sin bloquear', () => {
     const r = evaluarAlergias(AMPICILINA, [alergiaA('pa-amox', 'g-peni', 'GRAVE')], GRUPOS)[0]!;
-    expect(r.rango).toBe(0);
+    expect(r.rango).toBe(1);
     expect(r.bloquea).toBe(false);
   });
 });

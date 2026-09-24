@@ -6,7 +6,7 @@ import { Icono } from '@/ui/iconos';
 import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
-import { claveColorPorRango, COLOR_SEVERIDAD, type RangoGravedad } from '@gfh/shared-types';
+import { colorEspina, RANGO_ETIQUETA, type RangoGravedad } from '@gfh/shared-types';
 
 /**
  * El esqueleto de las tres herramientas: consulta y resultado como DOS estados
@@ -146,11 +146,15 @@ export function ConsultaPlegada({
  * El fondo tiñe con la gravedad. Los colores salen de la escala clínica: acá no
  * se elige un tono porque quede bien.
  */
-const FONDO_POR_CLAVE: Record<string, string> = {
-  grave: '#FEF2F2',
-  media: '#FFFBEB',
-  ok: '#F0FDF4',
-  neutro: 'transparent',
+/** Sin `null` acá: sin hallazgos no pasa por este componente en la práctica,
+ *  y de pasar, cae en el wash más neutro. */
+const FONDO_POR_RANGO: Record<RangoGravedad, string> = {
+  0: '#FEF2F2',
+  1: '#FEF2F2',
+  2: '#FFF7ED',
+  3: '#FFFBEB',
+  4: '#FFFBEB',
+  5: 'transparent',
 };
 
 export function Veredicto({
@@ -159,7 +163,7 @@ export function Veredicto({
   detalle,
   cifra,
 }: {
-  /** `null` = sin hallazgos. Distinto de 3, que es informativo. */
+  /** `null` = sin hallazgos. Distinto de 5, que es informativo. */
   rango: RangoGravedad | null;
   titulo: string;
   detalle?: string;
@@ -167,9 +171,8 @@ export function Veredicto({
   cifra?: string;
 }) {
   const col = useColores();
-  const clave = claveColorPorRango(rango);
-  const color = COLOR_SEVERIDAD[clave];
-  const fondo = FONDO_POR_CLAVE[clave] ?? 'transparent';
+  const color = colorEspina(rango);
+  const fondo = rango === null ? '#F0FDF4' : FONDO_POR_RANGO[rango];
 
   return (
     <Superficie
@@ -207,22 +210,14 @@ export function GrupoGravedad({ rango, cuantos }: { rango: RangoGravedad; cuanto
     <View className="mb-1.5 mt-1 flex-row items-center">
       <View
         className="mr-2 rounded-full"
-        style={{ width: 8, height: 8, backgroundColor: COLOR_SEVERIDAD[claveColorPorRango(rango)] }}
+        style={{ width: 8, height: 8, backgroundColor: colorEspina(rango) }}
       />
       <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
-        {ETIQUETA[rango]} · {cuantos}
+        {RANGO_ETIQUETA[rango]} · {cuantos}
       </Text>
     </View>
   );
 }
-
-/** Las etiquetas de la escala del sistema, tal cual. */
-const ETIQUETA: Record<RangoGravedad, string> = {
-  0: 'Contraindicado',
-  1: 'Grave',
-  2: 'Atención',
-  3: 'Informativo',
-};
 
 /**
  * Una fila de resultado con su espina de gravedad.
@@ -248,7 +243,7 @@ export function FilaResultado({
       className="mb-2 px-3.5 py-3"
       style={{
         borderLeftWidth: 4,
-        borderLeftColor: COLOR_SEVERIDAD[claveColorPorRango(rango)],
+        borderLeftColor: colorEspina(rango),
       }}
     >
       {typeof titulo === 'string' ? (

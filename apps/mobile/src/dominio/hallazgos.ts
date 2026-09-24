@@ -153,7 +153,7 @@ export function mensajeVacio(vista: Vista): string {
 }
 
 type HallazgoAgrupable = {
-  rango: 0 | 1 | 2 | 3;
+  rango: 0 | 1 | 2 | 3 | 4 | 5;
   tipoRiesgo?: TipoRiesgoInteraccion;
   condicionId?: string;
   condicionNombre?: string;
@@ -161,7 +161,7 @@ type HallazgoAgrupable = {
 
 export type FilaAgrupada<T> =
   | { tipo: 'individual'; hallazgo: T }
-  | { tipo: 'grupo'; clave: string; etiqueta: string; peor: 0 | 1 | 2 | 3; hallazgos: T[] };
+  | { tipo: 'grupo'; clave: string; etiqueta: string; peor: 0 | 1 | 2 | 3 | 4 | 5; hallazgos: T[] };
 
 /** De qué comparten riesgo dos hallazgos, si comparten alguno. INTERACCION por
  *  mecanismo clínico (motor §9 addendum); CONDICION por la condición o

@@ -33,7 +33,7 @@ describe('titular del resultado', () => {
 
   it('cuenta cuántas hay de esa gravedad', () => {
     expect(titularInteracciones([{ severidad: 'ALTA' }, { severidad: 'ALTA' }])).toBe(
-      '2 interacciones graves',
+      '2 interacciones altas',
     );
   });
 
