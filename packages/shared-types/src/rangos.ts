@@ -99,6 +99,11 @@ export const RANGOS = {
   // reusa bilirrubinaMgDl). ---------------------------------------------------
   pao2Fio2: { min: 0, max: 700, decimales: 0, habitual: { min: 40, max: 500 } },
   plaquetasMiles: { min: 0, max: 2000, decimales: 0, habitual: { min: 5, max: 700 } },
+
+  // --- MELD-Na y FENa ---------------------------------------------------------
+  sodioMeqL: { min: 100, max: 200, decimales: 0, habitual: { min: 115, max: 160 } },
+  sodioOrinaMeqL: { min: 0, max: 300, minExclusivo: true, decimales: 0, habitual: { min: 1, max: 150 } },
+  creatininaOrinaMgDl: { min: 0, max: 600, minExclusivo: true, decimales: 0, habitual: { min: 5, max: 400 } },
 } as const satisfies Record<string, Rango>;
 
 export type CampoConRango = keyof typeof RANGOS;

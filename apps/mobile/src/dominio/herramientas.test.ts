@@ -42,13 +42,16 @@ describe('el catálogo', () => {
     // comportamiento que se quiere, la categoría se enciende con su primera
     // herramienta.
     expect(hay).toContain('laboratorio');
-    expect(hay).not.toContain('embarazo');
+    // «Embarazo» se encendió con la fecha probable de parto — antes no tenía
+    // ninguna herramienta.
+    expect(hay).toContain('embarazo');
   });
 
   it('respeta el orden declarado y no el de aparición', () => {
     expect(categoriasConContenido()).toEqual([
       'renal',
       'hepatico',
+      'embarazo',
       'interacciones',
       'condiciones',
       'dosis',
@@ -61,8 +64,8 @@ describe('el catálogo', () => {
 });
 
 describe('filtrar por categoría', () => {
-  it('«Riñón» trae la calculadora y el ajuste', () => {
-    expect(claves(filtrarPorCategoria(HERRAMIENTAS, 'renal')).sort()).toEqual(['clcr', 'renal']);
+  it('«Riñón» trae las calculadoras y el ajuste', () => {
+    expect(claves(filtrarPorCategoria(HERRAMIENTAS, 'renal')).sort()).toEqual(['clcr', 'fena', 'renal']);
   });
 
   it('una herramienta puede estar en dos categorías', () => {
@@ -127,10 +130,16 @@ describe('agrupar', () => {
       'child-pugh',
       'clcr',
       'ldl',
+      'curb-65',
       'glasgow',
+      'fecha-probable-parto',
+      'fena',
       'has-bled',
       'hba1c',
       'imc',
+      'meld',
+      'nihss',
+      'peso-ideal',
       'qsofa',
       'qtc',
       'riesgo-cv',
@@ -173,13 +182,19 @@ describe('agrupar', () => {
     const g = agrupar(HERRAMIENTAS, relevantesDe('Nefrología'));
     expect(claves(g[0]!.herramientas)).toEqual([
       'clcr',
+      'fena',
       'cha2ds2-vasc',
       'child-pugh',
       'ldl',
+      'curb-65',
       'glasgow',
+      'fecha-probable-parto',
       'has-bled',
       'hba1c',
       'imc',
+      'meld',
+      'nihss',
+      'peso-ideal',
       'qsofa',
       'qtc',
       'riesgo-cv',
