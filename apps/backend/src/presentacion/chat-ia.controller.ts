@@ -1,4 +1,4 @@
-import { Controller, HttpCode, Inject, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, Inject, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { IsOptional, IsString, IsUUID, Length } from 'class-validator';
 
@@ -33,5 +33,19 @@ export class ChatIaController {
   @Throttle({ default: { limit: 15, ttl: 60_000 } })
   mensaje(@MedicoActual() medicoId: string, @Cuerpo(EnviarMensajeChatDto) dto: EnviarMensajeChatDto) {
     return this.chat.responder(medicoId, { sessionId: dto.sessionId, pregunta: dto.pregunta });
+  }
+
+  /** Sólo lectura, sin costo de Claude — no lleva el throttle ni el tope
+   *  diario de "mensajes", que son de la llamada al modelo. */
+  @DePago('Vera')
+  @Get('sesiones')
+  sesiones(@MedicoActual() medicoId: string) {
+    return this.chat.listarSesiones(medicoId);
+  }
+
+  @DePago('Vera')
+  @Get('sesiones/:id/mensajes')
+  mensajesDeSesion(@MedicoActual() medicoId: string, @Param('id', new ParseUUIDPipe()) id: string) {
+    return this.chat.obtenerMensajes(medicoId, id);
   }
 }

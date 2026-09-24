@@ -5,6 +5,7 @@ import type {
   Condicion,
   CondicionesYAlergias,
   Configuracion,
+  DetalleSesionChat,
   EstadoSuscripcion,
   GrupoAlergenico,
   Inicio,
@@ -17,6 +18,7 @@ import type {
   ResultadoChildPugh,
   RespuestaChat,
   Sesion,
+  SesionChat,
 } from './tipos';
 
 /**
@@ -248,3 +250,8 @@ export const reportarProblema = (datos: ReporteAyuda) => api.post<void>('/ayuda/
 
 export const enviarMensajeChat = (datos: { sessionId?: string; pregunta: string }) =>
   api.post<RespuestaChat>('/chat/mensajes', datos);
+
+export const sesionesChat = () => api.get<SesionChat[]>('/chat/sesiones');
+
+export const mensajesDeSesionChat = (sessionId: string) =>
+  api.get<DetalleSesionChat>(`/chat/sesiones/${sessionId}/mensajes`);

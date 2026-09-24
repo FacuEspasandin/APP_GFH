@@ -74,7 +74,10 @@ export function EncabezadoApp({
         {titulo}
       </Text>
 
-      <View className="h-10 w-10 items-center justify-center">{derecha}</View>
+      {/* Sin `w-10` fijo: la mayoría de las pantallas pasan un solo ícono de
+          40px y se ve igual, pero Vera necesita dos (nueva conversación +
+          historial) uno al lado del otro. */}
+      <View className="h-10 flex-row items-center justify-end gap-1">{derecha}</View>
     </View>
   );
 }

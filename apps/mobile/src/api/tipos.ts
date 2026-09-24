@@ -303,3 +303,26 @@ export interface RespuestaChat {
   respuesta: string;
   toolsUsadas: ToolUsadaChat[];
 }
+
+/** Una fila de `GET /chat/sesiones` — para la lista de historial. */
+export interface SesionChat {
+  id: string;
+  titulo: string | null;
+  createdAt: string;
+  cantidadMensajes: number;
+}
+
+/** Un mensaje guardado, al retomar una conversación con
+ *  `GET /chat/sesiones/:id/mensajes`. */
+export interface MensajeSesionChat {
+  id: string;
+  rol: 'USUARIO' | 'ASISTENTE';
+  contenido: string;
+  toolsUsadas: ToolUsadaChat[];
+}
+
+export interface DetalleSesionChat {
+  sessionId: string;
+  titulo: string | null;
+  mensajes: MensajeSesionChat[];
+}

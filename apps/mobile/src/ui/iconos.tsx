@@ -73,7 +73,10 @@ export type NombreIcono =
   // Botón central del navbar, chat de IA: burbuja de diálogo con tres puntos.
   | 'chat'
   // Botón de enviar del composer del chat: flecha simple.
-  | 'enviar';
+  | 'enviar'
+  // Botón de historial del chat: tres líneas horizontales — se diferencia a
+  // propósito de 'menu' (los tres puntos verticales de "más opciones").
+  | 'historial';
 
 interface Props {
   nombre: NombreIcono;
@@ -471,6 +474,14 @@ function trazos(nombre: NombreIcono, c: Comun) {
         <>
           <Path d="M5 12h14" {...c} />
           <Path d="M13 6l6 6-6 6" {...c} />
+        </>
+      );
+    case 'historial':
+      return (
+        <>
+          <Path d="M4 6h16" {...c} />
+          <Path d="M4 12h16" {...c} />
+          <Path d="M4 18h16" {...c} />
         </>
       );
   }

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { Stack } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -14,6 +14,7 @@ import {
 
 import * as API from '@/api/endpoints';
 import { ErrorApi } from '@/api/cliente';
+import type { MensajeSesionChat } from '@/api/tipos';
 import { chipsDeFuente, type ChipFuente } from '@/dominio/chat';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
@@ -43,12 +44,53 @@ function idLocal(): string {
  * conserva mientras la pantalla sigue montada para que el backend mantenga
  * contexto entre mensajes de una misma visita.
  */
+function mensajeDesdeHistorial(m: MensajeSesionChat): MensajeChat {
+  return {
+    id: m.id,
+    rol: m.rol === 'USUARIO' ? 'usuario' : 'asistente',
+    contenido: m.contenido,
+    chips: chipsDeFuente(m.toolsUsadas),
+  };
+}
+
 export default function ChatIa() {
   const col = useColores();
+  const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
   const [mensajes, setMensajes] = useState<MensajeChat[]>([]);
   const [texto, setTexto] = useState('');
   const [sessionId, setSessionId] = useState<string | undefined>(undefined);
+
+  // `sessionId=nueva` llega desde el botón "+" del historial; cualquier otro
+  // valor es un id real a retomar. Se acuerda cuál ya se procesó para no
+  // repetir la carga si el parámetro sigue en la URL tras la navegación.
+  const params = useLocalSearchParams<{ sessionId?: string }>();
+  const paramProcesado = useRef<string | undefined>(undefined);
+
+  const cargarSesion = useMutation({
+    mutationFn: (id: string) => API.mensajesDeSesionChat(id),
+    onSuccess: (detalle) => {
+      setSessionId(detalle.sessionId);
+      setMensajes(detalle.mensajes.map(mensajeDesdeHistorial));
+    },
+  });
+
+  const nuevaConversacion = () => {
+    setSessionId(undefined);
+    setMensajes([]);
+    setTexto('');
+  };
+
+  useEffect(() => {
+    const id = params.sessionId;
+    if (!id || id === paramProcesado.current) return;
+    paramProcesado.current = id;
+    if (id === 'nueva') {
+      nuevaConversacion();
+    } else {
+      cargarSesion.mutate(id);
+    }
+  }, [params.sessionId]);
 
   const enviar = useMutation({
     mutationFn: (pregunta: string) => API.enviarMensajeChat({ sessionId, pregunta }),
@@ -88,18 +130,44 @@ export default function ChatIa() {
 
   const mandar = () => {
     const pregunta = texto.trim();
-    if (!pregunta || enviar.isPending) return;
+    if (!pregunta || enviar.isPending || cargarSesion.isPending) return;
     setMensajes((m) => [...m, { id: idLocal(), rol: 'usuario', contenido: pregunta }]);
     setTexto('');
     enviar.mutate(pregunta);
   };
 
-  const hayHilo = mensajes.length > 0 || enviar.isPending;
+  const hayHilo = mensajes.length > 0 || enviar.isPending || cargarSesion.isPending;
+  const entradaDeshabilitada = enviar.isPending || cargarSesion.isPending;
 
   return (
     <View className="flex-1 bg-paper">
       <Stack.Screen options={{ headerShown: false }} />
-      <EncabezadoApp ocultarVolver titulo="Vera" />
+      <EncabezadoApp
+        ocultarVolver
+        titulo="Vera"
+        derecha={
+          <>
+            <Pressable
+              onPress={nuevaConversacion}
+              accessibilityRole="button"
+              accessibilityLabel="Nueva conversación"
+              hitSlop={8}
+              className="h-9 w-9 items-center justify-center"
+            >
+              <Icono nombre="mas" tamano={19} color={col.primary} />
+            </Pressable>
+            <Pressable
+              onPress={() => router.push('/chat/historial' as never)}
+              accessibilityRole="button"
+              accessibilityLabel="Historial de conversaciones"
+              hitSlop={8}
+              className="h-9 w-9 items-center justify-center"
+            >
+              <Icono nombre="historial" tamano={19} color={col.primary} />
+            </Pressable>
+          </>
+        }
+      />
 
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View className="flex-1 px-4 pt-3">
@@ -122,7 +190,7 @@ export default function ChatIa() {
               {mensajes.map((m) => (
                 <BurbujaMensaje key={m.id} mensaje={m} />
               ))}
-              {enviar.isPending ? (
+              {enviar.isPending || cargarSesion.isPending ? (
                 <View
                   className="mr-auto rounded-card rounded-bl-[3px] border px-3.5 py-3"
                   style={{ backgroundColor: col.surface, borderColor: col.line }}
@@ -145,12 +213,12 @@ export default function ChatIa() {
               className="flex-1 py-1.5 text-body text-ink"
               style={{ maxHeight: 100 }}
               multiline
-              editable={!enviar.isPending}
+              editable={!entradaDeshabilitada}
               accessibilityLabel="Mensaje para Vera"
             />
             <Pressable
               onPress={mandar}
-              disabled={!texto.trim() || enviar.isPending}
+              disabled={!texto.trim() || entradaDeshabilitada}
               accessibilityRole="button"
               accessibilityLabel="Enviar"
               className="mb-1 h-8 w-8 items-center justify-center rounded-full"

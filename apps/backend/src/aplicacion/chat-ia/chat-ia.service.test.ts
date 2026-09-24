@@ -28,15 +28,16 @@ function usoDeTool(id: string, name: string, input: unknown) {
 }
 
 function construirServicio(opts: {
-  enviarMensaje: ReturnType<typeof vi.fn>;
+  enviarMensaje?: ReturnType<typeof vi.fn>;
   interacciones?: ReturnType<typeof vi.fn>;
   ragBuscar?: ReturnType<typeof vi.fn>;
   chatSessionCreate?: ReturnType<typeof vi.fn>;
   chatSessionFindFirst?: ReturnType<typeof vi.fn>;
+  chatSessionFindMany?: ReturnType<typeof vi.fn>;
   chatMessageFindMany?: ReturnType<typeof vi.fn>;
   transaction?: ReturnType<typeof vi.fn>;
 }) {
-  const cliente = { enviarMensaje: opts.enviarMensaje } as unknown as ClienteAnthropic;
+  const cliente = { enviarMensaje: opts.enviarMensaje ?? vi.fn() } as unknown as ClienteAnthropic;
   const catalogo = {} as unknown as CatalogoService;
   const herramientas = { interacciones: opts.interacciones ?? vi.fn() } as unknown as HerramientasService;
   const alternativas = {} as unknown as AlternativasService;
@@ -45,11 +46,12 @@ function construirServicio(opts: {
   const chatSessionCreate =
     opts.chatSessionCreate ?? vi.fn().mockResolvedValue({ id: SESSION_ID, medicoId: MEDICO_ID, titulo: null });
   const chatSessionFindFirst = opts.chatSessionFindFirst ?? vi.fn().mockResolvedValue(null);
+  const chatSessionFindMany = opts.chatSessionFindMany ?? vi.fn().mockResolvedValue([]);
   const chatMessageFindMany = opts.chatMessageFindMany ?? vi.fn().mockResolvedValue([]);
   const transaction = opts.transaction ?? vi.fn().mockResolvedValue(undefined);
 
   const prisma = {
-    chatSession: { create: chatSessionCreate, findFirst: chatSessionFindFirst },
+    chatSession: { create: chatSessionCreate, findFirst: chatSessionFindFirst, findMany: chatSessionFindMany },
     chatMessage: { create: vi.fn((args: unknown) => args), findMany: chatMessageFindMany },
     $transaction: transaction,
   } as unknown as PrismaService;
@@ -58,6 +60,7 @@ function construirServicio(opts: {
     servicio: new ChatIaService(cliente, catalogo, herramientas, alternativas, rag, prisma),
     chatSessionCreate,
     chatSessionFindFirst,
+    chatSessionFindMany,
     chatMessageFindMany,
     transaction,
   };
@@ -157,11 +160,19 @@ describe('ChatIaService.responder', () => {
       .mockImplementationOnce(async () => usoDeTool('tool-1', 'ficha_tecnica', { pregunta: 'posología metformina' }))
       .mockImplementationOnce(async () => textoFinal('Dosis inicial 500mg.'));
 
-    const { servicio } = construirServicio({ enviarMensaje, ragBuscar });
+    const { servicio, transaction } = construirServicio({ enviarMensaje, ragBuscar });
 
     const resultado = await servicio.responder(MEDICO_ID, { pregunta: '¿dosis de metformina?' });
 
     expect(resultado.toolsUsadas).toEqual([
+      { tool: 'ficha_tecnica', input: { pregunta: 'posología metformina' }, encontrado: true },
+    ]);
+
+    // El `encontrado` tiene que quedar en lo que se guarda, no sólo en la
+    // respuesta — si no, una sesión retomada del historial no puede saber si
+    // el chip de "Ficha técnica" correspondía mostrarse.
+    const llamadasGuardadas = transaction.mock.calls[0]![0] as { data: { toolLlamada?: unknown } }[];
+    expect(llamadasGuardadas[1]!.data.toolLlamada).toEqual([
       { tool: 'ficha_tecnica', input: { pregunta: 'posología metformina' }, encontrado: true },
     ]);
   });
@@ -337,5 +348,80 @@ describe('ChatIaService.responder', () => {
 
     expect(enviarMensaje).toHaveBeenCalledTimes(6);
     expect(resultado.respuesta).toMatch(/no pude terminar/i);
+  });
+});
+
+describe('ChatIaService.listarSesiones', () => {
+  it('trae las sesiones del médico, más recientes primero, con la cantidad de mensajes', async () => {
+    const chatSessionFindMany = vi.fn().mockResolvedValue([
+      { id: SESSION_ID, titulo: 'Interacción warfarina', createdAt: new Date('2026-09-24'), _count: { mensajes: 4 } },
+    ]);
+    const { servicio } = construirServicio({ chatSessionFindMany });
+
+    const sesiones = await servicio.listarSesiones(MEDICO_ID);
+
+    expect(chatSessionFindMany).toHaveBeenCalledWith({
+      where: { medicoId: MEDICO_ID },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+      include: { _count: { select: { mensajes: true } } },
+    });
+    expect(sesiones).toEqual([
+      { id: SESSION_ID, titulo: 'Interacción warfarina', createdAt: new Date('2026-09-24'), cantidadMensajes: 4 },
+    ]);
+  });
+
+  it('nunca pide sesiones de otro médico: el filtro va siempre por medicoId', async () => {
+    const chatSessionFindMany = vi.fn().mockResolvedValue([]);
+    const { servicio } = construirServicio({ chatSessionFindMany });
+
+    await servicio.listarSesiones('otro-medico');
+
+    expect(chatSessionFindMany).toHaveBeenCalledWith(expect.objectContaining({ where: { medicoId: 'otro-medico' } }));
+  });
+});
+
+describe('ChatIaService.obtenerMensajes', () => {
+  it('devuelve los mensajes en orden cronológico, con las tools de cada uno', async () => {
+    const chatSessionFindFirst = vi.fn().mockResolvedValue({ id: SESSION_ID, medicoId: MEDICO_ID, titulo: 'Dosis de metformina' });
+    const chatMessageFindMany = vi.fn().mockResolvedValue([
+      { id: 'm1', rol: 'USUARIO', contenido: '¿Dosis de metformina en ERC?', toolLlamada: null },
+      {
+        id: 'm2',
+        rol: 'ASISTENTE',
+        contenido: 'Depende del ClCr...',
+        toolLlamada: [{ tool: 'ajuste_renal', input: { principioActivoId: ID_VALIDO } }],
+      },
+    ]);
+    const { servicio } = construirServicio({ chatSessionFindFirst, chatMessageFindMany });
+
+    const resultado = await servicio.obtenerMensajes(MEDICO_ID, SESSION_ID);
+
+    expect(chatMessageFindMany).toHaveBeenCalledWith({
+      where: { chatSessionId: SESSION_ID },
+      orderBy: { createdAt: 'asc' },
+      select: { id: true, rol: true, contenido: true, toolLlamada: true },
+    });
+    expect(resultado).toEqual({
+      sessionId: SESSION_ID,
+      titulo: 'Dosis de metformina',
+      mensajes: [
+        { id: 'm1', rol: 'USUARIO', contenido: '¿Dosis de metformina en ERC?', toolsUsadas: [] },
+        {
+          id: 'm2',
+          rol: 'ASISTENTE',
+          contenido: 'Depende del ClCr...',
+          toolsUsadas: [{ tool: 'ajuste_renal', input: { principioActivoId: ID_VALIDO } }],
+        },
+      ],
+    });
+  });
+
+  it('si la sesión no existe, o es de otro médico, tira NotFoundException — misma respuesta para las dos', async () => {
+    const chatSessionFindFirst = vi.fn().mockResolvedValue(null);
+    const { servicio } = construirServicio({ chatSessionFindFirst });
+
+    await expect(servicio.obtenerMensajes(MEDICO_ID, 'sesion-inexistente')).rejects.toThrow(/no encontrada/i);
+    expect(chatSessionFindFirst).toHaveBeenCalledWith({ where: { id: 'sesion-inexistente', medicoId: MEDICO_ID } });
   });
 });

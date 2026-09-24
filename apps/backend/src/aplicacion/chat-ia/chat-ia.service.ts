@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import type Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam, ToolResultBlockParam } from '@anthropic-ai/sdk/resources/messages';
 import type { Prisma } from '@prisma/client';
@@ -238,6 +238,25 @@ export class ChatIaService {
       `Respuesta final: ${respuestaFinal.length} caracteres, termina en "${respuestaFinal.slice(-30)}"`,
     );
 
+    // Calculado una sola vez: se guarda en `toolLlamada` Y se devuelve en la
+    // respuesta — antes se recalculaba distinto en cada lado y una sesión
+    // retomada del historial se quedaba sin poder saber si el chip de "Ficha
+    // técnica" correspondía mostrarse (`encontrado` no viajaba a la base).
+    const toolsConMetadata = toolsUsadas.map((t) => ({
+      tool: t.tool,
+      input: t.input,
+      ...(t.tool === 'ficha_tecnica'
+        ? {
+            encontrado: huboFichaRelevante(
+              t.output,
+              typeof t.input === 'object' && t.input !== null && 'pregunta' in t.input
+                ? String((t.input as { pregunta: unknown }).pregunta)
+                : '',
+            ),
+          }
+        : {}),
+    }));
+
     await this.prisma.$transaction([
       this.prisma.chatMessage.create({
         data: { chatSessionId: chatSession.id, medicoId, rol: 'USUARIO', contenido: params.pregunta },
@@ -249,9 +268,7 @@ export class ChatIaService {
           rol: 'ASISTENTE',
           contenido: respuestaFinal,
           toolLlamada:
-            toolsUsadas.length > 0
-              ? (toolsUsadas.map((t) => ({ tool: t.tool, input: t.input })) as unknown as Prisma.InputJsonValue)
-              : undefined,
+            toolsConMetadata.length > 0 ? (toolsConMetadata as unknown as Prisma.InputJsonValue) : undefined,
         },
       }),
     ]);
@@ -259,19 +276,49 @@ export class ChatIaService {
     return {
       sessionId: chatSession.id,
       respuesta: respuestaFinal,
-      toolsUsadas: toolsUsadas.map((t) => ({
-        tool: t.tool,
-        input: t.input,
-        ...(t.tool === 'ficha_tecnica'
-          ? {
-              encontrado: huboFichaRelevante(
-                t.output,
-                typeof t.input === 'object' && t.input !== null && 'pregunta' in t.input
-                  ? String((t.input as { pregunta: unknown }).pregunta)
-                  : '',
-              ),
-            }
-          : {}),
+      toolsUsadas: toolsConMetadata,
+    };
+  }
+
+  /** Últimas conversaciones del médico, para la lista de historial — nunca
+   *  de otro médico, sin importar qué `medicoId` venga en la URL. */
+  async listarSesiones(medicoId: string, limite = 20) {
+    const sesiones = await this.prisma.chatSession.findMany({
+      where: { medicoId },
+      orderBy: { createdAt: 'desc' },
+      take: limite,
+      include: { _count: { select: { mensajes: true } } },
+    });
+
+    return sesiones.map((s) => ({
+      id: s.id,
+      titulo: s.titulo,
+      createdAt: s.createdAt,
+      cantidadMensajes: s._count.mensajes,
+    }));
+  }
+
+  /** Los mensajes de una conversación, para retomarla. `NotFoundException`
+   *  tanto si no existe como si es de otro médico — misma respuesta para
+   *  las dos, no hay que distinguirle al médico cuál de las dos pasó. */
+  async obtenerMensajes(medicoId: string, sessionId: string) {
+    const sesion = await this.prisma.chatSession.findFirst({ where: { id: sessionId, medicoId } });
+    if (!sesion) throw new NotFoundException('Conversación no encontrada.');
+
+    const mensajes = await this.prisma.chatMessage.findMany({
+      where: { chatSessionId: sessionId },
+      orderBy: { createdAt: 'asc' },
+      select: { id: true, rol: true, contenido: true, toolLlamada: true },
+    });
+
+    return {
+      sessionId: sesion.id,
+      titulo: sesion.titulo,
+      mensajes: mensajes.map((m) => ({
+        id: m.id,
+        rol: m.rol,
+        contenido: m.contenido,
+        toolsUsadas: (m.toolLlamada as unknown as RespuestaChat['toolsUsadas'] | null) ?? [],
       })),
     };
   }
