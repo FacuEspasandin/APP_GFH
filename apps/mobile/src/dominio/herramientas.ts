@@ -422,33 +422,55 @@ export function relevantesDe(especialidad: Especialidad | null | undefined): Rea
 }
 
 /**
- * Las dos secciones: **calcula** contra **cruza el catálogo**.
+ * Las calculadoras, en mini-secciones por aparato — y "Contra el catálogo"
+ * aparte, al final.
  *
- * Es exactamente lo que decide el precio, y por eso se mantiene aunque los
- * chips filtren por aparato: agrupar por aparato dejaría el candado repartido
- * al azar por la lista.
+ * Con veinte calculadoras un solo bloque alfabético ya no se recorre con la
+ * vista: hay que separarlas para que nada quede perdido más abajo. El corte
+ * "cruza el catálogo" sigue siendo su propia sección y no se reparte por
+ * aparato — es lo que decide el precio, y mezclarlo dejaría el candado
+ * repartido al azar por la lista.
  *
- * Alfabético adentro de cada una — salvo que la especialidad del médico
- * adelante alguna: ésas van primero, y entre ellas y entre el resto el orden
- * sigue siendo alfabético. Es orden, no filtro (ver `CATEGORIAS` arriba): con
- * `relevantes` vacío el resultado es exactamente el de antes.
+ * Alfabético por título adentro de cada sección. La especialidad del médico
+ * adelanta SECCIONES enteras (no ítems sueltos, que quedaba invisible sin un
+ * título que marcara dónde terminaba "lo tuyo" y empezaba el resto) — dentro
+ * de "Contra el catálogo", que ya es chica (4 ítems) y no amerita
+ * sub-secciones, sigue adelantando por ítem como antes. Es orden, no filtro
+ * (ver `CATEGORIAS` arriba): con `relevantes` vacío el resultado es
+ * exactamente el orden declarado de `CATEGORIAS`.
  */
 export function agrupar(
   herramientas: readonly Herramienta[],
   relevantes: ReadonlySet<string> = new Set(),
 ): GrupoHerramientas[] {
-  const orden = (a: Herramienta, b: Herramienta) => {
+  const alfabetico = (a: Herramienta, b: Herramienta) => a.titulo.localeCompare(b.titulo, 'es');
+
+  const ordenConRelevancia = (a: Herramienta, b: Herramienta) => {
     const ra = relevantes.has(a.clave);
     const rb = relevantes.has(b.clave);
     if (ra !== rb) return ra ? -1 : 1;
-    return a.titulo.localeCompare(b.titulo, 'es');
+    return alfabetico(a, b);
   };
 
-  const calculan = herramientas.filter((h) => !h.cruza).sort(orden);
-  const cruzan = herramientas.filter((h) => h.cruza).sort(orden);
+  const calculan = herramientas.filter((h) => !h.cruza);
+  const cruzan = herramientas.filter((h) => h.cruza).sort(ordenConRelevancia);
+
+  const categoriasConCalculadoras = CATEGORIAS.filter((c) => calculan.some((h) => h.categorias.includes(c)));
+  const seccionEsRelevante = (c: CategoriaHerramienta) =>
+    calculan.some((h) => h.categorias.includes(c) && relevantes.has(h.clave));
+
+  const ordenDeSecciones = [
+    ...categoriasConCalculadoras.filter(seccionEsRelevante),
+    ...categoriasConCalculadoras.filter((c) => !seccionEsRelevante(c)),
+  ];
+
+  const seccionesCalculadoras: GrupoHerramientas[] = ordenDeSecciones.map((c) => ({
+    titulo: NOMBRE_CATEGORIA[c],
+    herramientas: calculan.filter((h) => h.categorias.includes(c)).sort(alfabetico),
+  }));
 
   return [
-    { titulo: 'Calculadoras', herramientas: calculan },
+    ...seccionesCalculadoras,
     { titulo: 'Contra el catálogo', herramientas: cruzan },
     // Una sección vacía no se dibuja: filtrando por «Hígado» sobra el título
     // «Contra el catálogo» encima de nada.

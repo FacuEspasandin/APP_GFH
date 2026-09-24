@@ -122,38 +122,42 @@ describe('buscar', () => {
 });
 
 describe('agrupar', () => {
-  it('separa lo que calcula de lo que cruza el catálogo', () => {
+  it('secciona las calculadoras por aparato, y deja "Contra el catálogo" aparte al final', () => {
     const g = agrupar(HERRAMIENTAS);
-    expect(g.map((x) => x.titulo)).toEqual(['Calculadoras', 'Contra el catálogo']);
-    expect(claves(g[0]!.herramientas)).toEqual([
-      'cha2ds2-vasc',
-      'child-pugh',
-      'clcr',
-      'ldl',
-      'curb-65',
-      'glasgow',
-      'fecha-probable-parto',
-      'fena',
-      'has-bled',
-      'hba1c',
-      'imc',
-      'meld',
-      'nihss',
-      'peso-ideal',
-      'qsofa',
-      'qtc',
-      'riesgo-cv',
-      'sofa',
-      'superficie-corporal',
-      'wells',
+    expect(g.map((x) => x.titulo)).toEqual([
+      'Riñón',
+      'Hígado',
+      'Embarazo',
+      'Dosis',
+      'Laboratorio',
+      'Cardiovascular',
+      'Neurológico',
+      'Cuidados críticos',
+      'Contra el catálogo',
     ]);
+    // Ninguna calculadora se pierde al seccionar: la suma da lo mismo que antes.
+    expect(g.reduce((total, x) => total + x.herramientas.length, 0)).toBe(HERRAMIENTAS.length);
   });
 
-  it('ordena por TÍTULO y no por clave', () => {
+  it('alfabético por título adentro de cada sección', () => {
+    const g = agrupar(HERRAMIENTAS);
+    const seccion = (titulo: string) => claves(g.find((x) => x.titulo === titulo)!.herramientas);
+
+    expect(seccion('Riñón')).toEqual(['clcr', 'fena']);
+    expect(seccion('Hígado')).toEqual(['child-pugh', 'meld']);
+    expect(seccion('Dosis')).toEqual(['peso-ideal', 'superficie-corporal']);
+    expect(seccion('Laboratorio')).toEqual(['ldl', 'hba1c', 'imc', 'riesgo-cv']);
+    expect(seccion('Cardiovascular')).toEqual(['cha2ds2-vasc', 'has-bled', 'qtc', 'wells']);
+    expect(seccion('Neurológico')).toEqual(['glasgow', 'nihss']);
+    expect(seccion('Cuidados críticos')).toEqual(['curb-65', 'qsofa', 'sofa']);
+  });
+
+  it('ordena por TÍTULO y no por clave dentro de "Contra el catálogo"', () => {
     // «Ajuste renal por fármaco» va primero aunque su clave sea `renal`: lo
     // que el médico recorre con el ojo es el título.
     const g = agrupar(HERRAMIENTAS);
-    expect(g[1]!.herramientas.map((h) => h.titulo)).toEqual([
+    const contraElCatalogo = g.find((x) => x.titulo === 'Contra el catálogo')!;
+    expect(contraElCatalogo.herramientas.map((h) => h.titulo)).toEqual([
       'Ajuste hepático por fármaco',
       'Ajuste renal por fármaco',
       'Condición y alergia',
@@ -163,50 +167,62 @@ describe('agrupar', () => {
 
   it('no dibuja una sección vacía', () => {
     // Filtrando por «Laboratorio» sobra el título «Contra el catálogo» encima
-    // de nada: la única de esa categoría es el LDL, que calcula sin cruzar.
+    // de nada: ninguna herramienta que cruza el catálogo es de laboratorio.
     const soloLaboratorio = filtrarPorCategoria(HERRAMIENTAS, 'laboratorio');
-    expect(agrupar(soloLaboratorio).map((x) => x.titulo)).toEqual(['Calculadoras']);
+    expect(agrupar(soloLaboratorio).map((x) => x.titulo)).toEqual(['Laboratorio']);
   });
 
   it('sin nada devuelve cero grupos', () => {
     expect(agrupar([])).toEqual([]);
   });
 
-  it('sin especialidad, el orden es exactamente el de antes', () => {
+  it('sin especialidad, el orden es el declarado en CATEGORIAS', () => {
     expect(agrupar(HERRAMIENTAS, relevantesDe(null))).toEqual(agrupar(HERRAMIENTAS));
   });
 
-  it('especialidad: adelanta lo relevante, alfabético dentro de cada grupo', () => {
-    // Nefrología sólo tiene 'renal': adelanta el clcr y el ajuste renal, en
-    // sus dos secciones, sin sacar nada de la lista.
+  it('especialidad: adelanta la SECCIÓN relevante entera, el resto sigue en su orden', () => {
+    // Nefrología sólo tiene 'renal': la sección "Riñón" pasa a ser la
+    // primera, sin sacar ni reordenar ninguna otra sección.
     const g = agrupar(HERRAMIENTAS, relevantesDe('Nefrología'));
-    expect(claves(g[0]!.herramientas)).toEqual([
-      'clcr',
-      'fena',
-      'cha2ds2-vasc',
-      'child-pugh',
-      'ldl',
-      'curb-65',
-      'glasgow',
-      'fecha-probable-parto',
-      'has-bled',
-      'hba1c',
-      'imc',
-      'meld',
-      'nihss',
-      'peso-ideal',
-      'qsofa',
-      'qtc',
-      'riesgo-cv',
-      'sofa',
-      'superficie-corporal',
-      'wells',
+    expect(g.map((x) => x.titulo)).toEqual([
+      'Riñón',
+      'Hígado',
+      'Embarazo',
+      'Dosis',
+      'Laboratorio',
+      'Cardiovascular',
+      'Neurológico',
+      'Cuidados críticos',
+      'Contra el catálogo',
     ]);
-    expect(claves(g[1]!.herramientas)).toEqual([
+    expect(claves(g[0]!.herramientas)).toEqual(['clcr', 'fena']);
+
+    // Dentro de "Contra el catálogo" (chica, sin sub-secciones) sigue
+    // adelantando por ítem, como antes.
+    const contraElCatalogo = g.find((x) => x.titulo === 'Contra el catálogo')!;
+    expect(claves(contraElCatalogo.herramientas)).toEqual([
       'renal',
       'ajuste-hepatico',
       'condicion-alergia',
       'interacciones',
+    ]);
+  });
+
+  it('especialidad con dos aparatos: las dos secciones se adelantan, en el orden declarado de CATEGORIAS', () => {
+    // Cardiología: 'laboratorio' y 'cardiovascular' — en CATEGORIAS,
+    // laboratorio va antes que cardiovascular, así que ese orden se respeta
+    // también adelantadas.
+    const g = agrupar(HERRAMIENTAS, relevantesDe('Cardiología'));
+    expect(g.map((x) => x.titulo)).toEqual([
+      'Laboratorio',
+      'Cardiovascular',
+      'Riñón',
+      'Hígado',
+      'Embarazo',
+      'Dosis',
+      'Neurológico',
+      'Cuidados críticos',
+      'Contra el catálogo',
     ]);
   });
 
