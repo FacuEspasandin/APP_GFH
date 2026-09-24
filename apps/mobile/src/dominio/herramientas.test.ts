@@ -123,6 +123,7 @@ describe('agrupar', () => {
     const g = agrupar(HERRAMIENTAS);
     expect(g.map((x) => x.titulo)).toEqual(['Calculadoras', 'Contra el catálogo']);
     expect(claves(g[0]!.herramientas)).toEqual([
+      'cha2ds2-vasc',
       'child-pugh',
       'clcr',
       'ldl',
@@ -135,6 +136,7 @@ describe('agrupar', () => {
       'riesgo-cv',
       'sofa',
       'superficie-corporal',
+      'wells',
     ]);
   });
 
@@ -171,6 +173,7 @@ describe('agrupar', () => {
     const g = agrupar(HERRAMIENTAS, relevantesDe('Nefrología'));
     expect(claves(g[0]!.herramientas)).toEqual([
       'clcr',
+      'cha2ds2-vasc',
       'child-pugh',
       'ldl',
       'glasgow',
@@ -182,6 +185,7 @@ describe('agrupar', () => {
       'riesgo-cv',
       'sofa',
       'superficie-corporal',
+      'wells',
     ]);
     expect(claves(g[1]!.herramientas)).toEqual([
       'renal',

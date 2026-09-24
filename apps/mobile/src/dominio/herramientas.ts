@@ -81,6 +81,26 @@ export interface Herramienta {
  */
 export const HERRAMIENTAS: readonly Herramienta[] = [
   {
+    clave: 'cha2ds2-vasc',
+    titulo: 'CHA2DS2-VASc',
+    detalle: 'Riesgo de ACV en fibrilación auricular · 7 criterios',
+    ruta: '/herramientas/cha2ds2-vasc',
+    cruza: false,
+    categorias: ['cardiovascular'],
+    icono: 'pulso',
+    busca: ['acv', 'ictus', 'fibrilacion auricular', 'anticoagulacion', 'vasc'],
+  },
+  {
+    clave: 'wells',
+    titulo: 'Wells (TEP)',
+    detalle: 'Probabilidad clínica de tromboembolismo pulmonar',
+    ruta: '/herramientas/wells',
+    cruza: false,
+    categorias: ['cardiovascular'],
+    icono: 'pulso',
+    busca: ['tep', 'tromboembolismo', 'embolia pulmonar', 'tvp', 'dimero d'],
+  },
+  {
     clave: 'clcr',
     titulo: 'Clearance de creatinina',
     detalle: 'Cockcroft-Gault · función renal',
