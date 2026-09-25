@@ -186,5 +186,9 @@ export function moldeNihss(): Molde {
     limite:
       'Mide déficit neurológico, no pronóstico funcional a largo plazo. Se repite en el tiempo ' +
       'para seguir evolución, no es un número que se toma una sola vez.',
+    acercaDe:
+      'La NIH Stroke Scale (1989) cuantifica déficit neurológico en ACV agudo ' +
+      'con quince ítems estandarizados, y es el lenguaje común entre ' +
+      'neurología, emergencias y los criterios de trombólisis/trombectomía.',
   };
 }

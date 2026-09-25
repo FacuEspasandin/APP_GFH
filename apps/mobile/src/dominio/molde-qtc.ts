@@ -49,6 +49,11 @@ export function moldeQtc(): Molde {
     limite:
       'Con frecuencia cardíaca fuera de 60–100 lpm, Bazett sobrecorrige o subcorrige — Fridericia ' +
       'es más confiable en esos extremos. Ninguna de las dos reemplaza la lectura del ECG completo.',
+    acercaDe:
+      'El QT corregido por frecuencia cardíaca (QTc) detecta riesgo de ' +
+      'arritmia ventricular grave (torsade de pointes), clave antes de recetar ' +
+      'fármacos que lo prolongan. Bazett (1920) es la fórmula más usada; ' +
+      'Fridericia (1920) corrige mejor en frecuencias extremas.',
   };
 }
 

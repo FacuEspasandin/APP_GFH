@@ -114,6 +114,10 @@ export function moldeRiesgoCV(): Molde {
       'Esta tabla no reemplaza el juicio clínico. Factores que no entran acá ' +
       '—obesidad, sedentarismo, antecedentes familiares— pueden subir el ' +
       `riesgo real por encima de lo que dice acá. Fuente: ${FUENTE_RIESGO_CV}.`,
+    acercaDe:
+      'Las tablas WHO/ISH (OMS/OPS) estiman probabilidad de evento ' +
+      'cardiovascular mayor a 10 años sin necesitar colesterol de laboratorio ' +
+      'exacto — pensadas para lugares donde pedirlo no siempre es posible.',
   };
 }
 

@@ -49,6 +49,11 @@ export function moldeImc(): Molde {
       'No distingue masa magra de grasa: un físicoculturista o un adulto ' +
       'mayor con sarcopenia pueden caer en la misma banda sin significar lo ' +
       'mismo. No aplica a menores de 18 años ni durante el embarazo.',
+    acercaDe:
+      'El índice de masa corporal (Quetelet, siglo XIX; adoptado por la OMS) ' +
+      'clasifica peso corporal con sólo peso y talla, sin balanza de ' +
+      'bioimpedancia ni pliegues — el cribado más simple que existe, con las ' +
+      'limitaciones que eso trae.',
   };
 }
 

@@ -30,6 +30,11 @@ export function moldeSodioCorregido(): Molde {
     limite:
       'No clasifica riesgo: la interpretación depende del cuadro clínico completo. Usa el factor ' +
       'de Katz (1,6) — con glucosa muy alta, algunas guías prefieren el factor de Hillier (2,4).',
+    acercaDe:
+      'La glucosa alta arrastra agua hacia el espacio vascular y diluye el ' +
+      'sodio medido. La corrección estima cuál sería el sodio real una vez ' +
+      'controlada la glucemia, para no tratar una hiponatremia que es sólo ' +
+      'dilucional.',
   };
 }
 

@@ -28,6 +28,10 @@ export function moldeSuperficieCorporal(): Molde {
     limite:
       'No clasifica riesgo: es un insumo para dosificar fármacos por m² o para otros cálculos ' +
       'fisiológicos, no un hallazgo clínico en sí mismo.',
+    acercaDe:
+      'La fórmula de Mosteller (1987) estima superficie corporal a partir de ' +
+      'peso y talla, sin necesitar un nomograma. Se usa para dosificar ' +
+      'quimioterapia y otros fármacos que se calculan por m² y no por kg.',
   };
 }
 

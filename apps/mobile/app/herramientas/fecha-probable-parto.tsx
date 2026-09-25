@@ -67,6 +67,20 @@ export default function FechaProbableDeParto() {
           gestación tiene que quedar en la ficha del paciente, se carga aparte, como ya funciona
           hoy.
         </Text>
+
+        <View
+          className="mb-3 rounded-card border border-line bg-surface px-4 py-3.5"
+          style={{ borderLeftWidth: 3, borderLeftColor: '#8CA39A' }}
+        >
+          <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
+            ⓘ Sobre esta herramienta
+          </Text>
+          <Text className="font-sans text-meta leading-5 text-ink-suave">
+            La regla de Naegele (Franz Naegele, siglo XIX) suma 280 días a la última menstruación,
+            asumiendo un ciclo de 28 días con ovulación en el día 14. Sigue siendo el método de
+            referencia para estimar la fecha de parto sin ecografía.
+          </Text>
+        </View>
       </View>
     </View>
   );

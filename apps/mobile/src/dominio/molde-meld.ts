@@ -58,6 +58,11 @@ export function moldeMeld(): Molde {
     limite:
       'Prioriza lista de espera de trasplante y estima mortalidad — no reemplaza la evaluación ' +
       'completa del equipo de trasplante ni excepciones por otras condiciones (ej. hepatocarcinoma).',
+    acercaDe:
+      'El MELD ordena la lista de espera de trasplante hepático por mortalidad ' +
+      'a 90 días, reemplazando el criterio antiguo de "tiempo en lista". La ' +
+      'variante con sodio (Kim et al. 2008, adoptada por OPTN/UNOS en 2016) es ' +
+      'la que usan hoy la mayoría de los programas.',
   };
 }
 

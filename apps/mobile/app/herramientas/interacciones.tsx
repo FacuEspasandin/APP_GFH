@@ -181,9 +181,10 @@ function ResultadoInteracciones({
             extra={`${sinInteraccion} ${
               sinInteraccion === 1 ? 'par no tiene' : 'pares no tienen'
             } interacción conocida en el catálogo, que no es lo mismo que decir que sean seguros.`}
+            acercaDe="Cruza cada par de fármacos seleccionados contra las interacciones fármaco-fármaco cargadas en el catálogo — nunca contra el conocimiento general del modelo. Sin interacción encontrada significa sin dato, no sin riesgo."
           />
         ) : (
-          <AvisoDescartable />
+          <AvisoDescartable acercaDe="Cruza cada par de fármacos seleccionados contra las interacciones fármaco-fármaco cargadas en el catálogo — nunca contra el conocimiento general del modelo. Sin interacción encontrada significa sin dato, no sin riesgo." />
         )}
       </ScrollView>
     </View>

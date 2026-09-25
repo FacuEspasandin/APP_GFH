@@ -53,5 +53,9 @@ export function moldeQsofa(): Molde {
     limite:
       'No es diagnóstico de sepsis por sí solo — es una alerta de screening que indica evaluación ' +
       'más profunda.',
+    acercaDe:
+      'qSOFA (Sepsis-3, 2016) identifica en segundos, fuera de UTI, qué ' +
+      'pacientes con sospecha de infección tienen mayor riesgo de mal ' +
+      'desenlace y ameritan escalar a un SOFA completo.',
   };
 }

@@ -40,6 +40,10 @@ export function moldePesoIdeal(): Molde {
       'No clasifica riesgo: es un insumo para dosificar fármacos en pacientes con obesidad, no ' +
       'un hallazgo clínico en sí mismo. La fórmula de Devine se valida desde 152 cm — bajo eso ' +
       'no aplica.',
+    acercaDe:
+      'La fórmula de Devine (1974) estima el peso "esperable" para la talla, ' +
+      'clave al dosificar fármacos en pacientes con obesidad — dosificar por ' +
+      'el peso real ahí sobredosifica; el peso ajustado corrige ese exceso.',
   };
 }
 

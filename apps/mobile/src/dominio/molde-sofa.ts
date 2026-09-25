@@ -139,5 +139,10 @@ export function moldeSofa(): Molde {
       'infección sospechada o confirmada, es parte de la definición de sepsis (Sepsis-3). ' +
       '«No aplica» en cardiovascular cuenta como 0 en el total — es la ausencia del dato, no la ' +
       'ausencia de disfunción.',
+    acercaDe:
+      'SOFA (1996) cuantifica disfunción orgánica en seis sistemas y es la ' +
+      'base de la definición actual de sepsis (Sepsis-3): un aumento de 2 o ' +
+      'más puntos con infección sospechada define sepsis. qSOFA es su versión ' +
+      'rápida de screening.',
   };
 }

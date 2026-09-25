@@ -336,7 +336,7 @@ function ResultadoCondicionAlergia({
           />
         ) : null}
 
-        <AvisoDescartable />
+        <AvisoDescartable acercaDe="Cruza cada fármaco contra la condición clínica y la alergia cargadas, en la misma llamada. Sólo la coincidencia exacta con severidad grave bloquea; el cruce por familia de alergia nunca bloquea solo, pide confirmación." />
       </ScrollView>
     </View>
   );

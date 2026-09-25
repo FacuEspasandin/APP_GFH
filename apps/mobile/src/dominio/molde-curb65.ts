@@ -69,5 +69,9 @@ export function moldeCurb65(): Molde {
     limite:
       'Mortalidad a 30 días, no gravedad al momento de la consulta. No reemplaza el juicio ' +
       'clínico ni la saturación de oxígeno, que no forma parte de esta escala.',
+    acercaDe:
+      'CURB-65 (2003) estima mortalidad a 30 días en neumonía adquirida en la ' +
+      'comunidad, con cinco criterios fáciles de obtener a la cabecera. Decide ' +
+      'entre tratamiento ambulatorio, internación breve o UCI.',
   };
 }

@@ -176,6 +176,20 @@ export default function CalculadoraLdl() {
           <Text className="font-sans mt-3 px-1 text-eyebrow leading-4 text-ink-suave">
             No se guarda nada. Al salir de la herramienta, estos valores se pierden.
           </Text>
+
+          <View
+            className="mt-3 rounded-card border border-line bg-surface px-4 py-3.5"
+            style={{ borderLeftWidth: 3, borderLeftColor: '#8CA39A' }}
+          >
+            <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
+              ⓘ Sobre esta herramienta
+            </Text>
+            <Text className="font-sans text-meta leading-5 text-ink-suave">
+              Friedewald (1972) estima el LDL sin medirlo directamente, a partir de tres valores de
+              rutina — pero falla con triglicéridos altos, de ahí las alternativas (Chen, de
+              Cordova) para ese caso. El no-HDL no depende de ninguna fórmula: es una resta directa.
+            </Text>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>

@@ -29,6 +29,11 @@ export function moldeCalcioCorregido(): Molde {
       'No clasifica riesgo: el rango de referencia de calcio varía por laboratorio, no hay un ' +
       'corte único que fijar. Sirve para no tratar (o para no descartar) una alteración de calcio ' +
       'que en realidad es un efecto de la albúmina baja.',
+    acercaDe:
+      'Cerca de la mitad del calcio sérico viaja unido a la albúmina, así que ' +
+      'una albúmina baja hace parecer bajo un calcio que en realidad es ' +
+      'normal. La corrección evita tratar (o descartar) algo que no está ' +
+      'pasando.',
   };
 }
 

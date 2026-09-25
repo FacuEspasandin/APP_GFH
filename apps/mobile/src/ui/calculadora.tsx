@@ -209,6 +209,19 @@ export function Calculadora({
 
         {extra}
 
+        {/* Al pie de todo, después del límite y de lo que la pantalla agregue:
+            info de fondo, no otra advertencia — por eso el estilo distinto al
+            de "Qué no dice". */}
+        <View
+          className="mb-3 rounded-card border border-line bg-surface px-4 py-3.5"
+          style={{ borderLeftWidth: 3, borderLeftColor: '#8CA39A' }}
+        >
+          <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
+            ⓘ Sobre esta herramienta
+          </Text>
+          <Text className="font-sans text-meta leading-5 text-ink-suave">{molde.acercaDe}</Text>
+        </View>
+
         {/* Guardar o descartar: no hay un tercer caso, y decir las dos cosas
             —un botón Y un cartel de que no se guarda— sería contradecirse. */}
         {guardar ? (

@@ -266,13 +266,29 @@ export function FilaResultado({
  * cargar diez fármacos es enterarse tarde. Que sean descartables es una
  * decisión de producto, no una limitación técnica.
  */
-export function AvisoDescartable({ extra }: { extra?: string }) {
+export function AvisoDescartable({ extra, acercaDe }: { extra?: string; acercaDe: string }) {
   return (
-    <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
-      <Text className="font-sans text-meta leading-5 text-ink-suave">
-        {extra ? `${extra} ` : ''}Esta herramienta no guarda nada: al salir se pierde. Para dejarlo
-        registrado, cargá el fármaco en un paciente.
-      </Text>
-    </Superficie>
+    <>
+      <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
+        <Text className="font-sans text-meta leading-5 text-ink-suave">
+          {extra ? `${extra} ` : ''}Esta herramienta no guarda nada: al salir se pierde. Para dejarlo
+          registrado, cargá el fármaco en un paciente.
+        </Text>
+      </Superficie>
+
+      {/* Mismo bloque que el molde genérico, al pie de todo — ver
+          `calculadora.tsx`. Estas cuatro no usan `Calculadora`/`Molde`
+          (cruzan el catálogo, no son un cálculo puro), así que el texto se
+          pasa acá en vez de vivir en un campo del molde. */}
+      <View
+        className="mb-3.5 rounded-card border border-line bg-surface px-4 py-3.5"
+        style={{ borderLeftWidth: 3, borderLeftColor: '#8CA39A' }}
+      >
+        <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
+          ⓘ Sobre esta herramienta
+        </Text>
+        <Text className="font-sans text-meta leading-5 text-ink-suave">{acercaDe}</Text>
+      </View>
+    </>
   );
 }

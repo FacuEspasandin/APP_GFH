@@ -42,6 +42,10 @@ export function moldeHba1c(): Molde {
       'No es válida con anemia, hemoglobinopatías, embarazo o enfermedad ' +
       'renal crónica avanzada — cualquier cosa que altere el recambio de ' +
       'glóbulos rojos invalida la relación entre HbA1c y glucemia.',
+    acercaDe:
+      'El estudio ADAG (2008) tradujo la HbA1c —un promedio de 2-3 meses— a ' +
+      'la unidad que el paciente ya conoce de su glucómetro, para explicar el ' +
+      'control metabólico en un número que se entiende sin curva.',
   };
 }
 

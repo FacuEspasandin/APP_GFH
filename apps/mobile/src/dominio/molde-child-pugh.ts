@@ -132,6 +132,11 @@ export function moldeChildPugh(conValorExacto: boolean): Molde {
       'Cuánto ajustar cada fármaco. Falta la tabla de ajuste hepático por ' +
       'fármaco en el catálogo, así que la clase está pero no hay contra qué ' +
       'cruzarla todavía.',
+    acercaDe:
+      'Child-Pugh (1973, revisada 1973 por Pugh) clasifica la severidad de la ' +
+      'cirrosis en tres clases combinando dos datos clínicos (ascitis, ' +
+      'encefalopatía) y tres de laboratorio. Se usa para pronóstico quirúrgico ' +
+      'y, en esta app, como referencia para el ajuste hepático de fármacos.',
   };
 }
 

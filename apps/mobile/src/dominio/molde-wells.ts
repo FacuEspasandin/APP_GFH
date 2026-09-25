@@ -84,5 +84,10 @@ export function moldeWells(): Molde {
     limite:
       'No reemplaza dímero-D ni imagen. Orienta el siguiente paso —dímero-D en bajo/moderado, ' +
       'angio-TC directo en alto— no diagnostica TEP por sí sola.',
+    acercaDe:
+      'La escala de Wells (1998, revisada 2000) estima probabilidad clínica de ' +
+      'tromboembolismo pulmonar antes de pedir estudios, para elegir el ' +
+      'siguiente paso correcto en vez de imagen a todos los pacientes con ' +
+      'sospecha.',
   };
 }

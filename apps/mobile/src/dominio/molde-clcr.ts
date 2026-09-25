@@ -67,6 +67,11 @@ export function moldeClcr(): Molde {
       'Este número no dice cuánto ajustar cada fármaco. Para eso hace falta ' +
       'cruzarlo contra las tablas del catálogo, que es lo que hace GFH con ' +
       'un paciente cargado.',
+    acercaDe:
+      'Cockcroft-Gault (1976) estima la función renal a partir de edad, peso ' +
+      'y creatinina, sin necesitar orina de 24 horas. Sigue siendo la fórmula ' +
+      'de referencia para ajustar dosis de fármacos, aunque otras (CKD-EPI, ' +
+      'MDRD) estimen mejor el filtrado glomerular real.',
   };
 }
 

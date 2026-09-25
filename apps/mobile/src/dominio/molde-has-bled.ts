@@ -111,6 +111,10 @@ export function moldeHasBled(): Molde {
     limite:
       'No contraindica anticoagular por sí solo. Identifica y ayuda a corregir factores ' +
       'de riesgo modificables, y orienta la frecuencia de seguimiento.',
+    acercaDe:
+      'HAS-BLED (2010) estima riesgo de sangrado mayor a un año en pacientes ' +
+      'que van a anticoagularse. Se usa junto con CHA₂DS₂-VASc — sangrado vs. ' +
+      'ACV son las dos caras de la misma decisión.',
   };
 }
 

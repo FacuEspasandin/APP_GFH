@@ -331,6 +331,7 @@ function ResultadoRenal({
               ? `${sinTabla} ${sinTabla === 1 ? 'fármaco no tiene' : 'fármacos no tienen'} tabla en el catálogo.`
               : undefined
           }
+          acercaDe="Cruza cada fármaco contra la tabla de ajuste renal del catálogo, usando el Clcr ingresado o calculado por Cockcroft-Gault. Sin tabla cargada para un fármaco es un dato faltante, no una señal de que sea seguro."
         />
       </ScrollView>
     </View>

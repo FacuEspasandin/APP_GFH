@@ -237,6 +237,15 @@ export interface Molde {
    * tenga.
    */
   limite: string;
+  /**
+   * Qué es esta herramienta, en dos o tres oraciones. Va al pie de la
+   * pantalla, después de todo lo demás — última cosa que ve el médico.
+   *
+   * Obligatorio por el mismo motivo que `limite`: que sea un campo del molde
+   * es la única forma de que la calculadora número veinticinco también lo
+   * tenga, en vez de depender de que alguien se acuerde de escribirlo.
+   */
+  acercaDe: string;
 }
 
 // ---------------------------------------------------------------------------

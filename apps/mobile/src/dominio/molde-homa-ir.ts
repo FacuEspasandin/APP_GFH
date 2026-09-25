@@ -42,6 +42,10 @@ export function moldeHomaIr(): Molde {
       'No clasifica riesgo: el corte de resistencia a la insulina (valores ≈2,5-3 aparecen seguido ' +
       'en la bibliografía) varía según la población de referencia del estudio. Constante /405 para ' +
       'glucosa en mg/dL — con mmol/L sería /22,5.',
+    acercaDe:
+      'HOMA-IR (1985) estima resistencia a la insulina con dos valores en ' +
+      'ayunas, sin necesitar el clamp euglicémico —el método de referencia, ' +
+      'invasivo y de investigación— que en la práctica clínica no se usa.',
   };
 }
 

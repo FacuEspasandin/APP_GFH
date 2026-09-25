@@ -96,5 +96,11 @@ export function moldeCha2ds2Vasc(): Molde {
       'El corte de "bajo riesgo" real es 0 en hombres o 1 en mujeres contando sólo el punto ' +
       'de sexo — este tramo no distingue eso: si el único punto sumado es el de sexo femenino, ' +
       'revisar antes de indicar anticoagulación por este resultado solo.',
+    acercaDe:
+      'CHA₂DS₂-VASc (2010, revisión del CHADS₂ original) estima riesgo anual ' +
+      'de ACV en fibrilación auricular no valvular, y es hoy el criterio ' +
+      'estándar para decidir si anticoagular. Se usa junto con HAS-BLED — ' +
+      'riesgo de ACV vs. riesgo de sangrado son las dos caras de la misma ' +
+      'decisión.',
   };
 }

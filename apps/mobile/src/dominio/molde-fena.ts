@@ -59,6 +59,11 @@ export function moldeFena(): Molde {
     limite:
       'No es confiable si el paciente recibió diuréticos recientemente — ahí se usa FEUrea, un ' +
       'cálculo distinto que no reemplaza éste.',
+    acercaDe:
+      'La fracción excretada de sodio distingue si una insuficiencia renal ' +
+      'aguda es prerenal (el riñón conserva sodio, responde a volumen) o ' +
+      'intrínseca (necrosis tubular, el sodio se escapa). Un mismo dato de ' +
+      'laboratorio, dos manejos completamente distintos.',
   };
 }
 

@@ -74,6 +74,11 @@ export function moldeGlasgow(): Molde {
     limite:
       'Con la verbal no evaluable (intubado), el total no se calcula — se anota E y M por ' +
       'separado, sin inventar un valor verbal. No reemplaza una evaluación neurológica completa.',
+    acercaDe:
+      'La escala de Glasgow (Teasdale y Jennett, 1974) mide nivel de conciencia ' +
+      'sumando tres respuestas — ocular, verbal, motora — en un lenguaje ' +
+      'común entre servicios. Es la base de qSOFA y de la parte neurológica ' +
+      'de SOFA.',
   };
 }
 

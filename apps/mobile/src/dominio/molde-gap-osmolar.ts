@@ -44,6 +44,11 @@ export function moldeGapOsmolar(): Molde {
     limite:
       'No identifica CUÁL tóxico — sólo señala que hay osmoles sin medir circulando. El contexto ' +
       'clínico (exposición, síntomas) decide qué estudiar después.',
+    acercaDe:
+      'La brecha entre la osmolaridad medida y la calculada detecta sustancias ' +
+      'osmóticamente activas que la fórmula no ve — típicamente etanol, ' +
+      'metanol o etilenglicol — útil como alerta temprana de intoxicación ' +
+      'antes de tener el resultado específico.',
   };
 }
 

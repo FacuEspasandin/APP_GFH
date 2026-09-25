@@ -308,6 +308,7 @@ function ResultadoHepatico({
               ? `${sinTabla} ${sinTabla === 1 ? 'fármaco no tiene' : 'fármacos no tienen'} tabla en el catálogo.`
               : undefined
           }
+          acercaDe="Cruza cada fármaco contra la tabla de ajuste hepático del catálogo, según Child-Pugh (por criterios o clase directa). Sin tabla cargada para un fármaco es un dato faltante, no una señal de que sea seguro."
         />
       </ScrollView>
     </View>
