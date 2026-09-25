@@ -146,10 +146,18 @@ describe('agrupar', () => {
     expect(seccion('Riñón')).toEqual(['clcr', 'fena']);
     expect(seccion('Hígado')).toEqual(['child-pugh', 'meld']);
     expect(seccion('Dosis')).toEqual(['peso-ideal', 'superficie-corporal']);
-    expect(seccion('Laboratorio')).toEqual(['ldl', 'hba1c', 'imc', 'riesgo-cv']);
+    expect(seccion('Laboratorio')).toEqual([
+      'calcio-corregido',
+      'ldl',
+      'hba1c',
+      'homa-ir',
+      'imc',
+      'riesgo-cv',
+      'sodio-corregido',
+    ]);
     expect(seccion('Cardiovascular')).toEqual(['cha2ds2-vasc', 'has-bled', 'qtc', 'wells']);
     expect(seccion('Neurológico')).toEqual(['glasgow', 'nihss']);
-    expect(seccion('Cuidados críticos')).toEqual(['curb-65', 'qsofa', 'sofa']);
+    expect(seccion('Cuidados críticos')).toEqual(['anion-gap', 'curb-65', 'gap-osmolar', 'qsofa', 'sofa']);
   });
 
   it('ordena por TÍTULO y no por clave dentro de "Contra el catálogo"', () => {

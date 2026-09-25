@@ -104,6 +104,15 @@ export const RANGOS = {
   sodioMeqL: { min: 100, max: 200, decimales: 0, habitual: { min: 115, max: 160 } },
   sodioOrinaMeqL: { min: 0, max: 300, minExclusivo: true, decimales: 0, habitual: { min: 1, max: 150 } },
   creatininaOrinaMgDl: { min: 0, max: 600, minExclusivo: true, decimales: 0, habitual: { min: 5, max: 400 } },
+
+  // --- Anion Gap, gap osmolar, calcio/sodio corregidos, HOMA-IR ---------------
+  cloroMeqL: { min: 60, max: 150, decimales: 0, habitual: { min: 80, max: 115 } },
+  bicarbonatoMeqL: { min: 0, max: 50, decimales: 0, habitual: { min: 5, max: 35 } },
+  ureaMgDl: { min: 0, max: 500, decimales: 0, habitual: { min: 5, max: 200 } },
+  osmolaridadMOsmKg: { min: 200, max: 500, decimales: 0, habitual: { min: 250, max: 400 } },
+  glucosaMgDl: { min: 0, max: 2000, minExclusivo: true, decimales: 0, habitual: { min: 40, max: 600 } },
+  insulinaUUmL: { min: 0, max: 300, minExclusivo: true, decimales: 1, habitual: { min: 2, max: 100 } },
+  calcioMgDl: { min: 0, max: 25, minExclusivo: true, decimales: 1, habitual: { min: 5, max: 14 } },
 } as const satisfies Record<string, Rango>;
 
 export type CampoConRango = keyof typeof RANGOS;
