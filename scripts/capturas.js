@@ -37,9 +37,29 @@ const CANDIDATOS_CHROME = [
 const METRO = process.env.METRO_URL ?? 'http://localhost:8081';
 const API = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3333';
 // La cuenta se puede cambiar para comparar planes:
-//   GFH_EMAIL=gratis@gfh.app GFH_PASSWORD=GratisGFH2026! GFH_SALIDA=gratis pnpm capturas
+//   GFH_EMAIL=gratis@gfh.app GFH_PASSWORD=<la de GFH_GRATIS_PASSWORD> GFH_SALIDA=gratis pnpm capturas
+// Ninguna contraseña va escrita acá: el repo es público. Se toman del entorno o
+// de apps/backend/.env (GFH_DEMO_PASSWORD / GFH_GRATIS_PASSWORD).
+function leerDelEnvDelBackend(nombre) {
+  try {
+    const texto = require('node:fs').readFileSync(
+      path.resolve(__dirname, '..', 'apps', 'backend', '.env'),
+      'utf8',
+    );
+    const m = texto.match(new RegExp(`^${nombre}="?([^"\\r\\n]*)"?`, 'm'));
+    return m ? m[1] : undefined;
+  } catch {
+    return undefined;
+  }
+}
 const EMAIL = process.env.GFH_EMAIL ?? 'demo@gfh.app';
-const PASSWORD = process.env.GFH_PASSWORD ?? 'DemoGFH2026!';
+const PASSWORD =
+  process.env.GFH_PASSWORD ??
+  process.env.GFH_DEMO_PASSWORD ??
+  leerDelEnvDelBackend('GFH_DEMO_PASSWORD');
+if (!PASSWORD) {
+  throw new Error('Falta la contraseña: definí GFH_PASSWORD, o GFH_DEMO_PASSWORD en apps/backend/.env.');
+}
 
 const oscuro = process.argv.includes('oscuro');
 const carpeta = process.env.GFH_SALIDA ?? (oscuro ? 'oscuro' : 'claro');

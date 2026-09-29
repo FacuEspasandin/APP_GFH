@@ -22,8 +22,26 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+/*
+ * Las contraseñas salen del entorno, no del código: estas cuentas viven en la
+ * base REAL y este repo es público. Ver la nota de Obsidian
+ * «Credenciales-cuentas-de-prueba». Se niega a correr con NODE_ENV=production.
+ */
+if (process.env.NODE_ENV === 'production') {
+  throw new Error('dev:cuentas crea cuentas de prueba: no se corre con NODE_ENV=production.');
+}
+try {
+  process.loadEnvFile();
+} catch {
+  /* sin .env local: se usa lo que ya haya en el entorno */
+}
+const passwordGratis = process.env.GFH_GRATIS_PASSWORD ?? '';
+if (passwordGratis.length < 10) {
+  throw new Error('Falta GFH_GRATIS_PASSWORD (mínimo 10 caracteres) en apps/backend/.env.');
+}
+
 const PAGA = { email: 'demo@gfh.app', usuario: 'demo' };
-const GRATIS = { email: 'gratis@gfh.app', usuario: 'gratis', password: 'GratisGFH2026!' };
+const GRATIS = { email: 'gratis@gfh.app', usuario: 'gratis', password: passwordGratis };
 
 async function main() {
   const { HashService } = await import('../src/aplicacion/auth/hash.service');
@@ -87,12 +105,12 @@ async function main() {
   await prisma.paciente.deleteMany({ where: { medicoId: gratuito.id } });
 
   console.log('\n  CUENTA PAGA');
-  console.log(`    ${PAGA.email}  ·  DemoGFH2026!`);
+  console.log(`    ${PAGA.email}  ·  contraseña: GFH_DEMO_PASSWORD (apps/backend/.env)`);
   console.log(`    suscripción ACTIVA hasta ${dentroDeUnAnio.toISOString().slice(0, 10)}`);
   console.log(`    ${pacientesDePago} pacientes — puede crear más`);
 
   console.log('\n  CUENTA GRATIS');
-  console.log(`    ${GRATIS.email}  ·  ${GRATIS.password}`);
+  console.log(`    ${GRATIS.email}  ·  contraseña: GFH_GRATIS_PASSWORD (apps/backend/.env)`);
   console.log('    sin suscripción, sin pacientes propios');
   console.log('    ve el paciente de demostración con su cockpit completo, y no lo puede tocar');
   console.log('    10 consultas de restricción, contadas por (fármaco, herramienta)');

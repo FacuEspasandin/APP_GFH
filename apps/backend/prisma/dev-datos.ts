@@ -19,8 +19,26 @@ import { normalizar } from '@gfh/shared-types';
 
 const prisma = new PrismaClient();
 
+/*
+ * Estas cuentas viven en la base REAL (dev y producción comparten Supabase) y
+ * este repo es público: una contraseña escrita acá es una cuenta PRO regalada.
+ * Por eso la contraseña sale del entorno y el script se niega a correr sin ella
+ * o con NODE_ENV=production. Ver la nota de Obsidian «Credenciales-cuentas-de-prueba».
+ */
+if (process.env.NODE_ENV === 'production') {
+  throw new Error('dev:datos crea cuentas de prueba: no se corre con NODE_ENV=production.');
+}
+try {
+  process.loadEnvFile();
+} catch {
+  /* sin .env local: se usa lo que ya haya en el entorno */
+}
+const MEDICO_PASSWORD = process.env.GFH_DEMO_PASSWORD ?? '';
+if (MEDICO_PASSWORD.length < 10) {
+  throw new Error('Falta GFH_DEMO_PASSWORD (mínimo 10 caracteres) en apps/backend/.env.');
+}
+
 const MEDICO_EMAIL = 'demo@gfh.app';
-const MEDICO_PASSWORD = 'DemoGFH2026!';
 
 /** Productos de demo sobre principios activos reales. */
 const PRODUCTOS: Array<{ nombre: string; laboratorio: string; forma: string; dosis: string; pas: string[] }> = [
@@ -253,14 +271,14 @@ async function main() {
   console.log('╚══════════════════════════════════════════════════════════╝\n');
   console.log(`  email       : ${MEDICO_EMAIL}`);
   console.log(`  usuario     : demo`);
-  console.log(`  contraseña  : ${MEDICO_PASSWORD}\n`);
+  console.log('  contraseña  : la de GFH_DEMO_PASSWORD en apps/backend/.env\n');
   console.log(`  medicoId    : ${medico.id}`);
   console.log(`  pacienteId  : ${paciente.id}`);
   console.log(`  Clcr        : ${clcr} mL/min (calculado)\n`);
   console.log('  1) Login:');
   console.log(`     curl -s -X POST http://127.0.0.1:${puerto}/auth/login \\`);
   console.log(`       -H "content-type: application/json" \\`);
-  console.log(`       -d '{"identificador":"${MEDICO_EMAIL}","password":"${MEDICO_PASSWORD}"}'\n`);
+  console.log(`       -d '{"identificador":"${MEDICO_EMAIL}","password":"<GFH_DEMO_PASSWORD>"}'\n`);
   console.log('  2) Cockpit (con el accessToken de arriba):');
   console.log(`     curl -H "authorization: Bearer <accessToken>" \\`);
   console.log(`       http://127.0.0.1:${puerto}/pacientes/${paciente.id}/cockpit\n`);

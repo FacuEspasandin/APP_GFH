@@ -425,7 +425,7 @@ Sin autenticación. Para el health check del hosting.
 Con el backend levantado (`pnpm backend dev`, puerto 3333):
 
 ```bash
-TOKEN=$(curl -s -X POST http://localhost:3333/auth/login -H 'content-type: application/json' -d '{"identificador":"demo@gfh.app","password":"DemoGFH2026!"}' | node -pe 'JSON.parse(require("fs").readFileSync(0)).data.accessToken')
+TOKEN=$(curl -s -X POST http://localhost:3333/auth/login -H 'content-type: application/json' -d "{\"identificador\":\"demo@gfh.app\",\"password\":\"$GFH_DEMO_PASSWORD\"}" | node -pe 'JSON.parse(require("fs").readFileSync(0)).data.accessToken')
 ```
 
 Y de ahí en adelante, siempre con `-H "authorization: Bearer $TOKEN"`:
