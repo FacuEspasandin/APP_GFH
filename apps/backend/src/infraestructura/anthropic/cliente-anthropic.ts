@@ -27,7 +27,7 @@ export class ClienteAnthropic {
     if (!claveApi) {
       throw new ServiceUnavailableException('El chat con IA no está configurado todavía.');
     }
-    if (!this.cliente) this.cliente = new Anthropic({ apiKey: claveApi });
+    if (!this.cliente) this.cliente = new Anthropic({ apiKey: claveApi, timeout: 60_000, maxRetries: 1 });
     return this.cliente;
   }
 

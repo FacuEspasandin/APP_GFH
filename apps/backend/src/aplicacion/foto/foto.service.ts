@@ -1,4 +1,13 @@
-import { Inject, Injectable, Logger, NotImplementedException, ServiceUnavailableException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+  NotImplementedException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 
 import { normalizar } from '@gfh/shared-types';
 
@@ -32,6 +41,10 @@ export interface LineaExtraida {
  */
 const URL_VISION = 'https://vision.googleapis.com/v1/images:annotate';
 
+/** Fotos por médico en una ventana móvil de 24 h. Una receta o un listado por
+ *  paciente rara vez pasa de unas pocas por día; esto sólo corta el abuso. */
+export const LIMITE_FOTOS_24H = 30;
+
 /** Largo máximo de una línea de tratamiento antes de aplicarle las heurísticas. */
 const TOPE_LARGO_LINEA = 200;
 
@@ -60,20 +73,65 @@ export class FotoService {
       );
     }
 
-    const texto = await this.leerTextoDeImagen(imagenBase64);
+    // Sin esto el `pacienteId` de la URL iría al rastro de auditoría sin que
+    // nadie mire de quién es.
+    const paciente = await this.prisma.paciente.findFirst({
+      where: { id: pacienteId, medicoId },
+      select: { id: true },
+    });
+    if (!paciente) throw new NotFoundException('Paciente no encontrado.');
+
+    // Cada foto es una llamada paga a Cloud Vision. El rastro de auditoría se
+    // escribe ANTES de llamar —es a la vez la reserva del cupo— y en la misma
+    // transacción que lo cuenta: contar primero y guardar después dejaba pasar
+    // N fotos simultáneas con "queda 1".
+    const reserva = await this.reservarFoto(medicoId, pacienteId);
+
+    let texto: string;
+    try {
+      texto = await this.leerTextoDeImagen(imagenBase64);
+    } catch (e) {
+      // Si Vision no pudo leerla, la foto no gasta cupo.
+      await this.prisma.auditLog.delete({ where: { id: reserva.id } }).catch(() => undefined);
+      throw e;
+    }
     const lineas = texto
       .split('\n')
       .map((l) => l.trim())
       .filter((l) => l.length > 1);
 
-    await this.prisma.auditLog.create({
-      data: { medicoId, accion: 'TREATMENT_LOADED_VIA_PHOTO', detalle: pacienteId },
-    });
-
     // El buffer de la imagen y el texto crudo mueren acá — nunca se
     // persisten. Lo único que sobrevive es `lineas`, que son las mismas
     // que produciría pegar el texto a mano.
     return this.matchearLineas(lineas);
+  }
+
+  private async reservarFoto(medicoId: string, pacienteId: string) {
+    return this.prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${medicoId}))`;
+
+      const usadas = await tx.auditLog.count({
+        where: {
+          medicoId,
+          accion: 'TREATMENT_LOADED_VIA_PHOTO',
+          createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        },
+      });
+      if (usadas >= LIMITE_FOTOS_24H) {
+        throw new HttpException(
+          {
+            codigo: 'LIMITE_FOTOS_DIARIO',
+            mensaje: `Llegaste al límite de ${LIMITE_FOTOS_24H} fotos en las últimas 24 horas. Cargá el tratamiento a mano o probá más tarde.`,
+          },
+          HttpStatus.TOO_MANY_REQUESTS,
+        );
+      }
+
+      return tx.auditLog.create({
+        data: { medicoId, accion: 'TREATMENT_LOADED_VIA_PHOTO', detalle: pacienteId },
+        select: { id: true },
+      });
+    });
   }
 
   /**
@@ -95,6 +153,8 @@ export class FotoService {
       respuesta = await fetch(`${URL_VISION}?key=${process.env.VISION_API_KEY}`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
+        // Sin tope, una Vision colgada deja la petición (y su cuerpo de hasta 8 MiB) en memoria.
+        signal: AbortSignal.timeout(30_000),
         body: JSON.stringify({
           requests: [
             {

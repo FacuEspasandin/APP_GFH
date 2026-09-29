@@ -1,4 +1,13 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import type Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam, ToolResultBlockParam } from '@anthropic-ai/sdk/resources/messages';
 import type { Prisma } from '@prisma/client';
@@ -9,6 +18,7 @@ import { HerramientasService } from '../herramientas/herramientas.service';
 import { ClienteAnthropic } from '../../infraestructura/anthropic/cliente-anthropic';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import { RagService } from '../../infraestructura/rag/rag.service';
+import { LIMITE_CONSULTAS_CHAT_24H, MAX_CONSULTAS_CHAT_EN_VUELO } from './limites';
 import { ejecutarTool, TOOLS_CHAT, type DependenciasTools } from './tools';
 
 /**
@@ -89,6 +99,32 @@ function huboFichaRelevante(output: unknown, pregunta: string): boolean {
   );
 }
 
+/** Tope de tools por mensaje, sumando todas las vueltas. */
+const MAX_TOOLS_POR_MENSAJE = 12;
+
+/** `\u0000` rompe el INSERT de Postgres (un 500 después de haber gastado la
+ *  llamada a Claude), y un sustituto UTF-16 suelto no se puede codificar. */
+const SUSTITUTO_SUELTO = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/;
+
+function validarPregunta(pregunta: string): void {
+  if (pregunta.includes('\u0000') || SUSTITUTO_SUELTO.test(pregunta)) {
+    throw new BadRequestException('La pregunta tiene caracteres que no se pueden procesar.');
+  }
+}
+
+/** Al modelo sólo llega el motivo cuando es de quien pregunta (ambigüedad, dato
+ *  inválido, no encontrado); un fallo interno, con rutas o SQL, no. */
+function mensajeDeToolParaElModelo(e: unknown): string {
+  if (e instanceof HttpException && e.getStatus() < 500) {
+    const r = e.getResponse();
+    if (typeof r === 'string') return r;
+    const m = (r as { message?: unknown; mensaje?: unknown }).mensaje ?? (r as { message?: unknown }).message;
+    if (typeof m === 'string') return m;
+    if (Array.isArray(m)) return m.filter((x) => typeof x === 'string').join('; ');
+  }
+  return 'La herramienta no pudo completar la consulta.';
+}
+
 function normalizarTexto(texto: string): string {
   return texto
     .normalize('NFD')
@@ -109,7 +145,62 @@ export class ChatIaService {
     @Inject(PrismaService) private readonly prisma: PrismaService,
   ) {}
 
+  /** Consultas en vuelo por médico, en este proceso. Con una sola instancia
+   *  del backend alcanza; con varias, la reserva en la base sigue siendo el
+   *  tope real del día y esto sólo acota la simultaneidad. */
+  private readonly enVuelo = new Map<string, number>();
+
   async responder(medicoId: string, params: { sessionId?: string; pregunta: string }): Promise<RespuestaChat> {
+    validarPregunta(params.pregunta);
+
+    const actuales = this.enVuelo.get(medicoId) ?? 0;
+    if (actuales >= MAX_CONSULTAS_CHAT_EN_VUELO) {
+      throw new HttpException(
+        { codigo: 'VERA_OCUPADA', mensaje: 'Vera todavía está respondiendo tu consulta anterior.' },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+    this.enVuelo.set(medicoId, actuales + 1);
+    try {
+      return await this.responderSinTope(medicoId, params);
+    } finally {
+      const quedan = (this.enVuelo.get(medicoId) ?? 1) - 1;
+      if (quedan <= 0) this.enVuelo.delete(medicoId);
+      else this.enVuelo.set(medicoId, quedan);
+    }
+  }
+
+  /**
+   * Cuenta y guarda la pregunta en una sola transacción, ANTES de llamar a
+   * Claude. Contar en un guard y guardar recién al final dejaba pasar N
+   * consultas simultáneas con "9 usadas": el candado de asesoramiento por
+   * médico las serializa, y la pregunta guardada es la reserva del cupo.
+   */
+  private async reservarConsulta(medicoId: string, chatSessionId: string, pregunta: string) {
+    return this.prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${medicoId}))`;
+
+      const usadas = await tx.chatMessage.count({
+        where: { medicoId, rol: 'USUARIO', createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+      });
+      if (usadas >= LIMITE_CONSULTAS_CHAT_24H) {
+        throw new ForbiddenException({
+          codigo: 'LIMITE_CHAT_DIARIO',
+          mensaje: `Llegaste al límite de ${LIMITE_CONSULTAS_CHAT_24H} consultas a Vera en las últimas 24 horas. Probá de nuevo más tarde.`,
+        });
+      }
+
+      return tx.chatMessage.create({
+        data: { chatSessionId, medicoId, rol: 'USUARIO', contenido: pregunta },
+        select: { id: true },
+      });
+    });
+  }
+
+  private async responderSinTope(
+    medicoId: string,
+    params: { sessionId?: string; pregunta: string },
+  ): Promise<RespuestaChat> {
     const deps: DependenciasTools = {
       catalogo: this.catalogo,
       herramientas: this.herramientas,
@@ -124,7 +215,9 @@ export class ChatIaService {
     const chatSession =
       sesionExistente ??
       (await this.prisma.chatSession.create({
-        data: { medicoId, titulo: params.pregunta.slice(0, 80) },
+        // `Array.from` y no `slice`: cortar por unidades UTF-16 puede partir un
+        // emoji por la mitad y dejar un sustituto suelto que Postgres rechaza.
+        data: { medicoId, titulo: Array.from(params.pregunta).slice(0, 80).join('') },
       }));
 
     const historialPrevio = sesionExistente
@@ -153,8 +246,37 @@ export class ChatIaService {
       };
     }
 
+    // El historial ya está leído: la pregunta que se guarda acá no se cuela en él.
+    let reservaId: string | undefined;
+    try {
+      reservaId = (await this.reservarConsulta(medicoId, chatSession.id, params.pregunta))?.id;
+    } catch (e) {
+      // Una sesión recién creada que no llegó a tener ningún mensaje es ruido en el historial.
+      if (!sesionExistente) await this.prisma.chatSession.delete({ where: { id: chatSession.id } }).catch(() => undefined);
+      throw e;
+    }
+
+    try {
+      return await this.conversar(medicoId, chatSession, params.pregunta, mensajesHistorial, deps);
+    } catch (e) {
+      // Si Claude no pudo responder, la consulta no se cobra del cupo.
+      if (reservaId) await this.prisma.chatMessage.delete({ where: { id: reservaId } }).catch(() => undefined);
+      if (!sesionExistente) await this.prisma.chatSession.delete({ where: { id: chatSession.id } }).catch(() => undefined);
+      throw e;
+    }
+  }
+
+  private async conversar(
+    medicoId: string,
+    chatSession: { id: string },
+    pregunta: string,
+    mensajesHistorial: MessageParam[],
+    deps: DependenciasTools,
+  ): Promise<RespuestaChat> {
+    const params = { pregunta };
     const mensajes: MessageParam[] = [...mensajesHistorial, { role: 'user', content: params.pregunta }];
     const toolsUsadas: Array<{ tool: string; input: unknown; output: unknown }> = [];
+    let toolsEjecutadas = 0;
 
     let respuestaFinal = '';
     let reintentoPorCorteHecho = false;
@@ -208,6 +330,19 @@ export class ChatIaService {
       const resultados: ToolResultBlockParam[] = [];
 
       for (const bloque of bloquesTool) {
+        // Todo `tool_use` necesita su `tool_result`: pasado el tope se contesta
+        // con error en vez de ejecutar (un mensaje no puede disparar decenas de consultas).
+        if (toolsEjecutadas >= MAX_TOOLS_POR_MENSAJE) {
+          resultados.push({
+            type: 'tool_result',
+            tool_use_id: bloque.id,
+            content: 'Se alcanzó el máximo de consultas de datos para este mensaje.',
+            is_error: true,
+          });
+          continue;
+        }
+        toolsEjecutadas += 1;
+
         try {
           const salida = await ejecutarTool(bloque.name, bloque.input, deps);
           toolsUsadas.push({ tool: bloque.name, input: bloque.input, output: salida });
@@ -217,7 +352,7 @@ export class ChatIaService {
           resultados.push({
             type: 'tool_result',
             tool_use_id: bloque.id,
-            content: e instanceof Error ? e.message : String(e),
+            content: mensajeDeToolParaElModelo(e),
             is_error: true,
           });
         }
@@ -257,21 +392,16 @@ export class ChatIaService {
         : {}),
     }));
 
-    await this.prisma.$transaction([
-      this.prisma.chatMessage.create({
-        data: { chatSessionId: chatSession.id, medicoId, rol: 'USUARIO', contenido: params.pregunta },
-      }),
-      this.prisma.chatMessage.create({
-        data: {
-          chatSessionId: chatSession.id,
-          medicoId,
-          rol: 'ASISTENTE',
-          contenido: respuestaFinal,
-          toolLlamada:
-            toolsConMetadata.length > 0 ? (toolsConMetadata as unknown as Prisma.InputJsonValue) : undefined,
-        },
-      }),
-    ]);
+    // La pregunta ya está guardada: es la reserva del cupo (`reservarConsulta`).
+    await this.prisma.chatMessage.create({
+      data: {
+        chatSessionId: chatSession.id,
+        medicoId,
+        rol: 'ASISTENTE',
+        contenido: respuestaFinal,
+        toolLlamada: toolsConMetadata.length > 0 ? (toolsConMetadata as unknown as Prisma.InputJsonValue) : undefined,
+      },
+    });
 
     return {
       sessionId: chatSession.id,
@@ -284,7 +414,7 @@ export class ChatIaService {
    *  de otro médico, sin importar qué `medicoId` venga en la URL. */
   async listarSesiones(medicoId: string, limite = 20) {
     const sesiones = await this.prisma.chatSession.findMany({
-      where: { medicoId },
+      where: { medicoId, mensajes: { some: {} } },
       orderBy: { createdAt: 'desc' },
       take: limite,
       include: { _count: { select: { mensajes: true } } },

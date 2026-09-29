@@ -48,11 +48,16 @@ function construirServicio(opts: {
   const chatSessionFindFirst = opts.chatSessionFindFirst ?? vi.fn().mockResolvedValue(null);
   const chatSessionFindMany = opts.chatSessionFindMany ?? vi.fn().mockResolvedValue([]);
   const chatMessageFindMany = opts.chatMessageFindMany ?? vi.fn().mockResolvedValue([]);
-  const transaction = opts.transaction ?? vi.fn().mockResolvedValue(undefined);
+  const transaction = opts.transaction ?? vi.fn().mockResolvedValue({ id: 'reserva-1' });
+  const chatMessageCreate = vi.fn((args: unknown) => args);
 
   const prisma = {
     chatSession: { create: chatSessionCreate, findFirst: chatSessionFindFirst, findMany: chatSessionFindMany },
-    chatMessage: { create: vi.fn((args: unknown) => args), findMany: chatMessageFindMany },
+    chatMessage: {
+      create: chatMessageCreate,
+      findMany: chatMessageFindMany,
+      delete: vi.fn().mockResolvedValue(undefined),
+    },
     $transaction: transaction,
   } as unknown as PrismaService;
 
@@ -62,6 +67,7 @@ function construirServicio(opts: {
     chatSessionFindFirst,
     chatSessionFindMany,
     chatMessageFindMany,
+    chatMessageCreate,
     transaction,
   };
 }
@@ -160,7 +166,7 @@ describe('ChatIaService.responder', () => {
       .mockImplementationOnce(async () => usoDeTool('tool-1', 'ficha_tecnica', { pregunta: 'posología metformina' }))
       .mockImplementationOnce(async () => textoFinal('Dosis inicial 500mg.'));
 
-    const { servicio, transaction } = construirServicio({ enviarMensaje, ragBuscar });
+    const { servicio, chatMessageCreate } = construirServicio({ enviarMensaje, ragBuscar });
 
     const resultado = await servicio.responder(MEDICO_ID, { pregunta: '¿dosis de metformina?' });
 
@@ -171,8 +177,8 @@ describe('ChatIaService.responder', () => {
     // El `encontrado` tiene que quedar en lo que se guarda, no sólo en la
     // respuesta — si no, una sesión retomada del historial no puede saber si
     // el chip de "Ficha técnica" correspondía mostrarse.
-    const llamadasGuardadas = transaction.mock.calls[0]![0] as { data: { toolLlamada?: unknown } }[];
-    expect(llamadasGuardadas[1]!.data.toolLlamada).toEqual([
+    const guardado = chatMessageCreate.mock.calls[0]![0] as { data: { toolLlamada?: unknown } };
+    expect(guardado.data.toolLlamada).toEqual([
       { tool: 'ficha_tecnica', input: { pregunta: 'posología metformina' }, encontrado: true },
     ]);
   });
@@ -219,7 +225,8 @@ describe('ChatIaService.responder', () => {
       content: Array<{ is_error?: boolean; content: string }>;
     };
     expect(ultimoMensaje.content[0]!.is_error).toBe(true);
-    expect(ultimoMensaje.content[0]!.content).toMatch(/motor clínico no disponible/);
+    // Un fallo interno no le llega al modelo con su texto original.
+    expect(ultimoMensaje.content[0]!.content).toBe('La herramienta no pudo completar la consulta.');
   });
 
   it('reusa una sesión existente en vez de crear una nueva cuando llega sessionId', async () => {
@@ -361,7 +368,7 @@ describe('ChatIaService.listarSesiones', () => {
     const sesiones = await servicio.listarSesiones(MEDICO_ID);
 
     expect(chatSessionFindMany).toHaveBeenCalledWith({
-      where: { medicoId: MEDICO_ID },
+      where: { medicoId: MEDICO_ID, mensajes: { some: {} } },
       orderBy: { createdAt: 'desc' },
       take: 20,
       include: { _count: { select: { mensajes: true } } },
@@ -377,7 +384,7 @@ describe('ChatIaService.listarSesiones', () => {
 
     await servicio.listarSesiones('otro-medico');
 
-    expect(chatSessionFindMany).toHaveBeenCalledWith(expect.objectContaining({ where: { medicoId: 'otro-medico' } }));
+    expect(chatSessionFindMany).toHaveBeenCalledWith(expect.objectContaining({ where: { medicoId: 'otro-medico', mensajes: { some: {} } } }));
   });
 });
 

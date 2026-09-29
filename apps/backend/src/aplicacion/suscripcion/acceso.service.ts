@@ -78,33 +78,33 @@ export class AccesoService {
   ): Promise<void> {
     if (await this.tieneSuscripcion(medicoId)) return;
 
-    const yaEstaba = await this.prisma.consultaGratis.findUnique({
-      where: {
-        medicoId_productoComercialId_herramienta: { medicoId, productoComercialId, herramienta },
-      },
-      select: { id: true },
+    // Contar y crear son dos pasos: sin serializarlos, 20 peticiones simultáneas
+    // con productos distintos ven todas "9 usadas" y pasan todas (el índice único
+    // sólo frena repetidas del MISMO producto). El candado de asesoramiento es por
+    // médico y se suelta solo al cerrar la transacción, así que no bloquea a
+    // nadie más ni deja nada colgado si algo falla.
+    await this.prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${medicoId}))`;
+
+      const yaEstaba = await tx.consultaGratis.findUnique({
+        where: {
+          medicoId_productoComercialId_herramienta: { medicoId, productoComercialId, herramienta },
+        },
+        select: { id: true },
+      });
+      if (yaEstaba) return;
+
+      const usadas = await tx.consultaGratis.count({ where: { medicoId } });
+      if (usadas >= PLAN_GRATIS.consultasRestriccion) {
+        throw new ForbiddenException({
+          codigo: CODIGO_SIN_CONSULTAS,
+          mensaje: `Usaste las ${PLAN_GRATIS.consultasRestriccion} consultas gratis.`,
+          usadas,
+          total: PLAN_GRATIS.consultasRestriccion,
+        });
+      }
+
+      await tx.consultaGratis.create({ data: { medicoId, productoComercialId, herramienta } });
     });
-    if (yaEstaba) return;
-
-    const usadas = await this.consultasUsadas(medicoId);
-    if (usadas >= PLAN_GRATIS.consultasRestriccion) {
-      throw new ForbiddenException({
-        codigo: CODIGO_SIN_CONSULTAS,
-        mensaje: `Usaste las ${PLAN_GRATIS.consultasRestriccion} consultas gratis.`,
-        usadas,
-        total: PLAN_GRATIS.consultasRestriccion,
-      });
-    }
-
-    // `create` con captura y no `upsert`: si dos peticiones entran a la vez,
-    // una gana y la otra choca contra el índice único. Chocar ahí es el
-    // resultado correcto —ya está registrada— y no un error que deba propagar.
-    try {
-      await this.prisma.consultaGratis.create({
-        data: { medicoId, productoComercialId, herramienta },
-      });
-    } catch {
-      // Ya la registró la otra petición.
-    }
   }
 }

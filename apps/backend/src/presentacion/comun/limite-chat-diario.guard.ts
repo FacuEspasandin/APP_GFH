@@ -1,19 +1,17 @@
 import { CanActivate, type ExecutionContext, ForbiddenException, Inject, Injectable } from '@nestjs/common';
 
+import { LIMITE_CONSULTAS_CHAT_24H } from '../../aplicacion/chat-ia/limites';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import type { RequestConMedico } from './medico-actual';
 
-/**
- * Tope de consultas a Vera por médico — protege el margen contra un uso
- * atípico muy por encima del promedio asumido al fijar el precio (8,5/día).
- *
- * Ventana móvil de 24 h, no "desde medianoche": evita que el corte dependa
- * de en qué huso horario corre el servidor (el VPS puede arrancar en UTC,
- * los médicos están en Uruguay, UTC-3 — con medianoche fija el reset
- * ocurriría a las 21 h hora local, no a medianoche real).
- */
-export const LIMITE_CONSULTAS_CHAT_24H = 10;
+export { LIMITE_CONSULTAS_CHAT_24H };
 
+/**
+ * Rechazo temprano y barato de quien ya llegó al tope. NO es el control real:
+ * entre este conteo y el mensaje que se guarda pasa la llamada a Claude, y N
+ * pedidos simultáneos ven todos "9 usadas". El que decide es
+ * `ChatIaService.reservarConsulta`, que cuenta y guarda en una transacción.
+ */
 @Injectable()
 export class LimiteChatDiarioGuard implements CanActivate {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
