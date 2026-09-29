@@ -913,6 +913,7 @@ model Medico {
   ultimoLoginAt DateTime?
 
   sesiones                Sesion[]
+  codigosRecuperacion     CodigoRecuperacion[]
   suscripcion             Suscripcion?
   configuracion           ConfiguracionUsuario?
   auditoria               AuditLog[]
@@ -961,6 +962,35 @@ model Sesion {
   @@index([medicoId, revocadaAt])
   @@index([expiraAt])
   @@map("sesion")
+}
+
+/// Código de 6 dígitos para "recuperar contraseña", que el médico recibe por
+/// email y escribe en la app.
+///
+/// Sólo se guarda un HMAC con secreto del servidor, nunca el código: con un
+/// millón de combinaciones, un SHA-256 pelado se revierte en milisegundos, así
+/// que una fila robada sin el secreto no sirve para nada.
+///
+/// La seguridad de un código corto no está en el código sino en los topes:
+/// `intentos` limita las pruebas por código (se cuenta cada una, incluso la
+/// correcta), y la cantidad de filas por médico en la última hora limita los
+/// códigos que se pueden pedir. Las filas no se borran al pedir uno nuevo —
+/// se invalidan con `usadaAt`— justamente para poder contarlas.
+model CodigoRecuperacion {
+  id         String    @id @default(uuid())
+  medicoId   String
+  codigoHash String
+  creadoAt   DateTime  @default(now())
+  expiraAt   DateTime
+  intentos   Int       @default(0)
+  /// Usado, o invalidado porque se pidió otro después.
+  usadaAt    DateTime?
+
+  medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  @@index([medicoId, creadoAt])
+  @@index([expiraAt])
+  @@map("codigo_recuperacion")
 }
 
 /// Un token de Expo Push por dispositivo. `token` es único y no `(medicoId,

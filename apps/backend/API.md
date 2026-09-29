@@ -139,6 +139,31 @@ Cierra esa sesión.
 { "actual": "…", "nueva": "…" }
 ```
 
+### `POST /auth/recuperar`
+```json
+{ "email": "…" }
+```
+Siempre responde **204**, exista o no una cuenta con ese email, y sin esperar
+el trabajo — decir lo contrario, o tardar distinto, permitiría enumerar
+cuentas registradas. Si existe y tiene contraseña (una cuenta sólo de Google
+no tiene qué recuperar), manda por email un **código de 6 dígitos**, válido 15
+minutos, que el médico escribe en la app. Pedir uno nuevo invalida el
+anterior. Tope de 5 códigos por hora por cuenta (pasado eso, se ignora en
+silencio). Rate limit de 3 por minuto por IP.
+
+### `POST /auth/recuperar/confirmar`
+```json
+{ "email": "…", "codigo": "123456", "nueva": "…" }
+```
+`codigo` son exactamente 6 dígitos (si no, **400**). Cambia la contraseña y
+cierra todas las sesiones activas, igual que `/auth/password`.
+
+Cada código admite **5 intentos** y cada intento se cuenta, también el
+correcto: a los 5 el código deja de servir y hay que pedir otro. Email que no
+existe, cuenta sin código vigente, código equivocado, vencido o ya usado →
+**401** con el mismo mensaje y el mismo trabajo en el servidor, para que
+nada distinga cuentas reales de inventadas.
+
 ### `POST /auth/disclaimer` · 🔒
 ```json
 { "version": "1.0" }

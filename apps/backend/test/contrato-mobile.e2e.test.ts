@@ -346,6 +346,23 @@ describe('contrato con el mobile', () => {
     aceptado(r, 'cambiar contraseña');
   });
 
+  it('recuperar.tsx', async () => {
+    const r = await api.post('/auth/recuperar', { email: medico.email });
+    aceptado(r, 'pedir recuperación');
+  });
+
+  it('recuperar-confirmar.tsx', async () => {
+    // Código inventado a propósito: acá sólo importa que el CUERPO pase la
+    // validación, no que la recuperación tenga éxito (401 es la respuesta
+    // esperada, no un fallo de contrato).
+    const r = await api.post('/auth/recuperar/confirmar', {
+      email: medico.email,
+      codigo: '123456',
+      nueva: 'OtraContrasena9',
+    });
+    aceptado(r, 'confirmar recuperación');
+  });
+
   it('perfil/eliminar-cuenta.tsx', async () => {
     // Cuenta descartable: este cuerpo borra de verdad.
     const victima = await crearMedico(api);

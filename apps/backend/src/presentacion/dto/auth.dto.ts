@@ -52,3 +52,19 @@ export class CambiarPasswordDto {
 export class AceptarDisclaimerDto {
   @IsString() @Length(1, 20) version!: string;
 }
+
+export class SolicitarRecuperacionDto {
+  @IsEmail({}, { message: 'El email no es válido.', context: { propio: true } })
+  email!: string;
+}
+
+export class ConfirmarRecuperacionDto {
+  @IsEmail({}, { message: 'El email no es válido.', context: { propio: true } })
+  email!: string;
+
+  @Matches(/^\d{6}$/, { message: 'El código tiene 6 dígitos.', context: { propio: true } })
+  codigo!: string;
+
+  @IsString() @MinLength(10, { message: 'La contraseña necesita al menos 10 caracteres.', context: { propio: true } })
+  nueva!: string;
+}

@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 
 import { Injectable } from '@nestjs/common';
 import { argon2id, argon2Verify } from 'hash-wasm';
@@ -59,5 +59,28 @@ export class HashService {
 
   hashearToken(token: string): string {
     return createHash('sha256').update(token).digest('hex');
+  }
+
+  /**
+   * Hash de un código corto (6 dígitos) de recuperación de contraseña.
+   *
+   * No sirve SHA-256 a secas como en los tokens de arriba: un token de 32
+   * bytes no se puede adivinar, pero un código de 6 dígitos tiene un millón de
+   * posibilidades y un SHA-256 filtrado se revierte probándolas todas en
+   * milisegundos. Con HMAC y el secreto del servidor, la base sola no alcanza.
+   * Incluye el `medicoId` para que el mismo código en dos cuentas no dé el
+   * mismo hash.
+   */
+  hashearCodigo(medicoId: string, codigo: string): string {
+    const secreto = process.env.JWT_ACCESS_SECRET;
+    if (!secreto) throw new Error('JWT_ACCESS_SECRET falta: no se puede proteger el código.');
+    return createHmac('sha256', secreto).update(`${medicoId}:${codigo}`).digest('hex');
+  }
+
+  /** Comparación en tiempo constante de dos hashes hex del mismo largo. */
+  hashesIguales(a: string, b: string): boolean {
+    const x = Buffer.from(a);
+    const y = Buffer.from(b);
+    return x.length === y.length && timingSafeEqual(x, y);
   }
 }

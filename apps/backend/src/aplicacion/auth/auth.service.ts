@@ -8,11 +8,24 @@ import {
 } from '@nestjs/common';
 import { DIAS_DE_GRACIA_BAJA } from '@gfh/shared-types';
 import { JwtService } from '@nestjs/jwt';
+import { randomInt } from 'node:crypto';
+import { Resend } from 'resend';
 
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import { PushService } from '../notificaciones/push.service';
 import { GoogleAuthService } from './google-auth.service';
 import { HashService } from './hash.service';
+
+/** Sin dominio propio todavía: mismo remitente de prueba que `AyudaService`. */
+const REMITENTE_RECUPERACION = 'GFH <onboarding@resend.dev>';
+
+/** Corto a propósito: 6 dígitos son pocos, así que dura poco y se prueba poco. */
+const MINUTOS_CODIGO_RECUPERACION = 15;
+const MAX_INTENTOS_CODIGO = 5;
+const MAX_CODIGOS_POR_HORA = 5;
+/** UUID que no existe: se consulta contra él para que una cuenta inexistente
+ *  cueste lo mismo que una real. */
+const ID_INEXISTENTE = '00000000-0000-0000-0000-000000000000';
 
 export interface ParDeTokens {
   accessToken: string;
@@ -247,6 +260,151 @@ export class AuthService {
     });
   }
 
+  /**
+   * Pide un código de recuperación por email.
+   *
+   * Responde siempre lo mismo, exista o no la cuenta, y sin importar si el
+   * envío salió bien: decir "no existe esa cuenta" o "no se pudo enviar"
+   * permitiría enumerar emails registrados probando uno por uno. Es la
+   * excepción a como `AyudaService` trata los fallos de Resend —ahí el envío
+   * ES la funcionalidad y hay que avisar si falló—; acá el silencio es la
+   * propiedad de seguridad, no un envío fingido: la cuenta con ese email, si
+   * existe, sigue recibiendo su código igual.
+   *
+   * Una cuenta que entra sólo por Google (`passwordHash: null`) no tiene
+   * contraseña que recuperar — tampoco se distingue ese caso en la respuesta.
+   *
+   * **Nada de esto se espera antes de responder.** Con cuenta real hay
+   * consultas, una escritura y un envío de email (cientos de ms o segundos);
+   * sin cuenta, nada. Si la respuesta esperara el trabajo, la diferencia de
+   * tiempos delataría qué emails están registrados aunque el cuerpo fuera
+   * idéntico.
+   */
+  async solicitarRecuperacion(email: string): Promise<void> {
+    void this.procesarRecuperacion(email.trim().toLowerCase()).catch((e) =>
+      this.logger.error(`Falló el proceso de recuperación: ${String(e)}`),
+    );
+  }
+
+  private async procesarRecuperacion(valor: string): Promise<void> {
+    const medico = await this.prisma.medico.findFirst({
+      where: { email: valor, passwordHash: { not: null } },
+      select: { id: true, email: true },
+    });
+
+    if (!medico) {
+      // Sin el email en el log: es un dato personal y no hace falta para nada.
+      this.logger.log('Recuperación pedida para un email sin cuenta con contraseña.');
+      return;
+    }
+
+    /*
+     * Tope de códigos por hora. Un código de 6 dígitos sólo es seguro si el
+     * atacante no puede pedir códigos nuevos sin límite: cada código nuevo
+     * es otra tanda de intentos. El límite por IP (`@Throttle`) no alcanza,
+     * porque se esquiva cambiando de IP; éste es por cuenta.
+     */
+    const hace1h = new Date(Date.now() - 60 * 60 * 1000);
+    const pedidos = await this.prisma.codigoRecuperacion.count({
+      where: { medicoId: medico.id, creadoAt: { gt: hace1h } },
+    });
+    if (pedidos >= MAX_CODIGOS_POR_HORA) {
+      this.logger.warn(`Tope de códigos de recuperación por hora alcanzado — médico ${medico.id}`);
+      return;
+    }
+
+    const codigo = randomInt(0, 1_000_000).toString().padStart(6, '0');
+    const expiraAt = new Date(Date.now() + MINUTOS_CODIGO_RECUPERACION * 60 * 1000);
+
+    await this.prisma.$transaction([
+      // Un código nuevo invalida los anteriores sin usar — pero no los borra:
+      // hay que poder contarlos para el tope de arriba.
+      this.prisma.codigoRecuperacion.updateMany({
+        where: { medicoId: medico.id, usadaAt: null },
+        data: { usadaAt: new Date() },
+      }),
+      this.prisma.codigoRecuperacion.create({
+        data: { medicoId: medico.id, codigoHash: this.hash.hashearCodigo(medico.id, codigo), expiraAt },
+      }),
+    ]);
+
+    await this.enviarEmailRecuperacion(medico.email, codigo);
+  }
+
+  /**
+   * Confirma la recuperación: cambia la contraseña y cierra todas las
+   * sesiones, igual que `cambiarPassword` — si el código llegó a manos
+   * ajenas, esto también las saca a ellas.
+   *
+   * **Todos los caminos de falla hacen el mismo trabajo y dicen lo mismo**:
+   * email que no existe, cuenta sin código vigente, código equivocado. Las
+   * mismas consultas, la misma escritura, un único mensaje. Si no, la
+   * respuesta (o su demora) diría qué emails tienen cuenta.
+   *
+   * **Cada intento se cuenta ANTES de mirar si el código es el correcto**, con
+   * un UPDATE condicional atómico. Contarlo después dejaría a un atacante
+   * mandar muchos intentos en paralelo que pasan todos el chequeo antes de que
+   * el primero sume; así, a lo sumo `MAX_INTENTOS_CODIGO` llegan a comparar.
+   * A los 5 el código deja de servir aunque después llegue el correcto.
+   */
+  async confirmarRecuperacion(email: string, codigo: string, nueva: string): Promise<void> {
+    const invalido = () =>
+      new UnauthorizedException('El código es inválido o venció. Pedí uno nuevo.');
+
+    const medico = await this.prisma.medico.findUnique({
+      where: { email: email.trim().toLowerCase() },
+      select: { id: true },
+    });
+
+    const fila = await this.prisma.codigoRecuperacion.findFirst({
+      where: {
+        // Con una cuenta inexistente se consulta igual, contra un id que no
+        // matchea nada: mismo costo, mismo resultado vacío.
+        medicoId: medico?.id ?? ID_INEXISTENTE,
+        usadaAt: null,
+        expiraAt: { gt: new Date() },
+        intentos: { lt: MAX_INTENTOS_CODIGO },
+      },
+      orderBy: { creadoAt: 'desc' },
+    });
+
+    const contado = await this.prisma.codigoRecuperacion.updateMany({
+      where: {
+        id: fila?.id ?? ID_INEXISTENTE,
+        usadaAt: null,
+        intentos: { lt: MAX_INTENTOS_CODIGO },
+      },
+      data: { intentos: { increment: 1 } },
+    });
+
+    // El hash se calcula siempre, con o sin fila: es lo que iguala el costo.
+    const esperado = this.hash.hashearCodigo(medico?.id ?? ID_INEXISTENTE, codigo);
+    const coincide = fila !== null && this.hash.hashesIguales(fila.codigoHash, esperado);
+
+    if (!medico || !fila || contado.count === 0 || !coincide) throw invalido();
+
+    await this.prisma.$transaction([
+      this.prisma.medico.update({
+        where: { id: medico.id },
+        data: { passwordHash: await this.hash.hashearPassword(nueva) },
+      }),
+      this.prisma.codigoRecuperacion.update({
+        where: { id: fila.id },
+        data: { usadaAt: new Date() },
+      }),
+      this.prisma.sesion.updateMany({
+        where: { medicoId: medico.id, revocadaAt: null },
+        data: { revocadaAt: new Date() },
+      }),
+    ]);
+
+    await this.auditar(medico.id, 'PASSWORD_CHANGE', 'por recuperación');
+    await this.push.enviarAMedico(medico.id, {
+      titulo: 'Tu contraseña se restableció',
+      cuerpo: 'Si no fuiste vos, escribinos apenas puedas entrar.',
+    });
+  }
+
   async perfil(medicoId: string) {
     return this.prisma.medico.findUniqueOrThrow({
       where: { id: medicoId },
@@ -400,6 +558,46 @@ export class AuthService {
      */
     const accessToken = await this.jwt.signAsync({ sub: medicoId, sid: sesion.id });
     return { accessToken, refreshToken, expiraEn: expiraAt.getTime() };
+  }
+
+  /**
+   * El envío nunca sube un error al llamador: `solicitarRecuperacion` ya
+   * decidió responder igual pase lo que pase con Resend (ver su comentario).
+   * Si falla, queda en el log del servidor — no en una respuesta que
+   * distinga cuentas reales de inventadas.
+   */
+  private async enviarEmailRecuperacion(email: string, codigo: string): Promise<void> {
+    const claveApi = process.env.RESEND_API_KEY;
+    if (!claveApi) {
+      this.logger.error('No se pudo enviar el email de recuperación: falta RESEND_API_KEY.');
+      return;
+    }
+
+    // Un código y no un enlace a propósito: un esquema propio (`gfh://`) lo
+    // puede interceptar otra app instalada en el teléfono, y los clientes de
+    // correo suelen no volverlo tocable. Un código que se escribe a mano no
+    // viaja por ningún canal que otra app pueda escuchar.
+    const cuerpo = [
+      'Pediste restablecer tu contraseña de GFH.',
+      '',
+      `Tu código: ${codigo}`,
+      '',
+      `Escribilo en la app. Vence en ${MINUTOS_CODIGO_RECUPERACION} minutos.`,
+      'Si no fuiste vos, ignorá este correo: tu contraseña sigue igual y nadie puede cambiarla sin este código.',
+    ].join('\n');
+
+    try {
+      const resend = new Resend(claveApi);
+      const { error } = await resend.emails.send({
+        from: REMITENTE_RECUPERACION,
+        to: email,
+        subject: `${codigo} es tu código de GFH`,
+        text: cuerpo,
+      });
+      if (error) throw new Error(error.message);
+    } catch (e) {
+      this.logger.error(`No se pudo enviar el email de recuperación: ${String(e)}`);
+    }
   }
 
   private async revocarTodas(medicoId: string): Promise<void> {

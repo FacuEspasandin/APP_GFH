@@ -17,10 +17,12 @@ import { JwtGuard, MedicoActual, SesionActual } from './comun/medico-actual';
 import {
   AceptarDisclaimerDto,
   CambiarPasswordDto,
+  ConfirmarRecuperacionDto,
   GoogleLoginDto,
   LoginDto,
   RefreshDto,
   RegistroDto,
+  SolicitarRecuperacionDto,
 } from './dto/auth.dto';
 
 /**
@@ -86,6 +88,25 @@ export class AuthController {
     @SesionActual() sesionId?: string,
   ) {
     return this.auth.revocarSesion(medicoId, id, sesionId);
+  }
+
+  /**
+   * Siempre 204, exista o no la cuenta — ver el comentario de
+   * `solicitarRecuperacion` en el servicio. El límite es más estricto que
+   * login porque además dispara un envío de email real.
+   */
+  @Post('recuperar')
+  @HttpCode(204)
+  @Throttle({ default: { limit: 3, ttl: 60_000 } })
+  recuperar(@Cuerpo(SolicitarRecuperacionDto) dto: SolicitarRecuperacionDto) {
+    return this.auth.solicitarRecuperacion(dto.email);
+  }
+
+  @Post('recuperar/confirmar')
+  @HttpCode(204)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  confirmarRecuperacion(@Cuerpo(ConfirmarRecuperacionDto) dto: ConfirmarRecuperacionDto) {
+    return this.auth.confirmarRecuperacion(dto.email, dto.codigo, dto.nueva);
   }
 
   @Post('password')

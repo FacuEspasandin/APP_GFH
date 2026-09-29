@@ -70,6 +70,11 @@ export const cambiarPassword = (datos: { actual: string; nueva: string }) =>
 export const aceptarDisclaimer = (version: string) =>
   api.post<void>('/auth/disclaimer', { version });
 
+export const pedirRecuperacion = (email: string) => api.post<void>('/auth/recuperar', { email });
+
+export const confirmarRecuperacion = (datos: { email: string; codigo: string; nueva: string }) =>
+  api.post<void>('/auth/recuperar/confirmar', datos);
+
 // --- 5. pacientes y grupos ---------------------------------------------------
 
 export const inicio = () => api.get<Inicio>('/inicio');

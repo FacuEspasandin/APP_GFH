@@ -188,6 +188,9 @@ function Navegacion() {
         <Stack.Screen name="registro" options={{ headerShown: false }} />
         {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
         <Stack.Screen name="recuperar" options={{ headerShown: false }} />
+        {/* Paso 2 de recuperar contraseña: el código del email + la nueva. Sin
+            sesión activa, igual que login/recuperar. */}
+        <Stack.Screen name="recuperar-confirmar" options={{ headerShown: false }} />
         {/* Cabecera propia (rediseño de Figma): blanca, "GFH" chico + cerrar —
             ver el header inline en `paywall.tsx`. */}
         <Stack.Screen name="paywall" options={{ headerShown: false }} />
