@@ -178,6 +178,10 @@ export class HerramientaCondicionAlergiaDto {
   @IsUUID() principioActivoId!: string;
   @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) condicionIds?: string[];
   @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) grupoAlergenicoIds?: string[];
+  /** Alergia a estos principios activos EXACTOS (no a su familia): la única forma
+   *  de que la herramienta vea una coincidencia exacta, que es la que puede bloquear. */
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) alergiaPrincipioActivoIds?: string[];
+  /** Obligatoria si hay alguna alergia: sin ella el motor no puede saber si bloquea. */
   @IsOptional() @IsEnum(['LEVE', 'MODERADA', 'GRAVE']) severidadAlergia?: 'LEVE' | 'MODERADA' | 'GRAVE';
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(45) semanaGestacion?: number;
 }

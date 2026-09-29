@@ -61,6 +61,10 @@ que está escrito para un humano y puede cambiar.
 | `SIN_CONSULTAS_GRATIS` | 403 | se agotaron las diez consultas de restricción | abrir el paywall del contador |
 | `SUSCRIPCION_VENCIDA` | 403 | había suscripción y venció | pantalla de bloqueo, **no** paywall |
 | `YA_EXISTE` | 409 | email o nombre de usuario tomado |  |
+| `TOPE_ALCANZADO` | 422 | el médico llegó al máximo de pacientes (500), fármacos / condiciones / alergias por paciente (60), grupos (50) | avisar el máximo; no reintentar |
+| `LIMITE_CHAT_DIARIO` | 403 | 10 consultas a Vera en 24 h | avisar; el tope real se reserva en el servidor antes de llamar al modelo |
+| `VERA_OCUPADA` | 429 | ya hay 2 consultas a Vera en curso | esperar la respuesta anterior |
+| `LIMITE_FOTOS_DIARIO` | 429 | 30 fotos en 24 h | cargar a mano |
 | `REFERENCIA_INVALIDA` | 400 | un id que no existe en el catálogo |  |
 
 `LIMITE_PLAN_GRATIS` y `SUSCRIPCION_VENCIDA` son distintos a propósito: uno
@@ -108,6 +112,12 @@ un cuerpo mayor devuelve **413** antes de autenticar.
 ```
 `password`: hasta 128 caracteres. Iniciar sesión cierra la sesión que hubiera viva del
 mismo `tipoDispositivo` (ver abajo).
+
+**Bloqueo por cuenta:** 10 contraseñas incorrectas en 15 minutos bloquean el login con
+contraseña de esa cuenta durante 15 minutos. Mientras dura, **hasta la contraseña correcta
+responde el mismo 401** «Email o contraseña incorrectos» (decir otra cosa delataría que la
+cuenta existe o que se acertó). Recuperar la contraseña con el código y entrar con Google
+no pasan por este bloqueo, y recuperar la contraseña lo levanta.
 
 ### `POST /auth/google`
 ```json
@@ -344,7 +354,9 @@ manda el cliente — el sistema no la inventa.
 cuerpo JSON como base64. OCR vía Cloud Vision (`DOCUMENT_TEXT_DETECTION`);
 sin `VISION_API_KEY` configurada responde **501**. Devuelve las líneas leídas
 para revisar una por una — **el archivo no se persiste nunca**, ni el texto
-crudo; sólo queda un `AuditLog` con el `pacienteId`. Ninguna línea se
+crudo; sólo queda un `AuditLog` con el `pacienteId`. El paciente tiene que ser del médico
+(**404** si no). Tope de **30 fotos por 24 h** (`LIMITE_FOTOS_DIARIO`, 429): se reserva
+antes de llamar a Vision y, si Vision falla, no se cobra del cupo. Ninguna línea se
 convierte en prescripción sin confirmación humana.
 
 ### `POST /pacientes/:pacienteId/lineas/matchear`
@@ -407,8 +419,11 @@ herramienta): volver a lo mismo no descuenta otra vez.
 ### `POST /herramientas/condicion-alergia`
 ```json
 { "principioActivoId": "uuid", "condicionIds": [], "grupoAlergenicoIds": [],
-  "severidadAlergia": "LEVE | MODERADA | GRAVE", "semanaGestacion": 24 }
+  "alergiaPrincipioActivoIds": [], "severidadAlergia": "LEVE | MODERADA | GRAVE", "semanaGestacion": 24 }
 ```
+`alergiaPrincipioActivoIds`: alergia a ESE fármaco (coincidencia exacta, la única que bloquea si
+es grave); `grupoAlergenicoIds`: alergia a una familia (nunca bloquea). **Si hay alguna alergia,
+`severidadAlergia` es obligatoria** (400 si falta): antes se suponía MODERADA.
 
 ### `POST /herramientas/ajuste-renal`
 `{ "principioActivoIds": [], "clcrMlMin": 24 }` — o los datos para calcularlo.
@@ -429,7 +444,7 @@ Cobertura de tabla por fármaco parcial — ver `docs/data/farmacos-ajuste-hepat
 |---|---|
 | `GET /perfil/configuracion` | preferencias del médico |
 | `PATCH /perfil/configuracion` | las mismas, para guardarlas |
-| `PATCH /perfil/datos` | nombre, apellido |
+| `PATCH /perfil/datos` | nombre, apellido, email. **Cambiar el email exige `password`** (la actual; **409** si falta o no coincide, y en una cuenta de sólo Google): cierra las otras sesiones, deja el email sin verificar y avisa por push |
 | `GET /perfil/plan` | lo que la app necesita para decidir si muestra el paywall: `vigente`, `pacientes`, `limitePacientes`, `puedeCrearPaciente`, `consultas` |
 | `GET /perfil/suscripcion` | estado, plan y vencimiento |
 | `POST /perfil/eliminar-cuenta` | pide la contraseña. **204** |
@@ -440,6 +455,14 @@ Cobertura de tabla por fármaco parcial — ver `docs/data/farmacos-ajuste-hepat
 ### `POST /webhooks/revenuecat`
 **Sin JWT.** La única fuente de verdad de la suscripción: el backend nunca
 confía en lo que reporta la app.
+
+Se ignoran (200, `aplicado: false`): eventos con `id`/`type` que no son texto, tipos no
+manejados, eventos de un entitlement que no es `premium`, eventos **más viejos que el último
+aplicado** (`event_timestamp_ms`) y, con `REVENUECAT_RECHAZA_SANDBOX=true`, los de `SANDBOX`
+(apagado por defecto: encenderlo cuando las tiendas aprueben la app, porque los revisores compran en sandbox). Una `CANCELLATION` con `cancel_reason:
+CUSTOMER_SUPPORT` (reembolso) corta el acceso de inmediato; una normal lo deja hasta el fin
+del período pago. `TRANSFER` le quita el acceso a las cuentas de origen (`transferred_from`)
+y no abre nada al destino: el evento no trae el período.
 
 ### `GET /salud`
 Sin autenticación. Para el health check del hosting.

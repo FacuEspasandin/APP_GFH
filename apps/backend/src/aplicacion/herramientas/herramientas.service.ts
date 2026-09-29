@@ -78,6 +78,12 @@ export class HerramientasService {
 
   /** Herramienta 2: un fármaco candidato contra condiciones y alergias sueltas. */
   async condicionAlergia(dto: HerramientaCondicionAlergiaDto) {
+    const hayAlergias = (dto.grupoAlergenicoIds?.length ?? 0) + (dto.alergiaPrincipioActivoIds?.length ?? 0) > 0;
+    // Antes se asumía MODERADA cuando faltaba: una alergia GRAVE exacta se mostraba
+    // como "requiere confirmación" en vez de bloquear, y nadie lo notaba.
+    if (hayAlergias && dto.severidadAlergia === undefined) {
+      throw new BadRequestException('Indicá la severidad de la alergia (LEVE, MODERADA o GRAVE).');
+    }
     const [pa, alertas, grupos] = await Promise.all([
       this.prisma.principioActivo.findUnique({
         where: { id: dto.principioActivoId },
@@ -123,12 +129,20 @@ export class HerramientasService {
         principioActivoId: pa.id,
         gruposIds: pa.gruposAlergenicos.map((g) => g.grupoAlergenicoId),
       },
-      (dto.grupoAlergenicoIds ?? []).map((gid, i) => ({
-        id: `tmp-${i}`,
-        severidad: dto.severidadAlergia ?? 'MODERADA',
-        principioActivoId: null,
-        grupoAlergenicoId: gid,
-      })),
+      [
+        ...(dto.alergiaPrincipioActivoIds ?? []).map((paId, i) => ({
+          id: `tmp-pa-${i}`,
+          severidad: dto.severidadAlergia!,
+          principioActivoId: paId,
+          grupoAlergenicoId: null,
+        })),
+        ...(dto.grupoAlergenicoIds ?? []).map((gid, i) => ({
+          id: `tmp-${i}`,
+          severidad: dto.severidadAlergia!,
+          principioActivoId: null,
+          grupoAlergenicoId: gid,
+        })),
+      ],
       mapaGrupos,
     );
 

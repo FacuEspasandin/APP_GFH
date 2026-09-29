@@ -54,6 +54,7 @@ class CondicionAlergiaChatDto {
   @IsOptional() @IsString() @Length(1, 100) principioActivoNombre?: string;
   @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) condicionIds?: string[];
   @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) grupoAlergenicoIds?: string[];
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) alergiaPrincipioActivoIds?: string[];
   @IsOptional() @IsEnum(['LEVE', 'MODERADA', 'GRAVE']) severidadAlergia?: 'LEVE' | 'MODERADA' | 'GRAVE';
   @IsOptional() @IsInt() @Min(1) @Max(45) semanaGestacion?: number;
 }
@@ -64,7 +65,9 @@ export const condicionAlergia: DefinicionTool = {
     description:
       'Alertas de un fármaco contra condiciones/alergias. Fármaco: id o nombre. Condición/alergia: usá ' +
       '"listar_condiciones_clinicas"/"listar_grupos_alergenicos" para el id. Sólo alergia EXACTA + ' +
-      'grave bloquea — cruce de familia nunca bloquea, sólo pide confirmación.',
+      'grave bloquea — cruce de familia nunca bloquea, sólo pide confirmación. Alergia al MISMO fármaco: ' +
+      '"alergiaPrincipioActivoIds" (id exacto); alergia a una familia: "grupoAlergenicoIds". Si hay alguna alergia, ' +
+      '"severidadAlergia" es OBLIGATORIA: si el médico no la dijo, preguntásela — nunca la supongas.',
     input_schema: {
       type: 'object',
       properties: {
@@ -72,6 +75,7 @@ export const condicionAlergia: DefinicionTool = {
         principioActivoNombre: { type: 'string' },
         condicionIds: { type: 'array', items: { type: 'string', format: 'uuid' } },
         grupoAlergenicoIds: { type: 'array', items: { type: 'string', format: 'uuid' } },
+        alergiaPrincipioActivoIds: { type: 'array', items: { type: 'string', format: 'uuid' } },
         severidadAlergia: { type: 'string', enum: ['LEVE', 'MODERADA', 'GRAVE'] },
         semanaGestacion: { type: 'integer', minimum: 1, maximum: 45 },
       },
@@ -84,6 +88,7 @@ export const condicionAlergia: DefinicionTool = {
       principioActivoId,
       condicionIds: input.condicionIds,
       grupoAlergenicoIds: input.grupoAlergenicoIds,
+      alergiaPrincipioActivoIds: input.alergiaPrincipioActivoIds,
       severidadAlergia: input.severidadAlergia,
       semanaGestacion: input.semanaGestacion,
     });

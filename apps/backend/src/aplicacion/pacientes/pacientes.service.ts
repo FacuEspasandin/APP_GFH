@@ -10,6 +10,7 @@ import { CODIGO_LIMITE_PLAN_GRATIS } from '../suscripcion/plan';
 import { SuscripcionService } from '../suscripcion/suscripcion.service';
 import { EventosService } from '../historial/eventos.service';
 import { conUnidad, diferencias, fecha } from '../historial/redaccion';
+import { exigirTope, TOPES } from '../topes';
 
 /**
  * CRUD de pacientes y grupos.
@@ -73,6 +74,7 @@ export class PacientesService {
     if (dto.grupoId) await this.exigirGrupoPropio(medicoId, dto.grupoId);
 
     await this.exigirCupoDePlan(medicoId);
+    exigirTope(await this.prisma.paciente.count({ where: { medicoId } }), TOPES.pacientes, 'pacientes');
 
     const creado = await this.prisma.paciente.create({
       data: { medicoId, ...this.aDatos(dto) },
@@ -268,6 +270,7 @@ export class PacientesService {
   // --- grupos ---------------------------------------------------------------
 
   async crearGrupo(medicoId: string, nombre: string) {
+    exigirTope(await this.prisma.grupo.count({ where: { medicoId } }), TOPES.grupos, 'grupos');
     return this.prisma.grupo.create({ data: { medicoId, nombre } });
   }
 

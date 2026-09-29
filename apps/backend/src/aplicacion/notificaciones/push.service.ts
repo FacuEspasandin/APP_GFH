@@ -3,6 +3,7 @@ import { Expo, type ExpoPushMessage, type ExpoPushTicket } from 'expo-server-sdk
 import type { PlataformaPush, TipoNotificacionPush } from '@prisma/client';
 
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
+import { TOPES } from '../topes';
 
 /**
  * Envío de push notifications. No clínicas — regla decidida en el documento
@@ -49,6 +50,19 @@ export class PushService {
       update: { medicoId, plataforma },
       create: { medicoId, token, plataforma },
     });
+
+    // Cada reinstalación deja un token nuevo y el viejo queda muerto. Pasado el
+    // tope se descartan los más antiguos en vez de rechazar el nuevo: un rechazo
+    // dejaría sin notificaciones justo al dispositivo que se acaba de usar.
+    const sobrantes = await this.prisma.pushToken.findMany({
+      where: { medicoId },
+      orderBy: { actualizadoAt: 'desc' },
+      skip: TOPES.dispositivosPush,
+      select: { id: true },
+    });
+    if (sobrantes.length > 0) {
+      await this.prisma.pushToken.deleteMany({ where: { id: { in: sobrantes.map((t) => t.id) } } });
+    }
   }
 
   /** `medicoId` en el `where`, aunque `token` ya sea único: mismo criterio de

@@ -26,6 +26,8 @@ interface MensajeChat {
   rol: 'usuario' | 'asistente';
   contenido: string;
   chips?: ChipFuente[];
+  /** Respuesta de Vera que no se apoyó en ninguna herramienta de datos de GFH. */
+  sinFuente?: boolean;
 }
 
 let contadorId = 0;
@@ -50,6 +52,7 @@ function mensajeDesdeHistorial(m: MensajeSesionChat): MensajeChat {
     rol: m.rol === 'USUARIO' ? 'usuario' : 'asistente',
     contenido: m.contenido,
     chips: chipsDeFuente(m.toolsUsadas),
+    sinFuente: m.rol !== 'USUARIO' && chipsDeFuente(m.toolsUsadas).length === 0,
   };
 }
 
@@ -105,6 +108,7 @@ export default function ChatIa() {
           rol: 'asistente',
           contenido: respuesta.respuesta,
           chips: chipsDeFuente(respuesta.toolsUsadas),
+          sinFuente: chipsDeFuente(respuesta.toolsUsadas).length === 0,
         },
       ]);
     },
@@ -261,6 +265,14 @@ function BurbujaMensaje({ mensaje }: { mensaje: MensajeChat }) {
           <TextoMarkdownLite texto={mensaje.contenido} color={col.ink} />
         )}
       </View>
+
+      {mensaje.sinFuente ? (
+        // Vera sólo debe contestar con lo que devuelven las herramientas. Si esta
+        // respuesta no usó ninguna, no hay de dónde salió: que no se lea como dato.
+        <Text className="font-sans mt-1.5 text-meta" style={{ color: col.inkSuave }}>
+          Esta respuesta no consultó los datos de GFH. No la tomes como dato clínico.
+        </Text>
+      ) : null}
 
       {mensaje.chips && mensaje.chips.length > 0 ? (
         <View className="mt-1.5 flex-row flex-wrap gap-1.5">

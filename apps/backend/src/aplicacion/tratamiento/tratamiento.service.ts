@@ -4,6 +4,7 @@ import { evaluarAlergias, mapearTextoLibreAGrupo } from '@gfh/motor-clinico';
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import { EventosService } from '../historial/eventos.service';
 import { conUnidad, diferencias, nombreFarmaco, pauta } from '../historial/redaccion';
+import { exigirTope, TOPES } from '../topes';
 import type {
   ActualizarPrescripcionDto,
   AgregarAlergiaDto,
@@ -66,6 +67,11 @@ export class TratamientoService {
    */
   async crearPrescripcion(medicoId: string, pacienteId: string, dto: CrearPrescripcionDto) {
     await this.exigirPaciente(medicoId, pacienteId);
+    exigirTope(
+      await this.prisma.prescripcion.count({ where: { medicoId, pacienteId } }),
+      TOPES.prescripcionesPorPaciente,
+      'fármacos por paciente',
+    );
 
     if (!dto.esFarmacoLibre && dto.productoComercialId) {
       const coincidencias = await this.evaluarAlergiasDeProducto(
@@ -241,6 +247,19 @@ export class TratamientoService {
   async agregarCondicion(medicoId: string, pacienteId: string, dto: AgregarCondicionDto) {
     await this.exigirPaciente(medicoId, pacienteId);
 
+    // Reactivar una que ya está no suma una fila: sólo cuenta contra el tope una nueva.
+    const yaEstaba = await this.prisma.condicionPaciente.findUnique({
+      where: { pacienteId_condicionClinicaId: { pacienteId, condicionClinicaId: dto.condicionClinicaId } },
+      select: { id: true },
+    });
+    if (!yaEstaba) {
+      exigirTope(
+        await this.prisma.condicionPaciente.count({ where: { medicoId, pacienteId } }),
+        TOPES.condicionesPorPaciente,
+        'condiciones por paciente',
+      );
+    }
+
     // El nombre se resuelve ahora y se guarda escrito: si mañana el catálogo
     // renombra la condición, la línea del historial tiene que seguir diciendo
     // lo que el médico vio cuando la cargó.
@@ -305,6 +324,11 @@ export class TratamientoService {
 
   async agregarAlergia(medicoId: string, pacienteId: string, dto: AgregarAlergiaDto) {
     await this.exigirPaciente(medicoId, pacienteId);
+    exigirTope(
+      await this.prisma.alergia.count({ where: { medicoId, pacienteId } }),
+      TOPES.alergiasPorPaciente,
+      'alergias por paciente',
+    );
 
     let grupoAlergenicoId: string | null = null;
 

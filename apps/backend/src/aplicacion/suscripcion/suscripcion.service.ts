@@ -73,8 +73,9 @@ export class SuscripcionService {
       return { aplicado: false, motivo: 'evento mal formado' };
     }
 
-    // Compras de prueba de las tiendas. Apagado por defecto para poder probar el
-    // circuito completo con sandbox; se enciende al lanzar (checklist de producción).
+    // Compras de prueba de las tiendas. Apagado por defecto: mientras se prueba y
+    // durante la revisión de las tiendas —los revisores compran en sandbox y
+    // necesitan ver el acceso PRO—. Se enciende cuando aprueban la app (checklist).
     if (e.environment === 'SANDBOX' && process.env.REVENUECAT_RECHAZA_SANDBOX === 'true') {
       this.logger.warn(`Evento SANDBOX rechazado: ${e.type}`);
       return { aplicado: false, motivo: 'evento de sandbox rechazado' };
