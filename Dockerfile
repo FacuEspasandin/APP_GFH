@@ -12,7 +12,10 @@
 # no depende de la metadata de decoradores que tsx no emite — la inyección usa
 # `@Inject()` y los cuerpos `@Cuerpo(Dto)`, ambos explícitos.
 
-FROM node:20-alpine
+# Node 22 (LTS vigente): la 20 llegó a fin de vida. Una sola etapa a propósito: en
+# runtime hacen falta `tsx` y el CLI de `prisma`, que son devDependencies, así que
+# una etapa final sin ellas no podría ni arrancar ni migrar y sólo sumaría capas.
+FROM node:22-alpine
 
 # OpenSSL: Prisma lo necesita para el motor de consultas en Alpine.
 RUN apk add --no-cache openssl
@@ -52,6 +55,11 @@ RUN pnpm --filter @gfh/backend prisma:generate
 
 ENV NODE_ENV=production
 
+# No corre como root: un fallo en la app no puede escribir fuera de lo suyo. Todo
+# lo que hace falta en runtime (node_modules, el cliente de Prisma ya generado, el
+# código) se escribió arriba y se lee sin permisos especiales.
+USER node
+
 # PORT no se fija acá a propósito: lo inyecta el host (Render usa 10000) y una
 # ENV en la imagen sería una segunda fuente de verdad para el mismo dato.
 # EXPOSE es sólo documentación del puerto local.
@@ -59,4 +67,9 @@ EXPOSE 3333
 
 # Las migraciones se aplican al arrancar. `migrate deploy` no pide confirmación
 # y no borra nada: sólo aplica lo que falte.
-CMD ["sh", "-c", "pnpm --filter @gfh/backend deploy:migrar && pnpm --filter @gfh/backend start:prod"]
+# Sin pnpm en runtime: corepack quiere escribir su caché en el HOME del usuario y
+# un usuario sin privilegios no debería depender de eso al arrancar. Son los
+# mismos comandos que `deploy:migrar` y `start:prod`, llamados directo. `exec` deja
+# a node como proceso principal para que reciba SIGTERM.
+WORKDIR /app/apps/backend
+CMD ["sh", "-c", "node ../../node_modules/prisma/build/index.js migrate deploy && exec node --import tsx src/main.ts"]

@@ -11,6 +11,12 @@
 //      TODAS las tablas, aunque sea redundante por la cadena de relaciones.
 //      Es deliberado: hace que el aislamiento sea una condicion del `where` y
 //      no la memoria de quien escribe el endpoint (motor §2, modelo §6).
+//
+// TABLA NUEVA = RLS ACTIVO. Prisma no lo genera: la migración que crea la tabla
+// tiene que agregar `ALTER TABLE "x" ENABLE ROW LEVEL SECURITY;` (sin políticas).
+// La app se conecta como `postgres` (BYPASSRLS) y no se ve afectada; es la red de
+// seguridad contra un GRANT olvidado a la Data API de Supabase. `test/rls.e2e.test.ts`
+// falla si alguna tabla queda sin él.
 // ============================================================================
 
 generator client {

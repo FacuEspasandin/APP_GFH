@@ -1,0 +1,56 @@
+# Integración continua: que un push o un PR no rompa lo que se puede verificar
+# sin base de datos ni teléfono.
+#
+# Lo que NO corre acá, a propósito:
+#   · los tests e2e del backend (`pnpm test:api`): pegan contra la base REAL de
+#     Supabase y crean y borran médicos. Se corren a mano antes de un push.
+#   · el build nativo de la app.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Sin esto los tipos de Prisma no existen y el typecheck del backend falla.
+      - run: pnpm db:generate
+
+      - run: pnpm typecheck
+
+      - run: pnpm test
+
+  auditoria-de-dependencias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Informativo y no bloqueante: hoy casi todo lo que reporta es herramienta de
+    # build de Expo (xmldom, postcss) que no corre en el backend. Bloquear el CI
+    # con eso lo volvería ruido y se ignoraría. Se mira el resumen; lo que sea del
+    # backend en producción se atiende de inmediato.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: pnpm audit --prod --audit-level=high
