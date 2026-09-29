@@ -24,6 +24,11 @@ export default function Cuenta() {
   const [c, setC] = useState({ nombre: '', apellido: '', email: '' });
   const [cargado, setCargado] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [password, setPassword] = useState('');
+
+  // El email es la llave de la recuperación de contraseña: cambiarlo pide la
+  // contraseña actual. Sólo aparece el campo cuando el email realmente cambia.
+  const cambiaElEmail = !!data && c.email.trim().toLowerCase() !== data.email.toLowerCase();
 
   useEffect(() => {
     if (!data || cargado) return;
@@ -37,6 +42,7 @@ export default function Cuenta() {
         nombre: c.nombre.trim(),
         apellido: c.apellido.trim(),
         email: c.email.trim().toLowerCase(),
+        ...(cambiaElEmail ? { password } : {}),
       }),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['perfil'] });
@@ -80,6 +86,20 @@ export default function Cuenta() {
             autoCapitalize="none"
             keyboardType="email-address"
           />
+          {cambiaElEmail ? (
+            <>
+              <CampoTexto
+                etiqueta="Tu contraseña actual"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+              />
+              <Text className="font-sans mt-1 text-meta text-ink-suave">
+                Para cambiar el email confirmá tu contraseña. Se cerrarán tus otras sesiones.
+              </Text>
+            </>
+          ) : null}
         </Superficie>
 
         {/* El usuario es identificador de login: cambiarlo rompería sesiones y
@@ -106,7 +126,9 @@ export default function Cuenta() {
             guardar.mutate();
           }}
           cargando={guardar.isPending}
-          deshabilitado={!c.nombre.trim() || !c.apellido.trim() || !c.email.trim()}
+          deshabilitado={
+            !c.nombre.trim() || !c.apellido.trim() || !c.email.trim() || (cambiaElEmail && !password)
+          }
         >
           Guardar
         </Boton>

@@ -71,9 +71,11 @@ describe('login con Google', () => {
     expect(yo2.cuerpo!.data.id).toBe(yo1.cuerpo!.data.id);
   });
 
-  it('se vincula por email a una cuenta que ya tenía contraseña', async () => {
+  it('se vincula por email a una cuenta con el email VERIFICADO, y conserva su contraseña', async () => {
     const conPassword = await crearMedico(api);
     medicos.push(conPassword.id);
+    // Sin verificar, Google se queda con la cuenta (ver cuentas-y-email.e2e.test.ts).
+    await ctx.prisma.medico.update({ where: { id: conPassword.id }, data: { emailVerificadoAt: new Date() } });
 
     identidad = {
       googleId: `g-vinculo-${Date.now()}`,

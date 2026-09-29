@@ -2,6 +2,7 @@ import { ConflictException, Inject, Injectable, NotFoundException } from '@nestj
 import { DIAS_DE_GRACIA_BAJA } from '@gfh/shared-types';
 
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
+import { PushService } from '../notificaciones/push.service';
 
 /**
  * Cuenta y preferencias del médico.
@@ -11,7 +12,10 @@ import { PrismaService } from '../../infraestructura/prisma/prisma.service';
  */
 @Injectable()
 export class PerfilService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(PushService) private readonly push: PushService,
+  ) {}
 
   /** Crea la fila si no existe: un médico registrado antes de que existiera
    *  `ConfiguracionUsuario` no tiene por qué quedar sin preferencias. */
@@ -40,29 +44,74 @@ export class PerfilService {
     });
   }
 
+  /**
+   * Cambiar el email pide la contraseña actual. El email es la llave de la
+   * recuperación de contraseña: con un token robado y sin esta pregunta, alguien
+   * lo cambia por el suyo, pide un código y se queda con la cuenta.
+   *
+   * Una cuenta de sólo Google no tiene contraseña que pedir y su email es el de
+   * Google, así que ahí no se cambia. Al cambiarlo se cierran las OTRAS sesiones
+   * (la que lo hizo sigue), se pierde la verificación del email anterior y se
+   * avisa por push.
+   */
   async actualizarDatos(
     medicoId: string,
-    datos: { nombre?: string; apellido?: string; email?: string },
+    datos: { nombre?: string; apellido?: string; email?: string; password?: string },
+    verificarPassword: (hash: string) => Promise<boolean>,
+    sesionActualId?: string,
   ) {
+    let cambiaElEmail = false;
+
     if (datos.email) {
       const email = datos.email.trim().toLowerCase();
-      const ocupado = await this.prisma.medico.findFirst({
-        where: { email, id: { not: medicoId } },
-        select: { id: true },
+      const actual = await this.prisma.medico.findUniqueOrThrow({
+        where: { id: medicoId },
+        select: { email: true, passwordHash: true },
       });
-      if (ocupado) throw new ConflictException('Ese email ya está en uso.');
+
+      if (email !== actual.email) {
+        if (actual.passwordHash === null) {
+          throw new ConflictException('Esta cuenta entra con Google: el email se cambia desde tu cuenta de Google.');
+        }
+        if (!datos.password || !(await verificarPassword(actual.passwordHash))) {
+          throw new ConflictException('Para cambiar el email confirmá tu contraseña actual.');
+        }
+
+        const ocupado = await this.prisma.medico.findFirst({
+          where: { email, id: { not: medicoId } },
+          select: { id: true },
+        });
+        if (ocupado) throw new ConflictException('Ese email ya está en uso.');
+        cambiaElEmail = true;
+      }
       datos.email = email;
     }
 
-    return this.prisma.medico.update({
+    const actualizado = await this.prisma.medico.update({
       where: { id: medicoId },
       data: {
         ...(datos.nombre !== undefined ? { nombre: datos.nombre.trim() } : {}),
         ...(datos.apellido !== undefined ? { apellido: datos.apellido.trim() } : {}),
-        ...(datos.email !== undefined ? { email: datos.email } : {}),
+        ...(cambiaElEmail ? { email: datos.email, emailVerificadoAt: null } : {}),
       },
       select: { id: true, email: true, nombreUsuario: true, nombre: true, apellido: true, rol: true },
     });
+
+    if (cambiaElEmail) {
+      await this.prisma.sesion.updateMany({
+        where: { medicoId, revocadaAt: null, ...(sesionActualId ? { id: { not: sesionActualId } } : {}) },
+        data: { revocadaAt: new Date(), motivoRevocacion: 'CERRADA' },
+      });
+      await this.prisma.auditLog.create({
+        data: { medicoId, accion: 'ADMIN_ACTION', detalle: 'cambio de email' },
+      });
+      await this.push.enviarAMedico(medicoId, {
+        titulo: 'Cambiaste el email de tu cuenta',
+        cuerpo: 'Si no fuiste vos, cambiá tu contraseña y revisá tus sesiones activas.',
+      });
+    }
+
+    return actualizado;
   }
 
   /**

@@ -28,6 +28,11 @@ const REMITENTE_RECUPERACION = 'GFH <onboarding@resend.dev>';
 const MINUTOS_CODIGO_RECUPERACION = 15;
 const MAX_INTENTOS_CODIGO = 5;
 const MAX_CODIGOS_POR_HORA = 5;
+
+/** Login con contraseña: 10 fallos en 15 minutos bloquean la cuenta 15 minutos. */
+const MAX_LOGIN_FALLIDOS = 10;
+const MINUTOS_VENTANA_LOGIN = 15;
+const MINUTOS_BLOQUEO_LOGIN = 15;
 /** UUID que no existe: se consulta contra él para que una cuenta inexistente
  *  cueste lo mismo que una real. */
 const ID_INEXISTENTE = '00000000-0000-0000-0000-000000000000';
@@ -116,11 +121,61 @@ export class AuthService {
     const hashAComparar = medico?.passwordHash ?? HASH_SENUELO;
     const passwordOk = await this.hash.verificarPassword(password, hashAComparar);
 
-    if (!medico || !passwordOk) {
+    // Cuenta bloqueada: se contesta lo mismo que con una contraseña mala, aun con
+    // la correcta. Distinguirlo le diría al atacante que acertó (o que la cuenta
+    // existe); el trabajo de arriba ya se hizo igual, así que el tiempo tampoco.
+    const bloqueada = medico?.bloqueadoHasta != null && medico.bloqueadoHasta > new Date();
+
+    if (!medico || !passwordOk || bloqueada) {
+      if (medico && !bloqueada) {
+        // Un fallo al contar no puede convertir el 401 en un 500 que distinga
+        // "cuenta que existe" de "cuenta que no existe".
+        await this.registrarLoginFallido(medico.id).catch((e) =>
+          this.logger.error(`No se pudo registrar el login fallido: ${String(e)}`),
+        );
+      }
       throw new UnauthorizedException('Email o contraseña incorrectos.');
     }
 
+    if (medico.intentosLoginFallidos > 0 || medico.bloqueadoHasta !== null) {
+      await this.prisma.medico.update({
+        where: { id: medico.id },
+        data: { intentosLoginFallidos: 0, ventanaLoginDesde: null, bloqueadoHasta: null },
+      });
+    }
+
     return this.finalizarLogin(medico, dispositivoInfo, tipoDispositivo);
+  }
+
+  /**
+   * Cuenta el fallo con un UPDATE atómico: leer, sumar y escribir dejaría a 50
+   * intentos en paralelo contarse como uno. La ventana se reinicia sola cuando
+   * pasó el tiempo, y al llegar al máximo la cuenta se bloquea.
+   *
+   * Es un tope por cuenta y no reemplaza al de IP: frena a quien rota de IP
+   * contra una misma víctima. El costo es que un tercero puede bloquear a
+   * propósito la cuenta de otro durante `MINUTOS_BLOQUEO_LOGIN`; recuperar la
+   * contraseña y entrar con Google no pasan por acá, así que siempre hay salida.
+   */
+  private async registrarLoginFallido(medicoId: string): Promise<void> {
+    await this.prisma.$executeRaw`
+      UPDATE "medico" SET
+        "intentosLoginFallidos" = CASE
+          WHEN "ventanaLoginDesde" IS NULL
+            OR "ventanaLoginDesde" < now() - make_interval(mins => ${MINUTOS_VENTANA_LOGIN}::int)
+          THEN 1 ELSE "intentosLoginFallidos" + 1 END,
+        "ventanaLoginDesde" = CASE
+          WHEN "ventanaLoginDesde" IS NULL
+            OR "ventanaLoginDesde" < now() - make_interval(mins => ${MINUTOS_VENTANA_LOGIN}::int)
+          THEN now() ELSE "ventanaLoginDesde" END,
+        "bloqueadoHasta" = CASE
+          WHEN (CASE
+                  WHEN "ventanaLoginDesde" IS NULL
+                    OR "ventanaLoginDesde" < now() - make_interval(mins => ${MINUTOS_VENTANA_LOGIN}::int)
+                  THEN 1 ELSE "intentosLoginFallidos" + 1 END) >= ${MAX_LOGIN_FALLIDOS}::int
+          THEN now() + make_interval(mins => ${MINUTOS_BLOQUEO_LOGIN}::int)
+          ELSE "bloqueadoHasta" END
+      WHERE "id" = ${medicoId}`;
   }
 
   /**
@@ -145,9 +200,34 @@ export class AuthService {
     if (!medico) {
       const porEmail = await this.prisma.medico.findUnique({ where: { email: identidad.email } });
       if (porEmail) {
+        // Ya tiene otra cuenta de Google: no se pisa. Sería cambiarle el dueño a
+        // la cuenta con sólo tener el mismo email en otra identidad de Google.
+        if (porEmail.googleId !== null) {
+          throw new UnauthorizedException('No se pudo iniciar sesión con Google.');
+        }
+
+        if (porEmail.emailVerificadoAt === null) {
+          // Nadie probó nunca que ese email sea de quien lo escribió al
+          // registrarse. Puede ser un atacante que se registró antes con el email
+          // de la víctima para quedarse con la cuenta cuando ella entre con
+          // Google. Google sí verificó el email: la cuenta es de esta identidad,
+          // y lo que dejó el registro anterior —contraseña y sesiones— se descarta.
+          await this.prisma.$transaction([
+            this.prisma.medico.update({
+              where: { id: porEmail.id },
+              data: { passwordHash: null },
+            }),
+            this.prisma.sesion.updateMany({
+              where: { medicoId: porEmail.id, revocadaAt: null },
+              data: { revocadaAt: new Date(), motivoRevocacion: 'CERRADA' },
+            }),
+          ]);
+          await this.auditar(porEmail.id, 'ERROR', 'cuenta sin email verificado tomada por Google');
+        }
+
         medico = await this.prisma.medico.update({
           where: { id: porEmail.id },
-          data: { googleId: identidad.googleId },
+          data: { googleId: identidad.googleId, emailVerificadoAt: porEmail.emailVerificadoAt ?? new Date() },
         });
       }
     }
@@ -161,6 +241,7 @@ export class AuthService {
           nombreUsuario: await this.nombreUsuarioLibre(identidad.email),
           passwordHash: null,
           googleId: identidad.googleId,
+          emailVerificadoAt: new Date(),
           nombre: identidad.nombre,
           apellido: identidad.apellido,
           rol: 'USER',
@@ -439,7 +520,16 @@ export class AuthService {
     await this.prisma.$transaction([
       this.prisma.medico.update({
         where: { id: medico.id },
-        data: { passwordHash: await this.hash.hashearPassword(nueva) },
+        // El código llegó al buzón: eso prueba el control del email. También
+        // levanta el bloqueo de login, que existe justamente para que el dueño
+        // tenga esta salida.
+        data: {
+          passwordHash: await this.hash.hashearPassword(nueva),
+          emailVerificadoAt: new Date(),
+          intentosLoginFallidos: 0,
+          ventanaLoginDesde: null,
+          bloqueadoHasta: null,
+        },
       }),
       this.prisma.codigoRecuperacion.update({
         where: { id: fila.id },

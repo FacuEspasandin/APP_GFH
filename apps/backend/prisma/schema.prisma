@@ -907,6 +907,18 @@ model Medico {
   /// pero no vale confiar en eso).
   googleId String? @unique
 
+  /// Cuándo se probó el control del buzón: Google lo verifica al entrar, y
+  /// recuperar la contraseña con el código lo prueba también. Null = el email
+  /// lo escribió alguien al registrarse y nadie lo confirmó. Por eso Google NO
+  /// vincula una cuenta con email sin verificar: se la queda (ver `AuthService`).
+  emailVerificadoAt DateTime?
+
+  /// Bloqueo del login con contraseña por cuenta: el límite por IP no frena a
+  /// quien rota de IP. `ventanaLoginDesde` abre la ventana de conteo.
+  intentosLoginFallidos Int       @default(0)
+  ventanaLoginDesde     DateTime?
+  bloqueadoHasta        DateTime?
+
   /// Opcional, elegida al registrarse de una lista fija (ver
   /// `@gfh/shared-types/especialidad`). Sólo reordena Herramientas por
   /// relevancia — nunca filtra: las que cruzan el catálogo las usa cualquier

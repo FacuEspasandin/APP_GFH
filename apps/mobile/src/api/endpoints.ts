@@ -232,6 +232,8 @@ export const guardarDatosMedico = (datos: {
   nombre?: string;
   apellido?: string;
   email?: string;
+  /** Contraseña actual: el backend la exige sólo cuando el email cambia. */
+  password?: string;
 }) => api.patch<Medico>('/perfil/datos', datos);
 
 export const estadoSuscripcion = () => api.get<EstadoSuscripcion>('/perfil/suscripcion');

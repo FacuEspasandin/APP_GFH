@@ -33,7 +33,7 @@ import { PushService } from '../aplicacion/notificaciones/push.service';
 import { PerfilService } from '../aplicacion/perfil/perfil.service';
 import { SuscripcionService, type EventoRevenueCat } from '../aplicacion/suscripcion/suscripcion.service';
 import { Cuerpo } from './comun/cuerpo';
-import { JwtGuard, MedicoActual } from './comun/medico-actual';
+import { JwtGuard, MedicoActual, SesionActual } from './comun/medico-actual';
 import { DePago } from './comun/requiere-suscripcion';
 
 export class ConfiguracionDto {
@@ -48,6 +48,8 @@ export class DatosMedicoDto {
   @IsOptional() @IsString() @Length(1, 80) nombre?: string;
   @IsOptional() @IsString() @Length(1, 80) apellido?: string;
   @IsOptional() @IsEmail() email?: string;
+  /** Contraseña actual: obligatoria sólo si el email cambia. */
+  @IsOptional() @IsString() @Length(1, 128) password?: string;
 }
 
 export class EliminarCuentaDto {
@@ -83,9 +85,21 @@ export class PerfilController {
     return this.perfil.actualizarConfiguracion(medicoId, dto);
   }
 
+  /** Con la contraseña puesta en juego cuando cambia el email: throttle bajo. */
   @Patch('datos')
-  datos(@MedicoActual() medicoId: string, @Cuerpo(DatosMedicoDto) dto: DatosMedicoDto) {
-    return this.perfil.actualizarDatos(medicoId, dto);
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  datos(
+    @MedicoActual() medicoId: string,
+    @SesionActual() sesionId: string | undefined,
+    @Cuerpo(DatosMedicoDto) dto: DatosMedicoDto,
+  ) {
+    const { password, ...datos } = dto;
+    return this.perfil.actualizarDatos(
+      medicoId,
+      { ...datos, password },
+      (hash) => this.hash.verificarPassword(password ?? '', hash),
+      sesionId,
+    );
   }
 
   /** Lo que la app necesita para decidir si muestra el paywall. */
