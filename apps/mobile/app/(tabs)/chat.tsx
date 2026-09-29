@@ -87,7 +87,9 @@ export default function ChatIa() {
     paramProcesado.current = id;
     if (id === 'nueva') {
       nuevaConversacion();
-    } else {
+    } else if (/^[0-9a-f-]{36}$/i.test(id)) {
+      // Un deep link `gfh://…?sessionId=…` puede traer cualquier texto: sólo se
+      // pide al servidor lo que tiene forma de id.
       cargarSesion.mutate(id);
     }
   }, [params.sessionId]);

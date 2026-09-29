@@ -47,6 +47,17 @@ export function dondeCorre(): string | null {
 }
 
 /**
+ * Teléfono o tablet, para la regla de una sesión por tipo de dispositivo.
+ *
+ * Lo decide `expo-device` con lo que reporta el sistema, no el tamaño de la
+ * pantalla. Sin dato (web, emulador raro) se asume teléfono, que es el caso
+ * común y el que menos deja hacer: no abre un segundo lugar por error.
+ */
+export function tipoDeDispositivo(): 'TELEFONO' | 'TABLET' {
+  return Device.deviceType === Device.DeviceType.TABLET ? 'TABLET' : 'TELEFONO';
+}
+
+/**
  * Lo que se manda al servidor para identificar la sesión.
  *
  * **Se manda el MODELO y no el nombre del dispositivo.** `Device.deviceName`

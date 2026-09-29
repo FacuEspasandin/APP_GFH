@@ -43,14 +43,14 @@ export class AuthController {
   @HttpCode(200)
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   login(@Cuerpo(LoginDto) dto: LoginDto) {
-    return this.auth.login(dto.identificador, dto.password, dto.dispositivoInfo);
+    return this.auth.login(dto.identificador, dto.password, dto.dispositivoInfo, dto.tipoDispositivo);
   }
 
   @Post('google')
   @HttpCode(200)
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   google(@Cuerpo(GoogleLoginDto) dto: GoogleLoginDto) {
-    return this.auth.loginConGoogle(dto.idToken, dto.dispositivoInfo);
+    return this.auth.loginConGoogle(dto.idToken, dto.dispositivoInfo, dto.tipoDispositivo);
   }
 
   @Post('refresh')

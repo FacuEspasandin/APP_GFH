@@ -32,6 +32,9 @@ export interface LineaExtraida {
  */
 const URL_VISION = 'https://vision.googleapis.com/v1/images:annotate';
 
+/** Largo máximo de una línea de tratamiento antes de aplicarle las heurísticas. */
+const TOPE_LARGO_LINEA = 200;
+
 @Injectable()
 export class FotoService {
   private readonly logger = new Logger(FotoService.name);
@@ -148,7 +151,11 @@ export class FotoService {
       select: { id: true, nombreComercial: true, nombreNormalizado: true, dosisTexto: true },
     });
 
-    return textos.map((texto) => {
+    return textos.map((crudo) => {
+      // Una línea de tratamiento tiene decenas de caracteres. El DTO ya limita a
+      // 200, pero `extraer()` también llega acá con texto de Vision: se acota
+      // igual, para que ninguna heurística corra sobre una línea desmedida.
+      const texto = crudo.slice(0, TOPE_LARGO_LINEA);
       const normalizado = normalizar(texto);
 
       // Coincidencia exacta primero; después, que el texto de la línea contenga
@@ -178,10 +185,20 @@ export class FotoService {
 /** Heurísticas de formato, no de contenido clínico: extraen lo que ya está
  *  escrito en la línea. Si no hay coincidencia devuelven null y el médico lo
  *  completa — nunca se inventa una dosis. */
-function extraerDosis(texto: string): string | null {
+export function extraerDosis(texto: string): string | null {
   // La barra tiene que entrar en el número: las combinaciones se escriben
   // "800/160 mg" y quedarse con el segundo valor daría una dosis equivocada.
-  const m = texto.match(/(\d+[.,]?\d*(?:\s*\/\s*\d+[.,]?\d*)*)\s*(mg|g|mcg|ug|ml|ui|u)\b/i);
+  //
+  // Ojo con la forma: la versión anterior, `\d+[.,]?\d*`, dejaba a dos
+  // cuantificadores disputarse los mismos dígitos (el separador era opcional) y
+  // sobre una cadena de dígitos sin unidad el motor probaba una cantidad cúbica
+  // de particiones — 3 s con 1.500 dígitos, más de un minuto con 4.000, con el
+  // servidor entero bloqueado. Ahora cada tramo de dígitos se separa del
+  // siguiente por un separador OBLIGATORIO, y el lookbehind impide arrancar el
+  // match en medio de un número: cada posición se prueba una sola vez.
+  const m = texto.match(
+    /(?<![\d.,/])(\d+(?:[.,]\d+)?(?:\s*\/\s*\d+(?:[.,]\d+)?)*)\s*(mg|g|mcg|ug|ml|ui|u)\b/i,
+  );
   if (!m) return null;
   return `${m[1]!.replace(/\s*\/\s*/g, '/')} ${m[2]!.toLowerCase()}`;
 }

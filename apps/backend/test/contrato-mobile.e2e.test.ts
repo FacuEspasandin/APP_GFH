@@ -67,6 +67,9 @@ describe('contrato con el mobile', () => {
       nombreUsuario: marca,
       email: `${marca}@gfh.test`,
       password: 'ContrasenaLarga1',
+      // Lo que la pantalla manda desde que la sesión es una por tipo de dispositivo.
+      dispositivoInfo: 'Pixel 7 · Android 14',
+      tipoDispositivo: 'TELEFONO',
     });
     aceptado(r, 'registro');
     if (r.cuerpo?.data) {

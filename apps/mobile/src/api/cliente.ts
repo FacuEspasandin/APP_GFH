@@ -1,9 +1,9 @@
-import { limpiarCache } from './persistencia';
+import { limpiarCache, limpiarOffline } from './persistencia';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 
 import type { MotivoPaywall } from '@/dominio/plan-gratis';
-import { infoDeSesion } from '@/ui/dispositivo';
+import { infoDeSesion, tipoDeDispositivo } from '@/ui/dispositivo';
 import { borrar, CLAVE_ACCESS, CLAVE_REFRESH, guardar, leer } from './almacen';
 import { desregistrarPushToken } from './notificaciones';
 import { cerrarSesionRevenueCat } from './revenuecat';
@@ -111,6 +111,31 @@ interface RespuestaSobre<T> {
   error?: { code: string; message: string };
 }
 
+/**
+ * Qué limpiar en memoria al cerrar sesión: la caché de `react-query`.
+ *
+ * Lo registra el layout raíz, que es quien tiene el `QueryClient`. Sin esto, el
+ * médico B que entra en el mismo teléfono ve por un instante el inicio y los
+ * cockpits del médico A (con `staleTime: 0` se sirve lo cacheado mientras se
+ * vuelve a pedir, y con el servidor dormido eso puede ser más de un minuto).
+ */
+let alCerrarSesion: (() => void) | null = null;
+export function registrarManejadorCierreDeSesion(fn: () => void): void {
+  alCerrarSesion = fn;
+}
+
+/**
+ * Un mensaje para mostrar en Login cuando la sesión se perdió por una razón
+ * que el médico tiene que entender —entró desde otro dispositivo del mismo tipo—
+ * y no como un cierre mudo. Se consume una sola vez.
+ */
+let avisoDeSesion: string | null = null;
+export function consumirAvisoDeSesion(): string | null {
+  const aviso = avisoDeSesion;
+  avisoDeSesion = null;
+  return aviso;
+}
+
 let refrescoEnVuelo: Promise<boolean> | null = null;
 
 async function refrescar(): Promise<boolean> {
@@ -126,7 +151,21 @@ async function refrescar(): Promise<boolean> {
       body: JSON.stringify({ refreshToken }),
     });
     if (!res.ok) {
-      await cerrarSesionLocal();
+      /*
+       * Sólo una respuesta que dice «esta sesión no sirve» (400, 401, 403) cierra la
+       * sesión local. Un 502 o un 503 —el arranque en frío de Render, un corte de red
+       * a mitad— no dice nada de la sesión: cerrarla ahí sacaba al médico de la app
+       * por un servidor que todavía estaba despertando.
+       *
+       * `sesionPerdida`: el servidor ya cerró esta sesión, así que no hay con qué
+       * autenticar el pedido de baja del push. Intentarlo volvía a pasar por acá,
+       * esperaba este mismo refresh en vuelo y la app quedaba colgada para siempre.
+       */
+      if (res.status === 400 || res.status === 401 || res.status === 403) {
+        const error = (await res.json().catch(() => null)) as RespuestaSobre<unknown> | null;
+        if (error?.error?.code === 'SESION_REEMPLAZADA') avisoDeSesion = error.error.message;
+        await cerrarSesionLocal({ sesionPerdida: true });
+      }
       return false;
     }
 
@@ -268,6 +307,7 @@ export async function iniciarSesion(identificador: string, password: string): Pr
       // ver `infoDeSesion`. Antes iba `ios · GFH 18`, que con dos iPhones no
       // le decía al médico cuál estaba cerrando.
       dispositivoInfo: infoDeSesion(),
+      tipoDispositivo: tipoDeDispositivo(),
     }),
   });
 
@@ -297,7 +337,7 @@ export async function iniciarSesionConGoogle(idToken: string): Promise<boolean> 
   const res = await fetch(`${BASE}/auth/google`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ idToken, dispositivoInfo: infoDeSesion() }),
+    body: JSON.stringify({ idToken, dispositivoInfo: infoDeSesion(), tipoDispositivo: tipoDeDispositivo() }),
   });
 
   const cuerpo = (await res.json().catch(() => null)) as RespuestaSobre<{
@@ -320,19 +360,38 @@ export async function iniciarSesionConGoogle(idToken: string): Promise<boolean> 
   return cuerpo.data.esNuevo ?? false;
 }
 
-export async function cerrarSesionLocal(): Promise<void> {
+/**
+ * `sesionPerdida`: el servidor ya cerró esta sesión (otro dispositivo entró, se
+ * cambió la contraseña). No se intenta la baja del push —no hay con qué
+ * autenticarla— y se limpia todo lo local igual.
+ *
+ * Nada de lo que sigue puede impedir que la sesión se cierre: si el pedido de
+ * baja del push falla por falta de red, o AsyncStorage protesta, los tokens se
+ * borran igual. Antes una excepción ahí cortaba todo a la mitad y el médico
+ * tocaba «Cerrar sesión» sin red y no pasaba nada.
+ */
+export async function cerrarSesionLocal(opciones: { sesionPerdida?: boolean } = {}): Promise<void> {
+  const intentar = async (fn: () => Promise<void> | void) => {
+    try {
+      await fn();
+    } catch {
+      /* a propósito: cerrar sesión no depende de que esto salga bien */
+    }
+  };
+
   // Antes de borrar el token: darse de baja del push necesita mandar el
   // request autenticado, y después de este punto ya no hay con qué.
-  await desregistrarPushToken();
+  if (!opciones.sesionPerdida) await intentar(desregistrarPushToken);
 
   await borrar(CLAVE_ACCESS);
   await borrar(CLAVE_REFRESH);
-  // El catálogo que quedó en disco es del médico que lo bajó. No es
-  // información de paciente —eso nunca se persiste— pero es lo que estamos
-  // vendiendo, y dejarlo para el siguiente que entre en este teléfono no
-  // tiene ningún sentido.
-  await limpiarCache();
-  await cerrarSesionRevenueCat();
+  // Lo que quedó en disco es del médico que lo bajó. El catálogo no es
+  // información de paciente, pero es lo que estamos vendiendo; las copias
+  // offline del cockpit SÍ son datos de pacientes, en texto plano.
+  await intentar(limpiarCache);
+  await intentar(limpiarOffline);
+  await intentar(() => alCerrarSesion?.());
+  await intentar(cerrarSesionRevenueCat);
   marcarSesion(false);
 }
 

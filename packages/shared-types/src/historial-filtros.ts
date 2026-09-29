@@ -78,7 +78,9 @@ export const ORDEN_GRUPOS: readonly GrupoDeEvento[] = [
 
 /** ¿Es un grupo conocido? Para validar lo que llega por query string. */
 export function esGrupoDeEvento(v: unknown): v is GrupoDeEvento {
-  return typeof v === 'string' && v in GRUPOS_DE_EVENTO;
+  // `Object.hasOwn` y no `in`: con `in`, `constructor` o `toString` (que salen
+  // del prototipo) pasaban por grupo válido y terminaban en un 500.
+  return typeof v === 'string' && Object.hasOwn(GRUPOS_DE_EVENTO, v);
 }
 
 /** Los tipos de un grupo, para el `where` del backend. */
@@ -109,7 +111,7 @@ export type Periodo = keyof typeof PERIODOS;
 export const ORDEN_PERIODOS: readonly Periodo[] = ['mes', 'trimestre', 'todo'];
 
 export function esPeriodo(v: unknown): v is Periodo {
-  return typeof v === 'string' && v in PERIODOS;
+  return typeof v === 'string' && Object.hasOwn(PERIODOS, v);
 }
 
 /**

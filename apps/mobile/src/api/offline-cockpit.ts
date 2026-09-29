@@ -10,6 +10,7 @@ import {
 } from '@gfh/motor-clinico';
 import reglasCrudas from '@gfh/motor-clinico/reglas-interaccion.json';
 
+import { PREFIJO_CLAVE_OFFLINE } from './persistencia';
 import type { Cockpit } from './tipos';
 
 /**
@@ -25,7 +26,7 @@ import type { Cockpit } from './tipos';
  * de invocar `guardarContextoOffline`, no este módulo.
  */
 
-const PREFIJO_CLAVE = 'gfh.offline.cockpit.';
+const PREFIJO_CLAVE = PREFIJO_CLAVE_OFFLINE;
 
 // El catálogo se construye una sola vez, desde el JSON que el paquete trae
 // bundleado — igual que hace el backend al boot, pero sin tocar disco: acá

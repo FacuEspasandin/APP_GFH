@@ -74,6 +74,26 @@ enum PlataformaPush {
   ANDROID
 }
 
+/// Una sesión viva por tipo de dispositivo y por cuenta: un teléfono y una tablet
+/// pueden convivir, dos teléfonos no. Es lo que impide compartir una suscripción
+/// entre dos personas sin molestar a un médico que usa sus dos equipos.
+/// Lo declara la app al iniciar sesión — no es un control contra un cliente
+/// modificado, sino contra el uso compartido normal.
+enum TipoDispositivo {
+  TELEFONO
+  TABLET
+}
+
+/// Por qué se cerró una sesión. Sólo `ROTADA` hace sospechar de un token robado
+/// si alguien lo vuelve a presentar: las otras dos son cierres legítimos y el
+/// dispositivo desplazado va a intentar renovar sin que eso sea un ataque.
+/// Sin motivo (filas anteriores a este campo) se trata como `ROTADA`.
+enum MotivoRevocacion {
+  ROTADA
+  CERRADA
+  REEMPLAZADA
+}
+
 /// Cada valor es una notificación que se manda UNA vez por médico — la unicidad
 /// vive en `NotificacionEnviada`. Las de reenganche por inactividad son la
 /// excepción: se borra la fila al volver a entrar, para que puedan volver a
@@ -952,9 +972,11 @@ model Sesion {
   medicoId         String
   refreshTokenHash String    @unique // nunca el token en claro
   dispositivoInfo  String? // modelo + OS, para poder revocar desde Perfil
+  tipoDispositivo  TipoDispositivo     @default(TELEFONO)
   creadaAt         DateTime  @default(now())
   expiraAt         DateTime
   revocadaAt       DateTime?
+  motivoRevocacion MotivoRevocacion?
   ultimoUsoAt      DateTime?
 
   medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)

@@ -20,6 +20,7 @@ import { esDelDemo, ID_PACIENTE_DEMO } from '../aplicacion/demo/paciente-demo';
 import { DePago } from './comun/requiere-suscripcion';
 import { EventosService } from '../aplicacion/historial/eventos.service';
 import { Cuerpo } from './comun/cuerpo';
+import { TextoOpcionalPipe } from './comun/parametros';
 import { IdPacientePipe } from './comun/id-paciente.pipe';
 import { JwtGuard, MedicoActual } from './comun/medico-actual';
 import { ActualizarPacienteDto, CrearGrupoDto, CrearPacienteDto } from './dto/paciente.dto';
@@ -61,7 +62,7 @@ export class PacientesController {
    * servir. Si el médico se suscribe vuelven a aparecer tal cual estaban.
    */
   @Get('inicio')
-  async inicio(@MedicoActual() medicoId: string, @Query('q') q?: string) {
+  async inicio(@MedicoActual() medicoId: string, @Query('q', TextoOpcionalPipe) q?: string) {
     if (await this.acceso.tieneSuscripcion(medicoId)) {
       return this.pacientes.inicio(medicoId, q);
     }

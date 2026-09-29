@@ -34,6 +34,7 @@ import { PerfilService } from '../aplicacion/perfil/perfil.service';
 import { SuscripcionService, type EventoRevenueCat } from '../aplicacion/suscripcion/suscripcion.service';
 import { Cuerpo } from './comun/cuerpo';
 import { JwtGuard, MedicoActual } from './comun/medico-actual';
+import { DePago } from './comun/requiere-suscripcion';
 
 export class ConfiguracionDto {
   @IsOptional() @IsEnum(['CLARO', 'OSCURO', 'SISTEMA']) tema?: 'CLARO' | 'OSCURO' | 'SISTEMA';
@@ -108,6 +109,12 @@ export class PerfilController {
     );
   }
 
+  /**
+   * Detrás del muro de pago como el resto de lo que toca a un paciente: `/inicio`,
+   * `GET /pacientes/:id` y el cockpit ya lo estaban, y este endpoint le entregaba
+   * las condiciones y alergias a una cuenta gratis o vencida.
+   */
+  @DePago('Ver las condiciones y alergias de un paciente')
   @Get('pacientes/:id/condiciones-alergias')
   condicionesYAlergias(
     @MedicoActual() medicoId: string,

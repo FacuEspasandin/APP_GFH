@@ -50,6 +50,15 @@ describe('validación de lo que llega por la URL', () => {
   it('un grupo conocido siempre devuelve tipos', () => {
     for (const g of ORDEN_GRUPOS) expect(tiposDelGrupo(g).length).toBeGreaterThan(0);
   });
+
+  it('los nombres del prototipo de Object no pasan por grupos ni períodos', () => {
+    // Con `in`, `constructor` y `toString` salen del prototipo y validaban: el
+    // backend seguía con una función en vez de una lista y terminaba en un 500.
+    for (const v of ['constructor', 'toString', 'hasOwnProperty', '__proto__', 'valueOf']) {
+      expect(esGrupoDeEvento(v)).toBe(false);
+      expect(esPeriodo(v)).toBe(false);
+    }
+  });
 });
 
 describe('desdeCuando', () => {

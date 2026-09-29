@@ -8,6 +8,7 @@ import { iniciarSesionGoogle } from '@/api/google-signin';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BotonGoogle } from '@/ui/boton-google';
 import { useVolverAInicio } from '@/ui/boton-volver';
+import { infoDeSesion, tipoDeDispositivo } from '@/ui/dispositivo';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto, Chip } from '@/ui/kit';
@@ -64,6 +65,8 @@ export default function Registro() {
         email: c.email,
         password: c.password,
         especialidad: especialidad ?? undefined,
+        dispositivoInfo: infoDeSesion(),
+        tipoDispositivo: tipoDeDispositivo(),
       });
       // El registro ya devuelve tokens, pero se hace login para reusar el
       // mismo camino de guardado y no duplicar la lógica de sesión.

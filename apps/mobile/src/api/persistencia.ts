@@ -93,7 +93,24 @@ export const opcionesDeshidratado = {
   shouldDehydrateQuery: (q: Query) => q.state.status === 'success' && seGuarda(q.queryKey),
 };
 
+/** Prefijo de las copias del cockpit para trabajar sin conexión (`offline-cockpit.ts`). */
+export const PREFIJO_CLAVE_OFFLINE = 'gfh.offline.cockpit.';
+
 /** Para «cerrar sesión»: lo bajado es del médico que lo bajó. */
 export async function limpiarCache(): Promise<void> {
   await AsyncStorage.removeItem('gfh-react-query');
+}
+
+/**
+ * Borra TODAS las copias offline de pacientes.
+ *
+ * Son datos clínicos —nombre, fecha de nacimiento, medicación, alergias— en
+ * texto plano. Antes se dejaban al cerrar sesión, al eliminar la cuenta y al
+ * cambiar de médico en el mismo teléfono: quedaban en el disco para cualquiera
+ * con acceso al aparato o a un backup.
+ */
+export async function limpiarOffline(): Promise<void> {
+  const claves = await AsyncStorage.getAllKeys();
+  const propias = claves.filter((k) => k.startsWith(PREFIJO_CLAVE_OFFLINE));
+  if (propias.length > 0) await AsyncStorage.multiRemove(propias);
 }

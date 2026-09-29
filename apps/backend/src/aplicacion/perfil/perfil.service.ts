@@ -123,7 +123,7 @@ export class PerfilService {
       }),
       this.prisma.sesion.updateMany({
         where: { medicoId, revocadaAt: null },
-        data: { revocadaAt: new Date() },
+        data: { revocadaAt: new Date(), motivoRevocacion: 'CERRADA' },
       }),
       this.prisma.auditLog.create({
         data: { medicoId, accion: 'ADMIN_ACTION', detalle: 'baja de cuenta solicitada' },

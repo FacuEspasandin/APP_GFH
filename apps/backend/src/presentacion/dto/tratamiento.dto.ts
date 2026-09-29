@@ -176,8 +176,8 @@ export class HerramientaHepaticaDto {
 
 export class HerramientaCondicionAlergiaDto {
   @IsUUID() principioActivoId!: string;
-  @IsOptional() @IsArray() @IsUUID('4', { each: true }) condicionIds?: string[];
-  @IsOptional() @IsArray() @IsUUID('4', { each: true }) grupoAlergenicoIds?: string[];
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) condicionIds?: string[];
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) grupoAlergenicoIds?: string[];
   @IsOptional() @IsEnum(['LEVE', 'MODERADA', 'GRAVE']) severidadAlergia?: 'LEVE' | 'MODERADA' | 'GRAVE';
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(45) semanaGestacion?: number;
 }

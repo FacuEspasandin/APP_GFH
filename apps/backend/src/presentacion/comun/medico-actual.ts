@@ -18,6 +18,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import type { FastifyRequest } from 'fastify';
 
+import { PrismaService } from '../../infraestructura/prisma/prisma.service';
+
 export interface RequestConMedico extends FastifyRequest {
   medicoId?: string;
   /** La sesión desde la que llega este request. Ausente en tokens emitidos
@@ -28,7 +30,10 @@ export interface RequestConMedico extends FastifyRequest {
 
 @Injectable()
 export class JwtGuard implements CanActivate {
-  constructor(@Inject(JwtService) private readonly jwt: JwtService) {}
+  constructor(
+    @Inject(JwtService) private readonly jwt: JwtService,
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+  ) {}
 
   async canActivate(contexto: ExecutionContext): Promise<boolean> {
     const request = contexto.switchToHttp().getRequest<RequestConMedico>();
@@ -38,16 +43,42 @@ export class JwtGuard implements CanActivate {
       throw new UnauthorizedException('Falta el token de acceso.');
     }
 
+    let payload: { sub: string; sid?: string };
     try {
-      const payload = await this.jwt.verifyAsync<{ sub: string; sid?: string }>(cabecera.slice(7));
-      request.medicoId = payload.sub;
-      request.sesionId = payload.sid;
-      return true;
+      payload = await this.jwt.verifyAsync<{ sub: string; sid?: string }>(cabecera.slice(7));
     } catch {
       // No se distingue token expirado de token inválido hacia afuera: el
       // cliente reintenta con el refresh en los dos casos.
       throw new UnauthorizedException('Token inválido o expirado.');
     }
+
+    /*
+     * La firma sola no alcanza: un access token dura hasta 15 minutos y firmado
+     * seguiría valiendo después de cerrar sesión, cambiar la contraseña, eliminar
+     * la cuenta, o de que otro dispositivo del mismo tipo desplace a este. Se
+     * comprueba en cada pedido que la sesión de la que salió siga viva y que la
+     * cuenta esté activa, en una sola consulta por clave primaria.
+     *
+     * Un token sin `sid` es de antes de que el payload la incluyera y no se puede
+     * atar a ninguna sesión: se rechaza, la app renueva y el nuevo ya la trae.
+     */
+    if (!payload.sid) throw new UnauthorizedException('Token inválido o expirado.');
+
+    const viva = await this.prisma.sesion.findFirst({
+      where: {
+        id: payload.sid,
+        medicoId: payload.sub,
+        revocadaAt: null,
+        expiraAt: { gt: new Date() },
+        medico: { estado: 'ACTIVO' },
+      },
+      select: { id: true },
+    });
+    if (!viva) throw new UnauthorizedException('La sesión ya no es válida.');
+
+    request.medicoId = payload.sub;
+    request.sesionId = payload.sid;
+    return true;
   }
 }
 

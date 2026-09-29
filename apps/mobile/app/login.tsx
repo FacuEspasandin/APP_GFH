@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { z } from 'zod';
 
-import { api, iniciarSesion } from '@/api/cliente';
+import { api, consumirAvisoDeSesion, iniciarSesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
 import { iniciarSesionGoogle } from '@/api/google-signin';
 import { BotonGoogle } from '@/ui/boton-google';
@@ -26,6 +26,9 @@ export default function Login() {
 
   const router = useRouter();
   const [errorServidor, setErrorServidor] = useState<string | null>(null);
+  // Por qué se cerró la sesión anterior, si el médico tiene que enterarse (entró
+  // desde otro dispositivo del mismo tipo). Se lee una sola vez, al montar.
+  const [avisoDeSesion] = useState(() => consumirAvisoDeSesion());
   const [entrandoConGoogle, setEntrandoConGoogle] = useState(false);
 
   const {
@@ -102,6 +105,12 @@ export default function Login() {
             Verificación clínica para tus pacientes.
           </Text>
         </View>
+
+        {avisoDeSesion ? (
+          <View className="mb-4 rounded-xl border px-4 py-3" style={{ borderColor: col.line, backgroundColor: col.surface }}>
+            <Text className="font-sans text-meta leading-5 text-ink">{avisoDeSesion}</Text>
+          </View>
+        ) : null}
 
         <View
           className="gap-3 rounded-xl border bg-surface px-5 pb-6 pt-8"

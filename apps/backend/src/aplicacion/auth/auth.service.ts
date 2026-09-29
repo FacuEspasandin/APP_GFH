@@ -9,12 +9,17 @@ import {
 import { DIAS_DE_GRACIA_BAJA } from '@gfh/shared-types';
 import { JwtService } from '@nestjs/jwt';
 import { randomInt } from 'node:crypto';
+import type { TipoDispositivo } from '@prisma/client';
 import { Resend } from 'resend';
 
 import { PrismaService } from '../../infraestructura/prisma/prisma.service';
 import { PushService } from '../notificaciones/push.service';
 import { GoogleAuthService } from './google-auth.service';
 import { HashService } from './hash.service';
+
+/** Lo que la app usa para distinguir «entraron desde otro dispositivo» de una
+ *  sesión que simplemente venció: la primera se avisa, la segunda no. */
+export const CODIGO_SESION_REEMPLAZADA = 'SESION_REEMPLAZADA';
 
 /** Sin dominio propio todavía: mismo remitente de prueba que `AyudaService`. */
 const REMITENTE_RECUPERACION = 'GFH <onboarding@resend.dev>';
@@ -59,6 +64,7 @@ export class AuthService {
     apellido: string;
     especialidad?: string;
     dispositivoInfo?: string;
+    tipoDispositivo?: TipoDispositivo;
   }): Promise<ParDeTokens> {
     const email = datos.email.trim().toLowerCase();
     const nombreUsuario = datos.nombreUsuario.trim().toLowerCase();
@@ -87,14 +93,19 @@ export class AuthService {
     });
 
     await this.auditar(medico.id, 'LOGIN', 'registro');
-    return this.emitirTokens(medico.id, datos.dispositivoInfo);
+    return this.emitirTokens(medico.id, datos.dispositivoInfo, datos.tipoDispositivo ?? 'TELEFONO', true);
   }
 
   /**
    * Acepta email o nombre de usuario indistintamente: el backend resuelve cuál
    * de los dos matchea antes de validar la contraseña.
    */
-  async login(identificador: string, password: string, dispositivoInfo?: string): Promise<ParDeTokens> {
+  async login(
+    identificador: string,
+    password: string,
+    dispositivoInfo?: string,
+    tipoDispositivo: TipoDispositivo = 'TELEFONO',
+  ): Promise<ParDeTokens> {
     const valor = identificador.trim().toLowerCase();
     const medico = await this.prisma.medico.findFirst({
       where: { OR: [{ email: valor }, { nombreUsuario: valor }] },
@@ -109,7 +120,7 @@ export class AuthService {
       throw new UnauthorizedException('Email o contraseña incorrectos.');
     }
 
-    return this.finalizarLogin(medico, dispositivoInfo);
+    return this.finalizarLogin(medico, dispositivoInfo, tipoDispositivo);
   }
 
   /**
@@ -122,7 +133,11 @@ export class AuthService {
    * es seguro vincular así porque Google ya verificó ese email antes de
    * emitir el token), si no la crea.
    */
-  async loginConGoogle(idToken: string, dispositivoInfo?: string): Promise<ParDeTokens> {
+  async loginConGoogle(
+    idToken: string,
+    dispositivoInfo?: string,
+    tipoDispositivo: TipoDispositivo = 'TELEFONO',
+  ): Promise<ParDeTokens> {
     const identidad = await this.google.verificar(idToken);
 
     let medico = await this.prisma.medico.findUnique({ where: { googleId: identidad.googleId } });
@@ -157,6 +172,7 @@ export class AuthService {
     const tokens = await this.finalizarLogin(
       medico,
       dispositivoInfo,
+      tipoDispositivo,
       esNuevo ? 'registro con Google' : 'google',
     );
     return { ...tokens, esNuevo };
@@ -165,9 +181,18 @@ export class AuthService {
   /**
    * Rotación: cada refresh emite una sesión nueva y revoca la anterior.
    *
-   * Reuso de un refresh ya revocado = señal de robo de token → se revocan
+   * Reuso de un refresh que YA fue rotado = señal de robo de token → se revocan
    * TODAS las sesiones del médico. Es agresivo a propósito: si el token viajó
    * a manos ajenas, no sabemos cuál de las dos partes es la legítima.
+   *
+   * Sólo cuenta como robo el reuso de un token rotado (`ROTADA`). Una sesión
+   * cerrada por otro motivo —el médico salió, cambió la contraseña, o entró desde
+   * otro dispositivo del mismo tipo (`REEMPLAZADA`)— intenta renovar de buena fe
+   * y recibe un 401 sin más: tratarlo como robo cerraría también la sesión nueva
+   * del médico legítimo cada vez que el dispositivo desplazado reintenta.
+   *
+   * La revocación de la sesión vieja es atómica (`updateMany` condicional): dos
+   * renovaciones simultáneas con el mismo token no pueden ganar las dos.
    */
   async refrescar(refreshToken: string, dispositivoInfo?: string): Promise<ParDeTokens> {
     const hash = this.hash.hashearToken(refreshToken);
@@ -176,29 +201,50 @@ export class AuthService {
     if (!sesion) throw new UnauthorizedException('Sesión inválida.');
 
     if (sesion.revocadaAt !== null) {
-      this.logger.warn(`Reuso de refresh token revocado — médico ${sesion.medicoId}`);
-      await this.revocarTodas(sesion.medicoId);
-      await this.auditar(sesion.medicoId, 'ERROR', 'reuso de refresh token revocado');
-      throw new UnauthorizedException('Sesión inválida.');
+      if (sesion.motivoRevocacion === 'REEMPLAZADA') {
+        throw new UnauthorizedException({
+          codigo: CODIGO_SESION_REEMPLAZADA,
+          mensaje: 'Tu sesión se cerró porque iniciaste sesión en otro dispositivo del mismo tipo.',
+        });
+      }
+      if (sesion.motivoRevocacion === 'CERRADA') {
+        throw new UnauthorizedException('Sesión inválida.');
+      }
+      return this.reusoDeRefreshToken(sesion.medicoId);
     }
 
     if (sesion.expiraAt < new Date()) {
       throw new UnauthorizedException('La sesión expiró.');
     }
 
-    await this.prisma.sesion.update({
-      where: { id: sesion.id },
-      data: { revocadaAt: new Date() },
+    const rotada = await this.prisma.sesion.updateMany({
+      where: { id: sesion.id, revocadaAt: null },
+      data: { revocadaAt: new Date(), motivoRevocacion: 'ROTADA' },
     });
+    // Otra renovación con este mismo token llegó primero: es un reuso.
+    if (rotada.count === 0) return this.reusoDeRefreshToken(sesion.medicoId);
 
-    return this.emitirTokens(sesion.medicoId, dispositivoInfo ?? sesion.dispositivoInfo ?? undefined);
+    // Rotar no desplaza a nadie: la sesión nueva ocupa el lugar de la vieja.
+    return this.emitirTokens(
+      sesion.medicoId,
+      dispositivoInfo ?? sesion.dispositivoInfo ?? undefined,
+      sesion.tipoDispositivo,
+      false,
+    );
+  }
+
+  private async reusoDeRefreshToken(medicoId: string): Promise<never> {
+    this.logger.warn(`Reuso de refresh token revocado — médico ${medicoId}`);
+    await this.revocarTodas(medicoId);
+    await this.auditar(medicoId, 'ERROR', 'reuso de refresh token revocado');
+    throw new UnauthorizedException('Sesión inválida.');
   }
 
   async logout(medicoId: string, refreshToken: string): Promise<void> {
     const hash = this.hash.hashearToken(refreshToken);
     await this.prisma.sesion.updateMany({
       where: { refreshTokenHash: hash, medicoId, revocadaAt: null },
-      data: { revocadaAt: new Date() },
+      data: { revocadaAt: new Date(), motivoRevocacion: 'CERRADA' },
     });
     await this.auditar(medicoId, 'LOGOUT');
   }
@@ -214,7 +260,14 @@ export class AuthService {
     const sesiones = await this.prisma.sesion.findMany({
       where: { medicoId, revocadaAt: null, expiraAt: { gt: new Date() } },
       orderBy: { creadaAt: 'desc' },
-      select: { id: true, dispositivoInfo: true, creadaAt: true, ultimoUsoAt: true, expiraAt: true },
+      select: {
+        id: true,
+        dispositivoInfo: true,
+        tipoDispositivo: true,
+        creadaAt: true,
+        ultimoUsoAt: true,
+        expiraAt: true,
+      },
     });
     return sesiones.map((s) => ({ ...s, esActual: s.id === sesionActualId }));
   }
@@ -232,7 +285,7 @@ export class AuthService {
     }
     await this.prisma.sesion.updateMany({
       where: { id: sesionId, medicoId, revocadaAt: null },
-      data: { revocadaAt: new Date() },
+      data: { revocadaAt: new Date(), motivoRevocacion: 'CERRADA' },
     });
   }
 
@@ -394,7 +447,7 @@ export class AuthService {
       }),
       this.prisma.sesion.updateMany({
         where: { medicoId: medico.id, revocadaAt: null },
-        data: { revocadaAt: new Date() },
+        data: { revocadaAt: new Date(), motivoRevocacion: 'CERRADA' },
       }),
     ]);
 
@@ -442,7 +495,8 @@ export class AuthService {
    */
   private async finalizarLogin(
     medico: { id: string; estado: string; eliminadaAt: Date | null },
-    dispositivoInfo?: string,
+    dispositivoInfo: string | undefined,
+    tipoDispositivo: TipoDispositivo,
     detalleAuditoria?: string,
   ): Promise<ParDeTokens> {
     /*
@@ -483,12 +537,16 @@ export class AuthService {
       throw new UnauthorizedException('La cuenta no está activa.');
     }
 
-    // Antes de crear la sesión nueva: si ya había otra viva, este login es
-    // "un dispositivo más" y no el primero — ahí sí vale avisar. En el primer
-    // login de la cuenta esto da 0 y no manda nada, que es lo correcto.
-    const otrasActivas = await this.prisma.sesion.count({
+    // Antes de crear la sesión nueva: qué había vivo. Del mismo tipo de
+    // dispositivo, este login lo va a DESPLAZAR (una sola sesión por teléfono y
+    // una por tablet); de otro tipo, es "un dispositivo más". En el primer login
+    // de la cuenta no hay nada y no se manda ningún aviso, que es lo correcto.
+    const activas = await this.prisma.sesion.findMany({
       where: { medicoId: medico.id, revocadaAt: null, expiraAt: { gt: new Date() } },
+      select: { tipoDispositivo: true },
     });
+    const delMismoTipo = activas.filter((s) => s.tipoDispositivo === tipoDispositivo).length;
+    const deOtroTipo = activas.length - delMismoTipo;
 
     await this.auditar(medico.id, 'LOGIN', detalleAuditoria);
     await this.prisma.medico.update({
@@ -500,14 +558,22 @@ export class AuthService {
     // marcado como "ya avisado" para siempre desde la primera vez.
     await this.push.resetearReenganche(medico.id);
 
-    if (otrasActivas > 0) {
+    const aQuien = tipoDispositivo === 'TABLET' ? 'tablet' : 'teléfono';
+    if (delMismoTipo > 0) {
+      await this.push.enviarAMedico(medico.id, {
+        titulo: `Se cerró tu sesión en otro ${aQuien}`,
+        cuerpo: dispositivoInfo
+          ? `Alguien entró con tu cuenta desde ${dispositivoInfo}. Si no fuiste vos, cambiá tu contraseña.`
+          : 'Alguien entró con tu cuenta desde otro dispositivo. Si no fuiste vos, cambiá tu contraseña.',
+      });
+    } else if (deOtroTipo > 0) {
       await this.push.enviarAMedico(medico.id, {
         titulo: 'Se inició sesión desde un dispositivo nuevo',
         cuerpo: dispositivoInfo ? `Desde ${dispositivoInfo}. Si no fuiste vos, revisá Perfil → Sesiones activas.` : 'Si no fuiste vos, revisá Perfil → Sesiones activas.',
       });
     }
 
-    return this.emitirTokens(medico.id, dispositivoInfo);
+    return this.emitirTokens(medico.id, dispositivoInfo, tipoDispositivo, true);
   }
 
   /**
@@ -531,20 +597,49 @@ export class AuthService {
     return candidato;
   }
 
-  private async emitirTokens(medicoId: string, dispositivoInfo?: string): Promise<ParDeTokens> {
+  /**
+   * `reemplazar`: al INICIAR sesión (login, registro, Google) la sesión nueva
+   * desplaza a la que hubiera viva del mismo tipo de dispositivo —una por
+   * teléfono y una por tablet—, en la misma transacción que la crea. Al RENOVAR
+   * (`refrescar`) no: la sesión vieja ya se rotó y la nueva sólo ocupa su lugar.
+   *
+   * Es lo que impide que dos personas usen una misma cuenta paga a la vez sin
+   * estorbarle a un médico que trabaja con su teléfono y su tablet. Dos inicios
+   * simultáneos del mismo tipo pueden dejar dos sesiones vivas; el siguiente
+   * inicio las cierra, y no vale la pena un lock por eso.
+   */
+  private async emitirTokens(
+    medicoId: string,
+    dispositivoInfo: string | undefined,
+    tipoDispositivo: TipoDispositivo,
+    reemplazar: boolean,
+  ): Promise<ParDeTokens> {
     const refreshToken = this.hash.generarTokenOpaco();
     const expiraAt = new Date(Date.now() + DIAS_REFRESH * 24 * 60 * 60 * 1000);
 
-    const sesion = await this.prisma.sesion.create({
+    const crear = this.prisma.sesion.create({
       data: {
         medicoId,
         refreshTokenHash: this.hash.hashearToken(refreshToken),
         dispositivoInfo: dispositivoInfo ?? null,
+        tipoDispositivo,
         expiraAt,
         ultimoUsoAt: new Date(),
       },
       select: { id: true },
     });
+
+    const sesion = reemplazar
+      ? (
+          await this.prisma.$transaction([
+            this.prisma.sesion.updateMany({
+              where: { medicoId, tipoDispositivo, revocadaAt: null },
+              data: { revocadaAt: new Date(), motivoRevocacion: 'REEMPLAZADA' },
+            }),
+            crear,
+          ])
+        )[1]
+      : await crear;
 
     /*
      * `sid`: de qué sesión salió este token.
@@ -603,7 +698,7 @@ export class AuthService {
   private async revocarTodas(medicoId: string): Promise<void> {
     await this.prisma.sesion.updateMany({
       where: { medicoId, revocadaAt: null },
-      data: { revocadaAt: new Date() },
+      data: { revocadaAt: new Date(), motivoRevocacion: 'CERRADA' },
     });
   }
 

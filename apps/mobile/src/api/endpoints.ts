@@ -62,6 +62,7 @@ export const registrarse = (datos: {
   apellido: string;
   especialidad?: string;
   dispositivoInfo?: string;
+  tipoDispositivo?: 'TELEFONO' | 'TABLET';
 }) => api.post<{ accessToken: string; refreshToken: string }>('/auth/registro', datos);
 
 export const cambiarPassword = (datos: { actual: string; nueva: string }) =>
@@ -259,4 +260,4 @@ export const enviarMensajeChat = (datos: { sessionId?: string; pregunta: string 
 export const sesionesChat = () => api.get<SesionChat[]>('/chat/sesiones');
 
 export const mensajesDeSesionChat = (sessionId: string) =>
-  api.get<DetalleSesionChat>(`/chat/sesiones/${sessionId}/mensajes`);
+  api.get<DetalleSesionChat>(`/chat/sesiones/${encodeURIComponent(sessionId)}/mensajes`);

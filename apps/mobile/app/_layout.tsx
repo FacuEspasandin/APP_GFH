@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import * as API from '@/api/endpoints';
 import {
+  registrarManejadorCierreDeSesion,
   registrarManejadorLimitePlan,
   registrarManejadorSuscripcionVencida,
   useHaySesion,
@@ -52,6 +53,9 @@ export default function LayoutRaiz() {
         },
       }),
   );
+
+  // Al cerrar sesión, la caché de datos en memoria se vacía: ver `cerrarSesionLocal`.
+  useEffect(() => registrarManejadorCierreDeSesion(() => cliente.clear()), [cliente]);
 
   const fuentesListas = useFuentes();
 

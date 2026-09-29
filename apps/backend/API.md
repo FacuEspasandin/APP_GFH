@@ -93,19 +93,25 @@ El refresh **rota**: cada uso devuelve uno nuevo e invalida el anterior.
 
 ### `POST /auth/registro`
 ```json
-{ "email": "…", "nombreUsuario": "…", "password": "…", "nombre": "…", "apellido": "…", "dispositivoInfo": "…" }
+{ "email": "…", "nombreUsuario": "…", "password": "…", "nombre": "…", "apellido": "…", "dispositivoInfo": "…", "tipoDispositivo": "TELEFONO" }
 ```
-`nombreUsuario`: 3–30, letras, números, `.`, `-`, `_`. `password`: mínimo 10.
-Devuelve `accessToken`, `refreshToken` y el médico.
+`nombreUsuario`: 3–30, letras, números, `.`, `-`, `_`. `password`: entre 10 y 128.
+`tipoDispositivo`: `TELEFONO` (por defecto) o `TABLET`; ver «Una sesión por tipo de
+dispositivo» más abajo. Devuelve `accessToken`, `refreshToken` y el médico.
+
+**Tope de cuerpo: 100 KB** en toda la API (8 MiB sólo en `POST /pacientes/:id/foto`);
+un cuerpo mayor devuelve **413** antes de autenticar.
 
 ### `POST /auth/login`
 ```json
-{ "identificador": "email o nombre de usuario", "password": "…", "dispositivoInfo": "…" }
+{ "identificador": "email o nombre de usuario", "password": "…", "dispositivoInfo": "…", "tipoDispositivo": "TELEFONO" }
 ```
+`password`: hasta 128 caracteres. Iniciar sesión cierra la sesión que hubiera viva del
+mismo `tipoDispositivo` (ver abajo).
 
 ### `POST /auth/google`
 ```json
-{ "idToken": "…", "dispositivoInfo": "…" }
+{ "idToken": "…", "dispositivoInfo": "…", "tipoDispositivo": "TELEFONO" }
 ```
 `idToken` es el id_token que devuelve el SDK nativo de Google en el
 teléfono, sin tocar. El backend lo verifica contra la clave pública de
@@ -121,12 +127,32 @@ endpoint todavía.
 ```json
 { "refreshToken": "…", "dispositivoInfo": "…" }
 ```
+Rota el token: la sesión nueva ocupa el lugar de la vieja y **no desplaza a nadie**.
+
+- Reuso de un refresh **ya rotado** → **401** y se cierran TODAS las sesiones (señal de robo).
+- Dos renovaciones simultáneas con el mismo token: sólo una gana, la otra cuenta como reuso.
+- Sesión desplazada por otro dispositivo del mismo tipo → **401** con `error.code`
+  `SESION_REEMPLAZADA` y sin cerrar nada más: no es un robo, la app avisa al médico.
+- Sesión cerrada a mano, o por cambio de contraseña → **401** sin cerrar las demás.
 
 ### `POST /auth/logout` · 🔒
 Revoca la sesión actual.
 
 ### `GET /auth/yo` · 🔒
 El médico: nombre, email, si aceptó el disclaimer y con qué versión.
+
+### Una sesión por tipo de dispositivo
+
+Cada cuenta puede tener **una sesión viva por tipo de dispositivo**: un teléfono y una
+tablet a la vez, pero no dos teléfonos. Iniciar sesión (`registro`, `login`, `google`)
+cierra la anterior del mismo tipo; la app lo declara en `tipoDispositivo`. Es lo que
+impide que dos personas usen una misma cuenta paga sin estorbar a quien trabaja con sus
+dos equipos. Al desplazar a un dispositivo se le avisa por push.
+
+**Todo endpoint autenticado verifica en cada pedido que la sesión del token siga viva y
+que la cuenta esté `ACTIVA`.** Cerrar sesión, cambiar la contraseña, eliminar la cuenta o
+ser desplazado invalida el access token de inmediato (antes seguía valiendo hasta 15
+minutos). Un token sin `sid` se rechaza. `JWT_ACCESS_TTL` no puede superar 15 minutos.
 
 ### `GET /auth/sesiones` · 🔒
 Una fila por dispositivo con sesión viva, la más reciente primero.

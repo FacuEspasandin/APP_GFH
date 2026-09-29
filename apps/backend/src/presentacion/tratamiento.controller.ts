@@ -21,6 +21,7 @@ import { AccesoService } from '../aplicacion/suscripcion/acceso.service';
 import { HERRAMIENTAS_FICHA } from '../aplicacion/suscripcion/herramientas-ficha';
 import type { HerramientaFicha } from '@prisma/client';
 import { Cuerpo } from './comun/cuerpo';
+import { EnteroNoNegativoOpcionalPipe, TextoOpcionalPipe } from './comun/parametros';
 import { DePago } from './comun/requiere-suscripcion';
 import { JwtGuard, MedicoActual } from './comun/medico-actual';
 import { SuscripcionGuard } from './comun/suscripcion.guard';
@@ -137,9 +138,12 @@ export class CatalogoController {
   ) {}
 
   @Get('productos')
-  productos(@Query('q') q?: string, @Query('desde') desde?: string) {
+  productos(
+    @Query('q', TextoOpcionalPipe) q?: string,
+    @Query('desde', EnteroNoNegativoOpcionalPipe) desde?: number,
+  ) {
     if (q && q.length >= 1) return this.catalogo.buscarProductos(q);
-    return this.catalogo.listarProductos(Number(desde ?? 0));
+    return this.catalogo.listarProductos(desde ?? 0);
   }
 
   /**
@@ -229,7 +233,7 @@ export class CatalogoController {
   }
 
   @Get('principios-activos')
-  principiosActivos(@Query('q') q?: string) {
+  principiosActivos(@Query('q', TextoOpcionalPipe) q?: string) {
     return this.catalogo.buscarPrincipiosActivos(q ?? '');
   }
 

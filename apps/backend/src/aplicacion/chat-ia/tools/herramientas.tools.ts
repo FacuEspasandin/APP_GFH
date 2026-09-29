@@ -10,6 +10,7 @@ import {
   IsUUID,
   Length,
   Max,
+  MaxLength,
   Min,
 } from 'class-validator';
 
@@ -25,7 +26,7 @@ class InteraccionesFarmacoFarmacoDto {
   @IsOptional() @IsArray() @ArrayMinSize(2) @ArrayMaxSize(20) @IsUUID('4', { each: true })
   principioActivoIds?: string[];
 
-  @IsOptional() @IsArray() @ArrayMinSize(2) @ArrayMaxSize(20) @IsString({ each: true })
+  @IsOptional() @IsArray() @ArrayMinSize(2) @ArrayMaxSize(20) @IsString({ each: true }) @MaxLength(100, { each: true })
   principioActivoNombres?: string[];
 }
 
@@ -51,8 +52,8 @@ export const interaccionesFarmacoFarmaco: DefinicionTool = {
 class CondicionAlergiaChatDto {
   @IsOptional() @IsUUID() principioActivoId?: string;
   @IsOptional() @IsString() @Length(1, 100) principioActivoNombre?: string;
-  @IsOptional() @IsArray() @IsUUID('4', { each: true }) condicionIds?: string[];
-  @IsOptional() @IsArray() @IsUUID('4', { each: true }) grupoAlergenicoIds?: string[];
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) condicionIds?: string[];
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @IsUUID('4', { each: true }) grupoAlergenicoIds?: string[];
   @IsOptional() @IsEnum(['LEVE', 'MODERADA', 'GRAVE']) severidadAlergia?: 'LEVE' | 'MODERADA' | 'GRAVE';
   @IsOptional() @IsInt() @Min(1) @Max(45) semanaGestacion?: number;
 }
@@ -92,7 +93,7 @@ export const condicionAlergia: DefinicionTool = {
 class AjusteRenalChatDto {
   @IsOptional() @IsArray() @ArrayMinSize(1) @ArrayMaxSize(20) @IsUUID('4', { each: true })
   principioActivoIds?: string[];
-  @IsOptional() @IsArray() @ArrayMinSize(1) @ArrayMaxSize(20) @IsString({ each: true })
+  @IsOptional() @IsArray() @ArrayMinSize(1) @ArrayMaxSize(20) @IsString({ each: true }) @MaxLength(100, { each: true })
   principioActivoNombres?: string[];
   @IsOptional() @IsNumber() @Min(0) @Max(300) clcrMlMin?: number;
   @IsOptional() @IsInt() @Min(0) @Max(120) edadAnios?: number;
@@ -137,7 +138,7 @@ export const ajusteRenal: DefinicionTool = {
 
 class AjusteHepaticoChatDto {
   @IsOptional() @IsArray() @ArrayMaxSize(20) @IsUUID('4', { each: true }) principioActivoIds?: string[];
-  @IsOptional() @IsArray() @ArrayMaxSize(20) @IsString({ each: true }) principioActivoNombres?: string[];
+  @IsOptional() @IsArray() @ArrayMaxSize(20) @IsString({ each: true }) @MaxLength(100, { each: true }) principioActivoNombres?: string[];
   @IsOptional() @IsEnum(['A', 'B', 'C']) clase?: 'A' | 'B' | 'C';
   @IsOptional() @IsNumber() @Min(0.01) @Max(80) bilirrubinaMgDl?: number;
   @IsOptional() @IsNumber() @Min(0.1) @Max(10) albuminaGDl?: number;

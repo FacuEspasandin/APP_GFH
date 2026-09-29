@@ -33,7 +33,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1F5E4A"
       },
-      "permissions": []
+      "permissions": [],
+      "allowBackup": false
     },
     "web": {
       "bundler": "metro",

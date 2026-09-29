@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   api,
   cerrarSesionLocal,
+  consumirAvisoDeSesion,
   ErrorApi,
   haySesion,
   haySesionSincrona,
@@ -204,6 +205,53 @@ describe('token vencido', () => {
       .mockResolvedValueOnce(respuesta(falla('NO_AUTORIZADO', 'revocado'), 401));
 
     await api.get('/inicio').catch(() => {});
+    expect(await haySesion()).toBe(false);
+  });
+
+  it('un 503 al renovar NO cierra la sesión: el servidor todavía está despertando', async () => {
+    fetchSimulado.mockResolvedValue(
+      respuesta(sobre({ accessToken: 'viejo', refreshToken: 'ref-1' })),
+    );
+    await iniciarSesion('demo@gfh.app', 'x');
+    fetchSimulado.mockReset();
+
+    fetchSimulado
+      .mockResolvedValueOnce(respuesta(falla('NO_AUTENTICADO', 'vencido'), 401))
+      .mockResolvedValueOnce(respuesta(falla('ERROR', 'Bad Gateway'), 503));
+
+    await api.get('/inicio').catch(() => {});
+    expect(await haySesion()).toBe(true);
+  });
+
+  it('si otro dispositivo del mismo tipo entró, la sesión se cierra y Login recibe el motivo', async () => {
+    fetchSimulado.mockResolvedValue(
+      respuesta(sobre({ accessToken: 'viejo', refreshToken: 'ref-1' })),
+    );
+    await iniciarSesion('demo@gfh.app', 'x');
+    fetchSimulado.mockReset();
+
+    fetchSimulado
+      .mockResolvedValueOnce(respuesta(falla('NO_AUTENTICADO', 'La sesión ya no es válida.'), 401))
+      .mockResolvedValueOnce(
+        respuesta(falla('SESION_REEMPLAZADA', 'Tu sesión se cerró porque iniciaste sesión en otro dispositivo.'), 401),
+      );
+
+    await api.get('/inicio').catch(() => {});
+    expect(await haySesion()).toBe(false);
+    expect(consumirAvisoDeSesion()).toBe('Tu sesión se cerró porque iniciaste sesión en otro dispositivo.');
+    // Se muestra una sola vez.
+    expect(consumirAvisoDeSesion()).toBeNull();
+  });
+
+  it('cerrar sesión sin red igual borra los tokens', async () => {
+    fetchSimulado.mockResolvedValue(
+      respuesta(sobre({ accessToken: 'a', refreshToken: 'r' })),
+    );
+    await iniciarSesion('demo@gfh.app', 'x');
+    fetchSimulado.mockReset();
+    fetchSimulado.mockRejectedValue(new TypeError('Network request failed'));
+
+    await expect(cerrarSesionLocal()).resolves.toBeUndefined();
     expect(await haySesion()).toBe(false);
   });
 });

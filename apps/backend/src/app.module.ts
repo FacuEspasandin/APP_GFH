@@ -54,7 +54,7 @@ import {
       secret: exigirSecreto(),
       // El tipo de `expiresIn` es una plantilla literal ("15m", "1h"…), así que
       // una variable de entorno no encaja sin afirmarlo.
-      signOptions: { expiresIn: (process.env.JWT_ACCESS_TTL ?? '15m') as `${number}m` },
+      signOptions: { expiresIn: exigirTtlDelAccessToken() },
     }),
     // Rate limiting global; login/registro/refresh lo ajustan hacia abajo con
     // @Throttle en su propio controlador.
@@ -105,6 +105,21 @@ import {
   ],
 })
 export class AppModule {}
+
+/**
+ * El access token vive como mucho 15 minutos. Antes cualquier valor de
+ * `JWT_ACCESS_TTL` se aceptaba sin mirarlo: un `7d` de más dejaba un token robado
+ * útil una semana. Con el `JwtGuard` que consulta la sesión el riesgo es menor,
+ * pero un tope acá evita que una variable mal puesta lo vuelva a abrir.
+ */
+function exigirTtlDelAccessToken(): `${number}m` {
+  const valor = process.env.JWT_ACCESS_TTL ?? '15m';
+  const m = /^(\d{1,2})m$/.exec(valor);
+  if (!m || Number(m[1]) < 1 || Number(m[1]) > 15) {
+    throw new Error(`JWT_ACCESS_TTL tiene que ser de 1m a 15m (hoy: "${valor}").`);
+  }
+  return valor as `${number}m`;
+}
 
 /**
  * Sin secreto no se arranca. Un default en el código es un backend firmando

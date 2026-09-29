@@ -1,12 +1,14 @@
 import { Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
   IsArray,
   IsEnum,
   IsOptional,
   IsString,
   IsUUID,
   Length,
+  MaxLength,
   ValidateNested,
 } from 'class-validator';
 
@@ -41,11 +43,14 @@ export class AceptarAlternativaDto {
 }
 
 export class MatchearLineasDto {
-  @IsArray() @IsString({ each: true }) textos!: string[];
+  /** Un listado de tratamiento son unas pocas líneas cortas. Sin tope, 8 MiB de
+   *  cadenas de un carácter eran millones de pasadas por el catálogo. */
+  @IsArray() @ArrayMaxSize(50) @IsString({ each: true }) @Length(1, 200, { each: true }) textos!: string[];
 }
 
 export class FotoDto {
-  @IsString() imagenBase64!: string;
+  /** Una foto de celular comprimida ronda 1-3 MB; en base64 ~33% más. */
+  @IsString() @MaxLength(6_000_000) imagenBase64!: string;
 }
 
 /** Las alternativas terapéuticas y la carga por foto son de paciente: el
