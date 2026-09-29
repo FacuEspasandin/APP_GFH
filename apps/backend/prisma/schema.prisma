@@ -1070,6 +1070,9 @@ model Suscripcion {
   /// veces no debe mover el periodo. Se guarda el ultimo evento procesado.
   ultimoEventoId   String?
   ultimoEventoTipo String?
+  /// `event_timestamp_ms` del último evento aplicado: un evento más viejo que
+  /// éste llegó tarde y se ignora.
+  ultimoEventoAt   DateTime?
 
   medico Medico @relation(fields: [medicoId], references: [id], onDelete: Cascade)
 

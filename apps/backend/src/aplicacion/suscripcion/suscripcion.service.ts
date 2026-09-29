@@ -21,6 +21,9 @@ const EVENTOS: Record<string, 'ACTIVA' | 'GRACIA' | 'VENCIDA' | 'CANCELADA'> = {
   EXPIRATION: 'VENCIDA',
 };
 
+/** El único entitlement que abre el producto. */
+const ENTITLEMENT_PREMIUM = 'premium';
+
 export interface EventoRevenueCat {
   event: {
     id: string;
@@ -30,6 +33,16 @@ export interface EventoRevenueCat {
     product_id?: string;
     store?: string;
     expiration_at_ms?: number | null;
+    /** Cuándo pasó el evento en RevenueCat. Los webhooks no llegan garantizados
+     *  en orden: con esto se descarta el que llegó tarde. */
+    event_timestamp_ms?: number | null;
+    /** `SANDBOX` (compras de prueba de las tiendas) o `PRODUCTION`. */
+    environment?: string;
+    /** En una CANCELLATION: `CUSTOMER_SUPPORT` es un reembolso. */
+    cancel_reason?: string;
+    /** Sólo en `TRANSFER`: no trae `app_user_id`, sino de quién a quién. */
+    transferred_from?: string[];
+    transferred_to?: string[];
     /** `TRIAL`/`INTRO` vs `NORMAL` — sin esto no hay forma de avisar "te
      *  quedan 3 días de prueba", sólo se sabe la fecha de fin. */
     period_type?: string;
@@ -54,14 +67,45 @@ export class SuscripcionService {
 
   async procesarWebhook(cuerpo: EventoRevenueCat): Promise<{ aplicado: boolean; motivo?: string }> {
     const e = cuerpo?.event;
-    if (!e?.type || !e.app_user_id) {
-      return { aplicado: false, motivo: 'evento sin tipo o sin usuario' };
+    // `typeof`: el cuerpo no se valida (es de RevenueCat) y un `type` que no sea
+    // string —o el nombre de algo heredado de Object— no puede llegar a ningún lookup.
+    if (!e || typeof e.type !== 'string' || typeof e.id !== 'string' || !e.id) {
+      return { aplicado: false, motivo: 'evento mal formado' };
     }
 
-    const estado = EVENTOS[e.type];
-    if (!estado) {
+    // Compras de prueba de las tiendas. Apagado por defecto para poder probar el
+    // circuito completo con sandbox; se enciende al lanzar (checklist de producción).
+    if (e.environment === 'SANDBOX' && process.env.REVENUECAT_RECHAZA_SANDBOX === 'true') {
+      this.logger.warn(`Evento SANDBOX rechazado: ${e.type}`);
+      return { aplicado: false, motivo: 'evento de sandbox rechazado' };
+    }
+
+    if (e.type === 'TRANSFER') return this.procesarTransferencia(e);
+
+    if (typeof e.app_user_id !== 'string' || !e.app_user_id) {
+      return { aplicado: false, motivo: 'evento sin usuario' };
+    }
+
+    if (!Object.hasOwn(EVENTOS, e.type)) {
       this.logger.warn(`Evento de RevenueCat ignorado: ${e.type}`);
       return { aplicado: false, motivo: `tipo no manejado: ${e.type}` };
+    }
+    // Un reembolso corta el acceso ya, no al final del período: la cancelación
+    // normal deja seguir hasta que venza lo pagado, un reembolso devolvió esa plata.
+    const estado =
+      e.type === 'CANCELLATION' && e.cancel_reason === 'CUSTOMER_SUPPORT' ? 'VENCIDA' : EVENTOS[e.type]!;
+
+    // El producto es UNA suscripción con el entitlement `premium`. Un evento de
+    // otro entitlement no puede abrir este acceso.
+    const abreAcceso = estado === 'ACTIVA' || estado === 'GRACIA';
+    if (
+      abreAcceso &&
+      Array.isArray(e.entitlement_ids) &&
+      e.entitlement_ids.length > 0 &&
+      !e.entitlement_ids.includes(ENTITLEMENT_PREMIUM)
+    ) {
+      this.logger.warn(`Evento ${e.type} sin el entitlement ${ENTITLEMENT_PREMIUM}: ${e.entitlement_ids.join(',')}`);
+      return { aplicado: false, motivo: 'entitlement distinto de premium' };
     }
 
     // `app_user_id` es el id del médico: se lo pasamos al SDK al hacer login.
@@ -78,13 +122,20 @@ export class SuscripcionService {
 
     const existente = await this.prisma.suscripcion.findUnique({
       where: { medicoId: medico.id },
-      select: { ultimoEventoId: true, estado: true, tuvoTrial: true },
+      select: { ultimoEventoId: true, ultimoEventoAt: true, estado: true, tuvoTrial: true },
     });
 
     // Idempotencia: RevenueCat reintenta, y un RENEWAL aplicado dos veces no
     // debe mover el período.
     if (existente?.ultimoEventoId === e.id) {
       return { aplicado: false, motivo: 'evento ya procesado' };
+    }
+
+    // Un evento más viejo que el último aplicado llegó tarde: un RENEWAL de ayer
+    // no puede reabrir lo que un EXPIRATION de hoy cerró.
+    const eventoAt = typeof e.event_timestamp_ms === 'number' ? new Date(e.event_timestamp_ms) : null;
+    if (eventoAt && existente?.ultimoEventoAt && eventoAt < existente.ultimoEventoAt) {
+      return { aplicado: false, motivo: 'evento anterior al último aplicado' };
     }
 
     const periodoActualFin = e.expiration_at_ms
@@ -94,7 +145,7 @@ export class SuscripcionService {
     const periodoEsTrial = e.period_type === 'TRIAL' || e.period_type === 'INTRO';
 
     const datos = {
-      entitlementId: e.entitlement_ids?.[0] ?? 'premium',
+      entitlementId: ENTITLEMENT_PREMIUM,
       productId: e.product_id ?? 'desconocido',
       store: (e.store === 'APP_STORE' ? 'APP_STORE' : 'PLAY_STORE') as 'APP_STORE' | 'PLAY_STORE',
       estado,
@@ -106,6 +157,7 @@ export class SuscripcionService {
       tuvoTrial: (existente?.tuvoTrial ?? false) || periodoEsTrial,
       ultimoEventoId: e.id,
       ultimoEventoTipo: e.type,
+      ...(eventoAt ? { ultimoEventoAt: eventoAt } : {}),
     };
 
     await this.prisma.suscripcion.upsert({
@@ -135,6 +187,31 @@ export class SuscripcionService {
 
     this.logger.log(`Suscripción de ${medico.id}: ${e.type} → ${estado}`);
     return { aplicado: true };
+  }
+
+  /**
+   * `TRANSFER`: la suscripción pasó de un usuario de RevenueCat a otro (la misma
+   * cuenta de la tienda entró con otra cuenta de GFH). No trae `app_user_id` y
+   * antes se descartaba, así que quien la había tenido seguía con acceso — hasta
+   * un EXPIRATION que RevenueCat manda al nuevo dueño, no a él. Es exactamente el
+   * modo de compartir una suscripción entre varias cuentas.
+   *
+   * Se corta el acceso de los de origen. Al de destino no se le abre nada acá: el
+   * evento no trae el período, y darle acceso sin fecha es peor que esperar a que
+   * el próximo evento de renovación (o «restaurar compras») se lo abra.
+   */
+  private async procesarTransferencia(e: EventoRevenueCat['event']): Promise<{ aplicado: boolean; motivo?: string }> {
+    const origen = (Array.isArray(e.transferred_from) ? e.transferred_from : []).filter(
+      (id): id is string => typeof id === 'string',
+    );
+    if (origen.length === 0) return { aplicado: false, motivo: 'transferencia sin origen' };
+
+    const afectadas = await this.prisma.suscripcion.updateMany({
+      where: { medicoId: { in: origen }, estado: { not: 'VENCIDA' } },
+      data: { estado: 'VENCIDA', ultimoEventoId: e.id, ultimoEventoTipo: 'TRANSFER' },
+    });
+    this.logger.warn(`TRANSFER de suscripción: ${afectadas.count} cuenta(s) de origen sin acceso`);
+    return { aplicado: afectadas.count > 0, motivo: afectadas.count > 0 ? undefined : 'origen sin suscripción vigente' };
   }
 
   async estado(medicoId: string) {
