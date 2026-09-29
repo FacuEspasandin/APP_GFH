@@ -113,6 +113,20 @@ export const RANGOS = {
   glucosaMgDl: { min: 0, max: 2000, minExclusivo: true, decimales: 0, habitual: { min: 40, max: 600 } },
   insulinaUUmL: { min: 0, max: 300, minExclusivo: true, decimales: 1, habitual: { min: 2, max: 100 } },
   calcioMgDl: { min: 0, max: 25, minExclusivo: true, decimales: 1, habitual: { min: 5, max: 14 } },
+
+  // --- Glasgow-Blatchford, sólo el valor exacto opcional de urea/hemoglobina/PAS
+  hemoglobinaGDl: { min: 0, max: 25, minExclusivo: true, decimales: 1, habitual: { min: 4, max: 20 } },
+  pasMmHg: { min: 40, max: 300, decimales: 0, habitual: { min: 60, max: 220 } },
+
+  // --- FIB-4 y APRI ------------------------------------------------------------
+  astUI: { min: 0, max: 5000, minExclusivo: true, decimales: 0, habitual: { min: 5, max: 1000 } },
+  altUI: { min: 0, max: 5000, minExclusivo: true, decimales: 0, habitual: { min: 5, max: 1000 } },
+  // El límite superior normal lo fija cada laboratorio; 40 U/L es el valor más
+  // citado en la bibliografía cuando el informe no lo declara.
+  astUlnUI: { min: 10, max: 100, decimales: 0, habitual: { min: 30, max: 50 } },
+
+  // --- Maddrey: PT del paciente y del control del mismo laboratorio -----------
+  ptSegundos: { min: 5, max: 100, decimales: 1, habitual: { min: 9, max: 40 } },
 } as const satisfies Record<string, Rango>;
 
 export type CampoConRango = keyof typeof RANGOS;

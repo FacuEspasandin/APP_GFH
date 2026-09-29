@@ -144,7 +144,7 @@ describe('agrupar', () => {
     const seccion = (titulo: string) => claves(g.find((x) => x.titulo === titulo)!.herramientas);
 
     expect(seccion('Riñón')).toEqual(['clcr', 'fena']);
-    expect(seccion('Hígado')).toEqual(['child-pugh', 'meld']);
+    expect(seccion('Hígado')).toEqual(['apri', 'child-pugh', 'fib4', 'maddrey', 'meld']);
     expect(seccion('Dosis')).toEqual(['peso-ideal', 'superficie-corporal']);
     expect(seccion('Laboratorio')).toEqual([
       'calcio-corregido',
@@ -155,9 +155,25 @@ describe('agrupar', () => {
       'riesgo-cv',
       'sodio-corregido',
     ]);
-    expect(seccion('Cardiovascular')).toEqual(['cha2ds2-vasc', 'has-bled', 'qtc', 'wells']);
-    expect(seccion('Neurológico')).toEqual(['glasgow', 'nihss']);
-    expect(seccion('Cuidados críticos')).toEqual(['anion-gap', 'curb-65', 'gap-osmolar', 'qsofa', 'sofa']);
+    expect(seccion('Cardiovascular')).toEqual([
+      'cha2ds2-vasc',
+      'has-bled',
+      'heart',
+      'rcri',
+      'qtc',
+      'wells',
+    ]);
+    expect(seccion('Neurológico')).toEqual(['abcd2', 'glasgow', 'nihss']);
+    expect(seccion('Cuidados críticos')).toEqual([
+      'anion-gap',
+      'centor',
+      'curb-65',
+      'gap-osmolar',
+      'glasgow-blatchford',
+      'charlson',
+      'qsofa',
+      'sofa',
+    ]);
   });
 
   it('ordena por TÍTULO y no por clave dentro de "Contra el catálogo"', () => {
