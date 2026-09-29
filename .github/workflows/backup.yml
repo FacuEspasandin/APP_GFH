@@ -1,0 +1,64 @@
+# Respaldo nocturno de la base a un bucket privado de Cloudflare R2.
+#
+# Mientras los secretos no estén cargados, el job avisa y termina en verde: no
+# rompe nada. Cuando estén, empieza a respaldar solo. Ver scripts/backup/.
+#
+# SECRETOS a crear en Settings > Secrets and variables > Actions:
+#   BACKUP_DATABASE_URL   conexión DIRECTA a Postgres (la DIRECT_URL de Supabase)
+#   BACKUP_PASSPHRASE     frase de cifrado — guardala también fuera de GitHub
+#   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET
+#
+# Sólo `schedule` y `workflow_dispatch`, NUNCA `pull_request`: el repo es público y un
+# PR de un tercero no debe poder correr esto ni acercarse a los secretos.
+
+name: Respaldo de la base
+
+on:
+  schedule:
+    - cron: '17 5 * * *' # 02:17 en Uruguay
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  respaldar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ¿Están los secretos?
+        id: secretos
+        env:
+          URL: ${{ secrets.BACKUP_DATABASE_URL }}
+          FRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+          BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          if [ -z "$URL" ] || [ -z "$FRASE" ] || [ -z "$BUCKET" ]; then
+            echo "::notice::Faltan los secretos del respaldo (ver el encabezado de backup.yml). No se respalda nada todavía."
+            echo "listos=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "listos=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # El servidor es Postgres 17: pg_dump tiene que ser 17 o mayor.
+      - name: Instalar cliente de Postgres 17
+        if: steps.secretos.outputs.listos == 'true'
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17
+
+      - name: Respaldar
+        if: steps.secretos.outputs.listos == 'true'
+        env:
+          BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: bash scripts/backup/respaldar.sh
