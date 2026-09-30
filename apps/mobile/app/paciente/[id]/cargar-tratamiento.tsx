@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ErrorApi } from '@/api/cliente';
 import * as API from '@/api/endpoints';
+import { borrarFotoLocal } from '@/api/limpieza-fotos';
 import {
   elegidasSinPauta,
   elegirTodas,
@@ -174,12 +175,23 @@ export default function CargarTratamiento() {
       base64: true,
     });
 
-    if (!comprimida.base64) {
-      setErrorFoto('No se pudo leer la foto. Probá de nuevo.');
-      return;
-    }
+    try {
+      if (!comprimida.base64) {
+        setErrorFoto('No se pudo leer la foto. Probá de nuevo.');
+        return;
+      }
 
-    subirFoto.mutate(comprimida.base64);
+      // `mutateAsync` y no `mutate`: hace falta esperar a que termine (haya
+      // salido bien o mal) antes de borrar los archivos del `finally`. El
+      // error ya lo maneja `onError` de la mutación; acá sólo se evita que la
+      // promesa rechazada quede sin atrapar.
+      await subirFoto.mutateAsync(comprimida.base64).catch(() => undefined);
+    } finally {
+      // Se sube en base64 (ver arriba): estas dos copias del archivo en el
+      // caché del teléfono ya no hacen falta, se haya subido bien o no.
+      borrarFotoLocal(foto.uri);
+      borrarFotoLocal(comprimida.uri);
+    }
   };
 
   const confirmar = useMutation({

@@ -10,6 +10,7 @@ import {
 } from '@gfh/motor-clinico';
 import reglasCrudas from '@gfh/motor-clinico/reglas-interaccion.json';
 
+import { cifrar, descifrar } from './cifrado-offline';
 import { PREFIJO_CLAVE_OFFLINE } from './persistencia';
 import type { Cockpit } from './tipos';
 
@@ -24,6 +25,12 @@ import type { Cockpit } from './tipos';
  *
  * Exclusivo de cuentas con suscripción vigente: quien llama decide eso antes
  * de invocar `guardarContextoOffline`, no este módulo.
+ *
+ * Lo que se guarda es nombre, fecha de nacimiento, medicación y alergias de un
+ * paciente real — por eso va cifrado (`cifrado-offline.ts`) y no como JSON
+ * plano en `AsyncStorage`. El nombre de la clave sigue siendo el
+ * `pacienteId`: eso no identifica al paciente por sí solo, así que no hace
+ * falta cifrarlo también.
  */
 
 const PREFIJO_CLAVE = PREFIJO_CLAVE_OFFLINE;
@@ -66,7 +73,8 @@ export async function guardarContextoOffline(
   contexto: ContextoCockpitSerializado,
 ): Promise<void> {
   const guardado: ContextoGuardado = { contexto, guardadoAt: new Date().toISOString() };
-  await AsyncStorage.setItem(PREFIJO_CLAVE + pacienteId, JSON.stringify(guardado));
+  const cifrado = await cifrar(JSON.stringify(guardado));
+  await AsyncStorage.setItem(PREFIJO_CLAVE + pacienteId, cifrado);
 }
 
 export async function leerContextoOffline(
@@ -74,7 +82,18 @@ export async function leerContextoOffline(
 ): Promise<ContextoGuardado | null> {
   const crudo = await AsyncStorage.getItem(PREFIJO_CLAVE + pacienteId);
   if (!crudo) return null;
-  return JSON.parse(crudo) as ContextoGuardado;
+
+  const plano = await descifrar(crudo);
+  // `null`: la clave de cifrado no existe más (se borró al cerrar sesión) o el
+  // dato es de antes de cifrar. Tratarlo como «no hay copia offline» es
+  // correcto en los dos casos — no hay nada legítimo que recuperar de ahí.
+  if (!plano) return null;
+
+  try {
+    return JSON.parse(plano) as ContextoGuardado;
+  } catch {
+    return null;
+  }
 }
 
 /**

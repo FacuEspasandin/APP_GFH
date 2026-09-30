@@ -45,6 +45,12 @@
       "expo-router",
       "expo-secure-store",
       [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "GFH usa Face ID para desbloquear la app, si lo activás en Perfil."
+        }
+      ],
+      [
         "expo-notifications",
         {
           "color": "#1F5E4A"

@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Query } from '@tanstack/react-query';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 
+import { borrarClaveDeCifrado } from './cifrado-offline';
+
 /**
  * Qué sobrevive a cerrar la app, y qué no.
  *
@@ -113,4 +115,8 @@ export async function limpiarOffline(): Promise<void> {
   const claves = await AsyncStorage.getAllKeys();
   const propias = claves.filter((k) => k.startsWith(PREFIJO_CLAVE_OFFLINE));
   if (propias.length > 0) await AsyncStorage.multiRemove(propias);
+
+  // Sin la clave, cualquier copia que sobreviviera —un backup del sistema, un
+  // clon del disco— queda indescifrable: mismo efecto práctico que borrarla.
+  await borrarClaveDeCifrado();
 }

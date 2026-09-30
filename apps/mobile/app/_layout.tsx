@@ -20,6 +20,7 @@ import { iniciarReporteDeErrores } from '@/api/errores';
 import { configurarGoogleSignIn } from '@/api/google-signin';
 import { sincronizarPushToken } from '@/api/notificaciones';
 import { MS_MAXIMO, opcionesDeshidratado, persistidor } from '@/api/persistencia';
+import { activarProteccionDePantalla } from '@/api/proteccion-pantalla';
 import { configurarRevenueCat, identificarEnRevenueCat } from '@/api/revenuecat';
 import { rutaPaywall } from '@/dominio/plan-gratis';
 import { ProveedorAviso } from '@/ui/aviso';
@@ -42,6 +43,7 @@ configurarGoogleSignIn();
 
 export default function LayoutRaiz() {
   useEffect(() => activarPantallaCompletaWeb(), []);
+  useEffect(() => void activarProteccionDePantalla(), []);
 
   const [cliente] = useState(
     () =>

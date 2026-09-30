@@ -17,6 +17,7 @@ export default defineConfig({
       '@': aqui('src'),
       'react-native': aqui('test/stub-react-native.ts'),
       'expo-secure-store': aqui('test/stub-secure-store.ts'),
+      'expo-crypto': aqui('test/stub-expo-crypto.ts'),
       'expo-device': aqui('test/stub-expo-device.ts'),
       'expo-application': aqui('test/stub-expo-application.ts'),
       '@react-native-async-storage/async-storage': aqui('test/stub-async-storage.ts'),
