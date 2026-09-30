@@ -1,0 +1,56 @@
+# Prueba de restauración: baja el respaldo más reciente de R2, lo descifra y lo
+# restaura en un Postgres 17 DESCARTABLE que vive sólo dentro de este job. Al final
+# imprime conteos de tablas para compararlos con la base real.
+#
+# Se corre a mano (Actions > "Probar restauración" > Run workflow) después del
+# primer respaldo, y de vez en cuando. Un respaldo que nunca se restauró no es un
+# respaldo. No toca la base de producción: la base destino es el contenedor local.
+#
+# Usa los mismos secretos que backup.yml, salvo BACKUP_DATABASE_URL (no se conecta
+# a Supabase).
+
+name: Probar restauración
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  restaurar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        # Postgres 17 con la extensión `vector`, igual que la base real.
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_PASSWORD: descartable
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar cliente de Postgres 17
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17
+
+      - name: Restaurar el último respaldo
+        env:
+          RESTAURAR_EN: postgresql://postgres:descartable@localhost:5432/postgres
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: bash scripts/backup/restaurar.sh

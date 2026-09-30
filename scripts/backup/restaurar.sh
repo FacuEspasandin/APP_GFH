@@ -49,7 +49,17 @@ openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 -pass env:BACKUP_PASSPHRASE -in
 # Las extensiones tienen que existir antes: el dump las referencia pero no las crea.
 psql "$RESTAURAR_EN" -v ON_ERROR_STOP=1 -c 'CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm; CREATE EXTENSION IF NOT EXISTS pgcrypto;'
 
-pg_restore --dbname="$RESTAURAR_EN" --no-owner --no-privileges --exit-on-error "$CRUDO"
+# Sin `--exit-on-error`: el dump puede traer `CREATE EXTENSION` de algo que ya
+# creamos arriba y eso da "already exists", que no es un fallo. Se juntan los
+# errores y se ignoran sólo esos; cualquier otro corta la restauración.
+ERRORES="$(mktemp)"
+trap 'rm -f "$CIFRADO" "$CRUDO" "$ERRORES"' EXIT
+pg_restore --dbname="$RESTAURAR_EN" --no-owner --no-privileges "$CRUDO" 2> "$ERRORES" || true
+if grep -i "error" "$ERRORES" | grep -vi "already exists" > /dev/null; then
+  echo "pg_restore reportó errores:" >&2
+  grep -i "error" "$ERRORES" | grep -vi "already exists" | head -n 20 >&2
+  exit 1
+fi
 
 echo "--- conteos en la base restaurada ---"
 psql "$RESTAURAR_EN" -At -c "
