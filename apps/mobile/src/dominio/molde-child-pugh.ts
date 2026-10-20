@@ -129,9 +129,9 @@ export function moldeChildPugh(conValorExacto: boolean): Molde {
       ],
     },
     limite:
-      'Cuánto ajustar cada fármaco. Falta la tabla de ajuste hepático por ' +
-      'fármaco en el catálogo, así que la clase está pero no hay contra qué ' +
-      'cruzarla todavía.',
+      'Cuánto ajustar cada fármaco. Para eso hay que cruzar la clase contra ' +
+      'la tabla de ajuste hepático del catálogo, que cubre solo una parte de ' +
+      'los fármacos: en el resto, el ajuste queda sin dato.',
     acercaDe:
       'Child-Pugh (1973, revisada 1973 por Pugh) clasifica la severidad de la ' +
       'cirrosis en tres clases combinando dos datos clínicos (ascitis, ' +

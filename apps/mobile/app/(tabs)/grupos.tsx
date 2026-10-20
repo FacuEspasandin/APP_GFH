@@ -156,7 +156,7 @@ function TarjetaGrupo({
             ) : null}
             {grupo.graves > 0 ? <Dato n={grupo.graves} etiqueta="grave" color={col.peligro} /> : null}
             {grupo.atencion > 0 ? (
-              <Dato n={grupo.atencion} etiqueta="en atención" color="#92400E" />
+              <Dato n={grupo.atencion} etiqueta="gravedad alta" color="#92400E" />
             ) : null}
           </View>
         </>

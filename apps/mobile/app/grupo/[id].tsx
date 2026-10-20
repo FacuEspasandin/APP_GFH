@@ -107,9 +107,9 @@ export default function DetalleGrupo() {
                 <View className="mt-2 flex-row flex-wrap gap-x-4 gap-y-1.5">
                   {[
                     { n: resumen.contraindicados + resumen.graves, color: COLOR_SEVERIDAD.grave, etiqueta: 'grave' },
-                    { n: resumen.atencion, color: COLOR_SEVERIDAD.media, etiqueta: 'en atención' },
+                    { n: resumen.atencion, color: COLOR_SEVERIDAD.media, etiqueta: 'gravedad alta' },
                     { n: resumen.sinHallazgos, color: COLOR_SEVERIDAD.ok, etiqueta: 'sin hallazgos' },
-                    { n: resumen.informativos, color: COLOR_SEVERIDAD.neutro, etiqueta: 'informativo' },
+                    { n: resumen.informativos, color: COLOR_SEVERIDAD.neutro, etiqueta: 'gravedad menor' },
                   ]
                     .filter((t) => t.n > 0)
                     .map((t) => (

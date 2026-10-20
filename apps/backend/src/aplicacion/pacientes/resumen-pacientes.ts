@@ -42,7 +42,8 @@ export interface ResumenGrupo {
    * cuenta una sola vez, en el más grave que lo toca.
    *
    * Los nombres son los de la escala del sistema (`RANGO_ETIQUETA`), no
-   * inventados: 0 contraindicado, 1 grave, 2 atención, 3 informativo. Llamar
+   * inventados: 0 contraindicada, 1 grave, 2 alta (campo `atencion`), y de 3 a 5
+   * (evitar, atención, informativa) juntos en `informativos`. Llamar
    * "moderado" al rango 1 —que es grave— subestima el riesgo en la única
    * pantalla que resume varios pacientes a la vez.
    */

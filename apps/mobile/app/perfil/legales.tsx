@@ -48,8 +48,7 @@ export default function Legales() {
         </Bloque>
 
         <Bloque titulo="Fotos de tratamiento">
-          Cuando exista la carga por foto, la imagen se procesa en memoria y se descarta de
-          inmediato. No se guarda ni la foto ni el texto extraído.
+          Con la carga por foto, la imagen se procesa en memoria y se descarta de inmediato. No se guarda ni la foto ni el texto extraído.
         </Bloque>
 
         <Bloque titulo="Marco legal" ultimo>

@@ -289,7 +289,7 @@ function TarjetaPlan({
         ) : null}
         {!estado.vigente ? (
           <Text className="font-sans mt-1 text-meta text-ink-suave">
-            El plan gratis sigue a un paciente.
+            El plan gratis no incluye pacientes propios.
           </Text>
         ) : null}
       </View>

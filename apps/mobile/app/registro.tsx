@@ -171,15 +171,15 @@ export default function Registro() {
 
         {/* Decía "El acceso es de pago desde el primer día, sin prueba
             gratuita". Era verdad antes del plan gratis, y quedó contradiciendo
-            al paywall — que sí ofrece un paciente sin pagar. */}
+            al paywall — que sí ofrece el plan gratis. */}
         <View
           className="mb-3.5 flex-row gap-3 rounded-md px-4 py-3.5"
           style={{ backgroundColor: col.paper, borderLeftWidth: 4, borderLeftColor: '#005228' }}
         >
           <Icono nombre="info" tamano={20} color="#005228" />
           <Text className="font-sans flex-1 text-meta leading-5 text-ink-suave">
-            Empezás con el plan gratis: un paciente, con todas las verificaciones. Cuando quieras el
-            segundo, ahí se elige plan.
+            Empezás con el plan gratis: paciente de demostración, calculadoras y consultas de fármacos.
+            Para cargar tus propios pacientes, ahí se elige plan.
           </Text>
         </View>
 

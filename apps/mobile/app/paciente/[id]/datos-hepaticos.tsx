@@ -142,7 +142,7 @@ export default function DatosHepaticos() {
               <Text className="font-sans text-meta leading-5 text-ink-suave">
                 {r.clase === null
                   ? 'La clase se guarda cuando estén los cinco criterios. Mientras tanto, lo que cargues queda igual.'
-                  : 'La clase queda en el paciente. La tabla de ajuste por fármaco todavía no existe: cuando esté, se aplica sola sobre el tratamiento que ya cargaste.'}
+                  : 'La clase queda en el paciente. El ajuste por fármaco se aplica solo sobre el tratamiento que ya cargaste, en los fármacos que tienen tabla hepática.'}
               </Text>
             </Superficie>
 
