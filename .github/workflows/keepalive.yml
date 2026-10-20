@@ -1,0 +1,33 @@
+# Mantiene despiertos el backend (Render) y la base (Supabase).
+#
+# Por qué existe: el plan gratis de Supabase PAUSA el proyecto tras una semana sin
+# actividad, y el de Render duerme el servicio a los 15 minutos. En octubre de 2026
+# la base se pausó, el backend entró en bucle de reinicios y producción estuvo caída
+# sin que nadie se enterara. `/salud` consulta la base (`SELECT 1`), así que un
+# pedido ahí despierta a los dos.
+#
+# Si `/salud` no responde 200, el job falla en rojo: es el aviso de que producción
+# está caída. No reemplaza un monitoreo de verdad ni los respaldos; se puede borrar
+# cuando el backend pase a un plan que no duerme y a una base paga.
+#
+# No usa ningún secreto: `/salud` es público.
+
+name: Mantener vivo el backend
+
+on:
+  schedule:
+    - cron: '23 12 */3 * *' # cada 3 días, ~09:23 en Uruguay
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Pedir /salud (el arranque en frío de Render tarda hasta ~100 s)
+        run: |
+          curl --fail --silent --show-error --max-time 240 --retry 2 --retry-delay 20 --retry-all-errors \
+            https://gfh-backend.onrender.com/salud
