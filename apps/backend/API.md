@@ -434,6 +434,17 @@ Child-Pugh para calcularla. `principioActivoIds` es opcional: sin fármacos,
 la calculadora de la clase sigue siendo libre y `resultados` sale vacío.
 Cobertura de tabla por fármaco parcial — ver `docs/data/farmacos-ajuste-hepatico.json`.
 
+### `GET /herramientas/alternativas` · `?principioActivoId=<uuid>`
+Alternativas terapéuticas de un fármaco **sin paciente**: a diferencia de las rutas de
+alternativas de la sección 8, que siempre parten de un `pacienteId`. Existe para Vera, que
+nunca tiene un paciente cargado. Sólo lectura, 🔒, con suscripción. `principioActivoId`
+obligatorio y UUID (**400** si falta o no lo es; **404** si no existe).
+
+```json
+{ "farmacoOrigen": "Warfarina",
+  "alternativas": [ { "nombre": "Apixabán", "razon": "…", "evidencia": "…" } ] }
+```
+
 ---
 
 ## 11. Perfil y suscripción
@@ -463,6 +474,70 @@ aplicado** (`event_timestamp_ms`) y, con `REVENUECAT_RECHAZA_SANDBOX=true`, los 
 CUSTOMER_SUPPORT` (reembolso) corta el acceso de inmediato; una normal lo deja hasta el fin
 del período pago. `TRANSFER` le quita el acceso a las cuentas de origen (`transferred_from`)
 y no abre nada al destino: el evento no trae el período.
+
+### `GET /ayuda/faq`
+🔒. Las preguntas frecuentes de la pantalla de Ayuda, servidas desde el backend (no viven en
+el bundle de la app: cambiar una es editar `docs/data/ayuda-faq.json` y redeployar, sin build
+nuevo). Devuelve un arreglo, sin paginar:
+```json
+[ { "pregunta": "…", "respuesta": "…" } ]
+```
+
+### `GET /ayuda/problemas`
+🔒. Los problemas frecuentes, con su categoría, para el buscador y los filtros de la pantalla
+de Ayuda (`docs/data/ayuda-problemas.json`):
+```json
+[ { "categoria": "…", "titulo": "…", "descripcion": "…" } ]
+```
+
+### `POST /ayuda/reportes`
+🔒. Manda por email (Resend) un reporte de error o una sugerencia a la casilla del equipo.
+Tope de **3 por minuto**. **204**, sin cuerpo.
+```json
+{ "nombre": "Ana", "apellido": "Pérez", "telefono": "099123456",
+  "correo": "ana@ejemplo.com", "tipo": "ERROR | SUGERENCIA", "descripcion": "…" }
+```
+Largos: nombre y apellido hasta 80, teléfono hasta 30, descripción hasta 2000 caracteres.
+Sin `RESEND_API_KEY` o si Resend falla responde **503**: acá el envío ES la función, así que
+nunca se finge uno que no pasó.
+
+### `POST /chat/mensajes`
+🔒 · **suscripción** (Vera es de pago). Una pregunta a Vera, el asistente con IA. Responde
+**sólo con lo que devuelven las herramientas deterministas** del motor clínico (interacciones,
+condición/alergia, ajuste renal y hepático, alternativas, ficha técnica): nunca decide
+severidad, dosis ni interacciones de memoria. **200** (no 201: no es un alta, es una consulta).
+```json
+{ "sessionId": "uuid (opcional: sin él se abre una conversación nueva)", "pregunta": "…" }
+```
+`pregunta`: de 1 a 2000 caracteres, sin el carácter NUL (U+0000) ni caracteres UTF-16 sueltos (**400**).
+Respuesta:
+```json
+{ "sessionId": "uuid", "respuesta": "…",
+  "toolsUsadas": [ { "tool": "ajuste_renal", "input": {}, "encontrado": true } ] }
+```
+`toolsUsadas` es de dónde salió lo respondido: la app lo muestra como chips de fuente, y una
+respuesta con la lista vacía se marca como «no consultó los datos de GFH». `encontrado` sólo
+viene en `ficha_tecnica`.
+
+Límites, todos del servidor: **15 por minuto**; **10 consultas por 24 h** por médico
+(**403 `LIMITE_CHAT_DIARIO`**), reservadas ANTES de llamar al modelo y devueltas si el modelo
+falla; **2 en curso a la vez** (**429 `VERA_OCUPADA`**). Sin `ANTHROPIC_API_KEY`, **503**.
+
+### `GET /chat/sesiones`
+🔒 · suscripción. Las últimas 20 conversaciones del médico, más recientes primero, para el
+historial. Una conversación sin mensajes no aparece.
+```json
+[ { "id": "uuid", "titulo": "…", "createdAt": "…", "cantidadMensajes": 4 } ]
+```
+
+### `GET /chat/sesiones/:id/mensajes`
+🔒 · suscripción. Los mensajes de una conversación, para retomarla. `:id` tiene que ser UUID
+(**400**). **404** si no existe **o es de otro médico**: la misma respuesta para las dos, para
+no revelar cuál pasó.
+```json
+{ "sessionId": "uuid", "titulo": "…",
+  "mensajes": [ { "id": "uuid", "rol": "USUARIO | ASISTENTE", "contenido": "…", "toolsUsadas": [] } ] }
+```
 
 ### `GET /salud`
 Sin autenticación. Para el health check del hosting.
