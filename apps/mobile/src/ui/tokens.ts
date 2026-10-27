@@ -44,6 +44,21 @@ export interface Paleta {
    * `COLOR_SEVERIDAD` y significa otra cosa.
    */
   peligro: string;
+  /** Texto e íconos sobre `primary`. En oscuro NO es blanco: ver global.css. */
+  onPrimary: string;
+  /** Bloque anidado dentro de una tarjeta. */
+  surfaceAlt: string;
+  /** Fondo suave de un aviso de error, y el texto que va encima. */
+  peligroLight: string;
+  peligroInk: string;
+  /** Aviso de INTERFAZ. Una gravedad clínica no va acá: va por severidad. */
+  aviso: string;
+  avisoLight: string;
+  /** Información neutra de interfaz. */
+  info: string;
+  infoLight: string;
+  /** Confirmación de interfaz (no es la severidad «ok»). */
+  exito: string;
 }
 
 const CLARO: Paleta = {
@@ -60,6 +75,15 @@ const CLARO: Paleta = {
   accent: '#0D7068',
   accentLight: '#E1F1EE',
   peligro: '#991B1B',
+  onPrimary: '#FFFFFF',
+  surfaceAlt: '#F8FAF8',
+  peligroLight: '#FFDAD6',
+  peligroInk: '#93000A',
+  aviso: '#B45309',
+  avisoLight: '#FEF3C7',
+  info: '#075985',
+  infoLight: '#E0F2FE',
+  exito: '#22C55E',
 };
 
 const OSCURO: Paleta = {
@@ -78,10 +102,56 @@ const OSCURO: Paleta = {
   accentLight: '#16302E',
   // Mismo motivo que el primary: el rojo oscuro sobre fondo oscuro no se lee.
   peligro: '#F87171',
+  onPrimary: '#00261A',
+  surfaceAlt: '#1A2A23',
+  peligroLight: '#4A1D1D',
+  peligroInk: '#FFB4AB',
+  aviso: '#F0B35A',
+  avisoLight: '#3A2A12',
+  info: '#7DD3FC',
+  infoLight: '#0C2A3A',
+  exito: '#4ADE80',
 };
 
 export const PALETA = { claro: CLARO, oscuro: OSCURO } as const;
 
+/**
+ * Colores que NO cambian con el tema, a propósito. Cada uno dice por qué.
+ *
+ * Todo lo que no esté en `PALETA` ni acá es un valor suelto: la auditoría
+ * (`scripts/auditar-visual.mjs`) lo cuenta como error.
+ */
+export const FIJO = {
+  /** Texto e íconos sobre fondos fijos: colores de severidad, splash verde. */
+  blanco: '#FFFFFF',
+  /** Fondo del aviso flotante y color de toda sombra (nunca negro puro). */
+  tinta: '#122A23',
+  /** El verde de marca sobre superficies blancas fijas (botón y logo de la bienvenida). */
+  marca: '#005228',
+  /** Barra inferior, splash y bienvenida: la marca a pleno, igual en los dos temas. */
+  verdeBarra: '#006D37',
+  /** Extremos del degradado del header de navegación. */
+  degradeHeader: { claro: ['#2A6E58', '#1B5342'], oscuro: ['#1A2C25', '#101B17'] },
+} as const;
+
 export function paleta(oscuro: boolean): Paleta {
   return oscuro ? OSCURO : CLARO;
 }
+
+/**
+ * Tamaños de letra para `style`, donde la clase de Tailwind no alcanza (cifras
+ * con `tabular-nums`, estilos del navegador). Mismos criterios que la escala de
+ * `tailwind.config.js`: acá sólo viven los que no tienen clase.
+ */
+export const TIPO = {
+  /** Cifra grande de un resultado (Clcr, puntaje, iniciales del perfil). */
+  cifra: 26,
+  /** Cifra de una fila o de un trimestre. */
+  cifraChica: 22,
+  /** Cifra que protagoniza una tarjeta. */
+  display: 32,
+  /** Título de la barra de navegación. */
+  barra: 16,
+  /** Rótulo de pestaña. */
+  pestana: 13,
+} as const;

@@ -1,10 +1,10 @@
 import { Stack } from 'expo-router';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { moldeCha2ds2Vasc } from '@/dominio/molde-cha2ds2-vasc';
 import { Calculadora } from '@/ui/calculadora';
 import { EncabezadoApp } from '@/ui/encabezado-app';
-import { Icono } from '@/ui/iconos';
+import { EncabezadoHerramienta } from '@/ui/encabezado-herramienta';
 
 /**
  * CHA2DS2-VASc, sobre datos sueltos.
@@ -21,15 +21,9 @@ export default function Cha2ds2Vasc() {
     <View className="flex-1 bg-paper">
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp />
-      <View className="px-4 pt-4">
-        <View className="mb-1 flex-row items-center gap-2">
-          <Icono nombre="pulso" tamano={20} color="#005228" />
-          <Text className="text-[28px] font-fuerte text-ink">CHA2DS2-VASc</Text>
-        </View>
-        <Text className="mb-2 text-body leading-6 text-ink-suave">
-          Riesgo de ACV en fibrilación auricular, sobre datos sueltos — no cruza el catálogo.
-        </Text>
-      </View>
+      <EncabezadoHerramienta icono="pulso" titulo="CHA2DS2-VASc">
+        Riesgo de ACV en fibrilación auricular, sobre datos sueltos — no cruza el catálogo.
+      </EncabezadoHerramienta>
 
       <Calculadora molde={molde} />
     </View>

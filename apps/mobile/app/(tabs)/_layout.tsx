@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 
 import { FondoHeader } from '@/ui/fondo-header';
 import { coloresChrome, useTema } from '@/ui/tema';
+import { TIPO } from '@/ui/tokens';
 
 /**
  * Las cuatro secciones de la app.
@@ -26,7 +27,7 @@ export default function LayoutTabs() {
         headerStyle: { backgroundColor: c.fondoHeader },
         headerTintColor: c.textoHeader,
         // Familia y no peso: con fuentes estáticas la negrita es otra familia.
-        headerTitleStyle: { fontFamily: 'Inter_700Bold', fontSize: 16 },
+        headerTitleStyle: { fontFamily: 'Inter_700Bold', fontSize: TIPO.barra },
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Pacientes' }} />

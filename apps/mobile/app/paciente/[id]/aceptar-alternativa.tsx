@@ -8,7 +8,7 @@ import { Icono } from '@/ui/iconos';
 import { hapticaExito } from '@/ui/haptica';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
-import { Boton, CampoTexto, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { VIAS_OFRECIDAS } from '@gfh/shared-types';
@@ -184,7 +184,7 @@ export default function AceptarAlternativa() {
       {/* El consentimiento y el botón, al pie: es el tercero de los cuatro
           puntos de la regla 7 y estaba a mitad del scroll, lejos de donde se
           decide. */}
-      <View className="border-t border-line bg-surface px-4 py-3">
+      <BarraAccion>
         <Pressable
           onPress={() => setConfirmado((v) => !v)}
           accessibilityRole="checkbox"
@@ -192,13 +192,13 @@ export default function AceptarAlternativa() {
           className="mb-3 flex-row items-start gap-3"
         >
           <View
-            className="mt-0.5 h-5 w-5 items-center justify-center rounded-[5px] border-2"
+            className="mt-0.5 h-5 w-5 items-center justify-center rounded-casilla border-2"
             style={{
               borderColor: confirmado ? col.primary : col.tenue,
               backgroundColor: confirmado ? col.primary : 'transparent',
             }}
           >
-            {confirmado ? <Icono nombre="check" tamano={14} color="#FFFFFF" /> : null}
+            {confirmado ? <Icono nombre="check" tamano={14} color={col.onPrimary} /> : null}
           </View>
           <Text className="font-sans flex-1 text-meta leading-5 text-ink-suave">
             El cambio es una decisión mía. GFH muestra los problemas conocidos de cada opción, no
@@ -216,7 +216,7 @@ export default function AceptarAlternativa() {
         >
           Aplicar cambio
         </Boton>
-      </View>
+      </BarraAccion>
       </KeyboardAvoidingView>
     </View>
   );

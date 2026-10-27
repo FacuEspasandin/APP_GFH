@@ -5,6 +5,7 @@ import { useIndicePrincipiosActivos } from '@/api/catalogo';
 import { buscar, POR_NOMBRE } from '@/dominio/busqueda';
 import { Icono } from './iconos';
 import { useColores } from './tema';
+import { Superficie } from './superficie';
 
 export interface PaSugerido {
   id: string;
@@ -62,13 +63,13 @@ export function BuscadorPrincipioActivo({
           autoCapitalize="none"
           autoCorrect={false}
           accessibilityLabel={unico ? 'Fármaco' : 'Buscar fármaco'}
-          className="h-[49px] rounded-lg border border-line pl-10 pr-4 text-body text-ink"
+          className="h-campo rounded-lg border border-line pl-10 pr-4 text-body text-ink"
           style={{ backgroundColor: col.paper }}
         />
       </View>
 
       {sugerencias.length > 0 ? (
-        <View className="mb-4 mt-2 overflow-hidden rounded-card border border-line bg-surface">
+        <Superficie className="mb-4 mt-2">
           {sugerencias.map((pa) => (
             <Pressable
               key={pa.id}
@@ -85,7 +86,7 @@ export function BuscadorPrincipioActivo({
               ) : null}
             </Pressable>
           ))}
-        </View>
+        </Superficie>
       ) : null}
 
       {texto !== '' && sugerencias.length === 0 ? (

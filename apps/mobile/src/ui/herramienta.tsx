@@ -3,10 +3,12 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } fro
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icono } from '@/ui/iconos';
-import { Boton } from '@/ui/kit';
+import { Boton, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { fondoSeveridad } from '@/ui/severidad';
 import { colorEspina, RANGO_ETIQUETA, type RangoGravedad } from '@gfh/shared-types';
+import { TIPO } from './tokens';
 
 /**
  * El esqueleto de las tres herramientas: consulta y resultado como DOS estados
@@ -41,11 +43,11 @@ export function Consulta({
         {children}
       </ScrollView>
 
-      <View className="border-t border-line bg-surface px-4 py-3">
+      <BarraAccion>
         <Boton onPress={onAccion} cargando={cargando} deshabilitado={deshabilitado}>
           {accion}
         </Boton>
-      </View>
+      </BarraAccion>
     </KeyboardAvoidingView>
   );
 }
@@ -146,17 +148,6 @@ export function ConsultaPlegada({
  * El fondo tiñe con la gravedad. Los colores salen de la escala clínica: acá no
  * se elige un tono porque quede bien.
  */
-/** Sin `null` acá: sin hallazgos no pasa por este componente en la práctica,
- *  y de pasar, cae en el wash más neutro. */
-const FONDO_POR_RANGO: Record<RangoGravedad, string> = {
-  0: '#FEF2F2',
-  1: '#FEF2F2',
-  2: '#FFF7ED',
-  3: '#FFFBEB',
-  4: '#FFFBEB',
-  5: 'transparent',
-};
-
 export function Veredicto({
   rango,
   titulo,
@@ -172,7 +163,7 @@ export function Veredicto({
 }) {
   const col = useColores();
   const color = colorEspina(rango);
-  const fondo = rango === null ? '#F0FDF4' : FONDO_POR_RANGO[rango];
+  const fondo = fondoSeveridad(rango);
 
   return (
     <Superficie
@@ -184,7 +175,7 @@ export function Veredicto({
         {cifra ? (
           <Text
             className="font-mono-fuerte mr-3"
-            style={{ color, fontSize: 26, fontVariant: ['tabular-nums'] }}
+            style={{ color, fontSize: TIPO.cifra, fontVariant: ['tabular-nums'] }}
           >
             {cifra}
           </Text>
@@ -267,6 +258,7 @@ export function FilaResultado({
  * decisión de producto, no una limitación técnica.
  */
 export function AvisoDescartable({ extra, acercaDe }: { extra?: string; acercaDe: string }) {
+  const col = useColores();
   return (
     <>
       <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
@@ -280,15 +272,12 @@ export function AvisoDescartable({ extra, acercaDe }: { extra?: string; acercaDe
           `calculadora.tsx`. Estas cuatro no usan `Calculadora`/`Molde`
           (cruzan el catálogo, no son un cálculo puro), así que el texto se
           pasa acá en vez de vivir en un campo del molde. */}
-      <View
-        className="mb-3.5 rounded-card border border-line bg-surface px-4 py-3.5"
-        style={{ borderLeftWidth: 3, borderLeftColor: '#8CA39A' }}
-      >
+      <Superficie className="mb-3.5 px-4 py-3.5" style={{ borderLeftWidth: 3, borderLeftColor: col.tenue }}>
         <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
           ⓘ Sobre esta herramienta
         </Text>
         <Text className="font-sans text-meta leading-5 text-ink-suave">{acercaDe}</Text>
-      </View>
+      </Superficie>
     </>
   );
 }

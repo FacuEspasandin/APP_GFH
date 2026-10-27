@@ -19,7 +19,6 @@ const ESTADOS = [
   { valor: 'FINALIZADO', etiqueta: 'Finalizado' },
 ] as const;
 
-const ROJO = '#BA1A1A';
 
 /**
  * Editar una prescripción.
@@ -80,21 +79,21 @@ export default function EditarPrescripcion() {
           <View className="mt-3 flex-row flex-wrap gap-2">
             <View
               className="flex-row items-center gap-1.5 rounded-full px-3 py-1.5"
-              style={{ backgroundColor: '#ECEEF3' }}
+              style={{ backgroundColor: col.surfaceAlt }}
             >
-              <Icono nombre="capsula" tamano={12} color="#191C20" />
+              <Icono nombre="capsula" tamano={12} color={col.ink} />
               <Text
                 className="font-fuerte text-eyebrow uppercase tracking-wider"
-                style={{ color: '#191C20' }}
+                style={{ color: col.ink }}
               >
                 {viaLegible(viaSel) ?? 'Sin vía'}
               </Text>
             </View>
             {f.frecuencia ? (
-              <View className="rounded-full px-3 py-1.5" style={{ backgroundColor: '#ECEEF3' }}>
+              <View className="rounded-full px-3 py-1.5" style={{ backgroundColor: col.surfaceAlt }}>
                 <Text
                   className="font-fuerte text-eyebrow uppercase tracking-wider"
-                  style={{ color: '#191C20' }}
+                  style={{ color: col.ink }}
                 >
                   {f.frecuencia}
                 </Text>
@@ -106,7 +105,7 @@ export default function EditarPrescripcion() {
         <Text className="mb-2 text-fila font-medio text-ink">Estado de la prescripción</Text>
         <View
           className="mb-2 flex-row rounded-lg border p-1"
-          style={{ backgroundColor: '#F2F3F9', borderColor: '#BECABD' }}
+          style={{ backgroundColor: col.surfaceAlt, borderColor: col.line }}
         >
           {ESTADOS.map((e) => {
             const activo = estadoSel === e.valor;
@@ -120,11 +119,11 @@ export default function EditarPrescripcion() {
                 accessibilityRole="radio"
                 accessibilityState={{ selected: activo }}
                 className="flex-1 items-center rounded-md py-2"
-                style={{ backgroundColor: activo ? '#005228' : 'transparent' }}
+                style={{ backgroundColor: activo ? col.primary : 'transparent' }}
               >
                 <Text
                   className={activo ? 'text-body font-medio' : 'font-sans text-body'}
-                  style={{ color: activo ? '#FFFFFF' : '#3F4940' }}
+                  style={{ color: activo ? col.onPrimary : col.inkSuave }}
                 >
                   {e.etiqueta}
                 </Text>
@@ -170,7 +169,7 @@ export default function EditarPrescripcion() {
         </View>
 
         <View className="mt-10 gap-3 border-t pt-6" style={{ borderColor: col.line }}>
-          <Text className="text-center text-fila font-fuerte" style={{ color: ROJO }}>
+          <Text className="text-center text-fila font-fuerte" style={{ color: col.peligro }}>
             Zona de riesgo
           </Text>
           <Pressable
@@ -183,10 +182,10 @@ export default function EditarPrescripcion() {
             disabled={eliminar.isPending}
             accessibilityRole="button"
             className="flex-row items-center justify-center gap-2 rounded-full py-3.5"
-            style={{ borderWidth: 2, borderColor: ROJO, opacity: eliminar.isPending ? 0.6 : 1 }}
+            style={{ borderWidth: 2, borderColor: col.peligro, opacity: eliminar.isPending ? 0.6 : 1 }}
           >
-            <Icono nombre="basura" tamano={16} color={ROJO} />
-            <Text className="text-fila font-medio" style={{ color: ROJO }}>
+            <Icono nombre="basura" tamano={16} color={col.peligro} />
+            <Text className="text-fila font-medio" style={{ color: col.peligro }}>
               Borrar prescripción
             </Text>
           </Pressable>

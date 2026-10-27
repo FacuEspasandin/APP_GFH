@@ -55,8 +55,8 @@ export default function HistorialChat() {
           className="mb-3.5 flex-row items-center justify-center gap-2 rounded-card py-3.5"
           style={{ backgroundColor: col.primary }}
         >
-          <Icono nombre="mas" tamano={16} color="#FFFFFF" />
-          <Text className="font-fuerte text-body text-white">Nueva conversación</Text>
+          <Icono nombre="mas" tamano={16} color={col.onPrimary} />
+          <Text className="font-fuerte text-body text-on-primary">Nueva conversación</Text>
         </Pressable>
 
         {(data?.length ?? 0) === 0 ? (

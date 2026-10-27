@@ -32,6 +32,21 @@
     /* Error y acciones destructivas de la INTERFAZ. No es el rojo de gravedad
        clinica: ese vive en shared-types y significa otra cosa. */
     --peligro: 153 27 27;
+    /* Texto e íconos SOBRE `primary` (botones, avatares, insignias). */
+    --on-primary: 255 255 255;
+    /* Bloque anidado dentro de una tarjeta, o fondo de apoyo. */
+    --surface-alt: 248 250 248;
+    /* Aviso de error de la INTERFAZ: fondo suave y el texto que va encima. */
+    --peligro-light: 255 218 214;
+    --peligro-ink: 147 0 10;
+    /* Aviso de interfaz (no es gravedad clínica: esa sale de severidad). */
+    --aviso: 180 83 9;
+    --aviso-light: 254 243 199;
+    /* Información neutra de interfaz (celeste). */
+    --info: 7 89 133;
+    --info-light: 224 242 254;
+    /* Confirmación de interfaz (suscripción activa, ítem incluido). */
+    --exito: 34 197 94;
   }
 
   .dark:root {
@@ -53,5 +68,15 @@
     --accent-light: 22 48 46;
     /* Mismo motivo que el primary: el rojo oscuro sobre fondo oscuro no se lee. */
     --peligro: 248 113 113;
+    /* Sobre el verde aclarado el blanco no llega a AA: va un verde casi negro. */
+    --on-primary: 0 38 26;
+    --surface-alt: 26 42 35;
+    --peligro-light: 74 29 29;
+    --peligro-ink: 255 180 171;
+    --aviso: 240 179 90;
+    --aviso-light: 58 42 18;
+    --info: 125 211 252;
+    --info-light: 12 42 58;
+    --exito: 74 222 128;
   }
 }

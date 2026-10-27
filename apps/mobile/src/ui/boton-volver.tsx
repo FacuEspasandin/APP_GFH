@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icono } from '@/ui/iconos';
 import { useColores } from '@/ui/tema';
+import { FIJO } from './tokens';
 
 /**
  * Volver a Bienvenida desde las pantallas de entrada.
@@ -65,7 +66,7 @@ export function BotonVolverHeader() {
       className="h-11 w-11 items-center justify-center"
       hitSlop={6}
     >
-      <Icono nombre="atras" tamano={20} color="#FFFFFF" />
+      <Icono nombre="atras" tamano={20} color={FIJO.blanco} />
     </Pressable>
   );
 }

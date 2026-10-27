@@ -5,6 +5,7 @@ import { cerrarSesionLocal } from '@/api/cliente';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { AvisoNeutro, Boton } from '@/ui/kit';
+import { useColores } from '@/ui/tema';
 
 /**
  * Suscripción vencida (1.9) — bloqueo de acceso.
@@ -18,6 +19,7 @@ import { AvisoNeutro, Boton } from '@/ui/kit';
  * única salida real es renovar o cerrar sesión, las dos ya están abajo.
  */
 export default function SuscripcionVencida() {
+  const col = useColores();
   const router = useRouter();
 
   return (
@@ -28,11 +30,11 @@ export default function SuscripcionVencida() {
         <View className="items-center">
           <View
             className="h-16 w-16 items-center justify-center rounded-full"
-            style={{ backgroundColor: '#FFDAD6' }}
+            style={{ backgroundColor: col.peligroLight }}
           >
-            <Icono nombre="alerta" tamano={26} color="#93000A" />
+            <Icono nombre="alerta" tamano={26} color={col.peligroInk} />
           </View>
-          <Text className="mt-5 text-center text-[28px] font-fuerte text-ink">
+          <Text className="mt-5 text-center text-titular font-fuerte text-ink">
             Tu suscripción venció
           </Text>
           <Text className="font-sans mt-2 text-center text-body leading-6 text-ink-suave">

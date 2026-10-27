@@ -2,10 +2,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
-import { api, ErrorApi } from '@/api/cliente';
+import { ErrorApi } from '@/api/cliente';
 import { usePlan } from '@/api/plan';
 import { decidirEntrada } from '@/dominio/plan-gratis';
-import type { Inicio } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { CampoFecha } from '@/ui/campo-fecha';
@@ -13,7 +12,7 @@ import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { Skeleton } from '@/ui/estados-sistema';
 import { edadDeFecha, validarFecha } from '@/ui/fecha';
 import { Icono } from '@/ui/iconos';
-import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, Pantalla, BarraAccion } from '@/ui/kit';
 import { ResultadoClcr } from '@/ui/resultado-clcr';
 import { useColores } from '@/ui/tema';
 import { OPCIONES_SEXO, RANGOS, type Sexo } from '@gfh/shared-types';
@@ -147,7 +146,7 @@ export default function CrearPaciente() {
           >
             <Icono nombre="atras" tamano={18} color={col.ink} />
           </Pressable>
-          <Text className="text-[28px] font-fuerte text-ink">Crear Paciente</Text>
+          <Text className="text-titular font-fuerte text-ink">Crear Paciente</Text>
         </View>
 
         <BloqueFormulario titulo="Datos del paciente" exigencia="Obligatorio">
@@ -278,11 +277,11 @@ export default function CrearPaciente() {
       {/* El botón no viaja con el scroll. Con tres bloques abiertos quedaba
           debajo del pliegue y había que volver al final para crear a alguien
           cuyos datos ya estaban completos arriba. */}
-      <View className="border-t border-line bg-surface px-4 py-3">
+      <BarraAccion>
         <Boton onPress={crear} cargando={enviando} deshabilitado={!listo}>
           Crear paciente
         </Boton>
-      </View>
+      </BarraAccion>
       </KeyboardAvoidingView>
     </View>
   );

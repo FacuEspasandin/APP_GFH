@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
@@ -12,8 +12,7 @@ import {
   FilaResultado,
   Veredicto,
 } from '@/ui/herramienta';
-import { Icono } from '@/ui/iconos';
-import { CampoTexto, Chip, Estado } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, Estado } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import {
@@ -152,27 +151,15 @@ export default function HerramientaCondicionAlergia() {
           ) : null}
 
           <View className="mt-2 items-center border-t pt-6" style={{ borderColor: col.line }}>
-            <Pressable
+            <Boton
+              tamano="grande"
+              icono="alerta"
               onPress={() => calcular.mutate()}
-              disabled={farmaco.length === 0 || calcular.isPending}
-              accessibilityRole="button"
-              className="h-[60px] w-full flex-row items-center justify-center gap-3 rounded-full"
-              style={{
-                backgroundColor: '#005228',
-                opacity: farmaco.length === 0 || calcular.isPending ? 0.5 : 1,
-              }}
+              cargando={calcular.isPending}
+              deshabilitado={farmaco.length === 0}
             >
-              {calcular.isPending ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <>
-                  <Icono nombre="alerta" tamano={18} color="#FFFFFF" />
-                  <Text className="text-fila font-fuerte text-white">
-                    {farmaco.length === 0 ? 'Elegí un fármaco' : `Analizar ${farmaco[0]!.nombre}`}
-                  </Text>
-                </>
-              )}
-            </Pressable>
+              {farmaco.length === 0 ? 'Elegí un fármaco' : `Analizar ${farmaco[0]!.nombre}`}
+            </Boton>
             <Text className="mt-2 text-center text-meta leading-5 text-ink-suave">
               Esta herramienta no guarda nada: al salir se pierde.
             </Text>

@@ -46,6 +46,15 @@ const VARIABLE: Record<keyof Paleta, string> = {
   accent: 'accent',
   accentLight: 'accent-light',
   peligro: 'peligro',
+  onPrimary: 'on-primary',
+  surfaceAlt: 'surface-alt',
+  peligroLight: 'peligro-light',
+  peligroInk: 'peligro-ink',
+  aviso: 'aviso',
+  avisoLight: 'aviso-light',
+  info: 'info',
+  infoLight: 'info-light',
+  exito: 'exito',
 };
 
 describe('paleta', () => {

@@ -20,6 +20,7 @@ import { Icono } from '@/ui/iconos';
 import { CampoTexto, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { MarcadoresAjuste } from '@/ui/marcadores-ajuste';
 import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 
 type Pestana = 'Todos' | 'Medicamentos' | 'ATC';
 const PESTANAS: Pestana[] = ['Todos', 'Medicamentos', 'ATC'];
@@ -268,6 +269,7 @@ function FilaFarmaco({
   farmaco: PrincipioActivoResumen;
   onPress: () => void;
 }) {
+  const col = useColores();
   return (
     <Pressable
       onPress={onPress}
@@ -277,7 +279,7 @@ function FilaFarmaco({
     >
       <Superficie elevacion="plana" className="flex-row items-center px-3.5 py-2.5">
         <View className="mr-3 h-8 w-8 items-center justify-center rounded-full bg-primary-light">
-          <Icono nombre="capsula" tamano={16} color="#1F5E4A" />
+          <Icono nombre="capsula" tamano={16} color={col.primary} />
         </View>
         <View className="flex-1 pr-2">
           <Text className="text-fila font-medio text-ink" numberOfLines={1}>
@@ -287,7 +289,7 @@ function FilaFarmaco({
             {[f.grupoTerapeutico, f.codigoATC].filter(Boolean).join(' · ') || 'Principio activo'}
           </Text>
         </View>
-        <Icono nombre="chevron" tamano={15} color="#8CA39A" />
+        <Icono nombre="chevron" tamano={15} color={col.tenue} />
       </Superficie>
     </Pressable>
   );

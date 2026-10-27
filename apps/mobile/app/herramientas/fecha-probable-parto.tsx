@@ -5,9 +5,10 @@ import { Text, View } from 'react-native';
 import { fechaProbableDeParto, semanasDesdeFum } from '@/dominio/fecha-probable-parto';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { EncabezadoApp } from '@/ui/encabezado-app';
+import { EncabezadoHerramienta } from '@/ui/encabezado-herramienta';
 import { aTexto, validarFecha } from '@/ui/fecha';
-import { Icono } from '@/ui/iconos';
 import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 
 /**
  * Fecha probable de parto (regla de Naegele), sobre datos sueltos.
@@ -22,6 +23,7 @@ import { Superficie } from '@/ui/superficie';
  * descartable, igual que Clcr o Child-Pugh.
  */
 export default function FechaProbableDeParto() {
+  const col = useColores();
   const [fumTexto, setFumTexto] = useState('');
   const validacion = validarFecha(fumTexto);
 
@@ -32,15 +34,9 @@ export default function FechaProbableDeParto() {
     <View className="flex-1 bg-paper">
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp />
-      <View className="px-4 pt-4">
-        <View className="mb-1 flex-row items-center gap-2">
-          <Icono nombre="calculadora" tamano={20} color="#005228" />
-          <Text className="text-[28px] font-fuerte text-ink">Fecha probable de parto</Text>
-        </View>
-        <Text className="mb-2 text-body leading-6 text-ink-suave">
-          Regla de Naegele, sobre datos sueltos — no cruza el catálogo.
-        </Text>
-      </View>
+      <EncabezadoHerramienta icono="calculadora" titulo="Fecha probable de parto">
+        Regla de Naegele, sobre datos sueltos — no cruza el catálogo.
+      </EncabezadoHerramienta>
 
       <View className="flex-1 px-4">
         <CampoFecha etiqueta="Fecha de última menstruación (FUM)" valor={fumTexto} onChange={setFumTexto} />
@@ -68,10 +64,7 @@ export default function FechaProbableDeParto() {
           hoy.
         </Text>
 
-        <View
-          className="mb-3 rounded-card border border-line bg-surface px-4 py-3.5"
-          style={{ borderLeftWidth: 3, borderLeftColor: '#8CA39A' }}
-        >
+        <Superficie className="mb-3 px-4 py-3.5" style={{ borderLeftWidth: 3, borderLeftColor: col.tenue }}>
           <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
             ⓘ Sobre esta herramienta
           </Text>
@@ -80,7 +73,7 @@ export default function FechaProbableDeParto() {
             asumiendo un ciclo de 28 días con ovulación en el día 14. Sigue siendo el método de
             referencia para estimar la fecha de parto sin ecografía.
           </Text>
-        </View>
+        </Superficie>
       </View>
     </View>
   );

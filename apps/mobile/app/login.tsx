@@ -2,16 +2,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { z } from 'zod';
 
-import { api, consumirAvisoDeSesion, iniciarSesion } from '@/api/cliente';
+import { consumirAvisoDeSesion, iniciarSesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
 import { iniciarSesionGoogle } from '@/api/google-signin';
 import { BotonGoogle } from '@/ui/boton-google';
 import { BotonVolverFlotante } from '@/ui/boton-volver';
 import { Disclaimer } from '@/ui/disclaimer';
 import { Icono, type NombreIcono } from '@/ui/iconos';
+import { Boton } from '@/ui/kit';
+import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
 const esquema = z.object({
@@ -97,8 +99,8 @@ export default function Login() {
 
       <ScrollView contentContainerClassName="flex-grow justify-center px-6 py-10">
         <View className="mb-8 items-center">
-          <View className="h-16 w-16 items-center justify-center rounded-2xl" style={{ backgroundColor: '#005228' }}>
-            <Text className="text-lg font-fuerte tracking-widest text-white">GFH</Text>
+          <View className="h-16 w-16 items-center justify-center rounded-2xl" style={{ backgroundColor: col.primary }}>
+            <Text className="text-lg font-fuerte tracking-widest text-on-primary">GFH</Text>
           </View>
           <Text className="mt-4 text-grande font-fuerte text-ink">Iniciar sesión</Text>
           <Text className="font-sans mt-1 text-meta text-ink-suave">
@@ -107,22 +109,14 @@ export default function Login() {
         </View>
 
         {avisoDeSesion ? (
-          <View className="mb-4 rounded-xl border px-4 py-3" style={{ borderColor: col.line, backgroundColor: col.surface }}>
+          <Superficie className="mb-4 px-4 py-3">
             <Text className="font-sans text-meta leading-5 text-ink">{avisoDeSesion}</Text>
-          </View>
+          </Superficie>
         ) : null}
 
-        <View
-          className="gap-3 rounded-xl border bg-surface px-5 pb-6 pt-8"
-          style={{
-            borderColor: col.line,
-            borderLeftWidth: 4,
-            borderLeftColor: '#22C55E',
-            shadowColor: '#000',
-            shadowOpacity: 0.05,
-            shadowRadius: 1,
-            shadowOffset: { width: 0, height: 1 },
-          }}
+        <Superficie
+          className="gap-3 px-5 pb-6 pt-8"
+          style={{ borderLeftWidth: 4, borderLeftColor: col.exito }}
         >
           <Campo
             control={control}
@@ -148,7 +142,7 @@ export default function Login() {
             accessibilityRole="button"
             className="items-end pb-1"
           >
-            <Text className="text-meta font-medio" style={{ color: '#005228' }}>
+            <Text className="text-meta font-medio" style={{ color: col.primary }}>
               ¿Olvidé mi contraseña?
             </Text>
           </Pressable>
@@ -159,20 +153,10 @@ export default function Login() {
             </Text>
           ) : null}
 
-          <Pressable
-            onPress={enviar}
-            disabled={isSubmitting}
-            className="h-14 flex-row items-center justify-center rounded-full"
-            style={{ backgroundColor: '#005228', opacity: isSubmitting ? 0.6 : 1 }}
-            accessibilityRole="button"
-          >
-            {isSubmitting ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text className="text-fila font-fuerte text-white">Entrar</Text>
-            )}
-          </Pressable>
-        </View>
+          <Boton tamano="grande" onPress={enviar} cargando={isSubmitting}>
+            Entrar
+          </Boton>
+        </Superficie>
 
         <View className="my-5 flex-row items-center gap-3">
           <View className="h-px flex-1" style={{ backgroundColor: col.line }} />
@@ -234,7 +218,7 @@ function Campo({
               autoCapitalize="none"
               autoCorrect={false}
               accessibilityLabel={etiqueta}
-              className="h-[52px] flex-1 rounded-lg border border-line bg-surface pl-11 text-body text-ink"
+              className="h-campo flex-1 rounded-lg border border-line bg-surface pl-11 text-body text-ink"
               style={{ paddingRight: secreto ? 44 : 14 }}
             />
           )}

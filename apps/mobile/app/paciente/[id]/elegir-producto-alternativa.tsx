@@ -11,6 +11,7 @@ import { ErrorApi } from '@/api/cliente';
 import { Estado } from '@/ui/kit';
 import { MarcadoresAjuste } from '@/ui/marcadores-ajuste';
 import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 
 /**
  * Paso 2 de aceptar una alternativa (motor §8, rediseño): elegir CON QUÉ
@@ -23,6 +24,7 @@ import { Superficie } from '@/ui/superficie';
  * comercial.
  */
 export default function ElegirProductoAlternativa() {
+  const col = useColores();
   const router = useRouter();
   const { id: pacienteId, paOrigenId, paAlternativaId, prescripcion, origen, alternativa } =
     useLocalSearchParams<{
@@ -78,7 +80,7 @@ export default function ElegirProductoAlternativa() {
       ) : (
         <ScrollView contentContainerClassName="px-4 pb-4 pt-3.5">
           <View className="mb-4 flex-row items-center gap-2 rounded-chip bg-primary-light px-3.5 py-2.5">
-            <Icono nombre="check" tamano={16} color="#1F5E4A" />
+            <Icono nombre="check" tamano={16} color={col.primary} />
             <Text className="font-fuerte text-body text-primary">{alternativa}</Text>
           </View>
 
@@ -108,7 +110,7 @@ export default function ElegirProductoAlternativa() {
                     </Text>
                   </View>
                   <MarcadoresAjuste renal={p.tieneAjusteRenal} hepatico={p.tieneAjusteHepatico} />
-                  <Icono nombre="chevron" tamano={15} color="#8CA39A" />
+                  <Icono nombre="chevron" tamano={15} color={col.tenue} />
                 </Superficie>
               </Pressable>
             ))

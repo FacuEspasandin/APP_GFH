@@ -3,7 +3,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
-import type { Cockpit } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import {
   cuerpoDeGuardado,
@@ -18,8 +17,9 @@ import {
 import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
-import { Boton, CampoTexto, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
+import { TIPO } from '@/ui/tokens';
 
 /**
  * Embarazo y lactancia (motor §6.2 y el addendum de la quinta verificación).
@@ -142,7 +142,7 @@ export default function EmbarazoYLactancia() {
         </Superficie>
       </ScrollView>
 
-      <View className="border-t border-line bg-surface px-4 py-3">
+      <BarraAccion>
         <Boton
           onPress={() => guardar.mutate()}
           cargando={guardar.isPending}
@@ -150,7 +150,7 @@ export default function EmbarazoYLactancia() {
         >
           Guardar y recalcular
         </Boton>
-      </View>
+      </BarraAccion>
       </KeyboardAvoidingView>
     </View>
   );
@@ -169,7 +169,7 @@ function Efecto({ semana }: { semana: number | undefined }) {
     <View className="mt-1 flex-row items-center rounded-chip bg-primary-light px-3 py-2.5">
       <Text
         className="font-mono-fuerte mr-3 text-primary"
-        style={{ fontSize: 22, fontVariant: ['tabular-nums'] }}
+        style={{ fontSize: TIPO.cifraChica, fontVariant: ['tabular-nums'] }}
       >
         {semana}
       </Text>

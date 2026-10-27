@@ -6,7 +6,7 @@ import { Pressable, Text, View } from 'react-native';
 import { usePlan } from '@/api/plan';
 import { buscar } from '@/dominio/busqueda';
 import { detalleDeAcceso, esDePago, rutaNuevoPaciente, rutaPaywall } from '@/dominio/plan-gratis';
-import type { FilaPaciente, Inicio as DatosInicio } from '@/api/tipos';
+import type { FilaPaciente } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import { FilaAnimada } from '@/ui/animacion';
 import { EncabezadoApp } from '@/ui/encabezado-app';
@@ -24,6 +24,7 @@ import {
   RANGO_ETIQUETA,
   type RangoGravedad,
 } from '@gfh/shared-types';
+import { useColores } from '@/ui/tema';
 
 /**
  * Pacientes (2.x + fusión con Grupos). "Todos" es lista PLANA, no agrupada.
@@ -44,6 +45,7 @@ import {
  * cada lugar donde trabajo?"), sólo cambia cómo se llega a la segunda.
  */
 export default function Pacientes() {
+  const col = useColores();
   const router = useRouter();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [consulta, setConsulta] = useState('');
@@ -87,7 +89,7 @@ export default function Pacientes() {
 
       <Pantalla onRefrescar={() => void refetch()} refrescando={isRefetching}>
         <View className="mb-3 flex-row items-center justify-between">
-          <Text className="text-[32px] font-fuerte" style={{ color: '#005228' }}>
+          <Text className="text-display font-fuerte" style={{ color: col.primary }}>
             Pacientes
           </Text>
           <Pressable
@@ -95,9 +97,9 @@ export default function Pacientes() {
             accessibilityRole="button"
             accessibilityLabel="Crear"
             className="h-12 w-12 items-center justify-center rounded-full"
-            style={{ backgroundColor: '#005228' }}
+            style={{ backgroundColor: col.primary }}
           >
-            <Icono nombre="mas" tamano={18} color="#FFFFFF" />
+            <Icono nombre="mas" tamano={18} color={col.onPrimary} />
           </Pressable>
         </View>
 
@@ -241,7 +243,7 @@ function Fila({ paciente }: { paciente: FilaPaciente }) {
                     className="rounded-full px-2 py-0.5"
                     style={{ backgroundColor: color }}
                   >
-                    <Text className="font-fuerte text-[10px] uppercase tracking-wider text-white">
+                    <Text className="font-fuerte text-[10px] uppercase tracking-wider text-blanco">
                       {RANGO_ETIQUETA[paciente.peorRango as RangoGravedad]}
                     </Text>
                   </View>

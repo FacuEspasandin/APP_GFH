@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 
 import { usePlan } from '@/api/plan';
 import { esDePago, rutaPaywall } from '@/dominio/plan-gratis';
-import type { Inicio, ResumenGrupo } from '@/api/tipos';
+import type { ResumenGrupo } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import { FilaAnimada } from '@/ui/animacion';
 import { BotonMas, EncabezadoApp } from '@/ui/encabezado-app';
@@ -156,7 +156,7 @@ function TarjetaGrupo({
             ) : null}
             {grupo.graves > 0 ? <Dato n={grupo.graves} etiqueta="grave" color={col.peligro} /> : null}
             {grupo.atencion > 0 ? (
-              <Dato n={grupo.atencion} etiqueta="gravedad alta" color="#92400E" />
+              <Dato n={grupo.atencion} etiqueta="gravedad alta" color={col.aviso} />
             ) : null}
           </View>
         </>

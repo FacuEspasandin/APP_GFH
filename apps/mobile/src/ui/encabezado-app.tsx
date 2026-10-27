@@ -70,7 +70,7 @@ export function EncabezadoApp({
         </Pressable>
       )}
 
-      <Text className="font-fuerte text-[32px] tracking-[-0.8px]" style={{ color: '#005228' }}>
+      <Text className="font-fuerte text-display tracking-logo" style={{ color: col.primary }}>
         {titulo}
       </Text>
 
@@ -121,7 +121,7 @@ export function EncabezadoConTitulo({
       >
         <Icono nombre={cierra ? 'cerrar' : 'atras'} tamano={cierra ? 16 : 18} color={col.ink} />
       </Pressable>
-      <Text className="text-fila font-fuerte" style={{ color: '#005228' }}>
+      <Text className="text-fila font-fuerte" style={{ color: col.primary }}>
         {titulo}
       </Text>
     </View>
@@ -130,15 +130,16 @@ export function EncabezadoConTitulo({
 
 /** El "+" verde para las pantallas donde crear es la acción principal del header (Grupos). */
 export function BotonMas({ onPress, etiqueta }: { onPress: () => void; etiqueta: string }) {
+  const col = useColores();
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={etiqueta}
       className="h-10 w-10 items-center justify-center rounded-full"
-      style={{ backgroundColor: '#005228' }}
+      style={{ backgroundColor: col.primary }}
     >
-      <Icono nombre="mas" tamano={16} color="#FFFFFF" />
+      <Icono nombre="mas" tamano={16} color={col.onPrimary} />
     </Pressable>
   );
 }

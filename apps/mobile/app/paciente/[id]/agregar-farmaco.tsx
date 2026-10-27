@@ -3,14 +3,15 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
-import { api, ErrorApi } from '@/api/cliente';
+import { ErrorApi } from '@/api/cliente';
 import { POR_PRODUCTO, useIndiceProductos } from '@/api/catalogo';
 import * as API from '@/api/endpoints';
 import { buscar } from '@/dominio/busqueda';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { hapticaAdvertencia, hapticaBloqueo, hapticaExito } from '@/ui/haptica';
-import { Boton, CampoTexto, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
+import { fondoSeveridad } from '@/ui/severidad';
 import { Superficie } from '@/ui/superficie';
 import { COLOR_SEVERIDAD, VIAS_OFRECIDAS } from '@gfh/shared-types';
 
@@ -208,13 +209,13 @@ export default function AgregarFarmaco() {
         </BloqueFormulario>
       </ScrollView>
 
-      <View className="border-t border-line bg-surface px-4 py-3">
+      <BarraAccion>
         {conflicto ? (
           <Superficie
             elevacion="plana"
             className="mb-2.5 px-3.5 py-3"
             style={{
-              backgroundColor: bloqueado ? '#FEF2F2' : '#FFFBEB',
+              backgroundColor: fondoSeveridad(bloqueado ? 0 : 3),
               borderLeftWidth: 4,
               borderLeftColor: bloqueado ? COLOR_SEVERIDAD.grave : COLOR_SEVERIDAD.media,
             }}
@@ -241,7 +242,7 @@ export default function AgregarFarmaco() {
         >
           {pideConfirmacion ? 'Confirmar y agregar' : 'Agregar al tratamiento'}
         </Boton>
-      </View>
+      </BarraAccion>
       </KeyboardAvoidingView>
     </View>
   );

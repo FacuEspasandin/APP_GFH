@@ -20,7 +20,7 @@ export default function Acerca() {
           <View className="mb-4 h-24 w-24 items-center justify-center rounded-full bg-primary-light">
             <Icono nombre="capsula" tamano={40} color={col.primary} />
           </View>
-          <Text className="text-center text-[22px] font-fuerte text-ink">
+          <Text className="text-center text-titulo font-fuerte text-ink">
             Gestión Farmacológica Hospitalaria
           </Text>
           <Text className="mt-1 text-center text-body text-ink-suave">Plataforma clínica</Text>
@@ -48,7 +48,7 @@ export default function Acerca() {
           className="mb-3 flex-row gap-3 border p-4"
           style={{ borderColor: col.line }}
         >
-          <Icono nombre="prohibido" tamano={20} color="#0EA5E9" />
+          <Icono nombre="prohibido" tamano={20} color={col.info} />
           <View className="flex-1">
             <Text className="mb-1 text-body font-medio text-ink">Decisiones clínicas, siempre trazables</Text>
             <Text className="font-sans text-meta leading-5 text-ink-suave">

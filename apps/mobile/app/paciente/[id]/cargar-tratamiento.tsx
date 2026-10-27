@@ -16,7 +16,7 @@ import {
 } from '@/dominio/carga-tratamiento';
 import { ConsultaPlegada, Veredicto } from '@/ui/herramienta';
 import { Icono } from '@/ui/iconos';
-import { Boton, CampoTexto, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD, VIAS_OFRECIDAS, viaCorta } from '@gfh/shared-types';
@@ -237,7 +237,7 @@ export default function CargarTratamiento() {
               placeholder={'Eliquis 5 mg cada 12 h\nIbupirac 600 mg cada 8 h'}
               placeholderTextColor={col.tenue}
               accessibilityLabel="Listado de medicación"
-              className="min-h-[140px] rounded-xl border border-line bg-surface px-4 py-4 text-body text-ink"
+              className="min-h-area-texto rounded-xl border border-line bg-surface px-4 py-4 text-body text-ink"
               style={{ textAlignVertical: 'top' }}
             />
             <Pressable
@@ -248,8 +248,8 @@ export default function CargarTratamiento() {
               className="absolute bottom-3 right-3 flex-row items-center gap-1.5 rounded-full px-3.5 py-2"
               style={{ backgroundColor: col.paper, borderWidth: 1, borderColor: col.line }}
             >
-              <Icono nombre="camara" tamano={16} color="#005228" />
-              <Text className="font-fuerte text-[11px] uppercase tracking-wider" style={{ color: '#005228' }}>
+              <Icono nombre="camara" tamano={16} color={col.primary} />
+              <Text className="font-fuerte text-eyebrow uppercase tracking-wider" style={{ color: col.primary }}>
                 {subirFoto.isPending ? 'Leyendo la foto…' : 'Desde una foto'}
               </Text>
             </Pressable>
@@ -272,7 +272,7 @@ export default function CargarTratamiento() {
           ) : null}
         </ScrollView>
 
-        <View className="border-t border-line bg-surface px-4 py-3">
+        <BarraAccion>
           <Boton
             onPress={() => matchear.mutate()}
             cargando={matchear.isPending}
@@ -282,7 +282,7 @@ export default function CargarTratamiento() {
               ? 'Escribí al menos una línea'
               : `Buscar ${textos.length} ${textos.length === 1 ? 'línea' : 'líneas'} en el catálogo`}
           </Boton>
-        </View>
+        </BarraAccion>
         </KeyboardAvoidingView>
       </View>
     );
@@ -362,7 +362,7 @@ export default function CargarTratamiento() {
         ) : null}
       </ScrollView>
 
-      <View className="border-t border-line bg-surface px-4 py-3">
+      <BarraAccion>
         <Boton
           onPress={() => confirmar.mutate()}
           cargando={confirmar.isPending}
@@ -372,7 +372,7 @@ export default function CargarTratamiento() {
             ? 'Elegí al menos una línea'
             : `Agregar ${listas.length} al tratamiento`}
         </Boton>
-      </View>
+      </BarraAccion>
       </KeyboardAvoidingView>
     </View>
   );
@@ -429,13 +429,13 @@ function FilaLinea({
         accessibilityRole="checkbox"
         accessibilityState={{ checked: l.elegida }}
         accessibilityLabel={`Elegir ${l.nombreSugerido ?? l.textoOriginal}`}
-        className="mr-3 mt-0.5 h-5 w-5 items-center justify-center rounded-[5px] border-2"
+        className="mr-3 mt-0.5 h-5 w-5 items-center justify-center rounded-casilla border-2"
         style={{
           borderColor: l.elegida ? col.primary : col.tenue,
           backgroundColor: l.elegida ? col.primary : 'transparent',
         }}
       >
-        {l.elegida ? <Icono nombre="check" tamano={13} color="#FFFFFF" /> : null}
+        {l.elegida ? <Icono nombre="check" tamano={13} color={col.onPrimary} /> : null}
       </Pressable>
 
       <View className="flex-1">
@@ -490,10 +490,11 @@ function FilaLinea({
  *  hay una vista combinada de los dos pasos, así que no hace falta el estado
  *  "pendiente" que sí tiene sentido en un mock estático de Figma. */
 function PasoNumerado({ n, titulo }: { n: number; titulo: string }) {
+  const col = useColores();
   return (
     <View className="mb-2 flex-row items-center gap-2">
-      <View className="h-6 w-6 items-center justify-center rounded-full" style={{ backgroundColor: '#005228' }}>
-        <Text className="font-medio text-eyebrow text-white">{n}</Text>
+      <View className="h-6 w-6 items-center justify-center rounded-full" style={{ backgroundColor: col.primary }}>
+        <Text className="font-medio text-eyebrow text-on-primary">{n}</Text>
       </View>
       <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
     </View>

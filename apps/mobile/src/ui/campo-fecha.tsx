@@ -63,7 +63,7 @@ export function CampoFecha({
           maxLength={LARGO_FECHA}
           accessibilityLabel={etiqueta}
           className="h-12 flex-1 rounded-chip border bg-surface px-3.5 text-body text-ink"
-          style={{ borderColor: error ? '#EF4444' : col.line }}
+          style={{ borderColor: error ? col.peligro : col.line }}
         />
         <Pressable
           onPress={() => setAbierto(true)}
@@ -142,7 +142,7 @@ function Calendario({
       >
         {/* El Pressable interno frena el toque para que tocar el calendario no
             lo cierre. */}
-        <Pressable className="w-full max-w-[360px] rounded-card bg-surface p-4" onPress={() => {}}>
+        <Pressable className="w-full max-w-dialogo rounded-card bg-surface p-4" onPress={() => {}}>
           <View className="mb-3 flex-row items-center justify-between">
             <Pressable
               onPress={() => setVista(vista === 'dia' ? 'mes' : vista === 'mes' ? 'anio' : 'anio')}
@@ -248,7 +248,7 @@ function GrillaDias({
         {DIAS_SEMANA.map((d, i) => (
           <Text
             key={i}
-            className="w-[14.28%] text-center text-eyebrow font-fuerte uppercase text-ink-suave"
+            className="w-dia text-center text-eyebrow font-fuerte uppercase text-ink-suave"
           >
             {d}
           </Text>
@@ -257,7 +257,7 @@ function GrillaDias({
 
       <View className="flex-row flex-wrap">
         {Array.from({ length: huecos }, (_, i) => (
-          <View key={`h${i}`} className="w-[14.28%] py-2" />
+          <View key={`h${i}`} className="w-dia py-2" />
         ))}
 
         {Array.from({ length: total }, (_, i) => i + 1).map((d) => {
@@ -275,7 +275,7 @@ function GrillaDias({
               accessibilityRole="button"
               accessibilityLabel={`${d} de ${MESES[mes - 1]} de ${anio}`}
               accessibilityState={{ selected: activa, disabled: futura }}
-              className="w-[14.28%] items-center py-1.5"
+              className="w-dia items-center py-1.5"
             >
               <View
                 className="h-9 w-9 items-center justify-center rounded-full"
@@ -284,7 +284,7 @@ function GrillaDias({
                 <Text
                   className="font-sans text-body"
                   style={{
-                    color: activa ? '#FFFFFF' : futura ? col.tenue : col.ink,
+                    color: activa ? col.onPrimary : futura ? col.tenue : col.ink,
                     fontFamily: activa ? 'Inter_700Bold' : 'Inter_400Regular',
                   }}
                 >

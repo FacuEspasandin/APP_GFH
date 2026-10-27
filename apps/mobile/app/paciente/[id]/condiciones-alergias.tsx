@@ -12,7 +12,7 @@ import {
 } from '@/dominio/condiciones-alergias';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
-import { Boton, Estado, Eyebrow } from '@/ui/kit';
+import { Boton, Estado, Eyebrow, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
@@ -164,7 +164,7 @@ export default function CondicionesYAlergias() {
 
       {/* Al pie y no al final del scroll: con seis condiciones cargadas, agregar
           la séptima obligaba a recorrer la lista entera. */}
-      <View className="flex-row gap-2.5 border-t border-line bg-surface px-4 py-3">
+      <BarraAccion className="flex-row gap-2.5">
         <View className="flex-1">
           <Boton
             variante="secundario"
@@ -181,7 +181,7 @@ export default function CondicionesYAlergias() {
             Agregar alergia
           </Boton>
         </View>
-      </View>
+      </BarraAccion>
     </View>
   );
 }

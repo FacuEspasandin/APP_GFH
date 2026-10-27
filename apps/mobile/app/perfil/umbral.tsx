@@ -53,13 +53,13 @@ export default function Umbral() {
                 accessibilityState={{ selected: activo }}
                 className="rounded-full border px-6 py-2.5"
                 style={{
-                  backgroundColor: activo ? '#005228' : col.surface,
-                  borderColor: activo ? '#005228' : col.line,
+                  backgroundColor: activo ? col.primary : col.surface,
+                  borderColor: activo ? col.primary : col.line,
                 }}
               >
                 <Text
                   className="text-meta font-medio"
-                  style={{ color: activo ? '#FFFFFF' : col.ink }}
+                  style={{ color: activo ? col.onPrimary : col.ink }}
                 >
                   {n}
                 </Text>
@@ -70,9 +70,9 @@ export default function Umbral() {
 
         <View
           className="mt-6 flex-row gap-2.5 rounded-md px-4 py-4"
-          style={{ backgroundColor: col.paper, borderLeftWidth: 4, borderLeftColor: '#0EA5E9' }}
+          style={{ backgroundColor: col.paper, borderLeftWidth: 4, borderLeftColor: col.info }}
         >
-          <Icono nombre="info" tamano={20} color="#0EA5E9" />
+          <Icono nombre="info" tamano={20} color={col.info} />
           <View className="flex-1">
             <Text className="mb-1 text-fila font-fuerte text-ink">Impacto clínico</Text>
             <Text className="font-sans text-meta leading-5 text-ink-suave">

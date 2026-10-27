@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
-import { api, iniciarSesion } from '@/api/cliente';
+import { iniciarSesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
 import { iniciarSesionGoogle } from '@/api/google-signin';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
@@ -11,7 +11,7 @@ import { useVolverAInicio } from '@/ui/boton-volver';
 import { infoDeSesion, tipoDeDispositivo } from '@/ui/dispositivo';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
-import { Boton, CampoTexto, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
 import { ESPECIALIDADES, type Especialidad } from '@gfh/shared-types';
 
@@ -174,9 +174,9 @@ export default function Registro() {
             al paywall — que sí ofrece el plan gratis. */}
         <View
           className="mb-3.5 flex-row gap-3 rounded-md px-4 py-3.5"
-          style={{ backgroundColor: col.paper, borderLeftWidth: 4, borderLeftColor: '#005228' }}
+          style={{ backgroundColor: col.paper, borderLeftWidth: 4, borderLeftColor: col.primary }}
         >
-          <Icono nombre="info" tamano={20} color="#005228" />
+          <Icono nombre="info" tamano={20} color={col.primary} />
           <Text className="font-sans flex-1 text-meta leading-5 text-ink-suave">
             Empezás con el plan gratis: paciente de demostración, calculadoras y consultas de fármacos.
             Para cargar tus propios pacientes, ahí se elige plan.
@@ -190,11 +190,11 @@ export default function Registro() {
         ) : null}
       </ScrollView>
 
-      <View className="border-t border-line bg-surface px-4 py-3">
+      <BarraAccion>
         <Boton onPress={enviar} cargando={enviando} deshabilitado={!listo}>
           Crear cuenta
         </Boton>
-      </View>
+      </BarraAccion>
       </KeyboardAvoidingView>
     </View>
   );

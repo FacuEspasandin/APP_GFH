@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 
 import { hapticaSeleccion } from './haptica';
+import { Icono, type NombreIcono } from './iconos';
+import { Superficie, SuperficieTocable } from './superficie';
 import { useColores } from './tema';
 import { COLOR_SEVERIDAD, etiquetaRango, evaluarValor, type Rango } from '@gfh/shared-types';
 
@@ -105,11 +107,10 @@ export function FilaAccion({
 }) {
   const col = useColores();
   return (
-    <Pressable
+    <SuperficieTocable
       onPress={onPress}
-      disabled={!onPress}
-      accessibilityRole={onPress ? 'button' : undefined}
-      className="mb-2 flex-row items-center rounded-card border border-line bg-surface px-3.5 py-3"
+      contenedor="mb-2"
+      className="flex-row items-center px-3.5 py-3"
     >
       <View className="flex-1">
         <Text
@@ -121,45 +122,76 @@ export function FilaAccion({
         {detalle ? <Text className="font-sans mt-0.5 text-meta text-ink-suave">{detalle}</Text> : null}
       </View>
       {derecha}
-    </Pressable>
+    </SuperficieTocable>
   );
 }
 
+/**
+ * El botón. Una sola pieza para toda la app: lo que cambia es el `tamano`, no
+ * quién lo dibuja.
+ *
+ *   normal  48 px, esquina de chip. El de formularios y diálogos.
+ *   grande  56 px, píldora. La acción principal de una pantalla (analizar,
+ *           calcular, entrar, crear).
+ *   chico   40 px, píldora, ancho del contenido. Acción secundaria al costado.
+ *
+ * Sobre `primary` el texto es `onPrimary`: blanco en claro, verde casi negro
+ * en oscuro (el verde de marca se aclara y el blanco dejaría de leerse).
+ */
 export function Boton({
   children,
   onPress,
   variante = 'primario',
+  tamano = 'normal',
+  icono,
   cargando,
   deshabilitado,
 }: {
   children: string;
   onPress: () => void;
   variante?: 'primario' | 'secundario' | 'destructivo';
+  tamano?: 'normal' | 'grande' | 'chico';
+  /** Ícono a la izquierda del texto. */
+  icono?: NombreIcono;
   cargando?: boolean;
   deshabilitado?: boolean;
 }) {
   const col = useColores();
 
-  const fondo =
-    variante === 'primario' ? 'bg-primary' : variante === 'destructivo' ? 'bg-surface' : 'bg-surface';
+  const fondo = variante === 'primario' ? 'bg-primary' : 'bg-surface';
   const borde = variante === 'primario' ? '' : 'border border-line';
   const colorTexto =
-    variante === 'primario' ? '#FFFFFF' : variante === 'destructivo' ? col.peligro : col.ink;
+    variante === 'primario' ? col.onPrimary : variante === 'destructivo' ? col.peligro : col.ink;
+  const forma =
+    tamano === 'grande'
+      ? 'h-14 w-full gap-3 rounded-full'
+      : tamano === 'chico'
+        ? 'h-10 gap-2 self-start rounded-full px-6'
+        : 'h-12 rounded-chip';
+  const claseTexto =
+    tamano === 'grande'
+      ? 'text-fila font-fuerte'
+      : tamano === 'chico'
+        ? 'text-meta font-medio'
+        : 'text-body font-fuerte';
 
   return (
     <Pressable
       onPress={onPress}
       disabled={cargando || deshabilitado}
       accessibilityRole="button"
-      className={`h-12 flex-row items-center justify-center rounded-chip ${fondo} ${borde}`}
+      className={`flex-row items-center justify-center ${forma} ${fondo} ${borde}`}
       style={{ opacity: cargando || deshabilitado ? 0.55 : 1 }}
     >
       {cargando ? (
-        <ActivityIndicator color={variante === 'primario' ? '#FFFFFF' : col.primary} />
+        <ActivityIndicator color={variante === 'primario' ? col.onPrimary : col.primary} />
       ) : (
-        <Text className="text-body font-fuerte" style={{ color: colorTexto }}>
-          {children}
-        </Text>
+        <>
+          {icono ? <Icono nombre={icono} tamano={tamano === 'chico' ? 16 : 18} color={colorTexto} /> : null}
+          <Text className={claseTexto} style={{ color: colorTexto }}>
+            {children}
+          </Text>
+        </>
       )}
     </Pressable>
   );
@@ -207,7 +239,7 @@ export const CampoTexto = forwardRef<
     error || v.estado === 'invalido'
       ? col.peligro
       : v.estado === 'implausible'
-        ? '#B45309'
+        ? col.aviso
         : col.tenue;
 
   return (
@@ -224,7 +256,7 @@ export const CampoTexto = forwardRef<
         accessibilityHint={rango ? `Entre ${etiquetaRango(rango)}` : undefined}
         className={
           props.multiline
-            ? 'min-h-[96px] rounded-chip border bg-surface px-3.5 py-3 text-body text-ink'
+            ? 'min-h-campo-multilinea rounded-chip border bg-surface px-3.5 py-3 text-body text-ink'
             : 'h-12 rounded-chip border bg-surface px-3.5 text-body text-ink'
         }
         style={{ borderColor: borde, borderWidth: v.estado === 'ok' ? 1 : 1.5 }}
@@ -310,7 +342,7 @@ export function Estado({
       <Text className="text-center text-fila font-fuerte text-ink">{titulo}</Text>
       <Text className="font-sans mt-2 text-center text-meta leading-5 text-ink-suave">{detalle}</Text>
       {accion && onAccion ? (
-        <View className="mt-5 w-full max-w-[220px]">
+        <View className="mt-5 w-full max-w-accion">
           <Boton onPress={onAccion}>{accion}</Boton>
         </View>
       ) : null}
@@ -323,11 +355,68 @@ export function AvisoNeutro({ children }: { children: ReactNode }) {
   const col = useColores();
 
   return (
-    <View
-      className="mb-2 rounded-card border border-line bg-surface px-3.5 py-3"
+    <Superficie
+      className="mb-2 px-3.5 py-3"
       style={{ borderLeftWidth: 4, borderLeftColor: col.tenue }}
     >
       <Text className="font-sans text-meta leading-5 text-ink">{children}</Text>
+    </Superficie>
+  );
+}
+
+/**
+ * Aviso de error o de acción irreversible de la INTERFAZ: fondo rojo suave,
+ * ícono y título en el rojo oscuro de `peligroInk`.
+ *
+ * Había seis copias, cada una con su propio borde y su propio `rgba` para el
+ * texto. En oscuro el `rgba` de rojo oscuro quedaba sobre fondo rojo oscuro y
+ * no se leía; centralizado, el texto sigue al tema.
+ *
+ * No es gravedad clínica: un hallazgo grave usa la escala de severidad. Este
+ * aviso dice «cuidado con lo que hacés» o «esto salió mal».
+ */
+export function AvisoPeligro({
+  titulo,
+  detalle,
+  className = '',
+  children,
+}: {
+  titulo: string;
+  /** Una línea de explicación. Para más (viñetas, un botón) usar `children`. */
+  detalle?: string;
+  className?: string;
+  children?: ReactNode;
+}) {
+  const col = useColores();
+
+  return (
+    <View className={`gap-3 rounded-card p-4 ${className}`} style={{ backgroundColor: col.peligroLight }}>
+      <View className="flex-row items-center gap-2">
+        <Icono nombre="alerta" tamano={20} color={col.peligroInk} />
+        <Text className="flex-1 text-fila font-fuerte" style={{ color: col.peligroInk }}>
+          {titulo}
+        </Text>
+      </View>
+      {detalle ? <TextoPeligro>{detalle}</TextoPeligro> : null}
+      {children}
     </View>
   );
+}
+
+/** Un párrafo dentro de `AvisoPeligro`. */
+export function TextoPeligro({ children }: { children: ReactNode }) {
+  const col = useColores();
+  return (
+    <Text className="font-sans text-meta leading-5" style={{ color: col.peligroInk }}>
+      {children}
+    </Text>
+  );
+}
+
+/**
+ * La barra fija al pie de una pantalla con la acción que sigue (guardar,
+ * continuar, aceptar). Un filo arriba la separa del contenido que se desplaza.
+ */
+export function BarraAccion({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return <View className={`border-t border-line bg-surface px-4 py-3 ${className}`}>{children}</View>;
 }

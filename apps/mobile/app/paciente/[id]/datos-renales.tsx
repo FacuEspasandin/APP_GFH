@@ -15,15 +15,10 @@ import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { aISO, validarFecha } from '@/ui/fecha';
-import { Boton, CampoTexto, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
-import {
-  calcularClcr,
-  claveColorPorClcr,
-  COLOR_SEVERIDAD,
-  DatoClinicoInvalido,
-  type Sexo,
-} from '@gfh/shared-types';
+import { claveColorPorClcr, COLOR_SEVERIDAD, type Sexo } from '@gfh/shared-types';
+import { TIPO } from '@/ui/tokens';
 
 /**
  * Editar datos renales (3.1.3). Calculado o pisado a mano.
@@ -156,13 +151,13 @@ export default function DatosRenales() {
         </BloqueFormulario>
       </ScrollView>
 
-      <View className="border-t border-line bg-surface px-4 py-3">
+      <BarraAccion>
         {/* "Guardar y recalcular" y no "Guardar": esto vuelve a correr las cinco
             verificaciones del paciente, y el botón tiene que decirlo. */}
         <Boton onPress={() => guardar.mutate()} cargando={guardar.isPending} deshabilitado={!listo}>
           Guardar y recalcular
         </Boton>
-      </View>
+      </BarraAccion>
       </KeyboardAvoidingView>
     </View>
   );
@@ -185,7 +180,7 @@ function ClcrVigente({ paciente }: { paciente: Cockpit['paciente'] }) {
       <View className="flex-row items-baseline">
         <Text
           className="font-mono-fuerte mr-2.5"
-          style={{ color, fontSize: 26, fontVariant: ['tabular-nums'] }}
+          style={{ color, fontSize: TIPO.cifra, fontVariant: ['tabular-nums'] }}
         >
           {String(paciente.clcrMlMin).replace('.', ',')}
         </Text>
@@ -259,7 +254,7 @@ function Delta({
 
       <Text
         className="font-mono-fuerte mr-3"
-        style={{ color, fontSize: 22, fontVariant: ['tabular-nums'] }}
+        style={{ color, fontSize: TIPO.cifraChica, fontVariant: ['tabular-nums'] }}
       >
         {String(despues).replace('.', ',')}
       </Text>

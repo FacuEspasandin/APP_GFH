@@ -27,7 +27,7 @@ export default function RestriccionLactancia() {
     <View className="flex-1 bg-paper">
       <EncabezadoApp />
       <Pantalla>
-        <Text className="mb-4 text-[28px] font-fuerte text-ink">Lactancia</Text>
+        <Text className="mb-4 text-titular font-fuerte text-ink">Lactancia</Text>
 
         <ResultadoConsulta
           cargando={isLoading}
@@ -99,7 +99,7 @@ function Contenido({ f }: { f: DetalleRestriccion }) {
               </Text>
             </View>
 
-            <View className="flex-1 rounded-card border border-line px-3 py-2.5">
+            <View className="flex-1 rounded-card bg-surface-alt px-3 py-2.5">
               <Text className="font-mono text-eyebrow uppercase tracking-wider text-tenue">
                 No, o sin dato
               </Text>

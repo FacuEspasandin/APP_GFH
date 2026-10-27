@@ -200,7 +200,7 @@ export default function CockpitPaciente() {
         {/* ---------- Encabezado: nombre + agregar ---------- */}
         <View className="mb-4 flex-row items-start justify-between">
           <View className="flex-1 pr-3">
-            <Text className="text-[32px] font-fuerte leading-10 text-ink">
+            <Text className="text-display font-fuerte leading-10 text-ink">
               {p.nombre} {p.apellido}
             </Text>
             <Text className="mt-0.5 text-body text-ink-suave">{p.edadAnios} años</Text>
@@ -210,9 +210,9 @@ export default function CockpitPaciente() {
             accessibilityRole="button"
             accessibilityLabel="Agregar"
             className="h-11 w-11 items-center justify-center rounded-full"
-            style={{ backgroundColor: '#005228' }}
+            style={{ backgroundColor: col.primary }}
           >
-            <Icono nombre="mas" tamano={18} color="#FFFFFF" />
+            <Icono nombre="mas" tamano={18} color={col.onPrimary} />
           </Pressable>
         </View>
 
@@ -365,15 +365,11 @@ export default function CockpitPaciente() {
               ))}
 
               {data.hallazgos.length > destacados.length ? (
-                <Pressable
-                  onPress={() => abrir(`/paciente/${id}/hallazgos`)}
-                  accessibilityRole="button"
-                  className="items-center rounded-card border border-line bg-surface py-2.5"
-                >
+                <SuperficieTocable onPress={() => abrir(`/paciente/${id}/hallazgos`)} className="items-center py-2.5">
                   <Text className="font-medio text-meta text-primary">
                     Ver los {data.hallazgos.length} hallazgos
                   </Text>
-                </Pressable>
+                </SuperficieTocable>
               ) : null}
             </View>
             <View className="mb-3" />
@@ -403,7 +399,7 @@ export default function CockpitPaciente() {
                 // El ancho va en `contenedor`: lo aplica el Pressable, que es
                 // quien participa de la fila. En `className` se dimensionaría
                 // el View interno y las cuatro saldrían del ancho de su texto.
-                contenedor="w-[48.5%]"
+                contenedor="w-mitad"
                 className="px-3.5 py-3.5"
                 // La franja toma la gravedad del peor hallazgo de la categoría.
                 // El número solo decía cuántos: tres informativos y tres
@@ -437,7 +433,7 @@ export default function CockpitPaciente() {
                       <Text className="font-fuerte text-eyebrow text-tenue">—</Text>
                     ) : (
                       <Text
-                        className="font-medio text-eyebrow text-white"
+                        className="font-medio text-eyebrow text-blanco"
                         style={{ fontVariant: ['tabular-nums'] }}
                       >
                         {n}
@@ -483,17 +479,17 @@ export default function CockpitPaciente() {
         )}
 
         {totalAvisos > 0 ? (
-          <Pressable
+          <SuperficieTocable
             onPress={() => abrir(`/paciente/${id}/hallazgos?avisos=1`)}
-            accessibilityRole="button"
-            className="mt-3 flex-row items-center rounded-card border border-line bg-surface px-3.5 py-3"
+            contenedor="mt-3"
+            className="flex-row items-center px-3.5 py-3"
             style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}
           >
             <Text className="font-sans flex-1 text-meta text-ink">
               {totalAvisos} {totalAvisos === 1 ? 'dato faltante' : 'datos faltantes'}
             </Text>
             <Text className="text-meta font-medio text-accent">Ver</Text>
-          </Pressable>
+          </SuperficieTocable>
         ) : null}
       </Pantalla>
 
@@ -583,7 +579,7 @@ function FilaTratamiento({
                 vistazo de esta fila a propósito, siguiendo el frame. */}
             {rango !== null ? (
               <View className="rounded-sm px-2 py-0.5" style={{ backgroundColor: color! }}>
-                <Text className="font-fuerte text-[11px] uppercase tracking-wider text-white">
+                <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-blanco">
                   {RANGO_ETIQUETA[rango]}
                 </Text>
               </View>

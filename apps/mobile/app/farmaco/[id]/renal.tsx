@@ -6,7 +6,7 @@ import { useDetalleRestriccion, type DetalleRestriccion } from '@/api/ficha';
 import { tramosRenales } from '@/dominio/restricciones';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
-import { Pantalla } from '@/ui/kit';
+import { AvisoPeligro, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import {
   EscalaRenal,
@@ -25,6 +25,7 @@ import { useColores } from '@/ui/tema';
  * información.
  */
 export default function RestriccionRenal() {
+  const col = useColores();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'renal');
@@ -50,10 +51,10 @@ export default function RestriccionRenal() {
             onPress={() => router.push('/herramientas/clcr')}
             accessibilityRole="button"
             className="flex-row items-center gap-2 rounded-full px-6 py-2.5"
-            style={{ backgroundColor: '#005228' }}
+            style={{ backgroundColor: col.primary }}
           >
-            <Icono nombre="calculadora" tamano={16} color="#FFFFFF" />
-            <Text className="text-meta font-medio text-white">Calcular Clcr</Text>
+            <Icono nombre="calculadora" tamano={16} color={col.onPrimary} />
+            <Text className="text-meta font-medio text-on-primary">Calcular Clcr</Text>
           </Pressable>
         </View>
       </Pantalla>
@@ -67,8 +68,8 @@ function EncabezadoAjusteRenal() {
   return (
     <View className="mb-4">
       <View className="mb-2 flex-row items-center gap-2">
-        <Icono nombre="gota" tamano={20} color="#0EA5E9" />
-        <Text className="text-[28px] font-fuerte text-ink">Ajuste Renal</Text>
+        <Icono nombre="gota" tamano={20} color={col.info} />
+        <Text className="text-titular font-fuerte text-ink">Ajuste Renal</Text>
       </View>
       <Text className="text-body leading-6 text-ink-suave">
         Ajuste de dosis basado en el aclaramiento de creatinina (Clcr) estimado.
@@ -128,21 +129,12 @@ function Contenido({ f }: { f: DetalleRestriccion }) {
 }
 
 function AlertaRenalCritica() {
+  const col = useColores();
   return (
-    <View
-      className="mb-4 flex-row gap-4 rounded-2xl p-4"
-      style={{ backgroundColor: '#FFDAD6', borderWidth: 1, borderColor: 'rgba(186,26,26,0.2)' }}
-    >
-      <Icono nombre="alerta" tamano={20} color="#BA1A1A" />
-      <View className="flex-1">
-        <Text className="text-meta font-medio" style={{ color: '#BA1A1A' }}>
-          Ajuste crítico
-        </Text>
-        <Text className="mt-1 text-meta leading-5 text-ink">
-          Al menos un tramo de este fármaco está marcado para evitar en insuficiencia renal.
-          Revisá el detalle de cada rango antes de indicarlo.
-        </Text>
-      </View>
-    </View>
+    <AvisoPeligro
+      className="mb-4"
+      titulo="Ajuste crítico"
+      detalle="Al menos un tramo de este fármaco está marcado para evitar en insuficiencia renal. Revisá el detalle de cada rango antes de indicarlo."
+    />
   );
 }

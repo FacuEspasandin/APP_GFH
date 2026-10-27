@@ -1,13 +1,14 @@
 import { Stack } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { calcularRiesgoCVParaMolde, moldeRiesgoCV } from '@/dominio/molde-riesgo-cv';
 import { Calculadora } from '@/ui/calculadora';
 import { EncabezadoApp } from '@/ui/encabezado-app';
+import { EncabezadoHerramienta } from '@/ui/encabezado-herramienta';
 import { Icono } from '@/ui/iconos';
 import { Boton, Chip } from '@/ui/kit';
-import { Superficie } from '@/ui/superficie';
+import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import {
   metaLdlCardiovascular,
@@ -60,23 +61,17 @@ export default function RiesgoCardiovascular() {
     <View className="flex-1 bg-paper">
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp />
-      <View className="px-4 pt-4">
-        <View className="mb-1 flex-row items-center gap-2">
-          <Icono nombre="pulso" tamano={20} color="#B91C1C" />
-          <Text className="text-[26px] font-fuerte text-ink">Riesgo cardiovascular</Text>
-        </View>
-        <Text className="mb-2 text-body leading-6 text-ink-suave">
-          A 10 años, sobre datos sueltos — no cruza el catálogo.
-        </Text>
-      </View>
+      <EncabezadoHerramienta icono="pulso" titulo="Riesgo cardiovascular" tono="peligro">
+        A 10 años, sobre datos sueltos — no cruza el catálogo.
+      </EncabezadoHerramienta>
 
       <View className="px-4">
         {excluido !== null ? (
-          <Pressable
+          <SuperficieTocable
             onPress={() => setExcluido(null)}
-            accessibilityRole="button"
-            accessibilityLabel="Corregir si tiene alguna de las condiciones"
-            className="mb-2 flex-row items-center rounded-card border border-line bg-surface px-3.5 py-2.5"
+            contenedor="mb-2"
+            className="flex-row items-center px-3.5 py-2.5"
+            accesibilidad="Corregir si tiene alguna de las condiciones"
           >
             <Icono nombre="check" tamano={14} color={col.primary} />
             <Text className="font-sans ml-2.5 flex-1 text-meta text-ink-suave" numberOfLines={1}>
@@ -84,7 +79,7 @@ export default function RiesgoCardiovascular() {
             </Text>
             <Text className="text-meta font-medio text-ink">{excluido ? 'Sí' : 'No'}</Text>
             <Text className="ml-2 text-meta text-ink-suave">✎</Text>
-          </Pressable>
+          </SuperficieTocable>
         ) : (
           <Superficie
             elevacion="plana"
@@ -114,9 +109,9 @@ export default function RiesgoCardiovascular() {
           <Superficie
             elevacion="plana"
             className="items-center px-3.5 py-6"
-            style={{ borderLeftWidth: 4, borderLeftColor: '#7C1D2C' }}
+            style={{ borderLeftWidth: 4, borderLeftColor: col.peligro }}
           >
-            <Text className="font-mono-fuerte text-titulo" style={{ color: '#7C1D2C' }}>
+            <Text className="font-mono-fuerte text-titulo" style={{ color: col.peligro }}>
               Alto riesgo
             </Text>
             <Text className="font-sans mt-2 text-center text-meta leading-5 text-ink-suave">

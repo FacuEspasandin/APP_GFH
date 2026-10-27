@@ -198,7 +198,7 @@ export default function ChatIa() {
               ))}
               {enviar.isPending || cargarSesion.isPending ? (
                 <View
-                  className="mr-auto rounded-card rounded-bl-[3px] border px-3.5 py-3"
+                  className="mr-auto rounded-card rounded-bl-cola border px-3.5 py-3"
                   style={{ backgroundColor: col.surface, borderColor: col.line }}
                 >
                   <ActivityIndicator size="small" color={col.tenue} />
@@ -233,7 +233,7 @@ export default function ChatIa() {
                 opacity: !texto.trim() || enviar.isPending ? 0.5 : 1,
               }}
             >
-              <Icono nombre="enviar" tamano={15} color="#FFFFFF" />
+              <Icono nombre="enviar" tamano={15} color={col.onPrimary} />
             </Pressable>
           </View>
         </View>
@@ -247,12 +247,12 @@ function BurbujaMensaje({ mensaje }: { mensaje: MensajeChat }) {
   const esUsuario = mensaje.rol === 'usuario';
 
   return (
-    <View className={esUsuario ? 'ml-auto max-w-[85%]' : 'mr-auto max-w-[90%]'}>
+    <View className={esUsuario ? 'ml-auto max-w-burbuja-usuario' : 'mr-auto max-w-burbuja'}>
       <View
         className={
           esUsuario
-            ? 'rounded-card rounded-br-[3px] px-3.5 py-2.5'
-            : 'rounded-card rounded-bl-[3px] border px-3.5 py-2.5'
+            ? 'rounded-card rounded-br-cola px-3.5 py-2.5'
+            : 'rounded-card rounded-bl-cola border px-3.5 py-2.5'
         }
         style={{
           backgroundColor: esUsuario ? col.primary : col.surface,
@@ -260,7 +260,7 @@ function BurbujaMensaje({ mensaje }: { mensaje: MensajeChat }) {
         }}
       >
         {esUsuario ? (
-          <Text className="text-body leading-5 text-white">{mensaje.contenido}</Text>
+          <Text className="text-body leading-5 text-on-primary">{mensaje.contenido}</Text>
         ) : (
           <TextoMarkdownLite texto={mensaje.contenido} color={col.ink} />
         )}

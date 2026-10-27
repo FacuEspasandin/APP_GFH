@@ -17,6 +17,7 @@ import {
   RANGO_ETIQUETA,
   type RangoGravedad,
 } from '@gfh/shared-types';
+import { useColores } from '@/ui/tema';
 
 /**
  * Los pacientes de un grupo.
@@ -29,6 +30,7 @@ import {
  * necesitan poder verse juntos, y no tienen fila propia en la base.
  */
 export default function DetalleGrupo() {
+  const col = useColores();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const sinGrupo = id === 'sin-grupo';
@@ -56,7 +58,7 @@ export default function DetalleGrupo() {
         >
           <View className="mb-6 flex-row items-center justify-between">
             <View className="flex-row items-center gap-2">
-              <Text className="text-[32px] font-fuerte leading-10 text-ink">
+              <Text className="text-display font-fuerte leading-10 text-ink">
                 {resumen?.nombre ?? 'Grupo'}
               </Text>
               {sinGrupo ? null : (
@@ -67,16 +69,16 @@ export default function DetalleGrupo() {
                   hitSlop={8}
                   className="h-8 w-8 items-center justify-center rounded-full"
                 >
-                  <Icono nombre="editar" tamano={15} color="#3F4940" />
+                  <Icono nombre="editar" tamano={15} color={col.inkSuave} />
                 </Pressable>
               )}
             </View>
             {resumen ? (
               <View
                 className="rounded-full border px-3 py-1"
-                style={{ backgroundColor: '#F2F3F9', borderColor: '#BECABD' }}
+                style={{ backgroundColor: col.surfaceAlt, borderColor: col.line }}
               >
-                <Text className="text-meta font-medio" style={{ color: '#5C6B64' }}>
+                <Text className="text-meta font-medio" style={{ color: col.inkSuave }}>
                   {resumen.pacientes} {resumen.pacientes === 1 ? 'paciente' : 'pacientes'}
                 </Text>
               </View>
@@ -176,7 +178,7 @@ function Fila({ paciente }: { paciente: FilaPaciente }) {
                 </Text>
                 {paciente.peorRango !== null ? (
                   <View className="rounded-full px-2 py-0.5" style={{ backgroundColor: color }}>
-                    <Text className="font-fuerte text-[10px] uppercase tracking-wider text-white">
+                    <Text className="font-fuerte text-[10px] uppercase tracking-wider text-blanco">
                       {RANGO_ETIQUETA[paciente.peorRango as RangoGravedad]}
                     </Text>
                   </View>

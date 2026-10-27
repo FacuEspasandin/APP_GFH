@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { Anillo } from '@/ui/anillo';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
@@ -26,6 +26,7 @@ import {
   type Unidades,
   type Tramo,
 } from '@gfh/shared-types';
+import { SuperficieTocable } from './superficie';
 
 /**
  * El color de un tramo, que puede venir de la escala clínica (una clave de
@@ -120,6 +121,7 @@ export function Calculadora({
    */
   extra?: ReactNode;
 }) {
+  const col = useColores();
   const [borrador, setBorrador] = useState<Borrador>(inicial ?? {});
   const [unidades, setUnidades] = useState<Unidades>({});
   /** La que el médico abrió para corregir. Gana sobre la primera sin contestar. */
@@ -212,15 +214,12 @@ export function Calculadora({
         {/* Al pie de todo, después del límite y de lo que la pantalla agregue:
             info de fondo, no otra advertencia — por eso el estilo distinto al
             de "Qué no dice". */}
-        <View
-          className="mb-3 rounded-card border border-line bg-surface px-4 py-3.5"
-          style={{ borderLeftWidth: 3, borderLeftColor: '#8CA39A' }}
-        >
+        <Superficie className="mb-3 px-4 py-3.5" style={{ borderLeftWidth: 3, borderLeftColor: col.tenue }}>
           <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
             ⓘ Sobre esta herramienta
           </Text>
           <Text className="font-sans text-meta leading-5 text-ink-suave">{molde.acercaDe}</Text>
-        </View>
+        </Superficie>
 
         {/* Guardar o descartar: no hay un tercer caso, y decir las dos cosas
             —un botón Y un cartel de que no se guarda— sería contradecirse. */}
@@ -399,11 +398,11 @@ function Plegado({
       : undefined;
 
   return (
-    <Pressable
+    <SuperficieTocable
       onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={`Corregir ${campo.rotulo}`}
-      className="mb-2 flex-row items-center rounded-card border border-line bg-surface px-3.5 py-2.5"
+      contenedor="mb-2"
+      className="flex-row items-center px-3.5 py-2.5"
+      accesibilidad={`Corregir ${campo.rotulo}`}
     >
       <Icono nombre="check" tamano={14} color={col.primary} />
       <Text className="font-sans ml-2.5 flex-1 text-meta text-ink-suave" numberOfLines={1}>
@@ -414,7 +413,7 @@ function Plegado({
         {puntos ? ` · +${puntos}` : ''}
       </Text>
       <Text className="ml-2 text-meta text-ink-suave">✎</Text>
-    </Pressable>
+    </SuperficieTocable>
   );
 }
 

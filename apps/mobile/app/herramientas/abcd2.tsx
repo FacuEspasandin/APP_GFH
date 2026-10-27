@@ -1,10 +1,10 @@
 import { Stack } from 'expo-router';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { moldeAbcd2 } from '@/dominio/molde-abcd2';
 import { Calculadora } from '@/ui/calculadora';
 import { EncabezadoApp } from '@/ui/encabezado-app';
-import { Icono } from '@/ui/iconos';
+import { EncabezadoHerramienta } from '@/ui/encabezado-herramienta';
 
 /**
  * ABCD2, sobre datos sueltos.
@@ -19,15 +19,9 @@ export default function Abcd2() {
     <View className="flex-1 bg-paper">
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp />
-      <View className="px-4 pt-4">
-        <View className="mb-1 flex-row items-center gap-2">
-          <Icono nombre="glasgow" tamano={20} color="#005228" />
-          <Text className="text-[28px] font-fuerte text-ink">ABCD2</Text>
-        </View>
-        <Text className="mb-2 text-body leading-6 text-ink-suave">
-          Riesgo de ACV tras un AIT, sobre datos sueltos — no cruza el catálogo.
-        </Text>
-      </View>
+      <EncabezadoHerramienta icono="glasgow" titulo="ABCD2">
+        Riesgo de ACV tras un AIT, sobre datos sueltos — no cruza el catálogo.
+      </EncabezadoHerramienta>
 
       <Calculadora molde={molde} />
     </View>

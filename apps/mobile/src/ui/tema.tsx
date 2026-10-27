@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 
 import { api, haySesionSincrona, suscribirseASesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
-import { paleta, type Paleta } from './tokens';
+import { FIJO, paleta, type Paleta } from './tokens';
 
 import type { Configuracion, Tema } from '@/api/tipos';
 
@@ -124,7 +124,7 @@ export function coloresChrome(oscuro: boolean) {
     // En oscuro el header usa `surface` y no `primary`: el verde aclarado que
     // necesita el texto no funciona como fondo de una barra entera.
     fondoHeader: oscuro ? p.surface : p.primary,
-    textoHeader: '#FFFFFF',
+    textoHeader: FIJO.blanco,
     fondoPantalla: p.paper,
     tabInactivo: oscuro ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.62)',
   };

@@ -71,7 +71,7 @@ export function Opcion({
         style={{
           width: 26,
           height: 26,
-          backgroundColor: destructiva ? '#FEE2E2' : col.primaryLight,
+          backgroundColor: destructiva ? col.peligroLight : col.primaryLight,
         }}
       >
         <Icono nombre={icono} tamano={15} color={destructiva ? col.peligro : col.primary} />

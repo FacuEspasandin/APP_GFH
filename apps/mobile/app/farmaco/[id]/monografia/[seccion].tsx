@@ -8,6 +8,7 @@ import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Pantalla } from '@/ui/kit';
 import { SelloSeccion, TextoSeccion } from '@/ui/monografia';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
+import { Superficie } from '@/ui/superficie';
 
 /**
  * Una sección de la monografía, para leer.
@@ -64,11 +65,11 @@ function Contenido({
 
   if (conTexto.length === 0) {
     return (
-      <View className="rounded-card border border-line bg-surface px-3.5 py-4">
+      <Superficie className="px-3.5 py-4">
         <Text className="font-sans text-body leading-5 text-ink-suave">
           Esta sección no está cargada para este fármaco.
         </Text>
-      </View>
+      </Superficie>
     );
   }
 

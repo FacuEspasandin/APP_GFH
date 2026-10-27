@@ -109,3 +109,6 @@ historial" en las herramientas standalone (son descartables a propósito).
 5. Herramientas standalone (reutilizan el mismo motor)
 6. Carga por foto, Buscador, Perfil, paywall/RevenueCat — en ese orden,
    son cada vez menos críticos para validar que el núcleo funciona
+
+## Rediseño visual
+Antes de tocar cualquier pantalla o estilo, leer docs/rediseno-visual/00-principios.md y docs/rediseno-visual/07-registro-de-progreso.md. Los valores visuales salen siempre de los tokens.

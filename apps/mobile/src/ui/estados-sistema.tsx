@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import { Icono } from './iconos';
 import { Boton } from './kit';
 import { useColores } from './tema';
+import { Superficie } from './superficie';
 
 /**
  * Estados de sistema (7.1-7.3).
@@ -23,7 +24,7 @@ export function SinConexion({ onReintentar }: { onReintentar: () => void }) {
         Revisá el wifi o los datos. La app necesita conexión: los cálculos se hacen en el servidor
         para que sean los mismos en todos lados.
       </Text>
-      <View className="mt-5 w-full max-w-[220px]">
+      <View className="mt-5 w-full max-w-accion">
         <Boton onPress={onReintentar}>Reintentar</Boton>
       </View>
     </View>
@@ -39,7 +40,7 @@ export function ErrorGenerico({ onReintentar, detalle }: { onReintentar: () => v
       <Text className="font-sans mt-2 text-center text-meta leading-5 text-ink-suave">
         {detalle ?? 'No pudimos completar la operación. Probá de nuevo en un momento.'}
       </Text>
-      <View className="mt-5 w-full max-w-[220px]">
+      <View className="mt-5 w-full max-w-accion">
         <Boton onPress={onReintentar}>Reintentar</Boton>
       </View>
     </View>
@@ -99,16 +100,13 @@ function Bloque({
 function FilaFantasma() {
   const col = useColores();
   return (
-    <View
-      className="mb-2.5 flex-row items-center rounded-card border border-line bg-surface px-3.5 py-3.5"
-      style={{ borderLeftWidth: 4, borderLeftColor: col.line }}
-    >
+    <Superficie className="mb-2.5 flex-row items-center px-3.5 py-3.5" style={{ borderLeftWidth: 4, borderLeftColor: col.line }}>
       <View className="flex-1 pr-4">
         <Bloque alto={15} ancho="70%" margenAbajo={8} />
         <Bloque alto={11} ancho="45%" />
       </View>
       <Bloque alto={22} ancho={54} />
-    </View>
+    </Superficie>
   );
 }
 
@@ -121,22 +119,18 @@ function FilaFantasma() {
 export function Skeleton({ filas = 3 }: { filas?: number }) {
   return (
     <View className="px-4 pt-3">
-      <View className="mb-3.5 rounded-card border border-line bg-surface px-3.5 py-4">
+      <Superficie className="mb-3.5 px-3.5 py-4">
         <Bloque alto={18} ancho="55%" margenAbajo={10} />
         <Bloque alto={12} ancho="35%" />
-      </View>
+      </Superficie>
 
       <Bloque alto={11} ancho="30%" margenAbajo={10} />
       <View className="mb-4 flex-row flex-wrap justify-between">
         {[0, 1, 2, 3].map((i) => (
-          <View
-            key={i}
-            className="mb-2.5 rounded-card border border-line bg-surface px-3.5 py-3.5"
-            style={{ width: '48.5%' }}
-          >
+          <Superficie className="mb-2.5 px-3.5 py-3.5" style={{ width: '48.5%' }}>
             <Bloque alto={12} ancho="80%" margenAbajo={10} />
             <Bloque alto={20} ancho={30} />
-          </View>
+          </Superficie>
         ))}
       </View>
 

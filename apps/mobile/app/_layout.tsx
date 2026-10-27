@@ -28,6 +28,7 @@ import { useFuentes } from '@/ui/fuentes';
 import { MenuInferior } from '@/ui/menu-inferior';
 import { activarPantallaCompletaWeb } from '@/ui/pantalla-completa-web';
 import { coloresChrome, ProveedorTema, useTema } from '@/ui/tema';
+import { TIPO } from '@/ui/tokens';
 
 /* Antes de que se monte nada: un error en el primer render también tiene que
    reportarse. Sin DSN configurado no hace nada — ver `api/errores.ts`. */
@@ -177,7 +178,7 @@ function Navegacion() {
           headerStyle: { backgroundColor: c.fondoHeader },
           headerTintColor: c.textoHeader,
           // Familia y no peso: con fuentes estáticas la negrita es otra familia.
-          headerTitleStyle: { fontFamily: 'Inter_700Bold', fontSize: 16 },
+          headerTitleStyle: { fontFamily: 'Inter_700Bold', fontSize: TIPO.barra },
           headerBackTitle: 'Atrás',
           contentStyle: { backgroundColor: c.fondoPantalla },
         }}

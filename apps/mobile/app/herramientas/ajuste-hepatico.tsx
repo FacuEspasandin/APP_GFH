@@ -1,14 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
 import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { AvisoDescartable, ConsultaPlegada, FilaResultado, Veredicto } from '@/ui/herramienta';
 import { Icono } from '@/ui/iconos';
-import { CampoTexto, Chip, Estado } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, Estado } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import {
@@ -91,7 +91,7 @@ export default function HerramientaAjusteHepatico() {
         <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
         <ScrollView contentContainerClassName="px-4 pb-6 pt-4" keyboardShouldPersistTaps="handled">
           <View className="mb-1 flex-row items-center gap-2">
-            <Icono nombre="higado" tamano={20} color="#B45309" />
+            <Icono nombre="higado" tamano={20} color={col.aviso} />
             <Text className="text-fila font-fuerte text-ink">Ajuste Hepático</Text>
           </View>
           <Text className="mb-4 font-sans text-meta leading-5 text-ink-suave">
@@ -194,26 +194,17 @@ export default function HerramientaAjusteHepatico() {
           ) : null}
 
           <View className="mt-2 items-center border-t pt-6" style={{ borderColor: col.line }}>
-            <Pressable
+            <Boton
+              tamano="grande"
+              icono="higado"
               onPress={() => calcular.mutate()}
-              disabled={!listo || calcular.isPending}
-              accessibilityRole="button"
-              className="h-[60px] w-full flex-row items-center justify-center gap-3 rounded-full"
-              style={{ backgroundColor: '#005228', opacity: !listo || calcular.isPending ? 0.5 : 1 }}
+              cargando={calcular.isPending}
+              deshabilitado={!listo}
             >
-              {calcular.isPending ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <>
-                  <Icono nombre="higado" tamano={18} color="#FFFFFF" />
-                  <Text className="text-fila font-fuerte text-white">
-                    {seleccion.length === 0
+              {seleccion.length === 0
                       ? 'Agregá al menos un fármaco'
                       : `Calcular ajuste de ${seleccion.length}`}
-                  </Text>
-                </>
-              )}
-            </Pressable>
+            </Boton>
             <Text className="mt-2 text-center text-meta leading-5 text-ink-suave">
               Esta herramienta no guarda nada: al salir se pierde.
             </Text>
@@ -247,6 +238,7 @@ function ResultadoHepatico({
   onCambiar: () => void;
   consulta: { farmacos: string[]; detalle: string };
 }) {
+  const col = useColores();
   const filas = [...datos.resultados].sort((a, b) => orden(a.rangoGravedad) - orden(b.rangoGravedad));
 
   const conAjuste = filas.filter((r) => r.rangoGravedad !== null && r.rangoGravedad <= 2).length;
@@ -292,7 +284,7 @@ function ResultadoHepatico({
                 {r.requiereRevision ? (
                   <Text
                     className="font-sans mt-1 text-eyebrow uppercase tracking-wider"
-                    style={{ color: '#B45309' }}
+                    style={{ color: col.aviso }}
                   >
                     Entrada marcada para revisión en la fuente
                   </Text>

@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import type {
   ClaveRestriccion,
@@ -9,9 +9,11 @@ import type {
   Peldano,
 } from '@/dominio/restricciones';
 import { Icono, type NombreIcono } from '@/ui/iconos';
-import { Superficie } from '@/ui/superficie';
+import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { ESTADO_RESTRICCION } from './severidad';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
+import { FIJO } from './tokens';
 
 /**
  * Las piezas de las restricciones del fármaco.
@@ -31,8 +33,6 @@ import { COLOR_SEVERIDAD } from '@gfh/shared-types';
  * es peligroso — hay que dosificarlo por clearance. Gastar un color de gravedad
  * en eso haría que «tiene tabla» se leyera como «cuidado».
  */
-const CELESTE = '#075985';
-const CELESTE_FONDO = '#E0F2FE';
 
 /**
  * `frente` es para texto y puntos; `relleno` para superficies grandes.
@@ -45,13 +45,21 @@ const CELESTE_FONDO = '#E0F2FE';
 export function coloresDe(estado: EstadoRestriccion, col: ReturnType<typeof useColores>) {
   switch (estado) {
     case 'ok':
-      return { frente: COLOR_SEVERIDAD.ok, relleno: COLOR_SEVERIDAD.ok, fondo: '#ECFDF3' };
+      return { frente: COLOR_SEVERIDAD.ok, relleno: COLOR_SEVERIDAD.ok, fondo: ESTADO_RESTRICCION.fondoOk };
     case 'evitar':
-      return { frente: COLOR_SEVERIDAD.grave, relleno: COLOR_SEVERIDAD.grave, fondo: '#FEE7E7' };
+      return { frente: COLOR_SEVERIDAD.grave, relleno: COLOR_SEVERIDAD.grave, fondo: ESTADO_RESTRICCION.fondoEvitar };
     case 'precaucion':
-      return { frente: '#B45309', relleno: COLOR_SEVERIDAD.media, fondo: '#FEF3C7' };
+      return {
+        frente: ESTADO_RESTRICCION.frentePrecaucion,
+        relleno: COLOR_SEVERIDAD.media,
+        fondo: ESTADO_RESTRICCION.fondoPrecaucion,
+      };
     case 'ajustar':
-      return { frente: CELESTE, relleno: CELESTE, fondo: CELESTE_FONDO };
+      return {
+        frente: ESTADO_RESTRICCION.frenteAjustar,
+        relleno: ESTADO_RESTRICCION.frenteAjustar,
+        fondo: ESTADO_RESTRICCION.fondoAjustar,
+      };
     case 'sindato':
       return { frente: col.tenue, relleno: col.line, fondo: col.paper };
   }
@@ -97,17 +105,16 @@ function TarjetaRestriccion({ r, onPress }: { r: Restriccion; onPress: () => voi
   const apagada = r.estado === 'sindato';
 
   return (
-    <Pressable
+    <SuperficieTocable
       onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={`${r.titulo}: ${ETIQUETA[r.estado]}. ${r.glosa}`}
+      accesibilidad={`${r.titulo}: ${ETIQUETA[r.estado]}. ${r.glosa}`}
       // 48% y no la mitad exacta: con `gap: 8` dos tarjetas al 50% no entran.
-      style={{ width: '48%', flexGrow: 1 }}
-      className="items-center rounded-card border border-line bg-surface px-3 py-4"
+      estiloContenedor={{ width: '48%', flexGrow: 1 }}
+      className="items-center px-3 py-4"
     >
       <Icono nombre={ICONO[r.clave]} tamano={20} color={c.frente} />
       <Text
-        className="mt-1.5 font-fuerte text-[11px] uppercase tracking-wider"
+        className="mt-1.5 font-fuerte text-eyebrow uppercase tracking-wider"
         style={{ color: apagada ? col.tenue : col.inkSuave }}
       >
         {r.titulo}
@@ -118,7 +125,7 @@ function TarjetaRestriccion({ r, onPress }: { r: Restriccion; onPress: () => voi
       >
         {ETIQUETA[r.estado]}
       </Text>
-    </Pressable>
+    </SuperficieTocable>
   );
 }
 
@@ -176,14 +183,14 @@ export function EscalaRenal({ tramos }: { tramos: readonly TramoRenal[] }) {
         const c = coloresDe(t.estado, col);
 
         return (
-          <View
+          <Superficie
             key={t.rango}
-            className="rounded-xl border bg-surface p-4"
-            style={{ borderColor: col.line, borderLeftWidth: 4, borderLeftColor: c.relleno }}
+            className="p-4"
+            style={{ borderLeftWidth: 4, borderLeftColor: c.relleno }}
           >
             <View className="mb-3 flex-row items-center justify-between gap-2">
               <Text
-                className="flex-1 font-fuerte text-[11px] uppercase tracking-wider text-ink-suave"
+                className="flex-1 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave"
                 numberOfLines={1}
               >
                 {t.rango}
@@ -193,7 +200,7 @@ export function EscalaRenal({ tramos }: { tramos: readonly TramoRenal[] }) {
                 style={{ backgroundColor: col.paper }}
               >
                 <View className="rounded-full" style={{ width: 8, height: 8, backgroundColor: c.relleno }} />
-                <Text className="font-fuerte text-[11px] uppercase tracking-wider" style={{ color: c.frente }}>
+                <Text className="font-fuerte text-eyebrow uppercase tracking-wider" style={{ color: c.frente }}>
                   {ETIQUETA[t.estado]}
                 </Text>
               </View>
@@ -204,7 +211,7 @@ export function EscalaRenal({ tramos }: { tramos: readonly TramoRenal[] }) {
             {t.nota ? (
               <Text className="font-sans mt-2 text-meta leading-5 text-ink-suave">{t.nota}</Text>
             ) : null}
-          </View>
+          </Superficie>
         );
       })}
 
@@ -291,7 +298,7 @@ export function LineaEmbarazo({ trimestres }: { trimestres: readonly Trimestre[]
             >
               <Text
                 className="font-mono-fuerte text-eyebrow"
-                style={{ color: t.estado === 'sindato' ? col.inkSuave : '#FFFFFF' }}
+                style={{ color: t.estado === 'sindato' ? col.inkSuave : FIJO.blanco }}
               >
                 {t.numero}º
               </Text>
@@ -386,7 +393,7 @@ export function PeldanosHepaticos({ peldanos }: { peldanos: readonly Peldano[] }
             >
               <Text
                 className="font-mono-fuerte text-fila"
-                style={{ color: vacio ? col.tenue : '#FFFFFF' }}
+                style={{ color: vacio ? col.tenue : FIJO.blanco }}
               >
                 {p.clase}
               </Text>

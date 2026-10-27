@@ -4,6 +4,7 @@ import { enOraciones, type ClaveSeccion } from '@gfh/shared-types';
 
 import { Icono, type NombreIcono } from '@/ui/iconos';
 import { useColores } from '@/ui/tema';
+import { Superficie } from './superficie';
 
 /**
  * Las piezas de la monografía: el índice y el texto de una sección.
@@ -138,10 +139,7 @@ export function TextoSeccion({ texto }: { texto: string }) {
 
         if (lista) {
           return (
-            <View
-              key={i}
-              className="rounded-card border border-line bg-surface px-3.5 py-3"
-            >
+            <Superficie className="px-3.5 py-3">
               <Text className="text-fila font-medio leading-5 text-ink">{lista.titulo}</Text>
               <View className="mt-2.5 flex-row flex-wrap gap-1.5">
                 {lista.items.map((item, j) => (
@@ -154,7 +152,7 @@ export function TextoSeccion({ texto }: { texto: string }) {
                   </View>
                 ))}
               </View>
-            </View>
+            </Superficie>
           );
         }
 

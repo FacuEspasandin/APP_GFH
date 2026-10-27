@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
@@ -12,8 +12,7 @@ import {
   FilaResultado,
   Veredicto,
 } from '@/ui/herramienta';
-import { Icono } from '@/ui/iconos';
-import { CampoTexto, Chip, Estado } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, Estado } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import {
@@ -193,26 +192,17 @@ export default function HerramientaRenal() {
           ) : null}
 
           <View className="mt-2 items-center border-t pt-6" style={{ borderColor: col.line }}>
-            <Pressable
+            <Boton
+              tamano="grande"
+              icono="gota"
               onPress={() => calcular.mutate()}
-              disabled={!listo || calcular.isPending}
-              accessibilityRole="button"
-              className="h-[60px] w-full flex-row items-center justify-center gap-3 rounded-full"
-              style={{ backgroundColor: '#005228', opacity: !listo || calcular.isPending ? 0.5 : 1 }}
+              cargando={calcular.isPending}
+              deshabilitado={!listo}
             >
-              {calcular.isPending ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <>
-                  <Icono nombre="gota" tamano={18} color="#FFFFFF" />
-                  <Text className="text-fila font-fuerte text-white">
-                    {seleccion.length === 0
+              {seleccion.length === 0
                       ? 'Agregá al menos un fármaco'
                       : `Calcular ajuste de ${seleccion.length}`}
-                  </Text>
-                </>
-              )}
-            </Pressable>
+            </Boton>
             <Text className="mt-2 text-center text-meta leading-5 text-ink-suave">
               Esta herramienta no guarda nada: al salir se pierde.
             </Text>

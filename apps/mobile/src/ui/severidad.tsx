@@ -61,3 +61,38 @@ export function ChipSeveridad({ rango }: { rango: RangoGravedad }) {
     </View>
   );
 }
+
+/**
+ * Fondos pastel con que se tiñe una pieza según la gravedad.
+ *
+ * Viven acá, con los colores de severidad, y no en la paleta del tema: son la
+ * misma información clínica y tampoco cambian entre claro y oscuro.
+ */
+const FONDO_POR_RANGO: Record<RangoGravedad, string> = {
+  0: '#FEF2F2',
+  1: '#FEF2F2',
+  2: '#FFF7ED',
+  3: '#FFFBEB',
+  4: '#FFFBEB',
+  5: 'transparent',
+};
+
+/** `null` = sin hallazgos. `transparent` = informativo: la pieza usa su propio fondo. */
+export function fondoSeveridad(rango: RangoGravedad | null): string {
+  return rango === null ? '#F0FDF4' : FONDO_POR_RANGO[rango];
+}
+
+/**
+ * Colores propios de cada estado de una restricción (embarazo, lactancia,
+ * renal, hepático). `ajustar` es el celeste de PROPIEDAD —tiene tabla de
+ * ajuste—, no una gravedad. Pastel fijo: la grilla no se mezcla en oscuro.
+ */
+export const ESTADO_RESTRICCION = {
+  fondoOk: '#ECFDF3',
+  fondoEvitar: '#FEE7E7',
+  /** El ámbar de la escala no llega a contraste como texto de 11 px: este sí. */
+  frentePrecaucion: '#B45309',
+  fondoPrecaucion: '#FEF3C7',
+  frenteAjustar: '#075985',
+  fondoAjustar: '#E0F2FE',
+} as const;

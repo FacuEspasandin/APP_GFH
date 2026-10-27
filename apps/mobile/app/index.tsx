@@ -4,6 +4,7 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 import { bloqueoActivo, pedirHuella } from '@/api/bloqueo';
 import { cerrarSesionLocal, haySesion } from '@/api/cliente';
+import { FIJO } from '@/ui/tokens';
 
 /** Splash (1.1). Decide entre Bienvenida e Inicio según la sesión guardada, y
  *  pide la huella en el medio si el bloqueo está prendido. */
@@ -38,20 +39,20 @@ export default function Entrada() {
    */
   if (estado === 'bloqueado') {
     return (
-      <View className="flex-1 items-center justify-center px-8" style={{ backgroundColor: '#006D37' }}>
-        <View className="h-20 w-20 items-center justify-center rounded-lg bg-white/10">
-          <Text className="text-xl font-fuerte tracking-widest text-white">GFH</Text>
+      <View className="flex-1 items-center justify-center px-8" style={{ backgroundColor: FIJO.verdeBarra }}>
+        <View className="h-20 w-20 items-center justify-center rounded-lg bg-blanco/10">
+          <Text className="text-xl font-fuerte tracking-widest text-blanco">GFH</Text>
         </View>
-        <Text className="mt-8 text-center text-body leading-6 text-white">
+        <Text className="mt-8 text-center text-body leading-6 text-blanco">
           La app está bloqueada.
         </Text>
 
         <Pressable
           onPress={() => void desbloquear()}
           accessibilityRole="button"
-          className="mt-6 h-12 w-full items-center justify-center rounded-full bg-white"
+          className="mt-6 h-12 w-full items-center justify-center rounded-full bg-blanco"
         >
-          <Text className="text-fila font-fuerte" style={{ color: '#006D37' }}>
+          <Text className="text-fila font-fuerte" style={{ color: FIJO.verdeBarra }}>
             Reintentar
           </Text>
         </Pressable>
@@ -59,9 +60,9 @@ export default function Entrada() {
         <Pressable
           onPress={() => void cerrarSesionLocal().then(() => setEstado('sin-sesion'))}
           accessibilityRole="button"
-          className="mt-3 h-12 w-full items-center justify-center rounded-full border border-white/40"
+          className="mt-3 h-12 w-full items-center justify-center rounded-full border border-blanco/40"
         >
-          <Text className="text-fila font-medio text-white">Entrar con contraseña</Text>
+          <Text className="text-fila font-medio text-blanco">Entrar con contraseña</Text>
         </Pressable>
       </View>
     );
@@ -69,11 +70,11 @@ export default function Entrada() {
 
   if (estado === 'cargando') {
     return (
-      <View className="flex-1 items-center justify-center" style={{ backgroundColor: '#006D37' }}>
-        <View className="h-20 w-20 items-center justify-center rounded-lg bg-white/10">
-          <Text className="text-xl font-fuerte tracking-widest text-white">GFH</Text>
+      <View className="flex-1 items-center justify-center" style={{ backgroundColor: FIJO.verdeBarra }}>
+        <View className="h-20 w-20 items-center justify-center rounded-lg bg-blanco/10">
+          <Text className="text-xl font-fuerte tracking-widest text-blanco">GFH</Text>
         </View>
-        <ActivityIndicator color="#FFFFFF" className="mt-8" />
+        <ActivityIndicator color={FIJO.blanco} className="mt-8" />
       </View>
     );
   }

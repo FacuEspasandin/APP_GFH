@@ -5,6 +5,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hapticaSeleccion } from '@/ui/haptica';
 import { Icono, type NombreIcono } from '@/ui/iconos';
 import { coloresChrome, useTema } from '@/ui/tema';
+import { estiloSombra } from './superficie';
+import { FIJO } from './tokens';
 
 /**
  * El menú principal: cuatro secciones y el botón de chat de IA al centro.
@@ -100,7 +102,7 @@ function seccionActiva(segmentos: string[]): string {
  * identidad de marca, no del chrome que se adapta al tema — igual que un logo
  * no cambia de color en modo oscuro.
  */
-const VERDE_BARRA = '#006D37';
+const VERDE_BARRA = FIJO.verdeBarra;
 
 export function MenuInferior() {
   const segmentos = useSegments() as string[];
@@ -139,7 +141,7 @@ export function MenuInferior() {
 
   const item = (d: Destino) => {
     const activo = d.clave === activa;
-    const color = activo ? '#FFFFFF' : c.tabInactivo;
+    const color = activo ? FIJO.blanco : c.tabInactivo;
 
     return (
       <Pressable
@@ -210,17 +212,13 @@ export function MenuInferior() {
                 // Estando ahí se rellena de verde, como los rótulos de los
                 // costados se ponen blancos: es el mismo idioma para decir
                 // «acá estás».
-                backgroundColor: enChat ? VERDE_BARRA : '#FFFFFF',
+                backgroundColor: enChat ? VERDE_BARRA : FIJO.blanco,
                 borderWidth: 4,
                 borderColor: VERDE_BARRA,
-                shadowColor: '#122A23',
-                shadowOpacity: 0.25,
-                shadowOffset: { width: 0, height: 5 },
-                shadowRadius: 12,
-                elevation: 14,
+                ...estiloSombra('alta'),
               }}
             >
-              <Icono nombre="chat" tamano={23} color={enChat ? '#FFFFFF' : VERDE_BARRA} />
+              <Icono nombre="chat" tamano={23} color={enChat ? FIJO.blanco : VERDE_BARRA} />
             </Pressable>
           </View>
         </View>

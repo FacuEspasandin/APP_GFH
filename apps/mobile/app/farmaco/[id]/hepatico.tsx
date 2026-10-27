@@ -8,6 +8,7 @@ import { Icono } from '@/ui/iconos';
 import { Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { PeldanosHepaticos, PieContexto, TapaRestriccion } from '@/ui/restricciones';
+import { useColores } from '@/ui/tema';
 
 /**
  * Ajuste hepático de un fármaco, sin paciente.
@@ -22,6 +23,7 @@ import { PeldanosHepaticos, PieContexto, TapaRestriccion } from '@/ui/restriccio
  * y la respuesta falta.
  */
 export default function RestriccionHepatica() {
+  const col = useColores();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { data, isLoading, error, refetch } = useDetalleRestriccion(id, 'hepatico');
@@ -46,10 +48,10 @@ export default function RestriccionHepatica() {
             onPress={() => router.push('/herramientas/hepatico')}
             accessibilityRole="button"
             className="flex-row items-center gap-2 rounded-full px-6 py-2.5"
-            style={{ backgroundColor: '#005228' }}
+            style={{ backgroundColor: col.primary }}
           >
-            <Icono nombre="calculadora" tamano={16} color="#FFFFFF" />
-            <Text className="text-meta font-medio text-white">Calcular Child-Pugh</Text>
+            <Icono nombre="calculadora" tamano={16} color={col.onPrimary} />
+            <Text className="text-meta font-medio text-on-primary">Calcular Child-Pugh</Text>
           </Pressable>
         </View>
       </Pantalla>
@@ -58,11 +60,12 @@ export default function RestriccionHepatica() {
 }
 
 function EncabezadoAjusteHepatico() {
+  const col = useColores();
   return (
     <View className="mb-4">
       <View className="mb-2 flex-row items-center gap-2">
-        <Icono nombre="higado" tamano={20} color="#B45309" />
-        <Text className="text-[28px] font-fuerte text-ink">Ajuste Hepático</Text>
+        <Icono nombre="higado" tamano={20} color={col.aviso} />
+        <Text className="text-titular font-fuerte text-ink">Ajuste Hepático</Text>
       </View>
       <Text className="text-body leading-6 text-ink-suave">
         Ajuste de dosis según la clase de Child-Pugh del paciente.

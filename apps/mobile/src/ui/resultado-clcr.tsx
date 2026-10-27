@@ -7,6 +7,7 @@ import {
   DatoClinicoInvalido,
   type Sexo,
 } from '@gfh/shared-types';
+import { TIPO } from './tokens';
 
 /**
  * El Clcr, calculado mientras el médico escribe.
@@ -41,7 +42,7 @@ export function ResultadoClcr({
     <View className="mt-3 flex-row items-center rounded-chip bg-primary-light px-3 py-2.5">
       <Text
         className="font-mono-fuerte mr-3"
-        style={{ color, fontSize: 21, fontVariant: ['tabular-nums'] }}
+        style={{ color, fontSize: TIPO.cifraChica, fontVariant: ['tabular-nums'] }}
       >
         {clcr ?? '—'}
       </Text>

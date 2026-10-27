@@ -13,6 +13,7 @@ import { useColores, useTema, type Tema } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
 import type { EstadoSuscripcion, Medico as Perfil } from '@/api/tipos';
+import { TIPO } from '@/ui/tokens';
 
 const TEXTO_ESTADO: Record<EstadoSuscripcion['estado'], string> = {
   SIN_SUSCRIPCION: 'Plan gratis',
@@ -40,6 +41,7 @@ const ETIQUETA_TEMA: Record<Tema, string> = {
  * "Suscripción" y nada más.
  */
 export default function PerfilPantalla() {
+  const col = useColores();
   const router = useRouter();
   const { tema, configuracion } = useTema();
 
@@ -144,9 +146,9 @@ export default function PerfilPantalla() {
         }}
         accessibilityRole="button"
         className="mt-4 flex-row items-center justify-center gap-2 rounded-full border px-6 py-3.5"
-        style={{ borderColor: '#6F7A6F' }}
+        style={{ borderColor: col.tenue }}
       >
-        <Icono nombre="salir" tamano={18} color="#191C20" />
+        <Icono nombre="salir" tamano={18} color={col.ink} />
         <Text className="text-body font-medio text-ink">Cerrar sesión</Text>
       </Pressable>
 
@@ -155,7 +157,7 @@ export default function PerfilPantalla() {
         accessibilityRole="button"
         className="mt-3.5 items-center py-1"
       >
-        <Text className="text-meta font-medio" style={{ color: '#991B1B' }}>
+        <Text className="text-meta font-medio" style={{ color: col.peligro }}>
           Eliminar cuenta
         </Text>
       </Pressable>
@@ -191,9 +193,9 @@ function Identidad({
 
       <View
         className="mb-3 items-center justify-center rounded-full"
-        style={{ width: 80, height: 80, backgroundColor: '#005228' }}
+        style={{ width: 80, height: 80, backgroundColor: col.primary }}
       >
-        <Text className="font-fuerte text-white" style={{ fontSize: 26 }}>
+        <Text className="font-fuerte text-on-primary" style={{ fontSize: TIPO.cifra }}>
           {iniciales(nombre)}
         </Text>
       </View>
@@ -218,7 +220,7 @@ function Identidad({
             style={{
               width: 8,
               height: 8,
-              backgroundColor: suscripcion.vigente ? '#22C55E' : col.tenue,
+              backgroundColor: suscripcion.vigente ? col.exito : col.tenue,
             }}
           />
           <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
@@ -231,9 +233,9 @@ function Identidad({
         onPress={onEditar}
         accessibilityRole="button"
         className="mt-4 rounded-full border px-5 py-2"
-        style={{ borderColor: '#6F7A6F' }}
+        style={{ borderColor: col.tenue }}
       >
-        <Text className="text-meta font-medio" style={{ color: '#005228' }}>
+        <Text className="text-meta font-medio" style={{ color: col.primary }}>
           Editar perfil
         </Text>
       </Pressable>

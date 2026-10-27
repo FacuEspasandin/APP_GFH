@@ -32,6 +32,18 @@ module.exports = {
         accent: token('accent'),
         'accent-light': token('accent-light'),
         peligro: token('peligro'),
+        'on-primary': token('on-primary'),
+        'surface-alt': token('surface-alt'),
+        'peligro-light': token('peligro-light'),
+        'peligro-ink': token('peligro-ink'),
+        aviso: token('aviso'),
+        'aviso-light': token('aviso-light'),
+        info: token('info'),
+        'info-light': token('info-light'),
+        exito: token('exito'),
+        // Blanco fijo: texto sobre fondos que no cambian con el tema (colores
+        // de severidad, splash verde). Sobre `primary` va `on-primary`.
+        blanco: 'rgb(255 255 255 / <alpha-value>)',
       },
       /**
        * Inter, la tipografía del rediseño de Figma ("Modernización de visual
@@ -62,6 +74,12 @@ module.exports = {
         chip: '7px',
         card: '12px',
         sheet: '16px',
+        // Esquina de la burbuja de chat que apunta a quien habla, y casilla de verificación.
+        cola: '3px',
+        casilla: '5px',
+        // Filas de opciones, mosaicos de ícono y barras segmentadas: el mismo 8 px de los campos
+        // (`rounded-lg`). Ya se escribía como `rounded-input` en 5 lugares sin que existiera.
+        input: '8px',
       },
       fontSize: {
         eyebrow: ['11px', { lineHeight: '14px', letterSpacing: '0.66px' }],
@@ -70,6 +88,35 @@ module.exports = {
         fila: ['15px', { lineHeight: '20px' }],
         pantalla: ['15px', { lineHeight: '20px' }],
         grande: ['20px', { lineHeight: '26px' }],
+        // Sin interlineado a propósito: es el que tenían hasta ahora como
+        // `text-[28px]` / `text-[32px]`. Se ajusta junto con la escala.
+        titular: '28px',
+        // Cifra o nombre que encabeza un resultado (puntaje, fecha, tramo, título de monografía).
+        // Ya se escribía como `text-titulo` en 7 lugares sin que existiera.
+        titulo: ['22px', { lineHeight: '28px' }],
+        display: '32px',
+      },
+      letterSpacing: {
+        logo: '-0.8px',
+      },
+      height: {
+        campo: '52px',
+      },
+      minHeight: {
+        'campo-multilinea': '96px',
+        'area-texto': '140px',
+      },
+      maxWidth: {
+        accion: '220px',
+        dialogo: '360px',
+        burbuja: '90%',
+        'burbuja-usuario': '85%',
+        motivo: '55%',
+      },
+      width: {
+        // Siete columnas de un calendario, y dos tarjetas por fila con su separación.
+        dia: '14.2857%',
+        mitad: '48.5%',
       },
     },
   },

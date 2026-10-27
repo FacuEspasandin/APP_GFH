@@ -19,6 +19,7 @@ import {
   type UnidadLipidos,
   type ValorLipidico,
 } from '@gfh/shared-types';
+import { TIPO } from '@/ui/tokens';
 
 /**
  * Colesterol LDL y no-HDL, sobre un perfil lipídico suelto.
@@ -38,6 +39,7 @@ import {
  * entre sí.
  */
 export default function CalculadoraLdl() {
+  const col = useColores();
   const [texto, setTexto] = useState({ total: '', hdl: '', tg: '' });
   const [unidad, setUnidad] = useState<UnidadLipidos>('mg/dL');
 
@@ -82,7 +84,7 @@ export default function CalculadoraLdl() {
       <EncabezadoApp />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerClassName="px-4 pb-8 pt-4" keyboardShouldPersistTaps="handled">
-          <Text className="text-[26px] font-fuerte leading-9 text-ink">Calculadora de LDL</Text>
+          <Text className="text-titular font-fuerte leading-9 text-ink">Calculadora de LDL</Text>
           <Text className="mb-4 mt-1 font-sans text-body leading-6 text-ink-suave">
             Estimación del colesterol LDL mediante la fórmula de Friedewald.
           </Text>
@@ -90,7 +92,7 @@ export default function CalculadoraLdl() {
           <Superficie
             elevacion="media"
             className="mb-4 p-5"
-            style={{ borderLeftWidth: 4, borderLeftColor: '#8CA39A' }}
+            style={{ borderLeftWidth: 4, borderLeftColor: col.tenue }}
           >
             <View className="mb-3 flex-row items-center justify-between">
               <Text className="text-fila font-fuerte text-ink">Perfil lipídico</Text>
@@ -128,8 +130,8 @@ export default function CalculadoraLdl() {
             </View>
           </Superficie>
 
-          <Superficie elevacion="plana" className="mb-4 flex-row gap-3 p-4" style={{ backgroundColor: '#F8FAFC' }}>
-            <Icono nombre="info" tamano={20} color="#5C5F61" />
+          <Superficie elevacion="plana" className="mb-4 flex-row gap-3 p-4" style={{ backgroundColor: col.surfaceAlt }}>
+            <Icono nombre="info" tamano={20} color={col.inkSuave} />
             <View className="flex-1">
               <Text className="text-fila font-fuerte text-ink">Fórmula de Friedewald</Text>
               <Text className="mt-1 text-meta leading-5 text-ink-suave">
@@ -138,7 +140,7 @@ export default function CalculadoraLdl() {
               </Text>
               <View
                 className="mt-2 items-center rounded px-2 py-2"
-                style={{ backgroundColor: '#F2F3F9', borderWidth: 1, borderColor: '#BECABD', borderStyle: 'dashed' }}
+                style={{ backgroundColor: col.surfaceAlt, borderWidth: 1, borderColor: col.line, borderStyle: 'dashed' }}
               >
                 <Text className="font-mono text-meta text-ink-suave">
                   {unidad === 'mg/dL' ? 'LDL = TC − HDL − TG/5' : 'LDL = TC − HDL − TG/2,2'}
@@ -177,10 +179,7 @@ export default function CalculadoraLdl() {
             No se guarda nada. Al salir de la herramienta, estos valores se pierden.
           </Text>
 
-          <View
-            className="mt-3 rounded-card border border-line bg-surface px-4 py-3.5"
-            style={{ borderLeftWidth: 3, borderLeftColor: '#8CA39A' }}
-          >
+          <Superficie className="mt-3 px-4 py-3.5" style={{ borderLeftWidth: 3, borderLeftColor: col.tenue }}>
             <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
               ⓘ Sobre esta herramienta
             </Text>
@@ -189,7 +188,7 @@ export default function CalculadoraLdl() {
               rutina — pero falla con triglicéridos altos, de ahí las alternativas (Chen, de
               Cordova) para ese caso. El no-HDL no depende de ninguna fórmula: es una resta directa.
             </Text>
-          </View>
+          </Superficie>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -223,12 +222,12 @@ function Cifra({
 }) {
   const col = useColores();
   const hay = valor.valor !== null;
-  const color = hay ? '#005228' : col.tenue;
+  const color = hay ? col.primary : col.tenue;
 
   return (
     <Superficie elevacion="media" className="p-5" style={{ borderLeftWidth: 4, borderLeftColor: color }}>
       <View className="flex-row items-center justify-between">
-        <Text className="font-fuerte text-[11px] uppercase tracking-wider text-ink-suave">
+        <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
           {titulo}
         </Text>
         <Icono nombre="info" tamano={16} color={col.tenue} />
@@ -238,7 +237,7 @@ function Cifra({
       <View className="mt-1 flex-row items-baseline gap-2">
         <Text
           className="font-fuerte"
-          style={{ fontSize: 32, color: hay ? col.ink : col.tenue, fontVariant: ['tabular-nums'] }}
+          style={{ fontSize: TIPO.display, color: hay ? col.ink : col.tenue, fontVariant: ['tabular-nums'] }}
         >
           {hay ? valor.valor : '—'}
         </Text>
@@ -249,7 +248,7 @@ function Cifra({
         className="mt-3 flex-row items-center justify-between border-t pt-2"
         style={{ borderColor: `${col.line}80` }}
       >
-        <Text className="font-fuerte text-[11px] uppercase tracking-wider" style={{ color: col.inkSuave }}>
+        <Text className="font-fuerte text-eyebrow uppercase tracking-wider" style={{ color: col.inkSuave }}>
           {hay ? 'Calculado' : 'Sin datos suficientes'}
         </Text>
         <View className="rounded-full" style={{ width: 12, height: 12, backgroundColor: color }} />
@@ -291,12 +290,12 @@ function PorQueNo({
   return (
     <View
       className="mb-3 flex-row rounded-card px-3.5 py-3"
-      style={{ backgroundColor: '#FFFBEB', borderWidth: 1, borderColor: '#FDE9C8' }}
+      style={{ backgroundColor: col.avisoLight, borderWidth: 1, borderColor: col.aviso }}
     >
-      <Text className="font-sans flex-1 text-meta leading-5" style={{ color: '#7C4A03' }}>
+      <Text className="font-sans flex-1 text-meta leading-5" style={{ color: col.ink }}>
         {motivo === 'TG_ALTOS' ? (
           <>
-            <Text className="font-medio" style={{ color: '#5C3702' }}>
+            <Text className="font-medio" style={{ color: col.aviso }}>
               El LDL no se puede calcular con estos triglicéridos.{' '}
             </Text>
             {texto} El no-HDL-C sí vale: no los usa.
@@ -342,7 +341,7 @@ function Alternativas({
   const col = useColores();
 
   return (
-    <Superficie elevacion="plana" className="overflow-hidden">
+    <Superficie elevacion="plana">
       <Pressable
         onPress={onAlternar}
         accessibilityRole="button"
@@ -381,7 +380,7 @@ function Alternativas({
                 </Text>
               ) : (
                 // También acá se dice por qué, no sólo un guion.
-                <Text className="font-sans max-w-[55%] text-right text-eyebrow leading-4 text-tenue">
+                <Text className="font-sans max-w-motivo text-right text-eyebrow leading-4 text-tenue">
                   {f.motivo === 'SIN_DATO'
                     ? 'faltan datos'
                     : f.motivo === 'NEGATIVO'
@@ -422,7 +421,7 @@ function SelectorUnidad({
         >
           <Text
             className="font-mono text-eyebrow"
-            style={{ color: u === activa ? '#FFFFFF' : col.inkSuave }}
+            style={{ color: u === activa ? col.onPrimary : col.inkSuave }}
           >
             {u}
           </Text>

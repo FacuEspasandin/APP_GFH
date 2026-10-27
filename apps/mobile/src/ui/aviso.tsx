@@ -4,6 +4,8 @@ import { Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { hapticaSeleccion } from './haptica';
+import { estiloSombra } from './superficie';
+import { FIJO } from './tokens';
 
 /**
  * El cartelito de «listo» que aparece arriba y se va solo.
@@ -86,15 +88,8 @@ export function ProveedorAviso({ children }: { children: ReactNode }) {
             }}
           >
             <Text
-              className="font-medio overflow-hidden rounded-chip px-4 py-2.5 text-meta text-white"
-              style={{
-                backgroundColor: '#122A23',
-                shadowColor: '#000',
-                shadowOpacity: 0.3,
-                shadowRadius: 12,
-                shadowOffset: { width: 0, height: 4 },
-                elevation: 6,
-              }}
+              className="font-medio overflow-hidden rounded-chip px-4 py-2.5 text-meta text-blanco"
+              style={{ backgroundColor: FIJO.tinta, ...estiloSombra('alta') }}
               accessibilityLiveRegion="polite"
             >
               {texto}

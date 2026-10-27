@@ -1,0 +1,17 @@
+{
+  "fecha": "2026-10-27",
+  "pantallas": 94,
+  "pantallasConSuperficie": 49,
+  "metricas": {
+    "hexSueltos": 218,
+    "hexMarca": 64,
+    "coloresTailwindCrudos": 33,
+    "valoresArbitrarios": 87,
+    "fontSizeSuelto": 16,
+    "textoMenorA12": 16,
+    "radioSuelto": 0,
+    "sombrasSueltas": 20,
+    "bordesLinea": 75,
+    "adopcionSuperficiePct": 52
+  }
+}

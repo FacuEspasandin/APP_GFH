@@ -2,6 +2,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { hapticaSeleccion } from '@/ui/haptica';
 import { useColores } from '@/ui/tema';
+import { TIPO } from './tokens';
 
 /**
  * Pestañas con subrayado, pegadas al header.
@@ -57,7 +58,7 @@ export function Pestanas<T extends string>({
                 React Native ya estira todas a la altura de la más alta. */}
             <Text
               className="font-medio text-center"
-              style={{ color: esActiva ? col.primary : col.inkSuave, fontSize: 13, lineHeight: 16 }}
+              style={{ color: esActiva ? col.primary : col.inkSuave, fontSize: TIPO.pestana, lineHeight: 16 }}
             >
               {p.titulo}
             </Text>

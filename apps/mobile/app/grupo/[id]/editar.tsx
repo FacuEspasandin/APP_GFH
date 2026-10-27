@@ -3,13 +3,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 
-import type { Inicio } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import { useAviso } from '@/ui/aviso';
 import { EncabezadoApp } from '@/ui/encabezado-app';
-import { Icono } from '@/ui/iconos';
-import { Boton, CampoTexto, Pantalla } from '@/ui/kit';
+import { AvisoPeligro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 
 /**
  * Renombrar o eliminar un grupo (2.7 y 2.8).
@@ -18,6 +17,7 @@ import { Superficie } from '@/ui/superficie';
  * habitual, editarlo es la excepción, y tenerlos juntos hacía que compitieran.
  */
 export default function EditarGrupo() {
+  const col = useColores();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
@@ -86,26 +86,16 @@ export default function EditarGrupo() {
           </View>
         </Superficie>
 
-        <View
-          className="gap-3 rounded-xl p-4"
-          style={{ backgroundColor: '#FFDAD6', borderWidth: 1, borderColor: 'rgba(186,26,26,0.2)' }}
+        <AvisoPeligro
+          titulo="Zona de riesgo"
+          detalle="Eliminar este grupo es una acción irreversible. Los pacientes no se borran: quedan sin grupo asignado."
         >
-          <View className="flex-row items-center gap-2">
-            <Icono nombre="alerta" tamano={18} color="#93000A" />
-            <Text className="text-fila font-fuerte" style={{ color: '#93000A' }}>
-              Zona de riesgo
-            </Text>
-          </View>
-          <Text className="font-sans text-meta leading-5" style={{ color: 'rgba(147,0,10,0.8)' }}>
-            Eliminar este grupo es una acción irreversible. Los pacientes no se borran: quedan sin
-            grupo asignado.
-          </Text>
           <View className="self-start">
             <Boton variante="destructivo" onPress={confirmarBorrado} cargando={eliminar.isPending}>
               Eliminar grupo
             </Boton>
           </View>
-        </View>
+        </AvisoPeligro>
       </Pantalla>
     </View>
   );

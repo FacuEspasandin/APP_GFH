@@ -33,7 +33,7 @@ export default function Similares() {
     <View className="flex-1 bg-paper">
       <EncabezadoApp />
       <Pantalla>
-        <Text className="mb-1 text-[28px] font-fuerte text-ink">Similares</Text>
+        <Text className="mb-1 text-titular font-fuerte text-ink">Similares</Text>
         <Text className="font-sans mb-4 text-meta leading-5 text-ink-suave">
           Otros fármacos de la misma clase que {nombre ?? 'este'}, por código ATC.
         </Text>

@@ -42,7 +42,7 @@ export default function CrearGrupo() {
             className="mb-3 items-center justify-center rounded-full"
             style={{ width: 64, height: 64, backgroundColor: col.paper }}
           >
-            <Icono nombre="grupos" tamano={26} color="#005228" />
+            <Icono nombre="grupos" tamano={26} color={col.primary} />
           </View>
           <Text className="text-fila font-fuerte text-ink">Crear Grupo</Text>
           <Text className="font-sans mt-2 text-center text-body leading-6 text-ink-suave">
@@ -69,15 +69,15 @@ export default function CrearGrupo() {
           onPress={crear}
           disabled={enviando || nombre.trim().length === 0}
           accessibilityRole="button"
-          className="mt-2 h-[52px] flex-row items-center justify-center gap-2 rounded-full"
-          style={{ backgroundColor: '#005228', opacity: enviando || nombre.trim().length === 0 ? 0.55 : 1 }}
+          className="mt-2 h-campo flex-row items-center justify-center gap-2 rounded-full"
+          style={{ backgroundColor: col.primary, opacity: enviando || nombre.trim().length === 0 ? 0.55 : 1 }}
         >
           {enviando ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color={col.onPrimary} />
           ) : (
             <>
-              <Text className="text-meta font-medio text-white">Crear grupo</Text>
-              <Icono nombre="mas" tamano={14} color="#FFFFFF" />
+              <Text className="text-meta font-medio text-on-primary">Crear grupo</Text>
+              <Icono nombre="mas" tamano={14} color={col.onPrimary} />
             </>
           )}
         </Pressable>

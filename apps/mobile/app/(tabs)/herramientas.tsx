@@ -220,14 +220,14 @@ function ChipFiltro({
       accessibilityState={{ selected: activo }}
       className="rounded-chip px-3.5 py-2"
       style={{
-        backgroundColor: activo ? '#005228' : col.surface,
+        backgroundColor: activo ? col.primary : col.surface,
         borderWidth: 1,
-        borderColor: activo ? '#005228' : col.line,
+        borderColor: activo ? col.primary : col.line,
       }}
     >
       <Text
-        className="text-meta"
-        style={{ color: activo ? '#FFFFFF' : col.inkSuave, fontWeight: activo ? '600' : '400' }}
+        className={activo ? 'text-meta font-medio' : 'font-sans text-meta'}
+        style={{ color: activo ? col.onPrimary : col.inkSuave }}
       >
         {texto}
       </Text>
@@ -290,9 +290,9 @@ function Fila({
           escala clínica a algo que no la tiene. Distingue el dibujo. */}
       <View
         className="mr-3 h-9 w-9 items-center justify-center rounded"
-        style={{ backgroundColor: '#E0F2FE' }}
+        style={{ backgroundColor: col.infoLight }}
       >
-        <Icono nombre={h.icono} tamano={18} color="#075985" />
+        <Icono nombre={h.icono} tamano={18} color={col.info} />
       </View>
 
       <View className="flex-1">
@@ -328,13 +328,14 @@ function Resaltado({
   consulta: string;
   className: string;
 }) {
+  const col = useColores();
   if (consulta === '') return <Text className={className}>{texto}</Text>;
 
   return (
     <Text className={className}>
       {partir(texto, consulta).map((t, i) =>
         t.coincide ? (
-          <Text key={i} style={{ backgroundColor: '#FEF3C7' }}>
+          <Text key={i} style={{ backgroundColor: col.avisoLight }}>
             {t.texto}
           </Text>
         ) : (

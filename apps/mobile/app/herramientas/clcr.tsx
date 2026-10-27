@@ -5,7 +5,7 @@ import { KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { calcularClcrParaMolde, moldeClcr } from '@/dominio/molde-clcr';
 import { Calculadora } from '@/ui/calculadora';
 import { EncabezadoApp } from '@/ui/encabezado-app';
-import { Icono } from '@/ui/iconos';
+import { EncabezadoHerramienta } from '@/ui/encabezado-herramienta';
 import { Superficie } from '@/ui/superficie';
 import { gradoKdigo, KDIGO_DESCRIPCION, type Borrador, type GradoKdigo } from '@gfh/shared-types';
 
@@ -38,15 +38,9 @@ export default function CalculadoraClcr() {
     <View className="flex-1 bg-paper">
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp />
-      <View className="px-4 pt-4">
-        <View className="mb-1 flex-row items-center gap-2">
-          <Icono nombre="calculadora" tamano={20} color="#005228" />
-          <Text className="text-[28px] font-fuerte text-ink">Clearance de creatinina</Text>
-        </View>
-        <Text className="mb-2 text-body leading-6 text-ink-suave">
-          Cockcroft-Gault, sobre datos sueltos — no cruza el catálogo.
-        </Text>
-      </View>
+      <EncabezadoHerramienta icono="calculadora" titulo="Clearance de creatinina">
+        Cockcroft-Gault, sobre datos sueltos — no cruza el catálogo.
+      </EncabezadoHerramienta>
 
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <Calculadora

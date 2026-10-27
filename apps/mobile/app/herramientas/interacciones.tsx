@@ -1,15 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
-import { paresDe, textoParesLimpios, titularInteracciones } from '@/dominio/interacciones';
+import { paresDe, titularInteracciones } from '@/dominio/interacciones';
 import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
 import { EncabezadoApp, BotonAvatar } from '@/ui/encabezado-app';
-import { Icono } from '@/ui/iconos';
 import { AvisoDescartable, ConsultaPlegada, FilaResultado, GrupoGravedad, Veredicto } from '@/ui/herramienta';
-import { Estado } from '@/ui/kit';
+import { Boton, Estado } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import {
@@ -69,27 +68,15 @@ export default function HerramientaInteracciones() {
           ) : null}
 
           <View className="mt-6 items-center border-t pt-6" style={{ borderColor: col.line }}>
-            <Pressable
+            <Boton
+              tamano="grande"
+              icono="interacciones"
               onPress={() => calcular.mutate()}
-              disabled={seleccion.length < 2 || calcular.isPending}
-              accessibilityRole="button"
-              className="h-[60px] w-full flex-row items-center justify-center gap-3 rounded-full"
-              style={{
-                backgroundColor: '#005228',
-                opacity: seleccion.length < 2 || calcular.isPending ? 0.5 : 1,
-              }}
+              cargando={calcular.isPending}
+              deshabilitado={seleccion.length < 2}
             >
-              {calcular.isPending ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <>
-                  <Icono nombre="interacciones" tamano={18} color="#FFFFFF" />
-                  <Text className="text-fila font-fuerte text-white">
-                    {seleccion.length < 2 ? 'Agregá al menos 2 fármacos' : `Analizar ${pares} pares`}
-                  </Text>
-                </>
-              )}
-            </Pressable>
+              {seleccion.length < 2 ? 'Agregá al menos 2 fármacos' : `Analizar ${pares} pares`}
+            </Boton>
             <Text className="mt-2 text-center text-meta leading-5 text-ink-suave">
               {seleccion.length >= 2
                 ? `Se cruzan todos contra todos: con ${seleccion.length} fármacos son ${pares} pares. No se guarda nada.`

@@ -20,7 +20,7 @@ import {
 import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { Icono } from '@/ui/iconos';
-import { Estado, Pantalla } from '@/ui/kit';
+import { AvisoPeligro, Estado, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { ChipSeveridad, Espina } from '@/ui/severidad';
 import {
@@ -133,7 +133,7 @@ export default function Hallazgos() {
         <AlertaCriticaHallazgos lista={lista} />
 
       {prescripcionActual ? (
-        <View className="mb-4 rounded-card border border-line bg-surface px-3.5 py-3">
+        <Superficie className="mb-4 px-3.5 py-3">
           <Text className="text-body font-medio text-ink">{prescripcionActual.nombre}</Text>
           <Text className="font-sans mt-0.5 text-meta text-ink-suave">
             {[
@@ -166,18 +166,15 @@ export default function Hallazgos() {
           >
             <Text className="text-meta font-medio text-accent">Editar o suspender</Text>
           </Pressable>
-        </View>
+        </Superficie>
       ) : null}
 
       {lista.length === 0 && avisosRelevantes.length === 0 ? (
         // El panel vacío se colapsa a una línea verde, no a una tarjeta grande
         // que ocupe el lugar de algo que sí importa.
-        <View
-          className="rounded-card border border-line bg-surface px-3.5 py-3"
-          style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.ok }}
-        >
+        <Superficie className="px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.ok }}>
           <Text className="font-sans text-meta text-ink">{mensajeVacio(vista)}</Text>
-        </View>
+        </Superficie>
       ) : null}
 
       {agruparHallazgos(lista).map((f) => (
@@ -192,13 +189,9 @@ export default function Hallazgos() {
       ))}
 
       {avisosRelevantes.map((a) => (
-        <View
-          key={a.codigo + (a.prescripcionId ?? '')}
-          className="mb-2 rounded-card border border-line bg-surface px-3.5 py-3"
-          style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}
-        >
+        <Superficie className="mb-2 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
           <Text className="font-sans text-meta leading-5 text-ink">{a.detalle}</Text>
-        </View>
+        </Superficie>
       ))}
       </ScrollView>
     </View>
@@ -309,12 +302,9 @@ function PorCategoria({
                 <AlertaCriticaHallazgos lista={lista} />
 
                 {lista.length === 0 && avisos.length === 0 ? (
-                  <View
-                    className="rounded-card border border-line bg-surface px-3.5 py-3"
-                    style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.ok }}
-                  >
+                  <Superficie className="px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.ok }}>
                     <Text className="font-sans text-meta text-ink">{mensajeVacio(suVista)}</Text>
-                  </View>
+                  </Superficie>
                 ) : null}
 
                 {agruparHallazgos(lista).map((f) => (
@@ -327,13 +317,9 @@ function PorCategoria({
                 ))}
 
                 {avisos.map((a) => (
-                  <View
-                    key={a.codigo + (a.prescripcionId ?? '')}
-                    className="mb-2 rounded-card border border-line bg-surface px-3.5 py-3"
-                    style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}
-                  >
+                  <Superficie className="mb-2 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
                     <Text className="font-sans text-meta leading-5 text-ink">{a.detalle}</Text>
-                  </View>
+                  </Superficie>
                 ))}
               </ScrollView>
             </View>
@@ -346,25 +332,17 @@ function PorCategoria({
 
 /** Solo se eleva si hay algo contraindicado en la lista que se está viendo. */
 function AlertaCriticaHallazgos({ lista }: { lista: readonly Hallazgo[] }) {
+  const col = useColores();
   const graves = lista.filter((h) => h.rango === 0);
   if (graves.length === 0) return null;
   const [primero, ...resto] = graves;
 
   return (
-    <View
-      className="mb-4 flex-row gap-4 rounded-2xl p-4"
-      style={{ backgroundColor: '#FFDAD6', borderWidth: 1, borderColor: 'rgba(186,26,26,0.2)' }}
-    >
-      <Icono nombre="alerta" tamano={20} color="#93000A" />
-      <View className="flex-1">
-        <Text className="text-fila font-fuerte" style={{ color: '#93000A' }}>
-          {primero!.titulo}
-        </Text>
-        <Text className="mt-1 text-meta leading-5" style={{ color: 'rgba(147,0,10,0.9)' }}>
-          {resto.length > 0 ? `Contraindicado. Y ${resto.length} más abajo.` : 'Contraindicado.'}
-        </Text>
-      </View>
-    </View>
+    <AvisoPeligro
+      className="mb-4"
+      titulo={primero!.titulo}
+      detalle={resto.length > 0 ? `Contraindicado. Y ${resto.length} más abajo.` : 'Contraindicado.'}
+    />
   );
 }
 

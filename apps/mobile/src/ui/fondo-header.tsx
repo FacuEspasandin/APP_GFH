@@ -2,6 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { View } from 'react-native';
 
 import { coloresChrome, useTema } from './tema';
+import { FIJO } from './tokens';
 
 /**
  * Fondo del header de navegación.
@@ -21,7 +22,7 @@ export function FondoHeader() {
   return (
     <View style={{ flex: 1 }}>
       <LinearGradient
-        colors={oscuro ? ['#1A2C25', '#101B17'] : ['#2A6E58', '#1B5342']}
+        colors={[...(oscuro ? FIJO.degradeHeader.oscuro : FIJO.degradeHeader.claro)]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{ flex: 1 }}

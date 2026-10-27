@@ -5,7 +5,7 @@ import { Text, View } from 'react-native';
 import { calcularGlasgowParaMolde, categoriaGlasgow, moldeGlasgow } from '@/dominio/molde-glasgow';
 import { Calculadora } from '@/ui/calculadora';
 import { EncabezadoApp } from '@/ui/encabezado-app';
-import { Icono } from '@/ui/iconos';
+import { EncabezadoHerramienta } from '@/ui/encabezado-herramienta';
 import { Superficie } from '@/ui/superficie';
 import { COLOR_SEVERIDAD, type Borrador } from '@gfh/shared-types';
 
@@ -30,15 +30,9 @@ export default function Glasgow() {
     <View className="flex-1 bg-paper">
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp />
-      <View className="px-4 pt-4">
-        <View className="mb-1 flex-row items-center gap-2">
-          <Icono nombre="glasgow" tamano={20} color="#005228" />
-          <Text className="text-[28px] font-fuerte text-ink">Escala de Glasgow</Text>
-        </View>
-        <Text className="mb-2 text-body leading-6 text-ink-suave">
-          Nivel de conciencia, sobre datos sueltos — no cruza el catálogo.
-        </Text>
-      </View>
+      <EncabezadoHerramienta icono="glasgow" titulo="Escala de Glasgow">
+        Nivel de conciencia, sobre datos sueltos — no cruza el catálogo.
+      </EncabezadoHerramienta>
 
       <Calculadora
         molde={molde}

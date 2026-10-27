@@ -8,7 +8,7 @@ import { PAYWALL_RESULT, presentarPaywall } from '@/api/revenuecat';
 import type { MotivoPaywall } from '@/dominio/plan-gratis';
 import { useAviso } from '@/ui/aviso';
 import { Icono } from '@/ui/iconos';
-import { Boton } from '@/ui/kit';
+import { Boton, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
@@ -25,7 +25,7 @@ function EncabezadoPaywall({ onCerrar }: { onCerrar: () => void }) {
       style={{ paddingTop: insets.top, backgroundColor: col.surface, borderColor: col.line }}
     >
       <View className="h-16 flex-1 items-center justify-center">
-        <Text className="text-fila font-fuerte" style={{ color: '#005228' }}>
+        <Text className="text-fila font-fuerte" style={{ color: col.primary }}>
           GFH
         </Text>
       </View>
@@ -130,7 +130,7 @@ export default function Paywall() {
     <View className="flex-1 bg-paper">
       <EncabezadoPaywall onCerrar={cerrar} />
       <ScrollView contentContainerClassName="px-4 pb-4 pt-5">
-        <Text className="text-center text-[28px] leading-9 font-fuerte text-ink">
+        <Text className="text-center text-titular leading-9 font-fuerte text-ink">
           {cabecera.titulo}
         </Text>
         <Text className="font-sans mt-2 text-center text-body leading-6 text-ink-suave">
@@ -152,7 +152,7 @@ export default function Paywall() {
         </Text>
       </ScrollView>
 
-      <View className="border-t border-line bg-surface px-4 py-3">
+      <BarraAccion>
         <Boton onPress={verPlanes} cargando={comprando}>
           Ver planes y suscribirme
         </Boton>
@@ -164,15 +164,16 @@ export default function Paywall() {
         >
           <Text className="font-medio text-meta text-ink-suave">Ahora no</Text>
         </Pressable>
-      </View>
+      </BarraAccion>
     </View>
   );
 }
 
 function Incluye({ texto }: { texto: string }) {
+  const col = useColores();
   return (
     <View className="mb-3 flex-row items-start gap-3">
-      <Icono nombre="check" tamano={18} color="#22C55E" />
+      <Icono nombre="check" tamano={18} color={col.exito} />
       <Text className="font-sans flex-1 text-body leading-6 text-ink">{texto}</Text>
     </View>
   );

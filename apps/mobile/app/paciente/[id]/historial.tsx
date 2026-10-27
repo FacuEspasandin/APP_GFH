@@ -28,7 +28,9 @@ import {
   type GrupoDeEvento,
   type Periodo,
 } from '@gfh/shared-types';
+import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { FIJO, type Paleta } from '@/ui/tokens';
 
 /**
  * Historial del paciente.
@@ -302,11 +304,16 @@ function Filtros({
  * separado de la severidad clínica igual que antes (ver comentario que
  * reemplaza este).
  */
-const MARCA: Record<FamiliaEvento, { color: string; relleno: boolean; icono: NombreIcono | null }> = {
-  tratamiento: { color: '#006D37', relleno: true, icono: 'check' },
-  paciente: { color: '#8CA39A', relleno: true, icono: 'documento' },
-  baja: { color: '#BECABD', relleno: false, icono: null },
-};
+function marcaDe(familia: FamiliaEvento, col: Paleta): { color: string; relleno: boolean; icono: NombreIcono | null } {
+  switch (familia) {
+    case 'tratamiento':
+      return { color: FIJO.verdeBarra, relleno: true, icono: 'check' };
+    case 'paciente':
+      return { color: col.tenue, relleno: true, icono: 'documento' };
+    case 'baja':
+      return { color: col.line, relleno: false, icono: null };
+  }
+}
 
 function Linea({
   evento,
@@ -319,7 +326,7 @@ function Linea({
 }) {
   const col = useColores();
   const familia = familiaDe(evento.tipo);
-  const marca = MARCA[familia];
+  const marca = marcaDe(familia, col);
   const esBaja = familia === 'baja';
 
   return (
@@ -347,24 +354,15 @@ function Linea({
           }}
         >
           {marca.icono ? (
-            <Icono nombre={marca.icono} tamano={12} color={marca.relleno ? '#FFFFFF' : marca.color} />
+            <Icono nombre={marca.icono} tamano={12} color={marca.relleno ? FIJO.blanco : marca.color} />
           ) : null}
         </View>
         <View className="w-px flex-1" style={{ backgroundColor: ultimo ? 'transparent' : col.line }} />
       </View>
 
-      <View
-        className="ml-3 flex-1 rounded-lg border px-4 py-3.5"
-        style={{
-          backgroundColor: col.surface,
-          borderColor: col.line,
-          opacity: esBaja ? 0.75 : 1,
-          shadowColor: '#000',
-          shadowOpacity: 0.05,
-          shadowRadius: 2,
-          shadowOffset: { width: 0, height: 1 },
-          elevation: esBaja ? 0 : 1,
-        }}
+      <Superficie
+        className="ml-3 flex-1 px-4 py-3.5"
+        style={{ opacity: esBaja ? 0.75 : 1 }}
       >
         <View className="flex-row items-start justify-between gap-2">
           <Text
@@ -383,7 +381,7 @@ function Linea({
         {evento.cambios && evento.cambios.length > 0 ? (
           <TablaCambios cambios={evento.cambios} />
         ) : null}
-      </View>
+      </Superficie>
     </View>
   );
 }

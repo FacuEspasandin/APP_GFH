@@ -41,7 +41,7 @@ export default function DisclaimerPrimerIngreso() {
 
       <ScrollView className="flex-1" contentContainerClassName="px-5 py-6">
         <Superficie elevacion="media" className="p-6">
-          <Text className="border-b border-line pb-4 text-center text-[28px] font-fuerte" style={{ color: '#005228' }}>
+          <Text className="border-b border-line pb-4 text-center text-titular font-fuerte" style={{ color: col.primary }}>
             Antes de empezar
           </Text>
           <View className="gap-4 pt-4">
@@ -70,13 +70,13 @@ export default function DisclaimerPrimerIngreso() {
         className="mb-4 flex-row items-start gap-3"
       >
         <View
-          className="mt-0.5 h-5 w-5 items-center justify-center rounded-[5px] border-2"
+          className="mt-0.5 h-5 w-5 items-center justify-center rounded-casilla border-2"
           style={{
             borderColor: aceptado ? col.primary : col.tenue,
             backgroundColor: aceptado ? col.primary : 'transparent',
           }}
         >
-          {aceptado ? <Icono nombre="check" tamano={14} color="#FFFFFF" /> : null}
+          {aceptado ? <Icono nombre="check" tamano={14} color={col.onPrimary} /> : null}
         </View>
         <Text className="font-sans flex-1 text-body leading-5 text-ink">
           Entiendo y acepto que esta herramienta no reemplaza mi criterio clínico.

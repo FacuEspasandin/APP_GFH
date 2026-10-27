@@ -3,7 +3,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
 
-import type { Inicio } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { CampoFecha } from '@/ui/campo-fecha';
@@ -15,7 +14,6 @@ import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { OPCIONES_SEXO, type Sexo } from '@gfh/shared-types';
 
-const ROJO = '#BA1A1A';
 
 /** Editar y eliminar paciente (2.9). */
 export default function EditarPaciente() {
@@ -110,7 +108,7 @@ export default function EditarPaciente() {
           >
             <Icono nombre="atras" tamano={18} color={col.ink} />
           </Pressable>
-          <Text className="text-[28px] font-fuerte text-ink">Editar Paciente</Text>
+          <Text className="text-titular font-fuerte text-ink">Editar Paciente</Text>
         </View>
 
         <Superficie elevacion="media" className="mb-4 p-5">
@@ -173,7 +171,7 @@ export default function EditarPaciente() {
         </Boton>
 
         <View className="mt-10 gap-3 border-t pt-6" style={{ borderColor: col.line }}>
-          <Text className="text-center text-fila font-fuerte" style={{ color: ROJO }}>
+          <Text className="text-center text-fila font-fuerte" style={{ color: col.peligro }}>
             Zona de riesgo
           </Text>
           <Text className="text-center font-sans text-meta leading-5 text-ink-suave">
@@ -193,10 +191,10 @@ export default function EditarPaciente() {
             disabled={eliminar.isPending}
             accessibilityRole="button"
             className="flex-row items-center justify-center gap-2 rounded-full py-3.5"
-            style={{ borderWidth: 2, borderColor: ROJO, opacity: eliminar.isPending ? 0.6 : 1 }}
+            style={{ borderWidth: 2, borderColor: col.peligro, opacity: eliminar.isPending ? 0.6 : 1 }}
           >
-            <Icono nombre="basura" tamano={16} color={ROJO} />
-            <Text className="text-fila font-medio" style={{ color: ROJO }}>
+            <Icono nombre="basura" tamano={16} color={col.peligro} />
+            <Text className="text-fila font-medio" style={{ color: col.peligro }}>
               Eliminar paciente
             </Text>
           </Pressable>

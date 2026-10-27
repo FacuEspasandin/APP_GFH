@@ -10,12 +10,12 @@ import { cupoAgotado, gastaConsulta, rutaPaywall, textoCupo } from '@/dominio/pl
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { HojaInferior } from '@/ui/hoja-inferior';
-import { Boton, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { AvisoPeligro, Boton, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { Pestanas } from '@/ui/pestanas';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { SelloSeccion } from '@/ui/monografia';
 import { GrillaRestricciones } from '@/ui/restricciones';
-import { Superficie } from '@/ui/superficie';
+import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { colorEspina, RANGO_POR_SEVERIDAD_INTERACCION, type ClaveSeccion } from '@gfh/shared-types';
 
@@ -236,26 +236,17 @@ function TituloSeccion({ icono, titulo }: { icono: Parameters<typeof Icono>[0]['
  * fuerte" — que es un hecho de la ficha, no una inferencia.
  */
 function AlertaCritica({ restricciones }: { restricciones: readonly Restriccion[] }) {
+  const col = useColores();
   const graves = restricciones.filter((r) => r.estado === 'evitar');
   if (graves.length === 0) return null;
   const [primera, ...resto] = graves;
 
   return (
-    <View
-      className="mb-4 flex-row gap-4 rounded-xl p-4"
-      style={{ backgroundColor: '#FFDAD6' }}
-    >
-      <Icono nombre="alerta" tamano={20} color="#93000A" />
-      <View className="flex-1">
-        <Text className="text-fila font-fuerte" style={{ color: '#93000A' }}>
-          {primera!.titulo}
-        </Text>
-        <Text className="mt-1 text-meta leading-5" style={{ color: 'rgba(147,0,10,0.9)' }}>
-          {primera!.glosa}
-          {resto.length > 0 ? ` Y ${resto.length} más abajo.` : ''}
-        </Text>
-      </View>
-    </View>
+    <AvisoPeligro
+      className="mb-4"
+      titulo={primera!.titulo}
+      detalle={`${primera!.glosa}${resto.length > 0 ? ` Y ${resto.length} más abajo.` : ''}`}
+    />
   );
 }
 
@@ -265,7 +256,7 @@ function Encabezado({ f }: { f: Ficha }) {
 
   return (
     <Superficie elevacion="media" className="mb-4 p-5">
-      <Text className="text-[28px] font-fuerte leading-9 text-ink">{f.nombreComercial}</Text>
+      <Text className="text-titular font-fuerte leading-9 text-ink">{f.nombreComercial}</Text>
       <Text className="mt-0.5 text-body text-ink-suave">
         {[f.dosisTexto, f.formaFarmaceutica].filter(Boolean).join(' ') || 'Sin dosis registrada'}
       </Text>
@@ -281,7 +272,7 @@ function Encabezado({ f }: { f: Ficha }) {
 
       {codigosATC.length > 0 ? (
         <View className="mt-3.5 border-t border-line pt-3">
-          <Text className="font-fuerte text-[11px] uppercase tracking-wider text-ink-suave">
+          <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             Código ATC
           </Text>
           <View className="mt-1.5 flex-row flex-wrap gap-1.5">
@@ -311,11 +302,11 @@ function FilaInteracciones({ f, onPress }: { f: Ficha; onPress: () => void }) {
     : col.tenue;
 
   return (
-    <Pressable
+    <SuperficieTocable
       onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={`Interacciones, ${total}`}
-      className="mb-4 flex-row items-center rounded-card border border-line bg-surface px-3.5 py-3"
+      contenedor="mb-4"
+      className="flex-row items-center px-3.5 py-3"
+      accesibilidad={`Interacciones, ${total}`}
     >
       <Text className="flex-1 text-fila font-medio text-ink">Interacciones</Text>
       {total > 0 ? (
@@ -328,7 +319,7 @@ function FilaInteracciones({ f, onPress }: { f: Ficha; onPress: () => void }) {
         <Text className="font-sans mr-2 text-meta text-tenue">Ninguna conocida</Text>
       )}
       <Icono nombre="chevron" tamano={15} color={col.tenue} />
-    </Pressable>
+    </SuperficieTocable>
   );
 }
 
@@ -428,6 +419,7 @@ function SimilaresDelUnicoPa({ principioActivoId }: { principioActivoId: string 
  * dejar la pestaña en blanco, que se leería como roto.
  */
 function TabPresentaciones({ productoId }: { productoId: string }) {
+  const col = useColores();
   const router = useRouter();
   const { data, isLoading, error, refetch } = usePresentaciones(productoId);
 
@@ -456,7 +448,7 @@ function TabPresentaciones({ productoId }: { productoId: string }) {
                   <Text className="mt-0.5 text-meta font-medio text-accent">Ésta</Text>
                 ) : null}
               </View>
-              {!p.actual ? <Icono nombre="chevron" tamano={15} color="#8CA39A" /> : null}
+              {!p.actual ? <Icono nombre="chevron" tamano={15} color={col.tenue} /> : null}
             </Pressable>
           ))}
         </Superficie>
@@ -509,13 +501,11 @@ function Monografia({ f }: { f: Ficha }) {
       <TituloSeccion icono="documento" titulo="Monografía" />
       <View className="mb-4 gap-2">
         {secciones.map((sec) => (
-          <Pressable
+          <SuperficieTocable
             key={sec.clave}
             onPress={() => router.push(`/farmaco/${f.id}/monografia/${sec.clave}`)}
-            accessibilityRole="button"
-            accessibilityLabel={sec.titulo}
-            className="flex-row items-center rounded-xl border px-4 py-4"
-            style={{ borderColor: col.line, backgroundColor: col.surface }}
+            accesibilidad={sec.titulo}
+            className="flex-row items-center px-4 py-4"
           >
             <SelloSeccion clave={sec.clave} />
             <View className="ml-3 flex-1">
@@ -525,7 +515,7 @@ function Monografia({ f }: { f: Ficha }) {
               </Text>
             </View>
             <Icono nombre="chevron" tamano={15} color={col.tenue} />
-          </Pressable>
+          </SuperficieTocable>
         ))}
       </View>
     </>

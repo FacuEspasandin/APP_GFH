@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { useColores } from './tema';
 
 /**
  * Los dos marcadores de propiedad de una fila del catálogo: R renal, H hepático.
@@ -13,9 +14,6 @@ import { Text, View } from 'react-native';
  * gravedad. Es el único uso legítimo de este color en el sistema: los de
  * severidad significan otra cosa y no se pueden gastar acá.
  */
-const CELESTE_FONDO = '#E0F2FE';
-const CELESTE_TEXTO = '#075985';
-
 export function MarcadoresAjuste({ renal, hepatico }: { renal: boolean; hepatico: boolean }) {
   return (
     <View
@@ -30,19 +28,21 @@ export function MarcadoresAjuste({ renal, hepatico }: { renal: boolean; hepatico
 }
 
 function Marcador({ letra, activo }: { letra: string; activo: boolean }) {
+  const col = useColores();
   return (
     <View
       className="items-center justify-center rounded-full"
       style={{
         width: 24,
         height: 24,
-        backgroundColor: activo ? CELESTE_FONDO : 'transparent',
+        backgroundColor: activo ? col.infoLight : 'transparent',
         borderWidth: activo ? 1 : 0,
+        // visual-ok: el celeste al 30 %, sin token de transparencia
         borderColor: 'rgba(14,165,233,0.3)',
       }}
     >
       {activo ? (
-        <Text className="font-mono-fuerte" style={{ fontSize: 11, color: CELESTE_TEXTO }}>
+        <Text className="font-mono-fuerte" style={{ fontSize: 11, color: col.info }}>
           {letra}
         </Text>
       ) : null}

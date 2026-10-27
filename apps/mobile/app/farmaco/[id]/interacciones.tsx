@@ -35,7 +35,7 @@ export default function InteraccionesFarmaco() {
     <View className="flex-1 bg-paper">
       <EncabezadoApp />
       <Pantalla>
-        <Text className="mb-4 text-[28px] font-fuerte text-ink">Interacciones</Text>
+        <Text className="mb-4 text-titular font-fuerte text-ink">Interacciones</Text>
 
         <ResultadoConsulta
           cargando={isLoading}

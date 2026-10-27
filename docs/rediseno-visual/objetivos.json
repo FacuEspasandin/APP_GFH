@@ -1,0 +1,19 @@
+{
+  "descripcion": "Metas para cerrar la etapa visual (se exigen con --estricto). Las excepciones justificadas se marcan en el código con «visual-ok: motivo».",
+  "metricas": {
+    "hexSueltos": 0,
+    "hexMarca": 0,
+    "coloresTailwindCrudos": 0,
+    "valoresArbitrarios": 0,
+    "fontSizeSuelto": 0,
+    "textoMenorA12": 0,
+    "radioSuelto": 0,
+    "sombrasSueltas": 0,
+    "bordesLinea": 20,
+    "adopcionSuperficiePct": 85
+  },
+  "notas": {
+    "adopcionSuperficiePct": "85 y no 90: las 12 pantallas restantes son formularios, el chat y los dos splash, que no tienen tarjetas. Cuentan como adoptadas las que usan Calculadora o Consulta (traen Superficie adentro).",
+    "bordesLinea": "Sólo se cuentan los bordes completos (campos, chips, recuadros punteados). Los separadores border-t/border-b están permitidos."
+  }
+}

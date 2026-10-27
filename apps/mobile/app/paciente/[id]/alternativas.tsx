@@ -16,6 +16,7 @@ import { ConsultaPlegada, GrupoGravedad } from '@/ui/herramienta';
 import { Boton, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { COLOR_SEVERIDAD, colorEspina, type RangoGravedad } from '@gfh/shared-types';
+import { useColores } from '@/ui/tema';
 
 interface Alternativa {
   paAlternativaId: string;
@@ -46,7 +47,6 @@ const MOTIVO: Record<string, string> = {
 
 /** El verde de "documentada" marca un estado del registro, no gravedad
  *  clínica: por eso no sale de `COLOR_SEVERIDAD`. */
-const VERDE_DOCUMENTADA = '#166534';
 
 /**
  * Alternativas terapéuticas (3.6.1).
@@ -207,6 +207,7 @@ export default function Alternativas() {
 }
 
 function TarjetaAlternativa({ alt, onReemplazar }: { alt: Alternativa; onReemplazar: () => void }) {
+  const col = useColores();
   const lista = problemasDeAlternativa(alt);
   const peor = peorDeAlternativa(alt);
 
@@ -232,7 +233,7 @@ function TarjetaAlternativa({ alt, onReemplazar }: { alt: Alternativa; onReempla
       {alt.yaAceptada ? (
         <Text
           className="mt-1 font-fuerte text-eyebrow uppercase tracking-wider"
-          style={{ color: VERDE_DOCUMENTADA }}
+          style={{ color: col.primary }}
         >
           Ya documentada
         </Text>
