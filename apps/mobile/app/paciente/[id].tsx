@@ -345,13 +345,8 @@ export default function CockpitPaciente() {
                   elevacion="plana"
                   onPress={() => abrir(`/paciente/${id}/hallazgos?categoria=${h.categoria}`)}
                   accesibilidad={`${h.titulo}, ${RANGO_ETIQUETA[h.rango]}`}
+                  franja={colorEspina(h.rango)}
                   className="mb-2 flex-row items-center gap-3 py-3 pl-4 pr-3"
-                  style={{
-                    borderLeftWidth: 4,
-                    borderLeftColor: colorEspina(h.rango),
-                    borderTopLeftRadius: 0,
-                    borderBottomLeftRadius: 0,
-                  }}
                 >
                   <View className="flex-1">
                     <Text className="text-body font-medio text-ink">{h.titulo}</Text>
@@ -404,10 +399,8 @@ export default function CockpitPaciente() {
                 // El número solo decía cuántos: tres informativos y tres
                 // contraindicados se pintaban igual, porque el badge usa la
                 // escala de CONTEO, que es otro eje.
-                style={{
-                  ...(color ? { borderLeftWidth: 4, borderLeftColor: color } : {}),
-                  ...(n === 0 ? { opacity: 0.72 } : {}),
-                }}
+                franja={color ?? undefined}
+                style={n === 0 ? { opacity: 0.72 } : undefined}
                 onPress={() => abrir(`/paciente/${id}/hallazgos?categoria=${cat}`)}
                 accesibilidad={
                   sinEvaluar
