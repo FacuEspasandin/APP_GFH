@@ -8,7 +8,7 @@ import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Eyebrow, Pantalla } from '@/ui/kit';
 import { GrupoOpciones, Opcion } from '@/ui/lista-opciones';
-import { FranjaLateral, Superficie, SuperficieTocable } from '@/ui/superficie';
+import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { useColores, useTema, type Tema } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
@@ -188,8 +188,7 @@ function Identidad({
   const col = useColores();
 
   return (
-    <Superficie elevacion="media" className="mb-3.5 items-center px-5 py-6">
-      <FranjaLateral color={col.tenue} absoluta />
+    <Superficie elevacion="media" franja={col.tenue} className="mb-3.5 items-center px-5 py-6">
 
       <View
         className="mb-3 items-center justify-center rounded-full"

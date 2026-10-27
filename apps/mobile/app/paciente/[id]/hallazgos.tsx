@@ -22,7 +22,7 @@ import { SkeletonLista } from '@/ui/estados-sistema';
 import { Icono } from '@/ui/iconos';
 import { AvisoPeligro, Estado, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
-import { ChipSeveridad, Espina } from '@/ui/severidad';
+import { ChipSeveridad } from '@/ui/severidad';
 import {
   CATEGORIA_HALLAZGO,
   colorEspina,
@@ -396,8 +396,7 @@ function TarjetaGrupoRiesgo({
         accessibilityState={{ expanded: abierto }}
         accessibilityLabel={`${grupo.etiqueta}, ${grupo.hallazgos.length} hallazgos`}
       >
-        <Superficie elevacion={grupo.peor <= 1 ? 'media' : 'plana'} className="flex-row items-stretch">
-          <Espina rango={grupo.peor} />
+        <Superficie elevacion={grupo.peor <= 1 ? 'media' : 'plana'} franja={colorEspina(grupo.peor)}>
           <View className="flex-1 flex-row items-center justify-between gap-2 px-3.5 py-3.5">
             <View className="flex-1">
               <Text className="text-fila font-medio text-ink">{grupo.etiqueta}</Text>
@@ -444,8 +443,7 @@ function Tarjeta({
   const pesa = hallazgo.rango <= 1;
 
   return (
-    <Superficie elevacion={pesa ? 'media' : 'plana'} className="mb-2.5 flex-row items-stretch">
-      <Espina rango={hallazgo.rango} />
+    <Superficie elevacion={pesa ? 'media' : 'plana'} franja={colorEspina(hallazgo.rango)} className="mb-2.5">
       <View className="flex-1 px-3.5 py-3.5">
         <View className="flex-row items-start justify-between gap-2">
           <Text className="flex-1 text-fila font-medio text-ink">{hallazgo.titulo}</Text>

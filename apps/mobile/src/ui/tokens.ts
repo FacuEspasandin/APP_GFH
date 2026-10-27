@@ -143,9 +143,6 @@ export function paleta(oscuro: boolean): Paleta {
  * con `tabular-nums`, estilos del navegador). Mismos criterios que la escala de
  * `tailwind.config.js`: acá sólo viven los que no tienen clase.
  */
-/** Radio de `rounded-card` (tailwind.config.js). Lo que sobresale del borde de una tarjeta tiene que seguir esta curva. */
-export const RADIO_TARJETA = 12;
-
 export const TIPO = {
   /** Cifra grande de un resultado (Clcr, puntaje, iniciales del perfil). */
   cifra: 26,

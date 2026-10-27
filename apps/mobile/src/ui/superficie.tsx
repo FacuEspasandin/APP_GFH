@@ -3,7 +3,7 @@ import { useState, type ReactNode } from 'react';
 import { Platform, Pressable, View, type ViewStyle } from 'react-native';
 
 import { useTema } from './tema';
-import { FIJO, PALETA, RADIO_TARJETA } from './tokens';
+import { FIJO, PALETA } from './tokens';
 
 /**
  * Superficies del sistema, con tres niveles de elevación y respuesta al tacto.
@@ -26,6 +26,15 @@ import { FIJO, PALETA, RADIO_TARJETA } from './tokens';
  * del borde (los hijos no llevan fondo propio de borde a borde).
  */
 const RECORTA = Platform.OS === 'ios' ? '' : 'overflow-hidden';
+
+/**
+ * Franja de color en el borde izquierdo (gravedad, estado). Es un borde de la
+ * propia tarjeta y no un hijo: así sigue la curva de las esquinas aunque en iOS
+ * no se recorte (para no perder la sombra).
+ */
+function estiloFranja(franja?: string): ViewStyle | null {
+  return franja ? { borderLeftWidth: 4, borderLeftColor: franja } : null;
+}
 
 export type Elevacion = 'plana' | 'media' | 'alta';
 
@@ -80,35 +89,17 @@ function useFilo(): ViewStyle | null {
   return oscuro ? { borderWidth: 1, borderColor: PALETA.oscuro.line } : null;
 }
 
-/**
- * Franja de color en el borde izquierdo de una tarjeta (gravedad, estado).
- *
- * Sigue la curva de la tarjeta: como `Superficie` no recorta en iOS (para no
- * perder la sombra), una franja recta sobresalía de las esquinas redondeadas.
- * `absoluta` la pega al borde cuando la tarjeta no es una fila.
- */
-export function FranjaLateral({ color, absoluta }: { color: string; absoluta?: boolean }) {
-  return (
-    <View
-      style={{
-        width: 4,
-        backgroundColor: color,
-        borderTopLeftRadius: RADIO_TARJETA,
-        borderBottomLeftRadius: RADIO_TARJETA,
-        ...(absoluta ? { position: 'absolute', top: 0, bottom: 0, left: 0 } : null),
-      }}
-    />
-  );
-}
-
 export function Superficie({
   children,
   elevacion = 'plana',
+  franja,
   className = '',
   style,
 }: {
   children: ReactNode;
   elevacion?: Elevacion;
+  /** Color de la franja del borde izquierdo. */
+  franja?: string;
   className?: string;
   style?: ViewStyle;
 }) {
@@ -116,7 +107,7 @@ export function Superficie({
   return (
     <View
       className={`${RECORTA} rounded-card bg-surface ${className}`}
-      style={[SOMBRAS[elevacion], filo, style]}
+      style={[SOMBRAS[elevacion], filo, estiloFranja(franja), style]}
     >
       {children}
     </View>
@@ -135,6 +126,7 @@ export function SuperficieTocable({
   children,
   onPress,
   elevacion = 'plana',
+  franja,
   className = '',
   contenedor = '',
   estiloContenedor,
@@ -144,6 +136,8 @@ export function SuperficieTocable({
   children: ReactNode;
   onPress?: () => void;
   elevacion?: Elevacion;
+  /** Color de la franja del borde izquierdo. */
+  franja?: string;
   /** Cómo se ordena el CONTENIDO de la tarjeta: padding, dirección, alineación. */
   className?: string;
   /**
@@ -167,7 +161,7 @@ export function SuperficieTocable({
   const contenido = (
     <View
       className={`${RECORTA} rounded-card bg-surface ${className}`}
-      style={[SOMBRAS[elevacion], filo, style]}
+      style={[SOMBRAS[elevacion], filo, estiloFranja(franja), style]}
     >
       {children}
     </View>

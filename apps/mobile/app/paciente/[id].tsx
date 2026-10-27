@@ -27,7 +27,6 @@ import {
   opcionesDelPaciente,
   peoresPorCategoria,
 } from '@/dominio/cockpit';
-import { Espina } from '@/ui/severidad';
 import {
   claveColorPorClcr,
   colorEspina,
@@ -563,10 +562,10 @@ function FilaTratamiento({
     <SuperficieTocable
       onPress={onPress}
       elevacion={conHallazgos ? 'media' : 'plana'}
-      className="mb-2.5 flex-row items-stretch"
+      franja={colorEspina(rango)}
+      className="mb-2.5"
       accesibilidad={`${prescripcion.nombre}, ${prescripcion.conteoHallazgos} hallazgos`}
     >
-      <Espina rango={rango} />
       <View className="flex-1 flex-row items-center px-3.5 py-3.5">
         <View className="flex-1">
           <View className="flex-row flex-wrap items-center gap-2">

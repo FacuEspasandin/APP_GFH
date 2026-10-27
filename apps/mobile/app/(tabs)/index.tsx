@@ -15,7 +15,7 @@ import { Icono } from '@/ui/iconos';
 import { CampoTexto, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { Pestanas } from '@/ui/pestanas';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
-import { FranjaLateral, Superficie } from '@/ui/superficie';
+import { Superficie } from '@/ui/superficie';
 import { ListaGrupos } from './grupos';
 import {
   claveColorPorClcr,
@@ -229,9 +229,9 @@ function Fila({ paciente }: { paciente: FilaPaciente }) {
       >
         <Superficie
           elevacion={paciente.peorRango !== null ? 'media' : 'plana'}
-          className="mb-2.5 flex-row items-stretch"
+          franja={color}
+          className="mb-2.5"
         >
-          <FranjaLateral color={color} />
           <View className="flex-1 flex-row items-center px-3.5 py-3.5">
             <View className="flex-1">
               <View className="flex-row flex-wrap items-center gap-2">

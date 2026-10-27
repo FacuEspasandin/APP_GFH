@@ -1,7 +1,5 @@
 import { Text, View } from 'react-native';
 
-import { FranjaLateral } from './superficie';
-
 import {
   claveColorPorConteo,
   colorEspina,
@@ -18,11 +16,6 @@ import {
  * cambian entre claro y oscuro. Es la misma definición que usa el backend para
  * ordenar — un solo módulo en todo el monorepo.
  */
-
-/** Barra de 4px en el borde izquierdo. La firma visual del sistema. */
-export function Espina({ rango }: { rango: RangoGravedad | null }) {
-  return <FranjaLateral color={colorEspina(rango)} />;
-}
 
 /**
  * Badge de CANTIDAD, no de gravedad. Escala distinta a propósito: mide cuántos
