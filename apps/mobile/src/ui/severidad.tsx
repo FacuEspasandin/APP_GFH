@@ -1,5 +1,7 @@
 import { Text, View } from 'react-native';
 
+import { FranjaLateral } from './superficie';
+
 import {
   claveColorPorConteo,
   colorEspina,
@@ -19,7 +21,7 @@ import {
 
 /** Barra de 4px en el borde izquierdo. La firma visual del sistema. */
 export function Espina({ rango }: { rango: RangoGravedad | null }) {
-  return <View style={{ width: 4, borderRadius: 2, backgroundColor: colorEspina(rango) }} />;
+  return <FranjaLateral color={colorEspina(rango)} />;
 }
 
 /**

@@ -9,7 +9,7 @@ import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Estado, Pantalla } from '@/ui/kit';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
-import { Superficie } from '@/ui/superficie';
+import { FranjaLateral, Superficie } from '@/ui/superficie';
 import {
   claveColorPorClcr,
   colorEspina,
@@ -169,7 +169,7 @@ function Fila({ paciente }: { paciente: FilaPaciente }) {
           elevacion={paciente.peorRango !== null ? 'media' : 'plana'}
           className="mb-2.5 flex-row items-stretch"
         >
-          <View style={{ width: 4, backgroundColor: color }} />
+          <FranjaLateral color={color} />
           <View className="flex-1 flex-row items-center px-3.5 py-3.5">
             <View className="flex-1">
               <View className="flex-row flex-wrap items-center gap-2">

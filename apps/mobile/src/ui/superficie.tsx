@@ -3,7 +3,7 @@ import { useState, type ReactNode } from 'react';
 import { Platform, Pressable, View, type ViewStyle } from 'react-native';
 
 import { useTema } from './tema';
-import { FIJO, PALETA } from './tokens';
+import { FIJO, PALETA, RADIO_TARJETA } from './tokens';
 
 /**
  * Superficies del sistema, con tres niveles de elevación y respuesta al tacto.
@@ -78,6 +78,27 @@ export function estiloSombra(elevacion: Elevacion): ViewStyle {
 function useFilo(): ViewStyle | null {
   const { oscuro } = useTema();
   return oscuro ? { borderWidth: 1, borderColor: PALETA.oscuro.line } : null;
+}
+
+/**
+ * Franja de color en el borde izquierdo de una tarjeta (gravedad, estado).
+ *
+ * Sigue la curva de la tarjeta: como `Superficie` no recorta en iOS (para no
+ * perder la sombra), una franja recta sobresalía de las esquinas redondeadas.
+ * `absoluta` la pega al borde cuando la tarjeta no es una fila.
+ */
+export function FranjaLateral({ color, absoluta }: { color: string; absoluta?: boolean }) {
+  return (
+    <View
+      style={{
+        width: 4,
+        backgroundColor: color,
+        borderTopLeftRadius: RADIO_TARJETA,
+        borderBottomLeftRadius: RADIO_TARJETA,
+        ...(absoluta ? { position: 'absolute', top: 0, bottom: 0, left: 0 } : null),
+      }}
+    />
+  );
 }
 
 export function Superficie({

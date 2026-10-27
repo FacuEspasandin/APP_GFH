@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { PALETA, type Paleta } from './tokens';
+import { PALETA, RADIO_TARJETA, type Paleta } from './tokens';
 
 /**
  * La paleta vive en dos lugares y tiene que decir lo mismo.
@@ -74,6 +74,11 @@ describe('paleta', () => {
 
   it('los dos temas definen exactamente las mismas claves', () => {
     expect(Object.keys(PALETA.claro).sort()).toEqual(Object.keys(PALETA.oscuro).sort());
+  });
+
+  it('RADIO_TARJETA coincide con rounded-card de tailwind.config.js', () => {
+    const cfg = readFileSync(join(__dirname, '..', '..', 'tailwind.config.js'), 'utf8');
+    expect(cfg).toContain(`card: '${RADIO_TARJETA}px'`);
   });
 
   it('ningún color se repite entre ink y paper: el texto tiene que verse', () => {
