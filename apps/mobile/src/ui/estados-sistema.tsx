@@ -127,7 +127,7 @@ export function Skeleton({ filas = 3 }: { filas?: number }) {
       <Bloque alto={11} ancho="30%" margenAbajo={10} />
       <View className="mb-4 flex-row flex-wrap justify-between">
         {[0, 1, 2, 3].map((i) => (
-          <Superficie className="mb-2.5 px-3.5 py-3.5" style={{ width: '48.5%' }}>
+          <Superficie key={i} className="mb-2.5 px-3.5 py-3.5" style={{ width: '48.5%' }}>
             <Bloque alto={12} ancho="80%" margenAbajo={10} />
             <Bloque alto={20} ancho={30} />
           </Superficie>

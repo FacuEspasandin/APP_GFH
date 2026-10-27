@@ -139,7 +139,7 @@ export function TextoSeccion({ texto }: { texto: string }) {
 
         if (lista) {
           return (
-            <Superficie className="px-3.5 py-3">
+            <Superficie key={i} className="px-3.5 py-3">
               <Text className="text-fila font-medio leading-5 text-ink">{lista.titulo}</Text>
               <View className="mt-2.5 flex-row flex-wrap gap-1.5">
                 {lista.items.map((item, j) => (

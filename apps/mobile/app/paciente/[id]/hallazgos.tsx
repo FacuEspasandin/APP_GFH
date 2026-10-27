@@ -189,7 +189,7 @@ export default function Hallazgos() {
       ))}
 
       {avisosRelevantes.map((a) => (
-        <Superficie className="mb-2 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
+        <Superficie key={a.codigo + (a.prescripcionId ?? '')} className="mb-2 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
           <Text className="font-sans text-meta leading-5 text-ink">{a.detalle}</Text>
         </Superficie>
       ))}
@@ -317,7 +317,7 @@ function PorCategoria({
                 ))}
 
                 {avisos.map((a) => (
-                  <Superficie className="mb-2 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
+                  <Superficie key={a.codigo + (a.prescripcionId ?? '')} className="mb-2 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
                     <Text className="font-sans text-meta leading-5 text-ink">{a.detalle}</Text>
                   </Superficie>
                 ))}
