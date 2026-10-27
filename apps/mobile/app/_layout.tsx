@@ -160,7 +160,7 @@ function Navegacion() {
   }, [haySesion, configuracion?.notificacionesPush]);
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-paper">
       <StatusBar style="light" />
       <Stack
         screenOptions={{
