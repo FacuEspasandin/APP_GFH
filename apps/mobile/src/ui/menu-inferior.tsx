@@ -162,14 +162,12 @@ export function MenuInferior() {
 
   return (
     <>
-      {/* El contenedor reserva lo que sobresale el botón, para que ninguna
-          pantalla quede tapada por él. El fondo tiene que ser el de la
-          pantalla y no transparente: sin él, esos 20px dejaban ver el blanco
-          de la ventana nativa, como una franja distinta entre el contenido y
-          la barra verde. */}
-      <View style={{ paddingTop: 20, backgroundColor: c.fondoPantalla }}>
-        <View style={{ position: 'relative' }}>
-          {/* De borde a borde: el verde llega a los lados de la pantalla y baja
+      {/* La barra verde mide lo suyo y nada más: sin franja de papel encima,
+          que se veía como un recuadro gris cortando el contenido. El botón
+          central va aparte, posicionado sobre el contenedor de la pantalla
+          (no dentro de la barra) para que su parte alta, que sobresale,
+          siga siendo tocable en Android. */}
+      {/* De borde a borde: el verde llega a los lados de la pantalla y baja
               hasta el borde inferior, cubriendo el área segura del teléfono.
               Flotando como pastilla dejaba una franja de papel abajo que no
               pertenecía a ninguna de las dos superficies. */}
@@ -198,7 +196,15 @@ export function MenuInferior() {
               herramientas: el Pressable invisible tapaba media barra. */}
           <View
             pointerEvents="box-none"
-            style={{ position: 'absolute', left: 0, right: 0, top: -24, alignItems: 'center' }}
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              // El botón asoma 24 px por encima de la barra: su borde inferior
+              // queda 34 px dentro de ella.
+              bottom: ALTO_CONTENIDO + respiro - 34,
+              alignItems: 'center',
+            }}
           >
             <Pressable
               onPress={() => ir('/(tabs)/chat')}
@@ -221,9 +227,6 @@ export function MenuInferior() {
               <Icono nombre="chat" tamano={23} color={enChat ? FIJO.blanco : VERDE_BARRA} />
             </Pressable>
           </View>
-        </View>
-      </View>
-
     </>
   );
 }

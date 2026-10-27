@@ -52,11 +52,13 @@ export function Pestanas<T extends string>({
               borderBottomColor: esActiva ? col.primary : 'transparent',
             }}
           >
-            {/* Sin límite de líneas: un rótulo largo ("Ficha técnica",
-                "Presentaciones") envuelve a dos en vez de cortarse con
-                puntos suspensivos — las columnas son de igual ancho y
-                React Native ya estira todas a la altura de la más alta. */}
+            {/* Una sola línea que se achica hasta el 80 % si no entra: envolver
+                partía la palabra a mitad ("Presentacion / es"). Las columnas son
+                de igual ancho, así que "Presentaciones" es la que manda. */}
             <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}
               className="font-medio text-center"
               style={{ color: esActiva ? col.primary : col.inkSuave, fontSize: TIPO.pestana, lineHeight: 16 }}
             >

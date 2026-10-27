@@ -202,7 +202,7 @@ export function Calculadora({
 
         {/* Obligatorio en el molde: es la línea que hoy cada calculadora escribe
             a su manera o no escribe. */}
-        <Superficie elevacion="plana" className="px-3.5 py-3">
+        <Superficie elevacion="plana" className="mb-3 px-3.5 py-3">
           <Text className="font-sans text-meta leading-5 text-ink-suave">
             <Text className="font-medio text-ink">Qué no dice. </Text>
             {molde.limite}
