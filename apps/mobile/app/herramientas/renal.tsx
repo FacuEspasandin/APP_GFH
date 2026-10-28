@@ -82,7 +82,7 @@ export default function HerramientaRenal() {
     return (
       <View className="flex-1 bg-paper">
         <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
-        <ScrollView contentContainerClassName="px-4 pb-6 pt-4" keyboardShouldPersistTaps="handled">
+        <ScrollView contentContainerClassName="px-margen pb-6 pt-4" keyboardShouldPersistTaps="handled">
           <Text className="mb-1 text-fila font-fuerte text-ink">Ajuste Renal</Text>
           <Text className="mb-4 font-sans text-meta leading-5 text-ink-suave">
             Evaluá el ajuste de dosis de varios fármacos según la función renal del paciente.
@@ -253,7 +253,7 @@ function ResultadoRenal({
         onCambiar={onCambiar}
       />
 
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-3">
         {/* El Clcr manda: hoy el médico carga edad, peso y creatinina y nunca
             ve el número que salió, sólo sus consecuencias. */}
         <Veredicto

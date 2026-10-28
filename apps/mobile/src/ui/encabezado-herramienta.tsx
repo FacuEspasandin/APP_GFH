@@ -32,10 +32,10 @@ export function EncabezadoHerramienta({
   const color = tono === 'aviso' ? col.aviso : tono === 'peligro' ? col.peligro : col.primary;
 
   return (
-    <View className="px-4 pt-4">
+    <View className="px-margen pt-4">
       <View className="mb-1 flex-row items-center gap-2">
         <Icono nombre={icono} tamano={20} color={color} />
-        <Text className="flex-1 text-titular font-fuerte text-ink">{titulo}</Text>
+        <Text className="flex-1 text-titular font-extra text-ink">{titulo}</Text>
       </View>
       <Text className="mb-2 text-body leading-6 text-ink-suave">{children}</Text>
     </View>

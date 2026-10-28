@@ -20,9 +20,9 @@ import {
 import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { Icono } from '@/ui/iconos';
-import { AvisoPeligro, Estado, Pantalla } from '@/ui/kit';
+import { AvisoPeligro, Estado, Pantalla, TituloConEtiqueta } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
-import { ChipSeveridad } from '@/ui/severidad';
+import { EtiquetaEstado } from '@/ui/severidad';
 import {
   CATEGORIA_HALLAZGO,
   colorEspina,
@@ -124,7 +124,7 @@ export default function Hallazgos() {
   return (
     <View className="flex-1 bg-paper">
       <EncabezadoApp derecha={derecha} />
-      <ScrollView contentContainerClassName="px-4 pb-6 pt-3" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-6 pt-3" keyboardShouldPersistTaps="handled">
         <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
         <Text className="mb-4 mt-1 font-sans text-meta leading-5 text-ink-suave">
           {descripcionDeVista(vista)}
@@ -189,7 +189,7 @@ export default function Hallazgos() {
       ))}
 
       {avisosRelevantes.map((a) => (
-        <Superficie key={a.codigo + (a.prescripcionId ?? '')} className="mb-2 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
+        <Superficie key={a.codigo + (a.prescripcionId ?? '')} className="mb-3.5 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
           <Text className="font-sans text-meta leading-5 text-ink">{a.detalle}</Text>
         </Superficie>
       ))}
@@ -232,7 +232,7 @@ function PorCategoria({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerClassName="gap-2 px-4 py-3"
+        contentContainerClassName="gap-2 px-margen py-3"
         className="flex-none border-b border-line bg-surface"
       >
         {CATEGORIA_HALLAZGO.map((cat, i) => {
@@ -293,7 +293,7 @@ function PorCategoria({
 
           return (
             <View key={cat} collapsable={false}>
-              <ScrollView contentContainerClassName="px-4 pb-6 pt-3">
+              <ScrollView contentContainerClassName="px-margen pb-6 pt-3">
                 <Text className="text-fila font-fuerte text-ink">{TITULO_CATEGORIA[cat]}</Text>
                 <Text className="mb-4 mt-1 font-sans text-meta leading-5 text-ink-suave">
                   {descripcionDeVista(suVista)}
@@ -317,7 +317,7 @@ function PorCategoria({
                 ))}
 
                 {avisos.map((a) => (
-                  <Superficie key={a.codigo + (a.prescripcionId ?? '')} className="mb-2 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
+                  <Superficie key={a.codigo + (a.prescripcionId ?? '')} className="mb-3.5 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
                     <Text className="font-sans text-meta leading-5 text-ink">{a.detalle}</Text>
                   </Superficie>
                 ))}
@@ -404,7 +404,7 @@ function TarjetaGrupoRiesgo({
                 {grupo.hallazgos.length} hallazgos
               </Text>
             </View>
-            <ChipSeveridad rango={grupo.peor} />
+            <EtiquetaEstado rango={grupo.peor} />
             <Icono
               nombre={abierto ? 'chevronArriba' : 'chevron'}
               tamano={15}
@@ -443,12 +443,9 @@ function Tarjeta({
   const pesa = hallazgo.rango <= 1;
 
   return (
-    <Superficie elevacion={pesa ? 'media' : 'plana'} franja={colorEspina(hallazgo.rango)} className="mb-2.5">
+    <Superficie elevacion={pesa ? 'media' : 'plana'} franja={colorEspina(hallazgo.rango)} className="mb-3.5">
       <View className="flex-1 px-3.5 py-3.5">
-        <View className="flex-row items-start justify-between gap-2">
-          <Text className="flex-1 text-fila font-medio text-ink">{hallazgo.titulo}</Text>
-          <ChipSeveridad rango={hallazgo.rango} />
-        </View>
+        <TituloConEtiqueta titulo={hallazgo.titulo} etiqueta={<EtiquetaEstado rango={hallazgo.rango} />} />
 
         {hallazgo.subtitulo ? (
           <Text className="font-mono mt-1 text-meta text-ink-suave">{hallazgo.subtitulo}</Text>

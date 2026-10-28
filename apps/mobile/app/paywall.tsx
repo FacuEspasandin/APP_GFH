@@ -129,8 +129,8 @@ export default function Paywall() {
   return (
     <View className="flex-1 bg-paper">
       <EncabezadoPaywall onCerrar={cerrar} />
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-5">
-        <Text className="text-center text-titular leading-9 font-fuerte text-ink">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-5">
+        <Text className="text-center text-titular leading-9 font-extra text-ink">
           {cabecera.titulo}
         </Text>
         <Text className="font-sans mt-2 text-center text-body leading-6 text-ink-suave">

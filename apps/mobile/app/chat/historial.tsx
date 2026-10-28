@@ -65,7 +65,7 @@ export default function HistorialChat() {
 
         {data?.map((s) => (
           <Pressable key={s.id} onPress={() => retomar(s.id)} accessibilityRole="button">
-            <Superficie elevacion="plana" className="mb-2.5 flex-row items-center px-3.5 py-3">
+            <Superficie elevacion="plana" className="mb-3.5 flex-row items-center px-3.5 py-3">
               <View
                 className="mr-3 items-center justify-center rounded-full"
                 style={{ width: 34, height: 34, backgroundColor: col.primaryLight }}

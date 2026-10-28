@@ -195,14 +195,14 @@ export function Calculadora({
 
   return (
     <View className="flex-1 bg-paper">
-      <ScrollView contentContainerClassName="px-4 pb-8 pt-3" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-8 pt-3" keyboardShouldPersistTaps="handled">
         {cuerpo}
 
         <Resultado molde={molde} borrador={borrador} unidades={unidades} calcular={calcular} />
 
         {/* Obligatorio en el molde: es la línea que hoy cada calculadora escribe
             a su manera o no escribe. */}
-        <Superficie elevacion="plana" className="mb-3 px-3.5 py-3">
+        <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
           <Text className="font-sans text-meta leading-5 text-ink-suave">
             <Text className="font-medio text-ink">Qué no dice. </Text>
             {molde.limite}
@@ -214,7 +214,7 @@ export function Calculadora({
         {/* Al pie de todo, después del límite y de lo que la pantalla agregue:
             info de fondo, no otra advertencia — por eso el estilo distinto al
             de "Qué no dice". */}
-        <Superficie className="mb-3 px-4 py-3.5" style={{ borderLeftWidth: 3, borderLeftColor: col.tenue }}>
+        <Superficie className="mb-3.5 px-4 py-3.5" style={{ borderLeftWidth: 3, borderLeftColor: col.tenue }}>
           <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
             ⓘ Sobre esta herramienta
           </Text>
@@ -317,7 +317,7 @@ function EnCascada({
             <Superficie
               key={campo.clave}
               elevacion="plana"
-              className="mb-2.5 px-3.5 py-3.5"
+              className="mb-3.5 px-3.5 py-3.5"
               style={{ borderColor: col.primary, borderWidth: 1.5 }}
             >
               {abiertaAMano === campo.clave ? (
@@ -400,7 +400,7 @@ function Plegado({
   return (
     <SuperficieTocable
       onPress={onPress}
-      contenedor="mb-2"
+      contenedor="mb-3.5"
       className="flex-row items-center px-3.5 py-2.5"
       accesibilidad={`Corregir ${campo.rotulo}`}
     >
@@ -583,7 +583,7 @@ function Resultado({
       >
         <View className="flex-row items-baseline">
           <Text
-            className="font-mono-fuerte text-titulo"
+            className="font-mono-fuerte text-grande"
             style={{
               color: todo ? color : empezado ? undefined : COLOR_SEVERIDAD.neutro,
               fontVariant: ['tabular-nums'],
@@ -644,7 +644,7 @@ function Resultado({
       >
         {tramo ? (
           <>
-            <Text className="font-mono-fuerte text-titulo" style={{ color }}>
+            <Text className="font-mono-fuerte text-grande" style={{ color }}>
               {tramo.rotulo}
             </Text>
             <Text className="font-sans mt-2 text-center text-meta leading-5 text-ink-suave">
@@ -672,7 +672,7 @@ function Resultado({
           >
             <View className="flex-row items-baseline">
               <Text
-                className="font-mono-fuerte text-titulo"
+                className="font-mono-fuerte text-grande"
                 style={{ fontVariant: ['tabular-nums'] }}
               >
                 {v ?? '—'}

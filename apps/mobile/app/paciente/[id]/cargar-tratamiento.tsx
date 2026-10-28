@@ -223,7 +223,7 @@ export default function CargarTratamiento() {
       <View className="flex-1 bg-paper">
         <EncabezadoTransaccional titulo="Cargar Tratamiento" />
         <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
+        <ScrollView contentContainerClassName="px-margen pb-4 pt-4" keyboardShouldPersistTaps="handled">
           <PasoNumerado n={1} titulo="Pegar lista de medicamentos" />
           <Text className="font-sans -mt-2 mb-3 text-meta leading-5 text-ink-suave">
             Copiá y pegá la lista desde la historia clínica o receta digital.
@@ -237,7 +237,7 @@ export default function CargarTratamiento() {
               placeholder={'Eliquis 5 mg cada 12 h\nIbupirac 600 mg cada 8 h'}
               placeholderTextColor={col.tenue}
               accessibilityLabel="Listado de medicación"
-              className="min-h-area-texto rounded-xl border border-line bg-surface px-4 py-4 text-body text-ink"
+              className="min-h-area-texto rounded-control border border-line bg-surface px-4 py-4 text-body text-ink"
               style={{ textAlignVertical: 'top' }}
             />
             <Pressable
@@ -266,7 +266,7 @@ export default function CargarTratamiento() {
 
           {/* La foto se procesa y se descarta: no se guarda nunca. */}
           {errorFoto ? (
-            <Superficie elevacion="plana" className="mb-3 px-3.5 py-3">
+            <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
               <Text className="font-sans text-meta leading-5 text-ink-suave">{errorFoto}</Text>
             </Superficie>
           ) : null}
@@ -318,7 +318,7 @@ export default function CargarTratamiento() {
         onCambiar={() => setLineas(null)}
       />
 
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-4" keyboardShouldPersistTaps="handled">
         <PasoNumerado n={2} titulo="Revisar y completar" />
         <Veredicto
           rango={null}
@@ -353,7 +353,7 @@ export default function CargarTratamiento() {
         ))}
 
         {faltaPauta > 0 ? (
-          <Superficie elevacion="plana" className="mb-3 px-3.5 py-3">
+          <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
             <Text className="font-sans text-meta leading-5 text-ink-suave">
               {faltaPauta === 1 ? 'Una línea elegida no tiene' : `${faltaPauta} líneas elegidas no tienen`}{' '}
               dosis o frecuencia. Completalas para poder agregarlas.
@@ -399,7 +399,7 @@ function FilaLinea({
     return (
       <Superficie
         elevacion="plana"
-        className="mb-2.5 px-3.5 py-3"
+        className="mb-3.5 px-3.5 py-3"
         style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.media }}
       >
         <Text className="font-sans text-meta italic text-tenue">«{l.textoOriginal}»</Text>
@@ -419,7 +419,7 @@ function FilaLinea({
   return (
     <Superficie
       elevacion="plana"
-      className="mb-2.5 flex-row px-3.5 py-3"
+      className="mb-3.5 flex-row px-3.5 py-3"
       style={l.elegida ? { borderWidth: 1, borderColor: col.primary } : undefined}
     >
       {/* Casilla y no un chip "Aceptar": esto es la confirmación línea por

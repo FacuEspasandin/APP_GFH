@@ -81,7 +81,7 @@ function Contenido({
       <View className="mb-4 flex-row items-center">
         <SelloSeccion clave={clave} grande />
         <View className="ml-3 flex-1">
-          <Text className="text-titulo font-fuerte text-ink">{meta?.titulo}</Text>
+          <Text className="text-grande font-fuerte text-ink">{meta?.titulo}</Text>
           <Text className="font-sans mt-0.5 text-meta leading-4 text-ink-suave">
             {conTexto.map((m) => m.principioActivo).join(' · ')}
           </Text>

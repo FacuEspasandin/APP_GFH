@@ -100,7 +100,7 @@ function Bloque({
 function FilaFantasma() {
   const col = useColores();
   return (
-    <Superficie className="mb-2.5 flex-row items-center px-3.5 py-3.5" style={{ borderLeftWidth: 4, borderLeftColor: col.line }}>
+    <Superficie className="mb-3.5 flex-row items-center px-3.5 py-3.5" style={{ borderLeftWidth: 4, borderLeftColor: col.line }}>
       <View className="flex-1 pr-4">
         <Bloque alto={15} ancho="70%" margenAbajo={8} />
         <Bloque alto={11} ancho="45%" />
@@ -118,7 +118,7 @@ function FilaFantasma() {
  */
 export function Skeleton({ filas = 3 }: { filas?: number }) {
   return (
-    <View className="px-4 pt-3">
+    <View className="px-margen pt-3">
       <Superficie className="mb-3.5 px-3.5 py-4">
         <Bloque alto={18} ancho="55%" margenAbajo={10} />
         <Bloque alto={12} ancho="35%" />
@@ -127,7 +127,7 @@ export function Skeleton({ filas = 3 }: { filas?: number }) {
       <Bloque alto={11} ancho="30%" margenAbajo={10} />
       <View className="mb-4 flex-row flex-wrap justify-between">
         {[0, 1, 2, 3].map((i) => (
-          <Superficie key={i} className="mb-2.5 px-3.5 py-3.5" style={{ width: '48.5%' }}>
+          <Superficie key={i} className="mb-3.5 px-3.5 py-3.5" style={{ width: '48.5%' }}>
             <Bloque alto={12} ancho="80%" margenAbajo={10} />
             <Bloque alto={20} ancho={30} />
           </Superficie>
@@ -144,7 +144,7 @@ export function Skeleton({ filas = 3 }: { filas?: number }) {
 /** Sólo filas: listas de pacientes, grupos, sesiones, historial. */
 export function SkeletonLista({ filas = 5 }: { filas?: number }) {
   return (
-    <View className="px-4 pt-3">
+    <View className="px-margen pt-3">
       {Array.from({ length: filas }, (_, i) => (
         <FilaFantasma key={i} />
       ))}
@@ -155,7 +155,7 @@ export function SkeletonLista({ filas = 5 }: { filas?: number }) {
 /** Un formulario: rótulo corto y campo, repetido. */
 export function SkeletonFormulario({ campos = 4 }: { campos?: number }) {
   return (
-    <View className="px-4 pt-3">
+    <View className="px-margen pt-3">
       {Array.from({ length: campos }, (_, i) => (
         <View key={i} className="mb-4">
           <Bloque alto={10} ancho="28%" margenAbajo={8} />

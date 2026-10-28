@@ -20,7 +20,8 @@ import { esSintetica, nombreCondicion } from '@/ui/condiciones';
 import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { FilaAnimada } from '@/ui/animacion';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
-import { Estado, Eyebrow, Pantalla } from '@/ui/kit';
+import { Estado, Eyebrow, Pantalla, TituloConEtiqueta } from '@/ui/kit';
+import { EtiquetaEstado } from '@/ui/severidad';
 import {
   destacados as hallazgosDestacados,
   hepaticoSinEvaluar,
@@ -199,7 +200,7 @@ export default function CockpitPaciente() {
         {/* ---------- Encabezado: nombre + agregar ---------- */}
         <View className="mb-4 flex-row items-start justify-between">
           <View className="flex-1 pr-3">
-            <Text className="text-display font-fuerte leading-10 text-ink">
+            <Text className="text-display font-extra leading-10 text-ink">
               {p.nombre} {p.apellido}
             </Text>
             <Text className="mt-0.5 text-body text-ink-suave">{p.edadAnios} años</Text>
@@ -346,7 +347,7 @@ export default function CockpitPaciente() {
                   onPress={() => abrir(`/paciente/${id}/hallazgos?categoria=${h.categoria}`)}
                   accesibilidad={`${h.titulo}, ${RANGO_ETIQUETA[h.rango]}`}
                   franja={colorEspina(h.rango)}
-                  className="mb-2 flex-row items-center gap-3 py-3 pl-4 pr-3"
+                  className="mb-3.5 flex-row items-center gap-3 py-3 pl-4 pr-3"
                 >
                   <View className="flex-1">
                     <Text className="text-body font-medio text-ink">{h.titulo}</Text>
@@ -556,27 +557,18 @@ function FilaTratamiento({
       onPress={onPress}
       elevacion={conHallazgos ? 'media' : 'plana'}
       franja={colorEspina(rango)}
-      className="mb-2.5"
+      className="mb-3.5"
       accesibilidad={`${prescripcion.nombre}, ${prescripcion.conteoHallazgos} hallazgos`}
     >
       <View className="flex-1 flex-row items-center px-3.5 py-3.5">
         <View className="flex-1">
-          <View className="flex-row flex-wrap items-center gap-2">
-            <Text className="text-fila font-medio text-ink">{prescripcion.nombre}</Text>
-            {/* La palabra de severidad, no el conteo: acá el rediseño de Figma
-                cambia qué información se prioriza en el vistazo — antes era
-                "cuántos hallazgos tiene este fármaco" (`BadgeConteo`), ahora es
-                "qué tan grave es lo peor que tiene". El conteo por fármaco
-                sigue disponible entrando a "Ver hallazgos"; se pierde del
-                vistazo de esta fila a propósito, siguiendo el frame. */}
-            {rango !== null ? (
-              <View className="rounded-sm px-2 py-0.5" style={{ backgroundColor: color! }}>
-                <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-blanco">
-                  {RANGO_ETIQUETA[rango]}
-                </Text>
-              </View>
-            ) : null}
-          </View>
+          {/* La palabra de severidad, no el conteo: el rediseño de Figma prioriza
+            «qué tan grave es lo peor que tiene». El conteo por fármaco sigue
+            disponible entrando a "Ver hallazgos". */}
+          <TituloConEtiqueta
+            titulo={prescripcion.nombre}
+            etiqueta={rango !== null ? <EtiquetaEstado rango={rango} /> : null}
+          />
           <Text className="font-sans mt-1 text-meta text-ink-suave">
             {/* La pauta en mono: son cifras, y alineadas se comparan de un
                 vistazo entre filas. */}

@@ -72,7 +72,7 @@ export default function HerramientaCondicionAlergia() {
     return (
       <View className="flex-1 bg-paper">
         <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
-        <ScrollView contentContainerClassName="px-4 pb-6 pt-4" keyboardShouldPersistTaps="handled">
+        <ScrollView contentContainerClassName="px-margen pb-6 pt-4" keyboardShouldPersistTaps="handled">
           <Text className="mb-1 text-fila font-fuerte text-ink">Condición y Alergia</Text>
           <Text className="mb-4 font-sans text-meta leading-5 text-ink-suave">
             Evalúe la interacción de un fármaco candidato con condiciones clínicas y alergias del
@@ -275,7 +275,7 @@ function ResultadoCondicionAlergia({
     <View className="flex-1 bg-paper">
       <ConsultaPlegada titulo={datos.farmaco} detalle={detalle} onCambiar={onCambiar} />
 
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-3">
         <Veredicto
           rango={peor}
           titulo={

@@ -72,7 +72,7 @@ export function Pestanas<T extends string>({
                 <Text
                   className="font-mono-fuerte"
                   style={{
-                    fontSize: 11,
+                    fontSize: TIPO.rotulo,
                     color: esActiva ? col.primary : col.inkSuave,
                     fontVariant: ['tabular-nums'],
                   }}

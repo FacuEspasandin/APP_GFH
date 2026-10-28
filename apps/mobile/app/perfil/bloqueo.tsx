@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Pressable, Switch, Text, View } from 'react-native';
+import { Switch, Text, View } from 'react-native';
 
 import { activarBloqueo, biometriaDisponible, bloqueoActivo, pedirHuella } from '@/api/bloqueo';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
@@ -57,7 +57,7 @@ export default function BloqueoPantalla() {
         </Text>
 
         <Superficie elevacion="plana" className="border p-2" style={{ borderColor: col.line }}>
-          <View className="flex-row items-center justify-between rounded-input px-3 py-3.5">
+          <View className="flex-row items-center justify-between rounded-chip px-3 py-3.5">
             <View className="flex-1 pr-3">
               <Text className="text-body font-medio text-ink">Pedir huella al abrir</Text>
               <Text className="font-sans mt-0.5 text-meta leading-5 text-ink-suave">

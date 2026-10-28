@@ -187,7 +187,7 @@ function FilaChips({
       horizontal
       showsHorizontalScrollIndicator={false}
       className="-mx-4 mb-3.5 grow-0"
-      contentContainerClassName="gap-1.5 px-4"
+      contentContainerClassName="gap-1.5 px-margen"
     >
       <ChipFiltro texto="Todas" activo={activa === null} onPress={() => onElegir(null)} />
       {categorias.map((c) => (

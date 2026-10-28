@@ -37,20 +37,22 @@ export function BadgeConteo({ n }: { n: number }) {
 }
 
 /**
- * Pill con la etiqueta escrita: el color nunca es el único portador.
+ * La etiqueta de estado: una pastilla con la palabra escrita, el color nunca es
+ * el único portador.
  *
  * Fondo sólido + texto blanco, SIN ícono — con 6 niveles, un ícono compartido
- * entre varios (como pasaba con "alerta" en los tres primeros) no aportaba
- * nada que el color y la palabra no dijeran ya.
+ * entre varios no aportaba nada que el color y la palabra no dijeran ya. El
+ * fondo es el color de la escala clínica, sin aclarar: un tono suave de ámbar
+ * no llega al contraste que pide un texto de 12 px.
+ *
+ * Es de una sola línea y no se achica ni se parte (`flex-none`): su lugar es
+ * siempre la derecha del título, ver `TituloConEtiqueta` en `kit.tsx`.
  */
-export function ChipSeveridad({ rango }: { rango: RangoGravedad }) {
+export function EtiquetaEstado({ rango }: { rango: RangoGravedad }) {
   const color = colorEspina(rango);
   return (
-    <View
-      className="flex-row items-center rounded-full px-2.5 py-1"
-      style={{ backgroundColor: color }}
-    >
-      <Text className="text-eyebrow font-fuerte uppercase text-white">
+    <View className="flex-none flex-row items-center rounded-full px-2.5 py-1" style={{ backgroundColor: color }}>
+      <Text numberOfLines={1} className="text-eyebrow font-fuerte uppercase text-blanco">
         {RANGO_ETIQUETA[rango]}
       </Text>
     </View>

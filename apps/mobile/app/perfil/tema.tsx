@@ -42,7 +42,7 @@ export default function TemaPantalla() {
                 }}
                 accessibilityRole="radio"
                 accessibilityState={{ selected: activo }}
-                className="flex-row items-center justify-between rounded-input px-3 py-3.5"
+                className="flex-row items-center justify-between rounded-chip px-3 py-3.5"
                 style={i > 0 ? { borderTopWidth: 1, borderTopColor: col.line } : undefined}
               >
                 <Text className="text-body font-medio text-ink">{o.etiqueta}</Text>

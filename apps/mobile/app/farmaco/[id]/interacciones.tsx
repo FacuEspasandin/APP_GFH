@@ -35,7 +35,7 @@ export default function InteraccionesFarmaco() {
     <View className="flex-1 bg-paper">
       <EncabezadoApp />
       <Pantalla>
-        <Text className="mb-4 text-titular font-fuerte text-ink">Interacciones</Text>
+        <Text className="mb-4 text-titular font-extra text-ink">Interacciones</Text>
 
         <ResultadoConsulta
           cargando={isLoading}
@@ -88,7 +88,7 @@ function Grupo({ g }: { g: NonNullable<DetalleRestriccion['gruposInteraccion']>[
       {/* La regla, una sola vez arriba: es lo que comparten todos los de abajo. */}
       <Superficie
         elevacion="media"
-        className="mb-2.5 px-3.5 py-3"
+        className="mb-3.5 px-3.5 py-3"
         style={{ borderLeftWidth: 5, borderLeftColor: color }}
       >
         <Text
@@ -107,7 +107,7 @@ function Grupo({ g }: { g: NonNullable<DetalleRestriccion['gruposInteraccion']>[
       ))}
 
       {g.sueltos.length > 0 ? (
-        <Superficie elevacion="plana" className="mb-2 px-3.5 py-3">
+        <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
           <Text className="mb-2 text-fila font-medio text-ink">
             {/* Los que la regla nombró sueltos, sin familia. No se omiten: la
                 ficha mostraría menos interacciones de las que hay. */}
@@ -146,7 +146,7 @@ function GrupoFamilia({
       accessibilityState={puedeExpandir ? { expanded: abierto } : undefined}
       accessibilityLabel={`${nombreFamilia(nombre)}, ${miembros.length} fármacos`}
     >
-      <Superficie elevacion="plana" className="mb-2 px-3.5 py-3">
+      <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
         <View className="mb-2 flex-row items-center">
           <Text className="flex-1 text-fila font-medio text-ink">{nombreFamilia(nombre)}</Text>
           <View className="flex-row items-center rounded px-2 py-0.5" style={{ backgroundColor: col.paper }}>

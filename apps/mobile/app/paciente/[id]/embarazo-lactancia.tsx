@@ -81,7 +81,7 @@ export default function EmbarazoYLactancia() {
         className="flex-1"
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-4" keyboardShouldPersistTaps="handled">
         <BloqueFormulario
           titulo="Embarazo"
           etiqueta={embarazoActual === 'si' ? 'Cargado' : 'Sin dato'}

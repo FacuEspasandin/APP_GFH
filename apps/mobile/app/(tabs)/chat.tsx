@@ -176,7 +176,7 @@ export default function ChatIa() {
       />
 
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View className="flex-1 px-4 pt-3">
+        <View className="flex-1 px-margen pt-3">
           {!hayHilo ? (
             <View className="flex-1 items-center justify-center px-6">
               <Icono nombre="chat" tamano={32} color={col.tenue} />

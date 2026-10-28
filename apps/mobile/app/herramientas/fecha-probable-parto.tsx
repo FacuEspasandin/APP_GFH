@@ -38,19 +38,19 @@ export default function FechaProbableDeParto() {
         Regla de Naegele, sobre datos sueltos — no cruza el catálogo.
       </EncabezadoHerramienta>
 
-      <View className="flex-1 px-4">
+      <View className="flex-1 px-margen">
         <CampoFecha etiqueta="Fecha de última menstruación (FUM)" valor={fumTexto} onChange={setFumTexto} />
 
         <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3.5">
           <View className="flex-row items-baseline justify-between">
             <Text className="font-sans text-meta text-ink-suave">Fecha probable de parto</Text>
-            <Text className="font-mono-fuerte text-titulo text-ink">
+            <Text className="font-mono-fuerte text-grande text-ink">
               {fpp ? aTexto(fpp) : '—'}
             </Text>
           </View>
           <View className="mt-2 flex-row items-baseline justify-between border-t border-line pt-2">
             <Text className="font-sans text-meta text-ink-suave">Semanas de gestación hoy</Text>
-            <Text className="font-mono-fuerte text-titulo text-ink">
+            <Text className="font-mono-fuerte text-grande text-ink">
               {semanas !== null ? `${semanas} sem` : '—'}
             </Text>
           </View>
@@ -64,7 +64,7 @@ export default function FechaProbableDeParto() {
           hoy.
         </Text>
 
-        <Superficie className="mb-3 px-4 py-3.5" style={{ borderLeftWidth: 3, borderLeftColor: col.tenue }}>
+        <Superficie className="mb-3.5 px-4 py-3.5" style={{ borderLeftWidth: 3, borderLeftColor: col.tenue }}>
           <Text className="font-sans mb-1.5 text-eyebrow font-fuerte uppercase tracking-wider text-ink-suave">
             ⓘ Sobre esta herramienta
           </Text>

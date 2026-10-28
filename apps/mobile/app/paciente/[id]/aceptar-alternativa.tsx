@@ -101,7 +101,7 @@ export default function AceptarAlternativa() {
         className="flex-1"
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-4" keyboardShouldPersistTaps="handled">
         {/* Sale → entra, en una línea. Dos renglones apilados no comunican que
             uno reemplaza al otro: parecían dos datos sueltos. */}
         <Superficie elevacion="plana" className="mb-3.5 flex-row items-center px-3.5 py-3.5">

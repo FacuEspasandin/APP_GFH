@@ -6,7 +6,7 @@ import { hapticaSeleccion } from '@/ui/haptica';
 import { Icono, type NombreIcono } from '@/ui/iconos';
 import { coloresChrome, useTema } from '@/ui/tema';
 import { estiloSombra } from './superficie';
-import { FIJO } from './tokens';
+import { FIJO, RADIO, TIPO } from './tokens';
 
 /**
  * El menú principal: cuatro secciones y el botón de chat de IA al centro.
@@ -153,7 +153,13 @@ export function MenuInferior() {
         className="flex-1 items-center justify-center"
       >
         <Icono nombre={d.icono} tamano={20} color={color} />
-        <Text className="font-medio" style={{ color, fontSize: 10, marginTop: 2 }}>
+        <Text
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.85}
+          className="font-medio"
+          style={{ color, fontSize: TIPO.rotulo, marginTop: 2 }}
+        >
           {d.titulo}
         </Text>
       </Pressable>
@@ -177,8 +183,8 @@ export function MenuInferior() {
               height: ALTO_CONTENIDO + respiro,
               paddingBottom: respiro,
               backgroundColor: VERDE_BARRA,
-              borderTopLeftRadius: 12,
-              borderTopRightRadius: 12,
+              borderTopLeftRadius: RADIO.card,
+              borderTopRightRadius: RADIO.card,
             }}
           >
             <View className="flex-1 flex-row" style={{ height: ALTO_CONTENIDO, paddingRight: 34 }}>

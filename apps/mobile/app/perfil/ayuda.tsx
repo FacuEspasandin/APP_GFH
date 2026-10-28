@@ -158,7 +158,7 @@ export default function Ayuda() {
             <Superficie
               key={p.titulo}
               elevacion="plana"
-              className="mb-3 border p-4"
+              className="mb-3.5 border p-4"
               style={{ borderColor: col.line }}
             >
               <Text
@@ -260,7 +260,7 @@ function PreguntaAcordeon({
 }) {
   const col = useColores();
   return (
-    <Superficie elevacion="plana" className="mb-2 border" style={{ borderColor: col.line }}>
+    <Superficie elevacion="plana" className="mb-3.5 border" style={{ borderColor: col.line }}>
       <Pressable
         onPress={onPress}
         accessibilityRole="button"

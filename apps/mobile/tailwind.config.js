@@ -62,8 +62,11 @@ module.exports = {
        */
       fontFamily: {
         sans: ['Inter_400Regular'],
+        // 500 y 800 del rediseño: `suave` para apoyo, `extra` sólo para cifras y títulos grandes.
+        suave: ['Inter_500Medium'],
         medio: ['Inter_600SemiBold'],
         fuerte: ['Inter_700Bold'],
+        extra: ['Inter_800ExtraBold'],
         // Mono se mantiene en IBM Plex: Figma no define una fuente
         // monoespaciada, y el ancho fijo de cifra clínica no es un gusto
         // visual — es lo que evita que una columna baile al cambiar de valor.
@@ -71,36 +74,38 @@ module.exports = {
         'mono-fuerte': ['IBMPlexMono_600SemiBold'],
       },
       borderRadius: {
-        chip: '7px',
-        card: '12px',
-        sheet: '16px',
+        chip: '10px',
+        // Campos y botones de tamaño normal.
+        control: '14px',
+        card: '20px',
+        // Tarjeta protagonista (reservado: aún no hay `TarjetaHero`).
+        hero: '24px',
+        sheet: '28px',
         // Esquina de la burbuja de chat que apunta a quien habla, y casilla de verificación.
         cola: '3px',
         casilla: '5px',
-        // Filas de opciones, mosaicos de ícono y barras segmentadas: el mismo 8 px de los campos
-        // (`rounded-lg`). Ya se escribía como `rounded-input` en 5 lugares sin que existiera.
-        input: '8px',
       },
       fontSize: {
-        eyebrow: ['11px', { lineHeight: '14px', letterSpacing: '0.66px' }],
-        meta: ['12px', { lineHeight: '16px' }],
-        body: ['14px', { lineHeight: '20px' }],
-        fila: ['15px', { lineHeight: '20px' }],
-        pantalla: ['15px', { lineHeight: '20px' }],
-        grande: ['20px', { lineHeight: '26px' }],
-        // Sin interlineado a propósito: es el que tenían hasta ahora como
-        // `text-[28px]` / `text-[32px]`. Se ajusta junto con la escala.
-        titular: '28px',
-        // Cifra o nombre que encabeza un resultado (puntaje, fecha, tramo, título de monografía).
-        // Ya se escribía como `text-titulo` en 7 lugares sin que existiera.
-        titulo: ['22px', { lineHeight: '28px' }],
-        display: '32px',
+        // Escala del rediseño (docs/rediseno-visual/02-tokens-objetivo.md).
+        // Mínimo absoluto: 12 px.
+        eyebrow: ['12px', { lineHeight: '16px', letterSpacing: '0.6px' }],
+        meta: ['13px', { lineHeight: '18px' }],
+        body: ['15px', { lineHeight: '22px' }],
+        fila: ['16px', { lineHeight: '22px' }],
+        pantalla: ['17px', { lineHeight: '24px' }],
+        grande: ['22px', { lineHeight: '28px' }],
+        titular: ['28px', { lineHeight: '34px' }],
+        display: ['32px', { lineHeight: '38px' }],
       },
       letterSpacing: {
         logo: '-0.8px',
       },
       height: {
         campo: '52px',
+      },
+      spacing: {
+        // Margen lateral de pantalla.
+        margen: '18px',
       },
       minHeight: {
         'campo-multilinea': '96px',

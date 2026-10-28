@@ -30,7 +30,7 @@ import {
 } from '@gfh/shared-types';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
-import { FIJO, type Paleta } from '@/ui/tokens';
+import { FIJO, type Paleta, TIPO } from '@/ui/tokens';
 
 /**
  * Historial del paciente.
@@ -155,7 +155,7 @@ export default function HistorialPaciente() {
         data={filas}
         keyExtractor={(f) => f.clave}
         getItemType={(f) => f.tipo}
-        contentContainerClassName="px-4 pb-6 pt-3"
+        contentContainerClassName="px-margen pb-6 pt-3"
         /*
          * Pide la página siguiente al acercarse al final, en vez del botón
          * «Ver lo anterior». Un historial se recorre hacia atrás de corrido:
@@ -259,7 +259,7 @@ function Filtros({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerClassName="gap-2 px-4 pt-3 pb-2"
+        contentContainerClassName="gap-2 px-margen pt-3 pb-2"
       >
         {/* «Todo» primero y activo por defecto: el historial se abre para ver
             qué pasó, no para buscar algo puntual. */}
@@ -280,7 +280,7 @@ function Filtros({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerClassName="gap-2 px-4 pb-3"
+        contentContainerClassName="gap-2 px-margen pb-3"
       >
         {ORDEN_PERIODOS.map((p) => (
           <Chip
@@ -405,14 +405,14 @@ function TablaCambios({ cambios }: { cambios: CambioEvento[] }) {
       >
         <Text
           className="font-fuerte uppercase tracking-wider text-ink-suave"
-          style={{ flex: 1.3, fontSize: 10 }}
+          style={{ flex: 1.3, fontSize: TIPO.rotulo }}
         >
           Campo
         </Text>
-        <Text className="font-fuerte uppercase tracking-wider text-ink-suave" style={{ flex: 1, fontSize: 10 }}>
+        <Text className="font-fuerte uppercase tracking-wider text-ink-suave" style={{ flex: 1, fontSize: TIPO.rotulo }}>
           Antes
         </Text>
-        <Text className="font-fuerte uppercase tracking-wider text-ink-suave" style={{ flex: 1, fontSize: 10 }}>
+        <Text className="font-fuerte uppercase tracking-wider text-ink-suave" style={{ flex: 1, fontSize: TIPO.rotulo }}>
           Después
         </Text>
       </View>

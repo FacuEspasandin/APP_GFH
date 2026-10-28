@@ -96,7 +96,7 @@ export default function DatosRenales() {
         className="flex-1"
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-4" keyboardShouldPersistTaps="handled">
         <BloqueFormulario titulo="Ahora" etiqueta={p.clcrMlMin !== null ? 'Vigente' : undefined}>
           <ClcrVigente paciente={p} />
         </BloqueFormulario>

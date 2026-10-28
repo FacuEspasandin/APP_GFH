@@ -69,7 +69,7 @@ export function CampoFecha({
           onPress={() => setAbierto(true)}
           accessibilityRole="button"
           accessibilityLabel="Elegir del calendario"
-          className="h-12 w-12 items-center justify-center rounded-chip border border-line bg-surface"
+          className="h-12 w-12 items-center justify-center rounded-control border border-line bg-surface"
         >
           <Icono nombre="carpeta" tamano={20} color={col.primary} />
         </Pressable>

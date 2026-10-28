@@ -89,7 +89,7 @@ export default function Registro() {
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Crear cuenta" alVolver={volver} />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-3" keyboardShouldPersistTaps="handled">
         <BotonGoogle
           texto="Crear cuenta con Google"
           onPress={entrarConGoogle}

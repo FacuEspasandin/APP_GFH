@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 import { useColores } from './tema';
+import { TIPO } from './tokens';
 
 /**
  * Los dos marcadores de propiedad de una fila del catálogo: R renal, H hepático.
@@ -42,7 +43,7 @@ function Marcador({ letra, activo }: { letra: string; activo: boolean }) {
       }}
     >
       {activo ? (
-        <Text className="font-mono-fuerte" style={{ fontSize: 11, color: col.info }}>
+        <Text className="font-mono-fuerte" style={{ fontSize: TIPO.rotulo, color: col.info }}>
           {letra}
         </Text>
       ) : null}

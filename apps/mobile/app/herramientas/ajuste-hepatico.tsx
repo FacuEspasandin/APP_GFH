@@ -89,7 +89,7 @@ export default function HerramientaAjusteHepatico() {
     return (
       <View className="flex-1 bg-paper">
         <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
-        <ScrollView contentContainerClassName="px-4 pb-6 pt-4" keyboardShouldPersistTaps="handled">
+        <ScrollView contentContainerClassName="px-margen pb-6 pt-4" keyboardShouldPersistTaps="handled">
           <View className="mb-1 flex-row items-center gap-2">
             <Icono nombre="higado" tamano={20} color={col.aviso} />
             <Text className="text-fila font-fuerte text-ink">Ajuste Hepático</Text>
@@ -248,7 +248,7 @@ function ResultadoHepatico({
     <View className="flex-1 bg-paper">
       <ConsultaPlegada titulo={consulta.farmacos.join(' · ')} detalle={consulta.detalle} onCambiar={onCambiar} />
 
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-3">
         <Veredicto
           rango={rangoDeClase(datos.clase)}
           cifra={datos.clase ?? '—'}

@@ -32,7 +32,7 @@ export default function RestriccionEmbarazo() {
     <View className="flex-1 bg-paper">
       <EncabezadoApp />
       <Pantalla>
-        <Text className="mb-4 text-titular font-fuerte text-ink">Embarazo</Text>
+        <Text className="mb-4 text-titular font-extra text-ink">Embarazo</Text>
 
         <ResultadoConsulta
           cargando={isLoading}

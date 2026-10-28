@@ -44,7 +44,7 @@ export default function HerramientaInteracciones() {
     return (
       <View className="flex-1 bg-paper">
         <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
-        <ScrollView contentContainerClassName="px-4 pb-6 pt-4" keyboardShouldPersistTaps="handled">
+        <ScrollView contentContainerClassName="px-margen pb-6 pt-4" keyboardShouldPersistTaps="handled">
           <Text className="mb-1 text-fila font-fuerte text-ink">Análisis de Interacciones</Text>
           <Text className="mb-4 font-sans text-meta leading-5 text-ink-suave">
             Seleccione los principios activos para analizar posibles interacciones cruzadas.
@@ -128,7 +128,7 @@ function ResultadoInteracciones({
         onCambiar={onCambiar}
       />
 
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-3">
         <Veredicto
           rango={peor}
           titulo={titularInteracciones(datos.pares)}

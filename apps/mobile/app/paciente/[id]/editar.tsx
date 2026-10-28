@@ -108,7 +108,7 @@ export default function EditarPaciente() {
           >
             <Icono nombre="atras" tamano={18} color={col.ink} />
           </Pressable>
-          <Text className="text-titular font-fuerte text-ink">Editar Paciente</Text>
+          <Text className="text-titular font-extra text-ink">Editar Paciente</Text>
         </View>
 
         <Superficie elevacion="media" className="mb-4 p-5">

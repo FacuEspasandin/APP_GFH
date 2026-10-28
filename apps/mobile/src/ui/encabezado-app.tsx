@@ -70,7 +70,7 @@ export function EncabezadoApp({
         </Pressable>
       )}
 
-      <Text className="font-fuerte text-display tracking-logo" style={{ color: col.primary }}>
+      <Text className="font-extra text-display tracking-logo" style={{ color: col.primary }}>
         {titulo}
       </Text>
 

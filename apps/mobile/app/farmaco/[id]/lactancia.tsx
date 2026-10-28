@@ -27,7 +27,7 @@ export default function RestriccionLactancia() {
     <View className="flex-1 bg-paper">
       <EncabezadoApp />
       <Pantalla>
-        <Text className="mb-4 text-titular font-fuerte text-ink">Lactancia</Text>
+        <Text className="mb-4 text-titular font-extra text-ink">Lactancia</Text>
 
         <ResultadoConsulta
           cargando={isLoading}

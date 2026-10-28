@@ -69,7 +69,7 @@ export default function EditarPrescripcion() {
   return (
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Editar Prescripción" />
-      <ScrollView contentContainerClassName="px-4 pb-8 pt-4" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-8 pt-4" keyboardShouldPersistTaps="handled">
         <Superficie elevacion="plana" className="mb-6 border p-4" style={{ borderColor: col.line }}>
           <Text className="text-grande font-medio text-ink">{nombre || 'Pauta'}</Text>
           {f.dosis ? (

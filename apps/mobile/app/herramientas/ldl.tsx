@@ -83,8 +83,8 @@ export default function CalculadoraLdl() {
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView contentContainerClassName="px-4 pb-8 pt-4" keyboardShouldPersistTaps="handled">
-          <Text className="text-titular font-fuerte leading-9 text-ink">Calculadora de LDL</Text>
+        <ScrollView contentContainerClassName="px-margen pb-8 pt-4" keyboardShouldPersistTaps="handled">
+          <Text className="text-titular font-extra leading-9 text-ink">Calculadora de LDL</Text>
           <Text className="mb-4 mt-1 font-sans text-body leading-6 text-ink-suave">
             Estimación del colesterol LDL mediante la fórmula de Friedewald.
           </Text>

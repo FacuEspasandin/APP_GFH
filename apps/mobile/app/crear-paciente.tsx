@@ -133,7 +133,7 @@ export default function CrearPaciente() {
       <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView
-        contentContainerClassName="px-4 pb-4 pt-3"
+        contentContainerClassName="px-margen pb-4 pt-3"
         keyboardShouldPersistTaps="handled"
       >
         <View className="mb-4 flex-row items-center gap-2">
@@ -146,7 +146,7 @@ export default function CrearPaciente() {
           >
             <Icono nombre="atras" tamano={18} color={col.ink} />
           </Pressable>
-          <Text className="text-titular font-fuerte text-ink">Crear Paciente</Text>
+          <Text className="text-titular font-extra text-ink">Crear Paciente</Text>
         </View>
 
         <BloqueFormulario titulo="Datos del paciente" exigencia="Obligatorio">

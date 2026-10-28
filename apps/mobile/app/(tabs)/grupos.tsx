@@ -125,7 +125,7 @@ function TarjetaGrupo({
     <SuperficieTocable
       onPress={onPress}
       elevacion={conRiesgo > 0 ? 'media' : 'plana'}
-      contenedor="mb-2.5"
+      contenedor="mb-3.5"
       className="px-4 py-3.5"
       accesibilidad={`${grupo.nombre}, ${grupo.pacientes} pacientes, ${grupo.graves} graves`}
       style={grupo.pacientes === 0 ? { opacity: 0.7 } : undefined}

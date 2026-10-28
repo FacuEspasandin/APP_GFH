@@ -4,13 +4,15 @@ import {
 } from '@expo-google-fonts/ibm-plex-mono';
 import {
   Inter_400Regular,
+  Inter_500Medium,
   Inter_600SemiBold,
   Inter_700Bold,
+  Inter_800ExtraBold,
 } from '@expo-google-fonts/inter';
 import { useFonts } from 'expo-font';
 
 /**
- * Las cinco caras que usa la app, y sólo esas.
+ * Las siete caras que usa la app, y sólo esas.
  *
  * Inter es la tipografía del rediseño de Figma ("Modernización de visual
  * app"); IBM Plex Mono se mantiene para los números clínicos —Figma no
@@ -18,16 +20,18 @@ import { useFonts } from 'expo-font';
  * gusto visual sino lo que evita que una columna baile al cambiar de valor.
  *
  * Cada archivo pesa y se descarga antes de que la app pinte nada, así que la
- * lista es exactamente lo que el código referencia: tres de Inter (regular,
- * semibold, bold) y dos de Mono (regular y semibold). Si alguna cara nueva
+ * lista es exactamente lo que el código referencia: cinco de Inter (regular,
+ * medium, semibold, bold, extrabold) y dos de Mono (regular y semibold). Si alguna cara nueva
  * hace falta, se agrega acá y en `tailwind.config.js` — los nombres tienen
  * que coincidir literalmente.
  */
 export function useFuentes(): boolean {
   const [listas, error] = useFonts({
     Inter_400Regular,
+    Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
+    Inter_800ExtraBold,
     IBMPlexMono_400Regular,
     IBMPlexMono_600SemiBold,
   });

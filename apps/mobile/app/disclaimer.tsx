@@ -41,7 +41,7 @@ export default function DisclaimerPrimerIngreso() {
 
       <ScrollView className="flex-1" contentContainerClassName="px-5 py-6">
         <Superficie elevacion="media" className="p-6">
-          <Text className="border-b border-line pb-4 text-center text-titular font-fuerte" style={{ color: col.primary }}>
+          <Text className="border-b border-line pb-4 text-center text-titular font-extra" style={{ color: col.primary }}>
             Antes de empezar
           </Text>
           <View className="gap-4 pt-4">

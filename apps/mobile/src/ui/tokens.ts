@@ -143,7 +143,16 @@ export function paleta(oscuro: boolean): Paleta {
  * con `tabular-nums`, estilos del navegador). Mismos criterios que la escala de
  * `tailwind.config.js`: acá sólo viven los que no tienen clase.
  */
+/**
+ * Radios para lo que no puede usar una clase (hoja inferior, esquinas de la barra).
+ * Tienen que coincidir con `borderRadius` de tailwind.config.js: lo verifica
+ * `tokens.test.ts`.
+ */
+export const RADIO = { chip: 10, control: 14, card: 20, hero: 24, sheet: 28 } as const;
+
 export const TIPO = {
+  /** Rótulos chicos de interfaz (menú inferior, encabezados de tabla): el mínimo de 12 px. */
+  rotulo: 12,
   /** Cifra grande de un resultado (Clcr, puntaje, iniciales del perfil). */
   cifra: 26,
   /** Cifra de una fila o de un trimestre. */

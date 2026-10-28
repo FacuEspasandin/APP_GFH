@@ -63,7 +63,7 @@ export function BuscadorPrincipioActivo({
           autoCapitalize="none"
           autoCorrect={false}
           accessibilityLabel={unico ? 'Fármaco' : 'Buscar fármaco'}
-          className="h-campo rounded-lg border border-line pl-10 pr-4 text-body text-ink"
+          className="h-campo rounded-control border border-line pl-10 pr-4 text-body text-ink"
           style={{ backgroundColor: col.paper }}
         />
       </View>

@@ -65,7 +65,7 @@ function EncabezadoAjusteHepatico() {
     <View className="mb-4">
       <View className="mb-2 flex-row items-center gap-2">
         <Icono nombre="higado" tamano={20} color={col.aviso} />
-        <Text className="text-titular font-fuerte text-ink">Ajuste Hepático</Text>
+        <Text className="text-titular font-extra text-ink">Ajuste Hepático</Text>
       </View>
       <Text className="text-body leading-6 text-ink-suave">
         Ajuste de dosis según la clase de Child-Pugh del paciente.

@@ -218,7 +218,7 @@ function Campo({
               autoCapitalize="none"
               autoCorrect={false}
               accessibilityLabel={etiqueta}
-              className="h-campo flex-1 rounded-lg border border-line bg-surface pl-11 text-body text-ink"
+              className="h-campo flex-1 rounded-control border border-line bg-surface pl-11 text-body text-ink"
               style={{ paddingRight: secreto ? 44 : 14 }}
             />
           )}

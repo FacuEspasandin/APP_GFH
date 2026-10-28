@@ -152,7 +152,7 @@ export function TapaRestriccion({
       style={{ borderLeftWidth: 4, borderLeftColor: c.frente }}
     >
       <View
-        className="mr-3 items-center justify-center rounded-input"
+        className="mr-3 items-center justify-center rounded-chip"
         style={{ width: 38, height: 38, backgroundColor: c.fondo }}
       >
         <Icono nombre={ICONO[clave]} tamano={20} color={c.frente} />
@@ -287,7 +287,7 @@ export function LineaEmbarazo({ trimestres }: { trimestres: readonly Trimestre[]
 
   return (
     <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3.5">
-      <View className="flex-row overflow-hidden rounded-input" style={{ height: 32, gap: 2 }}>
+      <View className="flex-row overflow-hidden rounded-chip" style={{ height: 32, gap: 2 }}>
         {trimestres.map((t) => {
           const c = coloresDe(t.estado, col);
           return (
@@ -381,7 +381,7 @@ export function PeldanosHepaticos({ peldanos }: { peldanos: readonly Peldano[] }
             }}
           >
             <View
-              className="mr-2.5 items-center justify-center rounded-input"
+              className="mr-2.5 items-center justify-center rounded-chip"
               style={{
                 width: 30,
                 height: 30,

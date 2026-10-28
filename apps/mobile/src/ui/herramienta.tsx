@@ -39,7 +39,7 @@ export function Consulta({
       className="flex-1 bg-paper"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-3" keyboardShouldPersistTaps="handled">
         {children}
       </ScrollView>
 
@@ -231,7 +231,7 @@ export function FilaResultado({
   return (
     <Superficie
       elevacion="plana"
-      className="mb-2 px-3.5 py-3"
+      className="mb-3.5 px-3.5 py-3"
       style={{
         borderLeftWidth: 4,
         borderLeftColor: colorEspina(rango),

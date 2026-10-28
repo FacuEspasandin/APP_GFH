@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 
-import type { Cockpit } from '@/api/tipos';
 import * as API from '@/api/endpoints';
 import {
   colorPorSeveridadAlergia,
@@ -92,7 +91,7 @@ export default function CondicionesYAlergias() {
   return (
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Condiciones y Alergias" />
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-4">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-4">
         {sinNada ? (
           <Estado
             titulo="Sin condiciones ni alergias"
@@ -143,7 +142,7 @@ export default function CondicionesYAlergias() {
         ) : null}
 
         {alergias.length > 0 ? (
-          <Superficie elevacion="plana" className="mb-3 mt-2 px-3.5 py-3">
+          <Superficie elevacion="plana" className="mb-3.5 mt-2 px-3.5 py-3">
             {/* Regla 4, dicha donde se ve la consecuencia y no sólo en el motor. */}
             <Text className="font-sans text-meta leading-5 text-ink-suave">
               Sólo la coincidencia exacta con una alergia grave impide prescribir. El cruce por
@@ -153,7 +152,7 @@ export default function CondicionesYAlergias() {
         ) : null}
 
         {alergias.some((a) => !a.cruza) ? (
-          <Superficie elevacion="plana" className="mb-3 px-3.5 py-3">
+          <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
             <Text className="font-sans text-meta leading-5 text-ink-suave">
               Una alergia que no cruza quedó registrada pero no coincide con ninguna familia
               conocida, así que no dispara alertas.
@@ -204,7 +203,7 @@ function Fila({
   return (
     <Superficie
       elevacion="plana"
-      className="mb-2 flex-row items-center px-3.5 py-3"
+      className="mb-3.5 flex-row items-center px-3.5 py-3"
       style={{ borderLeftWidth: 4, borderLeftColor: color }}
     >
       <View className="flex-1 pr-2">

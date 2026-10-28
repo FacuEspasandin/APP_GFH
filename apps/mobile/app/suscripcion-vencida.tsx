@@ -34,7 +34,7 @@ export default function SuscripcionVencida() {
           >
             <Icono nombre="alerta" tamano={26} color={col.peligroInk} />
           </View>
-          <Text className="mt-5 text-center text-titular font-fuerte text-ink">
+          <Text className="mt-5 text-center text-titular font-extra text-ink">
             Tu suscripción venció
           </Text>
           <Text className="font-sans mt-2 text-center text-body leading-6 text-ink-suave">

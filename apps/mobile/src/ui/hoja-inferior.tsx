@@ -5,6 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 import { hapticaSeleccion } from './haptica';
 import { Icono, type NombreIcono } from './iconos';
 import { useColores } from './tema';
+import { RADIO } from './tokens';
 
 /**
  * Hoja inferior: el menú que abren el botón `+` y el de herramientas.
@@ -70,7 +71,7 @@ export function HojaInferior({
       enableDynamicSizing
       onClose={onCerrar}
       backdropComponent={fondo}
-      backgroundStyle={{ borderTopLeftRadius: 22, borderTopRightRadius: 22 }}
+      backgroundStyle={{ borderTopLeftRadius: RADIO.sheet, borderTopRightRadius: RADIO.sheet }}
       handleIndicatorStyle={{ width: 40, height: 4 }}
     >
       <BottomSheetView className="px-4 pb-9 pt-1">

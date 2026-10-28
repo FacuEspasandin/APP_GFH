@@ -55,7 +55,7 @@ export function Pantalla({
 
   const contenido = scroll ? (
     <ScrollView
-      contentContainerClassName="px-4 pb-6 pt-3"
+      contentContainerClassName="px-margen pb-6 pt-3"
       keyboardShouldPersistTaps="handled"
       refreshControl={
         onRefrescar ? (
@@ -73,7 +73,7 @@ export function Pantalla({
       {children}
     </ScrollView>
   ) : (
-    <View className="flex-1 px-4 pb-6 pt-3">{children}</View>
+    <View className="flex-1 px-margen pb-6 pt-3">{children}</View>
   );
 
   return (
@@ -109,7 +109,7 @@ export function FilaAccion({
   return (
     <SuperficieTocable
       onPress={onPress}
-      contenedor="mb-2"
+      contenedor="mb-3.5"
       className="flex-row items-center px-3.5 py-3"
     >
       <View className="flex-1">
@@ -167,7 +167,7 @@ export function Boton({
       ? 'h-14 w-full gap-3 rounded-full'
       : tamano === 'chico'
         ? 'h-10 gap-2 self-start rounded-full px-6'
-        : 'h-12 rounded-chip';
+        : 'h-12 rounded-control';
   const claseTexto =
     tamano === 'grande'
       ? 'text-fila font-fuerte'
@@ -256,8 +256,8 @@ export const CampoTexto = forwardRef<
         accessibilityHint={rango ? `Entre ${etiquetaRango(rango)}` : undefined}
         className={
           props.multiline
-            ? 'min-h-campo-multilinea rounded-chip border bg-surface px-3.5 py-3 text-body text-ink'
-            : 'h-12 rounded-chip border bg-surface px-3.5 text-body text-ink'
+            ? 'min-h-campo-multilinea rounded-control border bg-surface px-3.5 py-3 text-body text-ink'
+            : 'h-12 rounded-control border bg-surface px-3.5 text-body text-ink'
         }
         style={{ borderColor: borde, borderWidth: v.estado === 'ok' ? 1 : 1.5 }}
         {...props}
@@ -356,7 +356,7 @@ export function AvisoNeutro({ children }: { children: ReactNode }) {
 
   return (
     <Superficie
-      className="mb-2 px-3.5 py-3"
+      className="mb-3.5 px-3.5 py-3"
       style={{ borderLeftWidth: 4, borderLeftColor: col.tenue }}
     >
       <Text className="font-sans text-meta leading-5 text-ink">{children}</Text>
@@ -418,5 +418,22 @@ export function TextoPeligro({ children }: { children: ReactNode }) {
  * continuar, aceptar). Un filo arriba la separa del contenido que se desplaza.
  */
 export function BarraAccion({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <View className={`border-t border-line bg-surface px-4 py-3 ${className}`}>{children}</View>;
+  return <View className={`border-t border-line bg-surface px-margen py-3 ${className}`}>{children}</View>;
+}
+
+/**
+ * El título de una tarjeta con su etiqueta de estado.
+ *
+ * La etiqueta va SIEMPRE a la derecha y arriba, a la altura de la primera línea
+ * del título, en todas las pantallas. El título ocupa el resto y es el que se
+ * parte en dos renglones si no entra: con el texto del sistema grande, la
+ * etiqueta bajaba debajo del nombre y cada fila quedaba distinta.
+ */
+export function TituloConEtiqueta({ titulo, etiqueta }: { titulo: ReactNode; etiqueta?: ReactNode }) {
+  return (
+    <View className="flex-row items-start gap-2">
+      <Text className="flex-1 text-fila font-medio text-ink">{titulo}</Text>
+      {etiqueta ? <View className="flex-none">{etiqueta}</View> : null}
+    </View>
+  );
 }

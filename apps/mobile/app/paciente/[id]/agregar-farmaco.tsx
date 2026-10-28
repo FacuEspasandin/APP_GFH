@@ -105,7 +105,7 @@ export default function AgregarFarmaco() {
         className="flex-1"
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-4" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-4" keyboardShouldPersistTaps="handled">
         <BloqueFormulario titulo="Producto" exigencia="Obligatorio">
           <View className="mb-3.5 flex-row gap-2">
             <Chip texto="Del catálogo" activo={!libre} onPress={() => setLibre(false)} />
@@ -213,7 +213,7 @@ export default function AgregarFarmaco() {
         {conflicto ? (
           <Superficie
             elevacion="plana"
-            className="mb-2.5 px-3.5 py-3"
+            className="mb-3.5 px-3.5 py-3"
             style={{
               backgroundColor: fondoSeveridad(bloqueado ? 0 : 3),
               borderLeftWidth: 4,

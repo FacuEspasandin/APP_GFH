@@ -65,11 +65,11 @@ export default function RiesgoCardiovascular() {
         A 10 años, sobre datos sueltos — no cruza el catálogo.
       </EncabezadoHerramienta>
 
-      <View className="px-4">
+      <View className="px-margen">
         {excluido !== null ? (
           <SuperficieTocable
             onPress={() => setExcluido(null)}
-            contenedor="mb-2"
+            contenedor="mb-3.5"
             className="flex-row items-center px-3.5 py-2.5"
             accesibilidad="Corregir si tiene alguna de las condiciones"
           >
@@ -83,7 +83,7 @@ export default function RiesgoCardiovascular() {
         ) : (
           <Superficie
             elevacion="plana"
-            className="mb-2.5 px-3.5 py-3.5"
+            className="mb-3.5 px-3.5 py-3.5"
             style={{ borderColor: col.primary, borderWidth: 1.5 }}
           >
             <Text className="text-grande font-fuerte text-ink">¿Tiene alguna de estas?</Text>
@@ -111,7 +111,7 @@ export default function RiesgoCardiovascular() {
             className="items-center px-3.5 py-6"
             style={{ borderLeftWidth: 4, borderLeftColor: col.peligro }}
           >
-            <Text className="font-mono-fuerte text-titulo" style={{ color: col.peligro }}>
+            <Text className="font-mono-fuerte text-grande" style={{ color: col.peligro }}>
               Alto riesgo
             </Text>
             <Text className="font-sans mt-2 text-center text-meta leading-5 text-ink-suave">

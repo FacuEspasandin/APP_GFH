@@ -78,7 +78,7 @@ export default function ElegirProductoAlternativa() {
       ) : catalogo.isLoading ? (
         <Skeleton filas={4} />
       ) : (
-        <ScrollView contentContainerClassName="px-4 pb-4 pt-3.5">
+        <ScrollView contentContainerClassName="px-margen pb-4 pt-3.5">
           <View className="mb-4 flex-row items-center gap-2 rounded-chip bg-primary-light px-3.5 py-2.5">
             <Icono nombre="check" tamano={16} color={col.primary} />
             <Text className="font-fuerte text-body text-primary">{alternativa}</Text>

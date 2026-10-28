@@ -69,7 +69,7 @@ function EncabezadoAjusteRenal() {
     <View className="mb-4">
       <View className="mb-2 flex-row items-center gap-2">
         <Icono nombre="gota" tamano={20} color={col.info} />
-        <Text className="text-titular font-fuerte text-ink">Ajuste Renal</Text>
+        <Text className="text-titular font-extra text-ink">Ajuste Renal</Text>
       </View>
       <Text className="text-body leading-6 text-ink-suave">
         Ajuste de dosis basado en el aclaramiento de creatinina (Clcr) estimado.

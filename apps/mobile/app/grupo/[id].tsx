@@ -7,16 +7,11 @@ import * as API from '@/api/endpoints';
 import { FilaAnimada } from '@/ui/animacion';
 import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
-import { Estado, Pantalla } from '@/ui/kit';
+import { Estado, Pantalla, TituloConEtiqueta } from '@/ui/kit';
+import { EtiquetaEstado } from '@/ui/severidad';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { Superficie } from '@/ui/superficie';
-import {
-  claveColorPorClcr,
-  colorEspina,
-  COLOR_SEVERIDAD,
-  RANGO_ETIQUETA,
-  type RangoGravedad,
-} from '@gfh/shared-types';
+import { claveColorPorClcr, colorEspina, COLOR_SEVERIDAD, type RangoGravedad } from '@gfh/shared-types';
 import { useColores } from '@/ui/tema';
 
 /**
@@ -58,7 +53,7 @@ export default function DetalleGrupo() {
         >
           <View className="mb-6 flex-row items-center justify-between">
             <View className="flex-row items-center gap-2">
-              <Text className="text-display font-fuerte leading-10 text-ink">
+              <Text className="text-display font-extra leading-10 text-ink">
                 {resumen?.nombre ?? 'Grupo'}
               </Text>
               {sinGrupo ? null : (
@@ -168,22 +163,18 @@ function Fila({ paciente }: { paciente: FilaPaciente }) {
         <Superficie
           elevacion={paciente.peorRango !== null ? 'media' : 'plana'}
           franja={color}
-          className="mb-2.5"
+          className="mb-3.5"
         >
           <View className="flex-1 flex-row items-center px-3.5 py-3.5">
             <View className="flex-1">
-              <View className="flex-row flex-wrap items-center gap-2">
-                <Text className="text-fila font-medio text-ink">
-                  {paciente.apellido}, {paciente.nombre}
-                </Text>
-                {paciente.peorRango !== null ? (
-                  <View className="rounded-full px-2 py-0.5" style={{ backgroundColor: color }}>
-                    <Text className="font-fuerte text-[10px] uppercase tracking-wider text-blanco">
-                      {RANGO_ETIQUETA[paciente.peorRango as RangoGravedad]}
-                    </Text>
-                  </View>
-                ) : null}
-              </View>
+              <TituloConEtiqueta
+                titulo={`${paciente.apellido}, ${paciente.nombre}`}
+                etiqueta={
+                  paciente.peorRango !== null ? (
+                    <EtiquetaEstado rango={paciente.peorRango as RangoGravedad} />
+                  ) : null
+                }
+              />
               <Text className="font-sans mt-1 text-meta text-ink-suave">
                 {paciente.edadAnios} años
               </Text>

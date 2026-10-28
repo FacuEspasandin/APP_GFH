@@ -127,9 +127,9 @@ export default function Alternativas() {
         variante="volver"
       />
 
-      <ScrollView contentContainerClassName="px-4 pb-4 pt-3">
+      <ScrollView contentContainerClassName="px-margen pb-4 pt-3">
         {data.sinDatos ? (
-          <Superficie elevacion="plana" className="mb-3 px-3.5 py-3">
+          <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
             <Text className="font-sans text-meta leading-5 text-ink-suave">{data.motivo}</Text>
           </Superficie>
         ) : null}
@@ -180,7 +180,7 @@ export default function Alternativas() {
         ))}
 
         {data.viables.length > 0 ? (
-          <Superficie elevacion="plana" className="mb-3 mt-2 px-3.5 py-3">
+          <Superficie elevacion="plana" className="mb-3.5 mt-2 px-3.5 py-3">
             {/* Regla 5: el silencio del catálogo no es seguridad. */}
             <Text className="font-sans text-meta leading-5 text-ink-suave">
               «Sin alertas» mide lo que el catálogo tiene cargado sobre este paciente. No dice que
@@ -193,7 +193,7 @@ export default function Alternativas() {
           <View className="mt-3">
             <Eyebrow>No se ofrecen</Eyebrow>
             {data.descartadas.map((d, i) => (
-              <Superficie key={i} elevacion="plana" className="mb-2 px-3.5 py-2.5">
+              <Superficie key={i} elevacion="plana" className="mb-3.5 px-3.5 py-2.5">
                 <Text className="font-sans text-meta text-ink">
                   <Text className="font-medio">{d.nombre}</Text> — {MOTIVO[d.motivo] ?? 'descartada'}
                 </Text>
@@ -214,7 +214,7 @@ function TarjetaAlternativa({ alt, onReemplazar }: { alt: Alternativa; onReempla
   return (
     <Superficie
       elevacion={lista.length === 0 ? 'media' : 'plana'}
-      className="mb-2.5 px-3.5 py-3"
+      className="mb-3.5 px-3.5 py-3"
       style={{ borderLeftWidth: 4, borderLeftColor: colorEspina(peor) }}
     >
       <View className="flex-row items-baseline">
