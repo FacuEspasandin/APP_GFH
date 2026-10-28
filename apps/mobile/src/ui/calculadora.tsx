@@ -6,6 +6,7 @@ import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
+import { useCadena } from '@/ui/teclado';
 import { useColores } from '@/ui/tema';
 import {
   completo,
@@ -127,6 +128,12 @@ export function Calculadora({
   /** La que el médico abrió para corregir. Gana sobre la primera sin contestar. */
   const [abiertaAMano, setAbiertaAMano] = useState<string | null>(null);
 
+  /* Los campos numéricos del formulario se encadenan: «Siguiente» pasa al de
+     abajo y el último cierra el teclado, con el resultado ya a la vista. Ver
+     `useCadena`. En cascada hay un solo campo abierto y sólo cuenta «Listo». */
+  const numericos = molde.campos.filter((c) => c.tipo === 'numero');
+  const cadena = useCadena(numericos.length);
+
   /* `onCambio` se llama DESPUÉS de `setBorrador`/`setUnidades`, nunca adentro
      del callback que se les pasa: ese callback tiene que ser puro (React lo
      puede invocar en cualquier momento, incluso durante el render de otro
@@ -188,6 +195,7 @@ export function Calculadora({
             onChange={(v) => responder(c.clave, v)}
             onUnidad={(u) => cambiarUnidad(c.clave, u)}
             onValorExacto={(v) => responderExacto(c.clave, v)}
+            cadena={c.tipo === 'numero' ? cadena(numericos.indexOf(c)) : undefined}
           />
         ))}
       </BloqueFormulario>
@@ -430,6 +438,7 @@ function CampoDelMolde({
   onUnidad,
   onValorExacto,
   sinRotulo = false,
+  cadena,
 }: {
   campo: Campo;
   valor: string | undefined;
@@ -439,6 +448,8 @@ function CampoDelMolde({
   onUnidad: (u: string) => void;
   onValorExacto?: (v: string) => void;
   sinRotulo?: boolean;
+  /** Los props de `useCadena` para este campo, si hay otros con quienes encadenar. */
+  cadena?: ReturnType<ReturnType<typeof useCadena>>;
 }) {
   const activa = unidadDe(campo, unidades);
 
@@ -463,6 +474,7 @@ function CampoDelMolde({
       <View>
         {selector}
         <CampoTexto
+          {...cadena}
           etiqueta={sinRotulo ? '' : campo.rotulo}
           value={valor ?? ''}
           onChangeText={onChange}

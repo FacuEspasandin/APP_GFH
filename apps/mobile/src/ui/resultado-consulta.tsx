@@ -1,7 +1,38 @@
 import type { ReactNode } from 'react';
+import { View } from 'react-native';
 
 import { ErrorApi } from '@/api/cliente';
 import { ErrorGenerico, SinConexion, Skeleton } from './estados-sistema';
+import { Pantalla } from './kit';
+
+/**
+ * Una pantalla entera cuya consulta falló: su encabezado y el error con
+ * «reintentar».
+ *
+ * Existe para las pantallas que hacen `if (isLoading || !data) → esqueleto`: si la
+ * consulta fallaba, `data` nunca llegaba y el esqueleto quedaba para siempre,
+ * sin decir qué pasó ni ofrecer una salida.
+ */
+export function PantallaConError({
+  encabezado,
+  error,
+  onReintentar,
+}: {
+  encabezado: ReactNode;
+  error: unknown;
+  onReintentar: () => void;
+}) {
+  return (
+    <View className="flex-1 bg-paper">
+      {encabezado}
+      <Pantalla>
+        <ResultadoConsulta cargando={false} error={error} onReintentar={onReintentar}>
+          {null}
+        </ResultadoConsulta>
+      </Pantalla>
+    </View>
+  );
+}
 
 /**
  * Envuelve el par cargando/error de una consulta.

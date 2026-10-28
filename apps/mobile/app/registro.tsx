@@ -12,6 +12,7 @@ import { infoDeSesion, tipoDeDispositivo } from '@/ui/dispositivo';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
+import { useCadena } from '@/ui/teclado';
 import { useColores } from '@/ui/tema';
 import { ESPECIALIDADES, type Especialidad } from '@gfh/shared-types';
 
@@ -33,6 +34,8 @@ export default function Registro() {
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [entrandoConGoogle, setEntrandoConGoogle] = useState(false);
+  // «Siguiente» recorre los seis campos en el orden en que se leen.
+  const cadena = useCadena(6);
 
   const entrarConGoogle = async () => {
     setError(null);
@@ -105,13 +108,14 @@ export default function Registro() {
         <BloqueFormulario titulo="Quién sos" exigencia="Obligatorio">
           <View className="flex-row gap-3">
             <View className="flex-1">
-              <CampoTexto etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
+              <CampoTexto {...cadena(0)} etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
             </View>
             <View className="flex-1">
-              <CampoTexto etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
+              <CampoTexto {...cadena(1)} etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
             </View>
           </View>
           <CampoTexto
+            {...cadena(2)}
             etiqueta="Email"
             value={c.email}
             onChangeText={campo('email')}
@@ -122,6 +126,7 @@ export default function Registro() {
 
         <BloqueFormulario titulo="Para entrar" exigencia="Obligatorio">
           <CampoTexto
+            {...cadena(3)}
             etiqueta="Nombre de usuario"
             value={c.nombreUsuario}
             onChangeText={campo('nombreUsuario')}
@@ -135,6 +140,7 @@ export default function Registro() {
           </Text>
 
           <CampoTexto
+            {...cadena(4)}
             etiqueta="Contraseña"
             value={c.password}
             onChangeText={campo('password')}
@@ -142,6 +148,7 @@ export default function Registro() {
             placeholder="Mínimo 10 caracteres"
           />
           <CampoTexto
+            {...cadena(5)}
             etiqueta="Repetir"
             value={c.confirmar}
             onChangeText={campo('confirmar')}

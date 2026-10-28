@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { SkeletonLista } from '@/ui/estados-sistema';
+import { PantallaConError } from '@/ui/resultado-consulta';
 import { useAviso } from '@/ui/aviso';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { fechaLarga } from '@/ui/fecha';
@@ -16,7 +17,7 @@ export default function Sesiones() {
   const col = useColores();
   const qc = useQueryClient();
   const { avisar } = useAviso();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['sesiones'],
     queryFn: API.sesiones,
   });
@@ -31,6 +32,15 @@ export default function Sesiones() {
     },
   });
 
+  if (error) {
+    return (
+      <PantallaConError
+        encabezado={<EncabezadoConTitulo titulo="Sesiones Activas" />}
+        error={error}
+        onReintentar={() => void refetch()}
+      />
+    );
+  }
   if (isLoading) {
     return (
       <View className="flex-1 bg-paper">

@@ -1,11 +1,16 @@
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetView,
+  useBottomSheetTimingConfigs,
+} from '@gorhom/bottom-sheet';
 import { useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { Easing } from 'react-native-reanimated';
 
 import { hapticaSeleccion } from './haptica';
 import { Icono, type NombreIcono } from './iconos';
 import { useColores } from './tema';
-import { RADIO } from './tokens';
+import { MOVIMIENTO, RADIO } from './tokens';
 
 /**
  * Hoja inferior: el menú que abren el botón `+` y el de herramientas.
@@ -40,6 +45,14 @@ export function HojaInferior({
 }) {
   const hoja = useRef<BottomSheet>(null);
 
+  // La misma duración y curva para abrir y cerrar, sacadas de los tokens de
+  // movimiento: antes cada hoja usaba el resorte por defecto de la librería, que
+  // no se parecía al resto de la app.
+  const animacion = useBottomSheetTimingConfigs({
+    duration: MOVIMIENTO.hoja,
+    easing: Easing.out(Easing.cubic),
+  });
+
   /* `visible` es la fuente de verdad y viene de la pantalla; la hoja se comanda
      desde ese estado. Al revés —dejar que la hoja mande— se desincroniza
      apenas alguien la cierra arrastrando. */
@@ -69,6 +82,7 @@ export function HojaInferior({
       index={0}
       enablePanDownToClose
       enableDynamicSizing
+      animationConfigs={animacion}
       onClose={onCerrar}
       backdropComponent={fondo}
       backgroundStyle={{ borderTopLeftRadius: RADIO.sheet, borderTopRightRadius: RADIO.sheet }}

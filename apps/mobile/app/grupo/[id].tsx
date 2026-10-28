@@ -9,6 +9,7 @@ import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Estado, Pantalla, TituloConEtiqueta } from '@/ui/kit';
 import { EtiquetaEstado } from '@/ui/severidad';
+import { useRefrescar } from '@/ui/refrescar';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { Superficie } from '@/ui/superficie';
 import { claveColorPorClcr, colorEspina, COLOR_SEVERIDAD, type RangoGravedad } from '@gfh/shared-types';
@@ -35,6 +36,8 @@ export default function DetalleGrupo() {
     queryFn: API.inicio,
   });
 
+  const refresco = useRefrescar([['inicio']]);
+
   const resumen = data?.grupos.find((g) => (sinGrupo ? g.id === null : g.id === id));
   const pacientes = (data?.pacientes ?? []).filter((p) =>
     sinGrupo ? p.grupoId === null : p.grupoId === id,
@@ -44,7 +47,7 @@ export default function DetalleGrupo() {
     <View className="flex-1 bg-paper">
       <EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />
 
-      <Pantalla>
+      <Pantalla onRefrescar={refresco.onRefrescar} refrescando={refresco.refrescando}>
         <ResultadoConsulta
           cargando={isLoading}
           error={error}

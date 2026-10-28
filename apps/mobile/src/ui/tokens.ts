@@ -164,3 +164,24 @@ export const TIPO = {
   /** Rótulo de pestaña. */
   pestana: 13,
 } as const;
+
+/**
+ * Duraciones del movimiento, en ms. El movimiento explica un cambio, no decora:
+ * todo es corto, sin rebotes, y se apaga con «reducir movimiento» del sistema.
+ */
+export const MOVIMIENTO = {
+  /** Respuesta al tacto: el botón o la tarjeta ceden bajo el dedo. */
+  toque: 120,
+  /** Entrada, salida y reacomodo de filas y bloques. */
+  base: 180,
+  /** Avisos que aparecen y se van. */
+  aviso: 220,
+  /** Hoja inferior. */
+  hoja: 260,
+  /** Pulso de la etiqueta cuando cambia la gravedad. */
+  pulso: 110,
+  /** Anillo que se dibuja y cifra que cuenta hasta su valor. */
+  cifra: 550,
+  /** Deslizar una fila hasta abrir o cerrar sus acciones. */
+  gesto: 200,
+} as const;

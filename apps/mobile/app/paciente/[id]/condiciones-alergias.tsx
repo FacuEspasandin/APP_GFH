@@ -11,6 +11,7 @@ import {
 } from '@/dominio/condiciones-alergias';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
+import { PantallaConError } from '@/ui/resultado-consulta';
 import { Boton, Estado, Eyebrow, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
@@ -35,7 +36,7 @@ export default function CondicionesYAlergias() {
   const router = useRouter();
   const qc = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['condiciones-alergias', pacienteId],
     queryFn: () => API.condicionesYAlergias(pacienteId),
     enabled: Boolean(pacienteId),
@@ -82,6 +83,15 @@ export default function CondicionesYAlergias() {
       { text: 'Quitar', style: 'destructive', onPress: accion },
     ]);
 
+  if (error) {
+    return (
+      <PantallaConError
+        encabezado={<EncabezadoConTitulo titulo="Condiciones y Alergias" />}
+        error={error}
+        onReintentar={() => void refetch()}
+      />
+    );
+  }
   if (isLoading) {
     return (
       <View className="flex-1 bg-paper">

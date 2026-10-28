@@ -2,8 +2,9 @@ import { MotiView } from 'moti';
 import { useState, type ReactNode } from 'react';
 import { Platform, Pressable, View, type ViewStyle } from 'react-native';
 
+import { useAnimar } from './animacion';
 import { useTema } from './tema';
-import { FIJO, PALETA } from './tokens';
+import { FIJO, MOVIMIENTO, PALETA } from './tokens';
 
 /**
  * Superficies del sistema, con tres niveles de elevación y respuesta al tacto.
@@ -118,9 +119,9 @@ export function Superficie({
  * Superficie tocable. Se hunde levemente mientras el dedo está apoyado.
  *
  * En web no se anima: `moti` depende de Reanimated, cuyas animaciones no
- * terminan de ejecutarse ahí y dejarían el elemento a media escala.
+ * terminan de ejecutarse ahí y dejarían el elemento a media escala. Tampoco con
+ * «reducir movimiento» activado: ver `useAnimar`.
  */
-const ANIMA = Platform.OS !== 'web';
 
 export function SuperficieTocable({
   children,
@@ -157,6 +158,7 @@ export function SuperficieTocable({
 }) {
   const [presionada, setPresionada] = useState(false);
   const filo = useFilo();
+  const anima = useAnimar();
 
   const contenido = (
     <View
@@ -178,11 +180,11 @@ export function SuperficieTocable({
       className={contenedor}
       style={estiloContenedor}
     >
-      {ANIMA ? (
+      {anima ? (
         <MotiView
           style={{ flex: 1 }}
           animate={{ scale: presionada ? 0.97 : 1, opacity: presionada ? 0.92 : 1 }}
-          transition={{ type: 'timing', duration: 120 }}
+          transition={{ type: 'timing', duration: MOVIMIENTO.toque }}
         >
           {contenido}
         </MotiView>

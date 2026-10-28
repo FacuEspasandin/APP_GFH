@@ -15,6 +15,7 @@ import { Calculadora } from '@/ui/calculadora';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonFormulario } from '@/ui/estados-sistema';
+import { PantallaConError } from '@/ui/resultado-consulta';
 import { aISO, validarFecha } from '@/ui/fecha';
 import { Superficie } from '@/ui/superficie';
 import type { Borrador, Unidades } from '@gfh/shared-types';
@@ -73,7 +74,7 @@ export default function DatosHepaticos() {
   // Se pide el paciente completo y no el cockpit: los cinco criterios son datos
   // crudos que el motor no necesita, y meterlos en el contexto clínico sería
   // ensuciar el puerto del dominio con algo que sólo usa esta pantalla.
-  const { data: paciente, isLoading } = useQuery({
+  const { data: paciente, isLoading, error, refetch } = useQuery({
     queryKey: ['paciente', pacienteId],
     queryFn: () => API.pacienteHepatico(pacienteId),
     enabled: Boolean(pacienteId),
@@ -109,6 +110,15 @@ export default function DatosHepaticos() {
     },
   });
 
+  if (error) {
+    return (
+      <PantallaConError
+        encabezado={<EncabezadoConTitulo titulo="Función Hepática" cierra />}
+        error={error}
+        onReintentar={() => void refetch()}
+      />
+    );
+  }
   if (isLoading || !paciente) {
     return (
       <View className="flex-1 bg-paper">

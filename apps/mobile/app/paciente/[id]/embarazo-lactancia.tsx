@@ -15,6 +15,7 @@ import {
   type EstadoLactancia,
 } from '@/dominio/gestacion';
 import { SkeletonFormulario } from '@/ui/estados-sistema';
+import { PantallaConError } from '@/ui/resultado-consulta';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
@@ -35,7 +36,7 @@ export default function EmbarazoYLactancia() {
   const router = useRouter();
   const qc = useQueryClient();
 
-  const { data: cockpit, isLoading } = useQuery({
+  const { data: cockpit, isLoading, error, refetch } = useQuery({
     queryKey: ['cockpit', pacienteId],
     queryFn: () => API.cockpit(pacienteId),
     enabled: Boolean(pacienteId),
@@ -59,6 +60,15 @@ export default function EmbarazoYLactancia() {
     },
   });
 
+  if (error) {
+    return (
+      <PantallaConError
+        encabezado={<EncabezadoConTitulo titulo="Embarazo y Lactancia" cierra />}
+        error={error}
+        onReintentar={() => void refetch()}
+      />
+    );
+  }
   if (isLoading || !cockpit) {
     return (
       <View className="flex-1 bg-paper">

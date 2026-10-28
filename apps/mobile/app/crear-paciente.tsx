@@ -14,6 +14,7 @@ import { edadDeFecha, validarFecha } from '@/ui/fecha';
 import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto, Chip, Pantalla, BarraAccion } from '@/ui/kit';
 import { ResultadoClcr } from '@/ui/resultado-clcr';
+import { useCadena } from '@/ui/teclado';
 import { useColores } from '@/ui/tema';
 import { OPCIONES_SEXO, RANGOS, type Sexo } from '@gfh/shared-types';
 import { hapticaExito } from '@/ui/haptica';
@@ -34,6 +35,10 @@ export default function CrearPaciente() {
   const router = useRouter();
   const qc = useQueryClient();
   const { data: inicio } = useQuery({ queryKey: ['inicio'], queryFn: API.inicio });
+  // Dos cadenas: nombre → apellido, y altura → peso → creatinina. «Siguiente»
+  // pasa al de al lado; el último de cada una cierra el teclado.
+  const nombres = useCadena(2);
+  const medidas = useCadena(3);
 
   /**
    * El muro va ANTES del formulario, no después de enviarlo.
@@ -156,10 +161,10 @@ export default function CrearPaciente() {
               juntos. Apilados gastaban el doble de alto para nada. */}
           <View className="flex-row gap-3">
             <View className="flex-1">
-              <CampoTexto etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
+              <CampoTexto {...nombres(0)} etiqueta="Nombre" value={c.nombre} onChangeText={campo('nombre')} />
             </View>
             <View className="flex-1">
-              <CampoTexto etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
+              <CampoTexto {...nombres(1)} etiqueta="Apellido" value={c.apellido} onChangeText={campo('apellido')} />
             </View>
           </View>
 
@@ -206,6 +211,7 @@ export default function CrearPaciente() {
           <View className="flex-row gap-2">
             <View className="flex-1">
               <CampoTexto
+                {...medidas(0)}
                 etiqueta="Altura"
                 value={c.alturaCm}
                 onChangeText={campo('alturaCm')}
@@ -217,6 +223,7 @@ export default function CrearPaciente() {
             </View>
             <View className="flex-1">
               <CampoTexto
+                {...medidas(1)}
                 etiqueta="Peso"
                 value={c.pesoKg}
                 onChangeText={campo('pesoKg')}
@@ -228,6 +235,7 @@ export default function CrearPaciente() {
             </View>
             <View className="flex-1">
               <CampoTexto
+                {...medidas(2)}
                 etiqueta="Creatinina"
                 value={c.creatininaMgDl}
                 onChangeText={campo('creatininaMgDl')}

@@ -27,6 +27,7 @@ import { ProveedorAviso } from '@/ui/aviso';
 import { useFuentes } from '@/ui/fuentes';
 import { MenuInferior } from '@/ui/menu-inferior';
 import { activarPantallaCompletaWeb } from '@/ui/pantalla-completa-web';
+import { BarraTeclado } from '@/ui/teclado';
 import { coloresChrome, ProveedorTema, useTema } from '@/ui/tema';
 import { TIPO } from '@/ui/tokens';
 
@@ -304,6 +305,10 @@ function Navegacion() {
 
       {/* Fuera del Stack a propósito: así sobrevive a cualquier navegación. */}
       <MenuInferior />
+
+      {/* La barra «Siguiente · Listo» del teclado numérico de iOS: una sola, la
+          comparten todos los campos. Ver `ui/teclado.tsx`. */}
+      <BarraTeclado />
     </View>
   );
 }

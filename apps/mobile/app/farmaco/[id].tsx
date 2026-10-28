@@ -12,6 +12,7 @@ import { Icono } from '@/ui/iconos';
 import { HojaInferior } from '@/ui/hoja-inferior';
 import { AvisoPeligro, Boton, Chip, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { Pestanas } from '@/ui/pestanas';
+import { useRefrescar } from '@/ui/refrescar';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { SelloSeccion } from '@/ui/monografia';
 import { GrillaRestricciones } from '@/ui/restricciones';
@@ -42,6 +43,10 @@ export default function FichaFarmaco() {
   const router = useRouter();
   const { data, isLoading, error, refetch } = useFicha(id);
   const { data: plan } = usePlan();
+  // Se vuelve a pedir la ficha y, si están a la vista, similares y presentaciones.
+  // Las restricciones NO: abrirlas gasta una consulta del plan gratis (ver
+  // `useDetalleRestriccion`) y refrescar no puede costarle nada al médico.
+  const refresco = useRefrescar([['ficha', id], ['similares'], ['presentaciones'], ['plan']]);
 
   const textoContador = textoCupo(plan);
   const sinCupo = cupoAgotado(plan);
@@ -78,7 +83,7 @@ export default function FichaFarmaco() {
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp />
-      <Pantalla>
+      <Pantalla onRefrescar={refresco.onRefrescar} refrescando={refresco.refrescando}>
         <ResultadoConsulta
           cargando={isLoading}
           error={error}

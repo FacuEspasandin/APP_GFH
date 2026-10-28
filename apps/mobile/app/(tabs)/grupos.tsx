@@ -10,6 +10,7 @@ import { FilaAnimada } from '@/ui/animacion';
 import { BotonMas, EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Estado, Pantalla } from '@/ui/kit';
+import { useRefrescar } from '@/ui/refrescar';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { SuperficieTocable } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
@@ -90,6 +91,7 @@ export function ListaGrupos() {
 export default function Grupos() {
   const router = useRouter();
   const { data: plan } = usePlan();
+  const refresco = useRefrescar([['inicio']]);
   const abrir = (ruta: string) =>
     router.push((esDePago(plan) ? rutaPaywall('grupo') : ruta) as never);
 
@@ -100,7 +102,7 @@ export default function Grupos() {
         derecha={<BotonMas onPress={() => abrir('/crear-grupo')} etiqueta="Crear grupo" />}
       />
 
-      <Pantalla>
+      <Pantalla onRefrescar={refresco.onRefrescar} refrescando={refresco.refrescando}>
         <Text className="mb-4 text-fila font-fuerte text-ink">Mis Grupos</Text>
         <ListaGrupos />
       </Pantalla>

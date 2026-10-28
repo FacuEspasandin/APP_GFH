@@ -7,6 +7,7 @@ import { useFicha } from '@/api/ficha';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Pantalla } from '@/ui/kit';
 import { SelloSeccion, TextoSeccion } from '@/ui/monografia';
+import { useRefrescar } from '@/ui/refrescar';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { Superficie } from '@/ui/superficie';
 
@@ -23,6 +24,8 @@ import { Superficie } from '@/ui/superficie';
 export default function SeccionMonografia() {
   const { id, seccion } = useLocalSearchParams<{ id: string; seccion: string }>();
   const { data, isLoading, error, refetch } = useFicha(id);
+  // La monografía viaja con la ficha: es la misma consulta.
+  const refresco = useRefrescar([['ficha', id]]);
 
   const clave = seccion as ClaveSeccion;
   const meta = SECCIONES_MONOGRAFIA.find((s) => s.clave === clave);
@@ -30,7 +33,7 @@ export default function SeccionMonografia() {
   return (
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo={meta?.titulo ?? 'Monografía'} />
-      <Pantalla>
+      <Pantalla onRefrescar={refresco.onRefrescar} refrescando={refresco.refrescando}>
         <ResultadoConsulta
           cargando={isLoading}
           error={error}

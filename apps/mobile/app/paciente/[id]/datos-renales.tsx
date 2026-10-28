@@ -11,6 +11,7 @@ import {
   procedenciaClcr,
 } from '@/dominio/funcion-renal';
 import { SkeletonFormulario } from '@/ui/estados-sistema';
+import { PantallaConError } from '@/ui/resultado-consulta';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
@@ -34,7 +35,7 @@ export default function DatosRenales() {
   const router = useRouter();
   const qc = useQueryClient();
 
-  const { data: cockpit, isLoading } = useQuery({
+  const { data: cockpit, isLoading, error, refetch } = useQuery({
     queryKey: ['cockpit', pacienteId],
     queryFn: () => API.cockpit(pacienteId),
     enabled: Boolean(pacienteId),
@@ -71,6 +72,15 @@ export default function DatosRenales() {
     },
   });
 
+  if (error) {
+    return (
+      <PantallaConError
+        encabezado={<EncabezadoConTitulo titulo="Función Renal" cierra />}
+        error={error}
+        onReintentar={() => void refetch()}
+      />
+    );
+  }
   if (isLoading || !cockpit) {
     return (
       <View className="flex-1 bg-paper">

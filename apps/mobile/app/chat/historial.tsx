@@ -4,6 +4,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { SkeletonLista } from '@/ui/estados-sistema';
+import { PantallaConError } from '@/ui/resultado-consulta';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { antiguedad } from '@/ui/fecha';
 import { Icono } from '@/ui/iconos';
@@ -22,7 +23,7 @@ export default function HistorialChat() {
   const col = useColores();
   const router = useRouter();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['chat', 'sesiones'],
     queryFn: API.sesionesChat,
   });
@@ -35,6 +36,15 @@ export default function HistorialChat() {
     router.push('/(tabs)/chat?sessionId=nueva' as never);
   };
 
+  if (error) {
+    return (
+      <PantallaConError
+        encabezado={<EncabezadoConTitulo titulo="Conversaciones" />}
+        error={error}
+        onReintentar={() => void refetch()}
+      />
+    );
+  }
   if (isLoading) {
     return (
       <View className="flex-1 bg-paper">

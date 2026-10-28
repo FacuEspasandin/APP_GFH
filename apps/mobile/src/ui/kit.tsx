@@ -1,8 +1,9 @@
-import { forwardRef, type ReactNode } from 'react';
+import { forwardRef, useRef, type ReactNode } from 'react';
 import {
   ActivityIndicator,
+  Animated,
+  Easing,
   Pressable,
-  RefreshControl,
   ScrollView,
   Text,
   TextInput,
@@ -10,8 +11,15 @@ import {
   type TextInputProps,
 } from 'react-native';
 
+import { useAnimar } from './animacion';
 import { hapticaSeleccion } from './haptica';
 import { Icono, type NombreIcono } from './iconos';
+import { ControlRefrescar } from './refrescar';
+import { alEnfocarCampo, ID_BARRA_TECLADO } from './teclado';
+import { MOVIMIENTO } from './tokens';
+
+/** Los teclados sin tecla de retorno en iOS: los que necesitan la barra «Siguiente · Listo». */
+const TECLADO_NUMERICO = new Set(['numeric', 'number-pad', 'decimal-pad', 'phone-pad']);
 import { Superficie, SuperficieTocable } from './superficie';
 import { useColores } from './tema';
 import { COLOR_SEVERIDAD, etiquetaRango, evaluarValor, type Rango } from '@gfh/shared-types';
@@ -45,29 +53,27 @@ export function Pantalla({
    * Deslizar hacia abajo vuelve a pedir los datos.
    *
    * Sólo donde el dato puede cambiar por fuera de lo que hace el médico en esa
-   * pantalla: la lista de pacientes y el cockpit. En un formulario el gesto no
-   * tendría nada que refrescar y ofrecerlo sería prometer algo que no pasa.
+   * pantalla: listas de pacientes y grupos, el cockpit, los hallazgos y la ficha
+   * de un fármaco. En un formulario el gesto no tendría nada que refrescar y
+   * ofrecerlo sería prometer algo que no pasa.
+   *
+   * Las restricciones de un fármaco (renal, hepático, embarazo, lactancia,
+   * interacciones) NO lo ofrecen: abrirlas descuenta una consulta del plan
+   * gratis y su consulta es un POST con efecto, ver `useDetalleRestriccion`.
    */
   onRefrescar?: () => void;
   refrescando?: boolean;
 }) {
-  const col = useColores();
-
   const contenido = scroll ? (
     <ScrollView
       contentContainerClassName="px-margen pb-6 pt-3"
       keyboardShouldPersistTaps="handled"
+      // iOS corre el contenido para que el campo enfocado quede a la vista. En
+      // Android lo hace el sistema (`adjustResize`). Sin esto, un formulario largo
+      // dejaba el campo de abajo tapado por el teclado.
+      automaticallyAdjustKeyboardInsets
       refreshControl={
-        onRefrescar ? (
-          <RefreshControl
-            refreshing={refrescando}
-            onRefresh={onRefrescar}
-            // El color del indicador es el de marca y no el de severidad: esto
-            // es cromo de la app, no información clínica.
-            tintColor={col.primary}
-            colors={[col.primary]}
-          />
-        ) : undefined
+        onRefrescar ? <ControlRefrescar refrescando={refrescando} onRefrescar={onRefrescar} /> : undefined
       }
     >
       {children}
@@ -166,8 +172,23 @@ export function Boton({
     tamano === 'grande'
       ? 'h-14 w-full gap-3 rounded-full'
       : tamano === 'chico'
-        ? 'h-10 gap-2 self-start rounded-full px-6'
+        ? 'h-10 gap-2 rounded-full px-6'
         : 'h-12 rounded-control';
+
+  // Cede 3% bajo el dedo y vuelve. Sutil a propósito: en una herramienta clínica
+  // un rebote grande se vuelve ruido a la décima vez. Es la misma respuesta que
+  // las tarjetas tocables (`SuperficieTocable`).
+  const anima = useAnimar();
+  const escala = useRef(new Animated.Value(1)).current;
+  const hundir = (abajo: boolean) => {
+    if (!anima) return;
+    Animated.timing(escala, {
+      toValue: abajo ? 0.97 : 1,
+      duration: MOVIMIENTO.toque,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: true,
+    }).start();
+  };
   const claseTexto =
     tamano === 'grande'
       ? 'text-fila font-fuerte'
@@ -176,24 +197,30 @@ export function Boton({
         : 'text-body font-fuerte';
 
   return (
-    <Pressable
-      onPress={onPress}
-      disabled={cargando || deshabilitado}
-      accessibilityRole="button"
-      className={`flex-row items-center justify-center ${forma} ${fondo} ${borde}`}
-      style={{ opacity: cargando || deshabilitado ? 0.55 : 1 }}
+    <Animated.View
+      style={{ transform: [{ scale: escala }], alignSelf: tamano === 'chico' ? 'flex-start' : 'stretch' }}
     >
-      {cargando ? (
-        <ActivityIndicator color={variante === 'primario' ? col.onPrimary : col.primary} />
-      ) : (
-        <>
-          {icono ? <Icono nombre={icono} tamano={tamano === 'chico' ? 16 : 18} color={colorTexto} /> : null}
-          <Text className={claseTexto} style={{ color: colorTexto }}>
-            {children}
-          </Text>
-        </>
-      )}
-    </Pressable>
+      <Pressable
+        onPress={onPress}
+        onPressIn={() => hundir(true)}
+        onPressOut={() => hundir(false)}
+        disabled={cargando || deshabilitado}
+        accessibilityRole="button"
+        className={`flex-row items-center justify-center ${forma} ${fondo} ${borde}`}
+        style={{ opacity: cargando || deshabilitado ? 0.55 : 1 }}
+      >
+        {cargando ? (
+          <ActivityIndicator color={variante === 'primario' ? col.onPrimary : col.primary} />
+        ) : (
+          <>
+            {icono ? <Icono nombre={icono} tamano={tamano === 'chico' ? 16 : 18} color={colorTexto} /> : null}
+            <Text className={claseTexto} style={{ color: colorTexto }}>
+              {children}
+            </Text>
+          </>
+        )}
+      </Pressable>
+    </Animated.View>
   );
 }
 
@@ -260,7 +287,17 @@ export const CampoTexto = forwardRef<
             : 'h-12 rounded-control border bg-surface px-3.5 text-body text-ink'
         }
         style={{ borderColor: borde, borderWidth: v.estado === 'ok' ? 1 : 1.5 }}
+        // «Listo» y no «return»: en un campo de una línea no hay nada que
+        // agregar abajo. Un formulario encadenado lo pisa (ver `useCadena`).
+        returnKeyType={props.multiline ? undefined : 'done'}
+        // El teclado numérico de iOS no tiene tecla de retorno: la barra de arriba
+        // es la única forma de cerrarlo o de pasar al campo siguiente.
+        inputAccessoryViewID={TECLADO_NUMERICO.has(props.keyboardType ?? '') ? ID_BARRA_TECLADO : undefined}
         {...props}
+        onFocus={(e) => {
+          alEnfocarCampo();
+          props.onFocus?.(e);
+        }}
       />
       {pie ? (
         <Text

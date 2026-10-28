@@ -1,5 +1,8 @@
-import { Text, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Animated, Easing, Text, View } from 'react-native';
 
+import { useAnimar } from './animacion';
+import { MOVIMIENTO } from './tokens';
 import {
   claveColorPorConteo,
   colorEspina,
@@ -47,15 +50,47 @@ export function BadgeConteo({ n }: { n: number }) {
  *
  * Es de una sola línea y no se achica ni se parte (`flex-none`): su lugar es
  * siempre la derecha del título, ver `TituloConEtiqueta` en `kit.tsx`.
+ *
+ * Cuando la gravedad CAMBIA con la pastilla ya en pantalla —se suspendió un
+ * fármaco, se aceptó una alternativa, se refrescó— hace un pulso corto. Es lo
+ * único que se mueve: el color no se anima nunca de un tono a otro, que
+ * insinuaría una gravedad intermedia que no existe. Al aparecer por primera vez
+ * no pulsa.
  */
 export function EtiquetaEstado({ rango }: { rango: RangoGravedad }) {
   const color = colorEspina(rango);
+  const anima = useAnimar();
+  const escala = useRef(new Animated.Value(1)).current;
+  const previo = useRef(rango);
+
+  useEffect(() => {
+    if (previo.current === rango) return;
+    previo.current = rango;
+    if (!anima) return;
+    Animated.sequence([
+      Animated.timing(escala, {
+        toValue: 1.12,
+        duration: MOVIMIENTO.pulso,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }),
+      Animated.timing(escala, {
+        toValue: 1,
+        duration: MOVIMIENTO.pulso * 1.5,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [rango, anima, escala]);
+
   return (
-    <View className="flex-none flex-row items-center rounded-full px-2.5 py-1" style={{ backgroundColor: color }}>
-      <Text numberOfLines={1} className="text-eyebrow font-fuerte uppercase text-blanco">
-        {RANGO_ETIQUETA[rango]}
-      </Text>
-    </View>
+    <Animated.View style={{ transform: [{ scale: escala }] }}>
+      <View className="flex-none flex-row items-center rounded-full px-2.5 py-1" style={{ backgroundColor: color }}>
+        <Text numberOfLines={1} className="text-eyebrow font-fuerte uppercase text-blanco">
+          {RANGO_ETIQUETA[rango]}
+        </Text>
+      </View>
+    </Animated.View>
   );
 }
 

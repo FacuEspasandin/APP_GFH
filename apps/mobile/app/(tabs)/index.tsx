@@ -15,6 +15,7 @@ import { Icono } from '@/ui/iconos';
 import { CampoTexto, Estado, Eyebrow, Pantalla, TituloConEtiqueta } from '@/ui/kit';
 import { EtiquetaEstado } from '@/ui/severidad';
 import { Pestanas } from '@/ui/pestanas';
+import { useRefrescar } from '@/ui/refrescar';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { Superficie } from '@/ui/superficie';
 import { ListaGrupos } from './grupos';
@@ -49,10 +50,12 @@ export default function Pacientes() {
   // Una sola consulta, sin `q`: `/inicio` ya trae la lista entera con el motor
   // corrido —es de donde salen los hallazgos de cada fila— así que filtrar acá
   // no le esconde nada al médico y sale desde la primera letra.
-  const { data, isLoading, error, refetch, isRefetching } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['inicio'],
     queryFn: API.inicio,
   });
+  // Por prefijo: alcanza también a la vista "Por grupo", que pide `['inicio', '']`.
+  const refresco = useRefrescar([['inicio']]);
 
   // Con el plan gratis lleno, "Nuevo paciente" lleva al paywall directo. El
   // formulario también se protege solo, pero mandar ahí para que rebote deja
@@ -82,7 +85,7 @@ export default function Pacientes() {
       <Stack.Screen options={{ headerShown: false }} />
       <EncabezadoApp ocultarVolver />
 
-      <Pantalla onRefrescar={() => void refetch()} refrescando={isRefetching}>
+      <Pantalla onRefrescar={refresco.onRefrescar} refrescando={refresco.refrescando}>
         <View className="mb-3 flex-row items-center justify-between">
           <Text className="text-display font-extra" style={{ color: col.primary }}>
             Pacientes

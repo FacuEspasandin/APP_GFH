@@ -5,6 +5,7 @@ import { Alert, Pressable, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { SkeletonFormulario } from '@/ui/estados-sistema';
+import { PantallaConError } from '@/ui/resultado-consulta';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { aTexto, validarFecha } from '@/ui/fecha';
@@ -23,7 +24,7 @@ export default function EditarPaciente() {
   const col = useColores();
   const qc = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['paciente', id],
     queryFn: () => API.paciente(id),
     enabled: Boolean(id),
@@ -84,6 +85,15 @@ export default function EditarPaciente() {
     },
   });
 
+  if (error) {
+    return (
+      <PantallaConError
+        encabezado={<EncabezadoApp derecha={<BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />} />}
+        error={error}
+        onReintentar={() => void refetch()}
+      />
+    );
+  }
   if (isLoading || !data) {
     return (
       <View className="flex-1 bg-paper">

@@ -3,6 +3,8 @@ import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
+import { decimalesDe, useInterpolado } from './animacion';
+
 /**
  * Una cifra dibujada contra su escala.
  *
@@ -59,7 +61,12 @@ export function Anillo({
   const centro = tamano / 2;
   const circunferencia = 2 * Math.PI * radio;
 
-  const proporcion = valor === null ? 0 : Math.min(valor, maximo) / maximo;
+  // El arco se dibuja al abrir y se desliza hacia el valor nuevo cuando cambia.
+  // El número, en cambio, cuenta sólo al abrir: mientras se escribe en una
+  // calculadora tiene que mostrar el valor exacto ya, no uno que lo alcanza
+  // medio segundo después.
+  const proporcion = useInterpolado(valor === null ? 0 : Math.min(valor, maximo) / maximo);
+  const contado = useInterpolado(valor ?? 0, { soloAlMontar: true });
   const pintado = circunferencia * proporcion;
 
   return (
@@ -126,7 +133,7 @@ export function Anillo({
             fontVariant: ['tabular-nums'],
           }}
         >
-          {valor ?? '—'}
+          {valor === null ? '—' : contado.toFixed(decimalesDe(valor))}
         </Text>
         <Text
           className="font-sans text-ink-suave"

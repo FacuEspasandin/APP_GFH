@@ -17,10 +17,13 @@ import {
   vistaDesdeParams,
   type FilaAgrupada,
 } from '@/dominio/hallazgos';
+import { FilaAnimada } from '@/ui/animacion';
 import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { Icono } from '@/ui/iconos';
-import { AvisoPeligro, Estado, Pantalla, TituloConEtiqueta } from '@/ui/kit';
+import { AvisoPeligro, Pantalla, TituloConEtiqueta } from '@/ui/kit';
+import { ControlRefrescar, useRefrescar } from '@/ui/refrescar';
+import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { Superficie } from '@/ui/superficie';
 import { EtiquetaEstado } from '@/ui/severidad';
 import {
@@ -57,11 +60,12 @@ export default function Hallazgos() {
   const vista = vistaDesdeParams(params);
   const router = useRouter();
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['cockpit', id],
     queryFn: () => API.cockpit(id),
     enabled: Boolean(id),
   });
+  const refresco = useRefrescar([['cockpit', id]]);
 
   const derecha = <BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />;
 
@@ -78,7 +82,15 @@ export default function Hallazgos() {
       <View className="flex-1 bg-paper">
         <EncabezadoApp derecha={derecha} />
         <Pantalla>
-          <Estado titulo="No se pudo cargar" detalle={String((error as Error)?.message ?? '')} />
+          {/* Con "reintentar", y distinguiendo «sin señal» de «falló del otro
+              lado»: antes el error quedaba sin salida. */}
+          <ResultadoConsulta
+            cargando={false}
+            error={error ?? new Error('No se pudo cargar.')}
+            onReintentar={() => void refetch()}
+          >
+            {null}
+          </ResultadoConsulta>
         </Pantalla>
       </View>
     );
@@ -124,7 +136,13 @@ export default function Hallazgos() {
   return (
     <View className="flex-1 bg-paper">
       <EncabezadoApp derecha={derecha} />
-      <ScrollView contentContainerClassName="px-margen pb-6 pt-3" keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerClassName="px-margen pb-6 pt-3"
+        keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <ControlRefrescar refrescando={refresco.refrescando} onRefrescar={refresco.onRefrescar} />
+        }
+      >
         <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
         <Text className="mb-4 mt-1 font-sans text-meta leading-5 text-ink-suave">
           {descripcionDeVista(vista)}
@@ -177,15 +195,16 @@ export default function Hallazgos() {
         </Superficie>
       ) : null}
 
-      {agruparHallazgos(lista).map((f) => (
-        <FilaHallazgo
-          key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave}
-          fila={f}
-          nombres={nombres}
-          onAlternativas={(pid) =>
-            router.push(`/paciente/${id}/alternativas?prescripcion=${pid}` as never)
-          }
-        />
+      {agruparHallazgos(lista).map((f, i) => (
+        <FilaAnimada key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} indice={i}>
+          <FilaHallazgo
+            fila={f}
+            nombres={nombres}
+            onAlternativas={(pid) =>
+              router.push(`/paciente/${id}/alternativas?prescripcion=${pid}` as never)
+            }
+          />
+        </FilaAnimada>
       ))}
 
       {avisosRelevantes.map((a) => (
@@ -221,6 +240,7 @@ function PorCategoria({
 }) {
   const col = useColores();
   const router = useRouter();
+  const refresco = useRefrescar([['cockpit', pacienteId]]);
   const pager = useRef<PagerView>(null);
   const arranque = Math.max(0, CATEGORIA_HALLAZGO.indexOf(inicial));
   const [actual, setActual] = useState(arranque);
@@ -293,7 +313,12 @@ function PorCategoria({
 
           return (
             <View key={cat} collapsable={false}>
-              <ScrollView contentContainerClassName="px-margen pb-6 pt-3">
+              <ScrollView
+                contentContainerClassName="px-margen pb-6 pt-3"
+                refreshControl={
+                  <ControlRefrescar refrescando={refresco.refrescando} onRefrescar={refresco.onRefrescar} />
+                }
+              >
                 <Text className="text-fila font-fuerte text-ink">{TITULO_CATEGORIA[cat]}</Text>
                 <Text className="mb-4 mt-1 font-sans text-meta leading-5 text-ink-suave">
                   {descripcionDeVista(suVista)}
@@ -307,13 +332,10 @@ function PorCategoria({
                   </Superficie>
                 ) : null}
 
-                {agruparHallazgos(lista).map((f) => (
-                  <FilaHallazgo
-                    key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave}
-                    fila={f}
-                    nombres={nombres}
-                    onAlternativas={onAlternativas}
-                  />
+                {agruparHallazgos(lista).map((f, i) => (
+                  <FilaAnimada key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} indice={i}>
+                    <FilaHallazgo fila={f} nombres={nombres} onAlternativas={onAlternativas} />
+                  </FilaAnimada>
                 ))}
 
                 {avisos.map((a) => (

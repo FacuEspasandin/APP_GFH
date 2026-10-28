@@ -6,6 +6,7 @@ import * as API from '@/api/endpoints';
 import { presentarCentroDeCliente } from '@/api/revenuecat';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
+import { PantallaConError } from '@/ui/resultado-consulta';
 import { AvisoNeutro, Boton, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
@@ -23,11 +24,20 @@ const TEXTO: Record<Estado['estado'], string> = {
 /** Facturación (6.6). El estado lo define la tienda; acá sólo se lee. */
 export default function Suscripcion() {
   const router = useRouter();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['suscripcion'],
     queryFn: API.estadoSuscripcion,
   });
 
+  if (error) {
+    return (
+      <PantallaConError
+        encabezado={<EncabezadoConTitulo titulo="Suscripción" />}
+        error={error}
+        onReintentar={() => void refetch()}
+      />
+    );
+  }
   if (isLoading) {
     return (
       <View className="flex-1 bg-paper">
