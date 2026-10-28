@@ -39,6 +39,11 @@ jobs:
 
       - run: pnpm test
 
+      # Que no vuelvan los colores, sombras y tamaños escritos a mano, ni clases de
+      # Tailwind que no existen (no hacen nada y nadie se entera).
+      - run: node scripts/auditar-visual.mjs --estricto
+      - run: node scripts/clases-inexistentes.cjs
+
   auditoria-de-dependencias:
     runs-on: ubuntu-latest
     timeout-minutes: 10

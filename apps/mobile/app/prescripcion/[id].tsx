@@ -5,9 +5,9 @@ import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
-import { hapticaExito, hapticaSeleccion } from '@/ui/haptica';
+import { hapticaExito } from '@/ui/haptica';
 import { Icono } from '@/ui/iconos';
-import { Boton, CampoTexto, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Chip, Segmentado } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { viaLegible } from '@gfh/shared-types';
@@ -103,33 +103,12 @@ export default function EditarPrescripcion() {
         </Superficie>
 
         <Text className="mb-2 text-fila font-medio text-ink">Estado de la prescripción</Text>
-        <View
-          className="mb-2 flex-row rounded-lg border p-1"
-          style={{ backgroundColor: col.surfaceAlt, borderColor: col.line }}
-        >
-          {ESTADOS.map((e) => {
-            const activo = estadoSel === e.valor;
-            return (
-              <Pressable
-                key={e.valor}
-                onPress={() => {
-                  hapticaSeleccion();
-                  setEstadoSel(e.valor);
-                }}
-                accessibilityRole="radio"
-                accessibilityState={{ selected: activo }}
-                className="flex-1 items-center rounded-md py-2"
-                style={{ backgroundColor: activo ? col.primary : 'transparent' }}
-              >
-                <Text
-                  className={activo ? 'text-body font-medio' : 'font-sans text-body'}
-                  style={{ color: activo ? col.onPrimary : col.inkSuave }}
-                >
-                  {e.etiqueta}
-                </Text>
-              </Pressable>
-            );
-          })}
+        <View className="mb-2">
+          <Segmentado
+            opciones={ESTADOS.map((e) => ({ valor: e.valor, etiqueta: e.etiqueta }))}
+            valor={estadoSel}
+            onCambiar={setEstadoSel}
+          />
         </View>
         {estadoSel !== 'ACTIVO' ? (
           <Text className="mb-6 font-sans text-meta leading-4 text-ink-suave">

@@ -4,7 +4,7 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } fro
 
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
-import { CampoTexto } from '@/ui/kit';
+import { CampoTexto, Segmentado } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import {
@@ -402,31 +402,15 @@ function SelectorUnidad({
   activa: UnidadLipidos;
   onElegir: (u: UnidadLipidos) => void;
 }) {
-  const col = useColores();
-
   return (
-    <View className="flex-row overflow-hidden rounded border border-line">
-      {(['mg/dL', 'mmol/L'] as const).map((u, i) => (
-        <Pressable
-          key={u}
-          onPress={() => onElegir(u)}
-          accessibilityRole="button"
-          accessibilityState={{ selected: u === activa }}
-          className="px-2.5 py-1"
-          style={{
-            backgroundColor: u === activa ? col.primary : col.surface,
-            borderLeftWidth: i === 0 ? 0 : 1,
-            borderLeftColor: col.line,
-          }}
-        >
-          <Text
-            className="font-mono text-eyebrow"
-            style={{ color: u === activa ? col.onPrimary : col.inkSuave }}
-          >
-            {u}
-          </Text>
-        </Pressable>
-      ))}
-    </View>
+    <Segmentado
+      compacto
+      opciones={[
+        { valor: 'mg/dL', etiqueta: 'mg/dL' },
+        { valor: 'mmol/L', etiqueta: 'mmol/L' },
+      ]}
+      valor={activa}
+      onCambiar={onElegir}
+    />
   );
 }

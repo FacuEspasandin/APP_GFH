@@ -274,16 +274,27 @@ export const CampoTexto = forwardRef<
   );
 });
 
+/**
+ * Chip: una opción que se prende o se apaga.
+ *
+ *   suave   Varias a la vez (filtros que se suman). Activo = fondo claro de marca.
+ *   solido  Una sola entre varias (filtro de categoría, umbral de edad). Activo = verde de marca.
+ *
+ * Siempre píldora; el área tocable se agranda para llegar a 44 px.
+ */
 export function Chip({
   texto,
   activo,
   onPress,
+  variante = 'suave',
 }: {
   texto: string;
   activo?: boolean;
   onPress?: () => void;
+  variante?: 'suave' | 'solido';
 }) {
   const col = useColores();
+  const solido = variante === 'solido';
 
   return (
     <Pressable
@@ -296,21 +307,75 @@ export function Chip({
           : undefined
       }
       disabled={!onPress}
-      accessibilityRole={onPress ? 'button' : undefined}
+      hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
+      accessibilityRole={onPress ? (solido ? 'radio' : 'button') : undefined}
       accessibilityState={{ selected: activo }}
       className="rounded-full border px-3 py-1.5"
       style={{
-        backgroundColor: activo ? col.primaryLight : col.surface,
+        backgroundColor: activo ? (solido ? col.primary : col.primaryLight) : col.surface,
         borderColor: activo ? col.primary : col.line,
       }}
     >
       <Text
         className="text-meta font-medio"
-        style={{ color: activo ? col.primary : col.inkSuave }}
+        style={{ color: activo ? (solido ? col.onPrimary : col.primary) : col.inkSuave }}
       >
         {texto}
       </Text>
     </Pressable>
+  );
+}
+
+/**
+ * Segmentado: dos o tres opciones excluyentes en un solo bloque (estado de una
+ * prescripción, unidad de un análisis). El segmento activo va en verde de marca.
+ *
+ * `compacto` para un selector chico dentro de un formulario; sin él ocupa todo
+ * el ancho y las opciones se reparten por igual.
+ */
+export function Segmentado<T extends string>({
+  opciones,
+  valor,
+  onCambiar,
+  compacto,
+}: {
+  opciones: readonly { valor: T; etiqueta: string }[];
+  valor: T;
+  onCambiar: (v: T) => void;
+  compacto?: boolean;
+}) {
+  const col = useColores();
+
+  return (
+    <View
+      className={`rounded-chip border p-1 flex-row ${compacto ? 'self-start' : ''}`}
+      style={{ backgroundColor: col.surfaceAlt, borderColor: col.line, gap: 2 }}
+    >
+      {opciones.map((o) => {
+        const activo = o.valor === valor;
+        return (
+          <Pressable
+            key={o.valor}
+            onPress={() => {
+              hapticaSeleccion();
+              onCambiar(o.valor);
+            }}
+            hitSlop={compacto ? { top: 6, bottom: 6 } : undefined}
+            accessibilityRole="radio"
+            accessibilityState={{ selected: activo }}
+            className={`items-center rounded-chip ${compacto ? 'px-3.5 py-1.5' : 'flex-1 py-2'}`}
+            style={{ backgroundColor: activo ? col.primary : 'transparent' }}
+          >
+            <Text
+              className={`${compacto ? 'text-meta' : 'text-body'} ${activo ? 'font-medio' : 'font-sans'}`}
+              style={{ color: activo ? col.onPrimary : col.inkSuave }}
+            >
+              {o.etiqueta}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
   );
 }
 

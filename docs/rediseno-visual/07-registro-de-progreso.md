@@ -8,11 +8,11 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 |---|---|---|---|---|
 | 0 · Línea base | hecha | 2026-10-27 | `rediseno-visual/fase-1` | Sin capturas «antes» (se revisó por código). Línea base en `linea-base.json`. |
 | 1 · Tokens única fuente | hecha, sin commit | 2026-10-27 | `rediseno-visual/fase-1` | Pendiente: `fontSize`/texto < 12 px (Fase 2) y pasar `theme.extend` a `theme` (ver pendientes). |
-| 2 · Escala tipográfica | pendiente | | | |
-| 3 · Superficies, radios, sombras | parcial | 2026-10-27 | `rediseno-visual/fase-1` | Hecho: sombras (valores del paquete), tarjetas con borde → `Superficie`, cero sombras a mano. Falta: radios 20/28 y espaciado. |
-| 4 · Kit de piezas | pendiente | | | |
+| 2 · Escala tipográfica | hecha | 2026-10-28 | main | Escala nueva, mínimo 12 px, Inter 500 y 800. |
+| 3 · Superficies, radios, sombras | hecha | 2026-10-27 | `rediseno-visual/fase-1` | Hecho: sombras (valores del paquete), tarjetas con borde → `Superficie`, cero sombras a mano. Radios 10/14/20/24/28 y margen 18 aplicados el 28/10. |
+| 4 · Kit de piezas | parcial | 2026-10-28 | main | Hechas: EtiquetaEstado, TituloConEtiqueta, EncabezadoModal, Chip suave/sólido, Segmentado, AvisoPeligro, BarraAccion, EncabezadoHerramienta. Falta /dev/componentes. |
 | 5 · Pantallas por familias | pendiente | | | |
-| 6 · Cierre visual | pendiente | | | |
+| 6 · Cierre visual | parcial | 2026-10-28 | main | Auditoría estricta en CI. Falta pasada de accesibilidad y mirar en teléfono. |
 | Etapa B · Eficiencia | no iniciada | | | |
 
 ## Decisiones abiertas para la persona
@@ -39,6 +39,7 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 |---|---|---|---|---|---|---|---|
 | 2026-10-27 | base | 218 | 64 | 87 | 16 | 75 | 52 % |
 | 2026-10-27 | fase 1 | 0 | 0 | 2 | 8 | 14 | 87 % |
+| 2026-10-28 | escala | 0 | 0 | 0 | 0 | 13 | 87 % |
 
 ## Pantallas revisadas
 

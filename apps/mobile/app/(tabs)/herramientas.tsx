@@ -23,7 +23,7 @@ import { esDePago, rutaHerramienta } from '@/dominio/plan-gratis';
 import { mostrarRecientes, recientesVigentes } from '@/dominio/recientes';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
-import { CampoTexto, Eyebrow, Pantalla } from '@/ui/kit';
+import { CampoTexto, Eyebrow, Pantalla, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
@@ -186,52 +186,20 @@ function FilaChips({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      className="-mx-4 mb-3.5 grow-0"
+      className="-mx-margen mb-3.5 grow-0"
       contentContainerClassName="gap-1.5 px-margen"
     >
-      <ChipFiltro texto="Todas" activo={activa === null} onPress={() => onElegir(null)} />
+      <Chip variante="solido" texto="Todas" activo={activa === null} onPress={() => onElegir(null)} />
       {categorias.map((c) => (
-        <ChipFiltro
+        <Chip
           key={c}
+          variante="solido"
           texto={NOMBRE_CATEGORIA[c]}
           activo={activa === c}
           onPress={() => onElegir(c)}
         />
       ))}
     </ScrollView>
-  );
-}
-
-function ChipFiltro({
-  texto,
-  activo,
-  onPress,
-}: {
-  texto: string;
-  activo: boolean;
-  onPress: () => void;
-}) {
-  const col = useColores();
-
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityState={{ selected: activo }}
-      className="rounded-chip px-3.5 py-2"
-      style={{
-        backgroundColor: activo ? col.primary : col.surface,
-        borderWidth: 1,
-        borderColor: activo ? col.primary : col.line,
-      }}
-    >
-      <Text
-        className={activo ? 'text-meta font-medio' : 'font-sans text-meta'}
-        style={{ color: activo ? col.onPrimary : col.inkSuave }}
-      >
-        {texto}
-      </Text>
-    </Pressable>
   );
 }
 

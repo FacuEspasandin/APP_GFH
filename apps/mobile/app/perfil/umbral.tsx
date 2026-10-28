@@ -1,11 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as API from '@/api/endpoints';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { Icono } from '@/ui/iconos';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
-import { Pantalla } from '@/ui/kit';
+import { Pantalla, Chip } from '@/ui/kit';
 import { useColores, useTema } from '@/ui/tema';
 
 const OPCIONES = [60, 65, 70, 75, 80];
@@ -43,29 +43,9 @@ export default function Umbral() {
         </Text>
 
         <View className="flex-row flex-wrap gap-2">
-          {OPCIONES.map((n) => {
-            const activo = actual === n;
-            return (
-              <Pressable
-                key={n}
-                onPress={() => guardar(n)}
-                accessibilityRole="radio"
-                accessibilityState={{ selected: activo }}
-                className="rounded-full border px-6 py-2.5"
-                style={{
-                  backgroundColor: activo ? col.primary : col.surface,
-                  borderColor: activo ? col.primary : col.line,
-                }}
-              >
-                <Text
-                  className="text-meta font-medio"
-                  style={{ color: activo ? col.onPrimary : col.ink }}
-                >
-                  {n}
-                </Text>
-              </Pressable>
-            );
-          })}
+          {OPCIONES.map((n) => (
+            <Chip key={n} texto={String(n)} variante="solido" activo={actual === n} onPress={() => guardar(n)} />
+          ))}
         </View>
 
         <View
