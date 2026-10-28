@@ -13,6 +13,7 @@ import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { OPCIONES_SEXO, type Sexo } from '@gfh/shared-types';
+import { hapticaExito } from '@/ui/haptica';
 
 
 /** Editar y eliminar paciente (2.9). */
@@ -63,6 +64,7 @@ export default function EditarPaciente() {
         ...(c.alturaCm.trim() ? { alturaCm: Number(c.alturaCm.replace(',', '.')) } : {}),
       }),
     onSuccess: async () => {
+      hapticaExito();
       await qc.invalidateQueries({ queryKey: ['inicio'] });
       await qc.invalidateQueries({ queryKey: ['cockpit', id] });
       router.back();
@@ -72,6 +74,7 @@ export default function EditarPaciente() {
   const eliminar = useMutation({
     mutationFn: () => API.borrarPaciente(id),
     onSuccess: async () => {
+      hapticaExito();
       await qc.invalidateQueries({ queryKey: ['inicio'] });
       // Borrar libera cupo del plan gratis: sin invalidar esto, "Nuevo
       // paciente" seguiría mandando al paywall con el conteo viejo.

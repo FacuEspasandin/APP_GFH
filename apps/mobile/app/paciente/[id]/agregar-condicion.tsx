@@ -10,6 +10,7 @@ import { aISO, validarFecha } from '@/ui/fecha';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
+import { hapticaExito } from '@/ui/haptica';
 
 /** Agregar condición clínica (3.4.1). */
 export default function AgregarCondicion() {
@@ -36,6 +37,7 @@ export default function AgregarCondicion() {
         ...(fechaDiagnostico ? { fechaDiagnostico } : {}),
       }),
     onSuccess: async () => {
+      hapticaExito();
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       router.back();
     },

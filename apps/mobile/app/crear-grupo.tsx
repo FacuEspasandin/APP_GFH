@@ -8,6 +8,7 @@ import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { CampoTexto, Pantalla } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
+import { hapticaExito } from '@/ui/haptica';
 
 /** Crear grupo (2.4). Un grupo es organización libre: no tiene semántica clínica. */
 export default function CrearGrupo() {
@@ -25,6 +26,7 @@ export default function CrearGrupo() {
     try {
       await API.crearGrupo(nombre.trim());
       await qc.invalidateQueries({ queryKey: ['inicio'] });
+      hapticaExito();
       router.back();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'No se pudo crear el grupo.');

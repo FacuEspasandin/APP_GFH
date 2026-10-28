@@ -118,7 +118,7 @@ export default function Paywall() {
         await queryClient.invalidateQueries({ queryKey: ['suscripcion'] });
         cerrar();
       } else if (resultado === PAYWALL_RESULT.ERROR) {
-        avisar('No se pudo abrir la compra. Probá de nuevo en un momento.');
+        avisar('No se pudo abrir la compra. Probá de nuevo en un momento.', 'error');
       }
       // CANCELLED y NOT_PRESENTED: el médico se queda en esta pantalla, sin aviso.
     } finally {

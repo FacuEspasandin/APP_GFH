@@ -18,6 +18,7 @@ import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { aISO, validarFecha } from '@/ui/fecha';
 import { Superficie } from '@/ui/superficie';
 import type { Borrador, Unidades } from '@gfh/shared-types';
+import { hapticaExito } from '@/ui/haptica';
 
 /**
  * Lo que hace falta de `GET /pacientes/:id`. Los tres primeros son `Decimal` en
@@ -100,6 +101,7 @@ export default function DatosHepaticos() {
       });
     },
     onSuccess: async () => {
+      hapticaExito();
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       await qc.invalidateQueries({ queryKey: ['historial', pacienteId] });
       await qc.invalidateQueries({ queryKey: ['inicio'] });

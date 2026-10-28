@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useRef, useState, type ReactNod
 import { Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { hapticaSeleccion } from './haptica';
+import { hapticaAdvertencia, hapticaExito, hapticaSeleccion } from './haptica';
 import { estiloSombra } from './superficie';
 import { FIJO } from './tokens';
 
@@ -31,8 +31,11 @@ const MS_VISIBLE = 2600;
 /** Alto del encabezado de `Stack`, para que el aviso caiga debajo y no encima. */
 const ALTO_ENCABEZADO = 52;
 
+/** `exito` confirma algo guardado; `error` avisa que algo no salió; `info` es neutro. */
+export type TipoAviso = 'info' | 'exito' | 'error';
+
 interface Contexto {
-  avisar: (texto: string) => void;
+  avisar: (texto: string, tipo?: TipoAviso) => void;
 }
 
 const ContextoAviso = createContext<Contexto>({ avisar: () => {} });
@@ -46,12 +49,14 @@ export function ProveedorAviso({ children }: { children: ReactNode }) {
   const reloj = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inset = useSafeAreaInsets();
 
-  const avisar = useCallback((t: string) => {
+  const avisar = useCallback((t: string, tipo: TipoAviso = 'info') => {
     // Un aviso nuevo pisa al anterior en vez de encolarse: dos carteles
     // seguidos obligan a leer el segundo a las apuradas, y el que importa
     // siempre es el último.
     if (reloj.current) clearTimeout(reloj.current);
-    hapticaSeleccion();
+    if (tipo === 'exito') hapticaExito();
+    else if (tipo === 'error') hapticaAdvertencia();
+    else hapticaSeleccion();
     setTexto(t);
     reloj.current = setTimeout(() => setTexto(null), MS_VISIBLE);
   }, []);

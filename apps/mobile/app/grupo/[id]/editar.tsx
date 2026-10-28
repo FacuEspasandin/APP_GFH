@@ -9,6 +9,7 @@ import { EncabezadoApp } from '@/ui/encabezado-app';
 import { AvisoPeligro, Boton, CampoTexto, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { hapticaExito } from '@/ui/haptica';
 
 /**
  * Renombrar o eliminar un grupo (2.7 y 2.8).
@@ -36,15 +37,17 @@ export default function EditarGrupo() {
   const renombrar = useMutation({
     mutationFn: () => API.renombrarGrupo(id, nombre.trim()),
     onSuccess: async () => {
+      hapticaExito();
       await invalidar();
       router.back();
-      avisar('Grupo renombrado');
+      avisar('Grupo renombrado', 'exito');
     },
   });
 
   const eliminar = useMutation({
     mutationFn: () => API.borrarGrupo(id),
     onSuccess: async () => {
+      hapticaExito();
       await invalidar();
       // Dos veces: se sale de esta pantalla y del detalle del grupo, que ya no
       // existe. Quedarse ahí mostraría un grupo borrado.

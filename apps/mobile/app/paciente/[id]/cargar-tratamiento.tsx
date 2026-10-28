@@ -20,6 +20,7 @@ import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD, VIAS_OFRECIDAS, viaCorta } from '@gfh/shared-types';
+import { hapticaExito } from '@/ui/haptica';
 
 /** Cerrar + título, blanco — flujo lineal, sin la marca "GFH" ni la barra
  *  inferior (ver `SIN_MENU_SUBRUTA_PACIENTE` en `menu-inferior.tsx`). */
@@ -209,6 +210,7 @@ export default function CargarTratamiento() {
       }
     },
     onSuccess: async () => {
+      hapticaExito();
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       router.back();
     },

@@ -8,6 +8,7 @@ import { Icono } from '@/ui/iconos';
 import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { hapticaExito } from '@/ui/haptica';
 
 const VERSION_DISCLAIMER = '1.0';
 
@@ -29,6 +30,7 @@ export default function DisclaimerPrimerIngreso() {
     setEnviando(true);
     try {
       await API.aceptarDisclaimer(VERSION_DISCLAIMER);
+      hapticaExito();
       router.replace('/(tabs)');
     } finally {
       setEnviando(false);

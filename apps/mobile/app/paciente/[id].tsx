@@ -163,7 +163,7 @@ export default function CockpitPaciente() {
     // motivo: acá el médico sí paga, sólo no hay señal ahora mismo. Nunca se
     // escribe sin conexión (modo offline nivel 2 es sólo lectura).
     if (data.offline) {
-      aviso.avisar('No se puede editar sin conexión.');
+      aviso.avisar('No se puede editar sin conexión.', 'error');
       return;
     }
     router.push((data.esDemostracion ? rutaPaywall('paciente') : ruta) as never);

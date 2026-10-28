@@ -15,6 +15,7 @@ import { Boton, Estado, Eyebrow, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
+import { hapticaExito } from '@/ui/haptica';
 
 interface Datos {
   condiciones: Array<{ id: string; codigo: string; nombre: string; observaciones: string | null }>;
@@ -61,12 +62,18 @@ export default function CondicionesYAlergias() {
   const quitarCondicion = useMutation({
     mutationFn: (condicionId: string) =>
       API.quitarCondicion(pacienteId, condicionId),
-    onSuccess: invalidar,
+    onSuccess: () => {
+      hapticaExito();
+      return invalidar();
+    },
   });
 
   const quitarAlergia = useMutation({
     mutationFn: (alergiaId: string) => API.quitarAlergia(alergiaId),
-    onSuccess: invalidar,
+    onSuccess: () => {
+      hapticaExito();
+      return invalidar();
+    },
   });
 
   const confirmar = (titulo: string, mensaje: string, accion: () => void) =>

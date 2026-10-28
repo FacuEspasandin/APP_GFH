@@ -20,6 +20,7 @@ import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { TIPO } from '@/ui/tokens';
+import { hapticaExito } from '@/ui/haptica';
 
 /**
  * Embarazo y lactancia (motor §6.2 y el addendum de la quinta verificación).
@@ -51,6 +52,7 @@ export default function EmbarazoYLactancia() {
         cuerpoDeGuardado(embarazoActual, numeroSemana, lactanciaActual),
       ),
     onSuccess: async () => {
+      hapticaExito();
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       await qc.invalidateQueries({ queryKey: ['inicio'] });
       router.back();

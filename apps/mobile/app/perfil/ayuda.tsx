@@ -75,7 +75,7 @@ export default function Ayuda() {
       await API.reportarProblema({ ...datos, tipo });
       reset();
       setTipo('ERROR');
-      avisar('Gracias — recibimos tu reporte.');
+      avisar('Gracias — recibimos tu reporte.', 'exito');
     } catch (e) {
       setErrorServidor(e instanceof Error ? e.message : 'No se pudo enviar el reporte.');
     }

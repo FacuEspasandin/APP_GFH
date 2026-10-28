@@ -10,6 +10,7 @@ import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { hapticaExito } from '@/ui/haptica';
 
 /** Editar cuenta (6.2). El nombre de usuario no se cambia: es identificador de
  *  login y cambiarlo rompería sesiones y referencias. */
@@ -45,9 +46,10 @@ export default function Cuenta() {
         ...(cambiaElEmail ? { password } : {}),
       }),
     onSuccess: async () => {
+      hapticaExito();
       await qc.invalidateQueries({ queryKey: ['perfil'] });
       router.back();
-      avisar('Datos guardados');
+      avisar('Datos guardados', 'exito');
     },
     onError: (e) => setError(e instanceof Error ? e.message : 'No se pudo guardar.'),
   });

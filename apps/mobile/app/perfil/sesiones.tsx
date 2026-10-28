@@ -27,7 +27,7 @@ export default function Sesiones() {
       await qc.invalidateQueries({ queryKey: ['sesiones'] });
       // La fila desaparece de la lista, que ya es una señal. El aviso es para
       // el caso de tener varias: se ve que se fue una sin tener que contarlas.
-      avisar('Sesión cerrada');
+      avisar('Sesión cerrada', 'exito');
     },
   });
 

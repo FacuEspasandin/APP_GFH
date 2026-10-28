@@ -19,6 +19,7 @@ import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { useColores } from '@/ui/tema';
 import { claveColorPorClcr, COLOR_SEVERIDAD, type Sexo } from '@gfh/shared-types';
 import { TIPO } from '@/ui/tokens';
+import { hapticaExito } from '@/ui/haptica';
 
 /**
  * Editar datos renales (3.1.3). Calculado o pisado a mano.
@@ -63,6 +64,7 @@ export default function DatosRenales() {
         ...(medidoAt ? { medidoAt } : {}),
       }),
     onSuccess: async () => {
+      hapticaExito();
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       await qc.invalidateQueries({ queryKey: ['inicio'] });
       router.back();

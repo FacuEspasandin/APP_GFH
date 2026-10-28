@@ -8,6 +8,7 @@ import { BuscadorPrincipioActivo, type PaSugerido } from '@/ui/buscador-pa';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Chip, Pantalla } from '@/ui/kit';
+import { hapticaExito } from '@/ui/haptica';
 
 /** Agregar alergia (3.4.2 farmacológica / 3.4.3 texto libre). */
 export default function AgregarAlergia() {
@@ -28,6 +29,7 @@ export default function AgregarAlergia() {
         ...(tipo === 'FARMACOLOGICA' ? { principioActivoId: pa[0]?.id } : { descripcion: descripcion.trim() }),
       }),
     onSuccess: async () => {
+      hapticaExito();
       await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       router.back();
     },

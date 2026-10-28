@@ -16,6 +16,7 @@ import { Boton, CampoTexto, Chip, Pantalla, BarraAccion } from '@/ui/kit';
 import { ResultadoClcr } from '@/ui/resultado-clcr';
 import { useColores } from '@/ui/tema';
 import { OPCIONES_SEXO, RANGOS, type Sexo } from '@gfh/shared-types';
+import { hapticaExito } from '@/ui/haptica';
 
 /**
  * Crear paciente (2.5).
@@ -97,6 +98,7 @@ export default function CrearPaciente() {
       // gratis podría abrir el formulario una segunda vez con el plan viejo en
       // caché.
       await qc.invalidateQueries({ queryKey: ['plan'] });
+      hapticaExito();
       router.back();
     } catch (e) {
       // El paywall lo abre el cliente HTTP, para CUALQUIER acción que exceda
