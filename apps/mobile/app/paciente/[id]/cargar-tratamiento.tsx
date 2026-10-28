@@ -4,7 +4,6 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ErrorApi } from '@/api/cliente';
 import * as API from '@/api/endpoints';
@@ -15,38 +14,13 @@ import {
   listasParaCrear,
 } from '@/dominio/carga-tratamiento';
 import { ConsultaPlegada, Veredicto } from '@/ui/herramienta';
+import { EncabezadoModal } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD, VIAS_OFRECIDAS, viaCorta } from '@gfh/shared-types';
 import { hapticaExito } from '@/ui/haptica';
-
-/** Cerrar + título, blanco — flujo lineal, sin la marca "GFH" ni la barra
- *  inferior (ver `SIN_MENU_SUBRUTA_PACIENTE` en `menu-inferior.tsx`). */
-function EncabezadoTransaccional({ titulo }: { titulo: string }) {
-  const col = useColores();
-  const router = useRouter();
-  const insets = useSafeAreaInsets();
-
-  return (
-    <View
-      className="flex-row items-center gap-2 border-b px-2"
-      style={{ paddingTop: insets.top, backgroundColor: col.surface, borderColor: col.line }}
-    >
-      <Pressable
-        onPress={() => router.back()}
-        accessibilityRole="button"
-        accessibilityLabel="Cerrar"
-        hitSlop={8}
-        className="h-16 w-12 items-center justify-center"
-      >
-        <Icono nombre="cerrar" tamano={16} color={col.ink} />
-      </Pressable>
-      <Text className="text-fila font-fuerte text-ink">{titulo}</Text>
-    </View>
-  );
-}
 
 interface Linea {
   textoOriginal: string;
@@ -223,7 +197,7 @@ export default function CargarTratamiento() {
   if (!lineas) {
     return (
       <View className="flex-1 bg-paper">
-        <EncabezadoTransaccional titulo="Cargar Tratamiento" />
+        <EncabezadoModal titulo="Cargar Tratamiento" onCerrar={() => router.back()} />
         <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerClassName="px-margen pb-4 pt-4" keyboardShouldPersistTaps="handled">
           <PasoNumerado n={1} titulo="Pegar lista de medicamentos" />
@@ -300,7 +274,7 @@ export default function CargarTratamiento() {
 
   return (
     <View className="flex-1 bg-paper">
-      <EncabezadoTransaccional titulo="Cargar Tratamiento" />
+      <EncabezadoModal titulo="Cargar Tratamiento" onCerrar={() => router.back()} />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ConsultaPlegada
         titulo={`${lineas.length} ${

@@ -160,3 +160,70 @@ export function BotonAvatar({ onPress }: { onPress: () => void }) {
     </Pressable>
   );
 }
+
+/**
+ * Encabezado de un flujo lineal que se abandona, no se «vuelve»: una X para
+ * cerrar y, según `variante`, el título de lo que se está haciendo o la marca.
+ *
+ * - `titulo`: X a la izquierda y el título al lado (carga de tratamiento).
+ * - `marca`: «GFH» centrado y la X a la derecha (paywall). Sale por la X o por
+ *   «Ahora no», nunca por un back que reabra el motivo que trajo hasta acá.
+ *
+ * Sin la marca ni la barra inferior en el primer caso: ver
+ * `SIN_MENU_SUBRUTA_PACIENTE` en `menu-inferior.tsx`.
+ */
+export function EncabezadoModal({
+  titulo,
+  onCerrar,
+  variante = 'titulo',
+}: {
+  titulo?: string;
+  onCerrar: () => void;
+  variante?: 'titulo' | 'marca';
+}) {
+  const col = useColores();
+  const insets = useSafeAreaInsets();
+
+  const cerrar = (
+    <Pressable
+      onPress={onCerrar}
+      accessibilityRole="button"
+      accessibilityLabel="Cerrar"
+      hitSlop={8}
+      className={
+        variante === 'marca'
+          ? 'absolute right-3 h-11 w-11 items-center justify-center rounded-full'
+          : 'h-16 w-12 items-center justify-center'
+      }
+    >
+      <Icono nombre="cerrar" tamano={16} color={col.ink} />
+    </Pressable>
+  );
+
+  return (
+    <View
+      className={
+        variante === 'marca'
+          ? 'flex-row items-center justify-center border-b px-5'
+          : 'flex-row items-center gap-2 border-b px-2'
+      }
+      style={{ paddingTop: insets.top, backgroundColor: col.surface, borderColor: col.line }}
+    >
+      {variante === 'marca' ? (
+        <>
+          <View className="h-16 flex-1 items-center justify-center">
+            <Text className="text-fila font-fuerte" style={{ color: col.primary }}>
+              GFH
+            </Text>
+          </View>
+          {cerrar}
+        </>
+      ) : (
+        <>
+          {cerrar}
+          <Text className="flex-1 text-fila font-fuerte text-ink">{titulo}</Text>
+        </>
+      )}
+    </View>
+  );
+}

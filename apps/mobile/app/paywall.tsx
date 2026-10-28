@@ -2,7 +2,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PAYWALL_RESULT, presentarPaywall } from '@/api/revenuecat';
 import type { MotivoPaywall } from '@/dominio/plan-gratis';
@@ -11,36 +10,7 @@ import { Icono } from '@/ui/iconos';
 import { Boton, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
-
-/** Cierra este flujo lineal: "GFH" chico centrado + una X, sin volver — sale
- *  por acá o por "Ahora no" del pie, nunca por un back que reabra el motivo
- *  que trajo al médico hasta el paywall. */
-function EncabezadoPaywall({ onCerrar }: { onCerrar: () => void }) {
-  const col = useColores();
-  const insets = useSafeAreaInsets();
-
-  return (
-    <View
-      className="flex-row items-center justify-center border-b px-5"
-      style={{ paddingTop: insets.top, backgroundColor: col.surface, borderColor: col.line }}
-    >
-      <View className="h-16 flex-1 items-center justify-center">
-        <Text className="text-fila font-fuerte" style={{ color: col.primary }}>
-          GFH
-        </Text>
-      </View>
-      <Pressable
-        onPress={onCerrar}
-        accessibilityRole="button"
-        accessibilityLabel="Cerrar"
-        hitSlop={8}
-        className="absolute right-3 h-10 w-10 items-center justify-center rounded-full"
-      >
-        <Icono nombre="cerrar" tamano={16} color={col.ink} />
-      </Pressable>
-    </View>
-  );
-}
+import { EncabezadoModal } from '@/ui/encabezado-app';
 
 /**
  * Qué se le dice según de dónde venga.
@@ -128,7 +98,7 @@ export default function Paywall() {
 
   return (
     <View className="flex-1 bg-paper">
-      <EncabezadoPaywall onCerrar={cerrar} />
+      <EncabezadoModal variante="marca" onCerrar={cerrar} />
       <ScrollView contentContainerClassName="px-margen pb-4 pt-5">
         <Text className="text-center text-titular leading-9 font-extra text-ink">
           {cabecera.titulo}
