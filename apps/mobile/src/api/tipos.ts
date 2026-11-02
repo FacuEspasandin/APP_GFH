@@ -143,6 +143,17 @@ export interface Medico {
   rol: string;
   disclaimerAceptadoAt?: string | null;
   disclaimerVersion?: string | null;
+  /** Cada consentimiento con el texto que se aceptó y cuándo. `null` = nunca,
+   *  o retirado. Ver `VERSION_CONSENTIMIENTO` en shared-types. */
+  terminosVersion?: string | null;
+  terminosAceptadosAt?: string | null;
+  consentimientoVeraVersion?: string | null;
+  consentimientoVeraAt?: string | null;
+  consentimientoFotoVersion?: string | null;
+  consentimientoFotoAt?: string | null;
+  /** Cómo entra esta cuenta: decide qué se pide para confirmar la baja. */
+  tienePassword?: boolean;
+  tieneGoogle?: boolean;
 }
 
 export type EstadoSuscripcionValor =

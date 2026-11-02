@@ -13,6 +13,7 @@ import { useColores, useTema, type Tema } from '@/ui/tema';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
 import type { EstadoSuscripcion, Medico as Perfil } from '@/api/tipos';
+import { tiendaDeLaCompra } from '@/ui/tienda';
 import { TIPO } from '@/ui/tokens';
 
 const TEXTO_ESTADO: Record<EstadoSuscripcion['estado'], string> = {
@@ -89,6 +90,13 @@ export default function PerfilPantalla() {
           valor={textoSesiones(sesiones.data?.length)}
           onPress={() => router.push('/perfil/sesiones')}
         />
+        {/* Dónde se retiran los permisos de Vera y de fotos, y se pide una copia
+            de los datos. Va en Cuenta porque es de la cuenta, no de la app. */}
+        <Opcion
+          icono="usuario"
+          titulo="Privacidad y datos"
+          onPress={() => router.push('/perfil/privacidad' as never)}
+        />
       </GrupoOpciones>
 
       <Eyebrow>Preferencias</Eyebrow>
@@ -110,7 +118,6 @@ export default function PerfilPantalla() {
         <Opcion
           icono="campana"
           titulo="Notificaciones"
-          valor={configuracion ? (configuracion.notificacionesPush ? 'Activadas' : 'Desactivadas') : null}
           onPress={() => router.push('/perfil/notificaciones')}
         />
         {/* Estaba enterrado dentro de "Tema y notificaciones" pese a decidir
@@ -135,6 +142,11 @@ export default function PerfilPantalla() {
           icono="documento"
           titulo="Términos y privacidad"
           onPress={() => router.push('/perfil/legales')}
+        />
+        <Opcion
+          icono="info"
+          titulo="Metodología y fuentes"
+          onPress={() => router.push('/legal?clave=metodologia' as never)}
         />
         <Opcion icono="info" titulo="Acerca de GFH" onPress={() => router.push('/perfil/acerca')} />
       </GrupoOpciones>
@@ -267,7 +279,7 @@ function TarjetaPlan({
 
   const detalle = [
     fecha ? `${estado.vigente ? 'Se renueva el' : 'Venció el'} ${fecha}` : null,
-    estado.store ? (estado.store === 'APP_STORE' ? 'App Store' : 'Google Play') : null,
+    tiendaDeLaCompra(estado.store),
   ]
     .filter(Boolean)
     .join(' · ');

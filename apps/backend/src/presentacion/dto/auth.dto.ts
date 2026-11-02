@@ -1,4 +1,4 @@
-import { ESPECIALIDADES } from '@gfh/shared-types';
+import { ESPECIALIDADES, TIPOS_CONSENTIMIENTO, type TipoConsentimiento } from '@gfh/shared-types';
 import { IsEmail, IsEnum, IsIn, IsOptional, IsString, Length, Matches, MaxLength, MinLength } from 'class-validator';
 
 /** Lo declara la app al iniciar sesión; sin valor se asume teléfono. */
@@ -58,6 +58,11 @@ export class CambiarPasswordDto {
 }
 
 export class AceptarDisclaimerDto {
+  @IsString() @Length(1, 20) version!: string;
+}
+
+export class AceptarConsentimientoDto {
+  @IsIn(TIPOS_CONSENTIMIENTO) tipo!: TipoConsentimiento;
   @IsString() @Length(1, 20) version!: string;
 }
 

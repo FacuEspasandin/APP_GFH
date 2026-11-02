@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -10,11 +11,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
+import { TIPOS_CONSENTIMIENTO, type TipoConsentimiento } from '@gfh/shared-types';
 
 import { AuthService } from '../aplicacion/auth/auth.service';
 import { Cuerpo } from './comun/cuerpo';
 import { JwtGuard, MedicoActual, SesionActual } from './comun/medico-actual';
 import {
+  AceptarConsentimientoDto,
   AceptarDisclaimerDto,
   CambiarPasswordDto,
   ConfirmarRecuperacionDto,
@@ -121,5 +124,27 @@ export class AuthController {
   @UseGuards(JwtGuard)
   aceptarDisclaimer(@MedicoActual() medicoId: string, @Cuerpo(AceptarDisclaimerDto) dto: AceptarDisclaimerDto) {
     return this.auth.aceptarDisclaimer(medicoId, dto.version);
+  }
+
+  /** Acepta un texto (términos, Vera, fotos) y guarda cuál versión. */
+  @Post('consentimientos')
+  @HttpCode(204)
+  @UseGuards(JwtGuard)
+  aceptarConsentimiento(
+    @MedicoActual() medicoId: string,
+    @Cuerpo(AceptarConsentimientoDto) dto: AceptarConsentimientoDto,
+  ) {
+    return this.auth.aceptarConsentimiento(medicoId, dto.tipo, dto.version);
+  }
+
+  /** Retira el permiso de Vera o de fotos. Desde ese momento no se manda nada. */
+  @Delete('consentimientos/:tipo')
+  @HttpCode(204)
+  @UseGuards(JwtGuard)
+  retirarConsentimiento(@MedicoActual() medicoId: string, @Param('tipo') tipo: string) {
+    if (!(TIPOS_CONSENTIMIENTO as readonly string[]).includes(tipo)) {
+      throw new BadRequestException('Consentimiento desconocido.');
+    }
+    return this.auth.retirarConsentimiento(medicoId, tipo as TipoConsentimiento);
   }
 }

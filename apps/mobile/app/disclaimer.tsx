@@ -9,8 +9,7 @@ import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { hapticaExito } from '@/ui/haptica';
-
-const VERSION_DISCLAIMER = '1.0';
+import { VERSION_DISCLAIMER } from '@gfh/shared-types';
 
 /**
  * Disclaimer de primer ingreso (1.8). Regla no negociable 7: checkbox
@@ -57,8 +56,15 @@ export default function DisclaimerPrimerIngreso() {
               terapia concomitante.
             </Text>
             <Text className="font-sans text-body leading-7 text-ink-suave">
-              El contenido clínico está en revisión profesional. Las fichas marcadas como borrador
-              no fueron validadas por un farmacéutico.
+              Cada resultado se calcula con tablas y reglas fijas que se pueden rastrear hasta su
+              fuente. Si falta un dato, GFH lo muestra en neutro: nunca supone que algo es seguro.{' '}
+              <Text
+                className="font-medio text-accent"
+                onPress={() => router.push('/legal?clave=metodologia' as never)}
+                accessibilityRole="link"
+              >
+                Ver metodología y fuentes
+              </Text>
             </Text>
           </View>
         </Superficie>

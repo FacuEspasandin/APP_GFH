@@ -1,3 +1,5 @@
+import type { TipoConsentimiento } from '@gfh/shared-types';
+
 import { api } from './cliente';
 import type { ContextoCockpitSerializado } from './offline-cockpit';
 import type {
@@ -70,6 +72,14 @@ export const cambiarPassword = (datos: { actual: string; nueva: string }) =>
 
 export const aceptarDisclaimer = (version: string) =>
   api.post<void>('/auth/disclaimer', { version });
+
+/** Guarda que el médico aceptó un texto (términos, Vera, fotos) y cuál versión. */
+export const aceptarConsentimiento = (tipo: TipoConsentimiento, version: string) =>
+  api.post<void>('/auth/consentimientos', { tipo, version });
+
+/** Retira el permiso de Vera o de fotos. */
+export const retirarConsentimiento = (tipo: 'VERA' | 'FOTO') =>
+  api.delete<void>(`/auth/consentimientos/${tipo}`);
 
 export const pedirRecuperacion = (email: string) => api.post<void>('/auth/recuperar', { email });
 
@@ -238,8 +248,9 @@ export const guardarDatosMedico = (datos: {
 
 export const estadoSuscripcion = () => api.get<EstadoSuscripcion>('/perfil/suscripcion');
 
-export const eliminarCuenta = (password: string) =>
-  api.post<void>('/perfil/eliminar-cuenta', { password });
+/** Cuenta con contraseña: `password`. Cuenta sólo de Google: un id_token recién emitido. */
+export const eliminarCuenta = (prueba: { password?: string; googleIdToken?: string }) =>
+  api.post<void>('/perfil/eliminar-cuenta', prueba);
 
 export const condicionesYAlergias = (pacienteId: string) =>
   api.get<CondicionesYAlergias>(`/perfil/pacientes/${pacienteId}/condiciones-alergias`);

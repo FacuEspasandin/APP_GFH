@@ -10,6 +10,7 @@ import { Icono } from '@/ui/iconos';
 import { Boton, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { nombreDeLaTienda } from '@/ui/tienda';
 import { EncabezadoModal } from '@/ui/encabezado-app';
 
 /**
@@ -117,9 +118,31 @@ export default function Paywall() {
         </Superficie>
 
         <Text className="font-sans mb-2 px-1 text-eyebrow leading-4 text-ink-suave">
-          El precio, mensual o anual, se muestra en el paso siguiente. Podés cancelar cuando
-          quieras desde la tienda; el acceso sigue hasta el final del período pago.
+          El precio, mensual o anual, se muestra en el paso siguiente. La suscripción se renueva
+          sola salvo que la canceles al menos 24 horas antes de que termine el período; podés
+          cancelar cuando quieras desde {nombreDeLaTienda()} y el acceso sigue hasta el final del
+          período pago.
         </Text>
+
+        {/* Apple pide que los términos y la privacidad se puedan abrir desde donde
+            se compra (guideline 3.1.2). El paso siguiente es el paywall de
+            RevenueCat, que lleva los suyos; éstos son los de esta pantalla. */}
+        <View className="mb-2 flex-row flex-wrap justify-center gap-x-4 px-1">
+          <Pressable
+            onPress={() => router.push('/legal?clave=terminos' as never)}
+            accessibilityRole="link"
+            className="py-1.5"
+          >
+            <Text className="font-medio text-meta text-accent">Términos y condiciones</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => router.push('/legal?clave=privacidad' as never)}
+            accessibilityRole="link"
+            className="py-1.5"
+          >
+            <Text className="font-medio text-meta text-accent">Política de privacidad</Text>
+          </Pressable>
+        </View>
       </ScrollView>
 
       <BarraAccion>

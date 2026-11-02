@@ -8,13 +8,19 @@ import { iniciarSesionGoogle } from '@/api/google-signin';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { BotonGoogle } from '@/ui/boton-google';
 import { useVolverAInicio } from '@/ui/boton-volver';
+import { CasillaAceptacion } from '@/ui/casilla';
 import { infoDeSesion, tipoDeDispositivo } from '@/ui/dispositivo';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { useCadena } from '@/ui/teclado';
 import { useColores } from '@/ui/tema';
-import { ESPECIALIDADES, type Especialidad } from '@gfh/shared-types';
+import {
+  ACEPTACION_TERMINOS,
+  ESPECIALIDADES,
+  VERSION_CONSENTIMIENTO,
+  type Especialidad,
+} from '@gfh/shared-types';
 
 /** Registro (1.4). Nombre de usuario único + email + contraseña. */
 export default function Registro() {
@@ -34,15 +40,26 @@ export default function Registro() {
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [entrandoConGoogle, setEntrandoConGoogle] = useState(false);
+  // Sin esto marcado no se crea ninguna cuenta, ni con el formulario ni con
+  // Google: las dos son la misma aceptación.
+  const [acepta, setAcepta] = useState(false);
   // «Siguiente» recorre los seis campos en el orden en que se leen.
   const cadena = useCadena(6);
 
+  /** Deja constancia de qué versión de los términos se aceptó. No frena el alta:
+   *  si falla, la cuenta ya existe y el rastro se pierde, pero entrar no. */
+  const guardarAceptacion = () =>
+    API.aceptarConsentimiento('TERMINOS', VERSION_CONSENTIMIENTO.TERMINOS).catch(() => undefined);
+
   const entrarConGoogle = async () => {
+    if (!acepta) return setError('Aceptá los términos y la política de privacidad para continuar.');
     setError(null);
     setEntrandoConGoogle(true);
     try {
       const resultado = await iniciarSesionGoogle();
       if (resultado === 'cancelado') return;
+      // Una cuenta existente que entra por acá ya aceptó una vez: no se pisa su fecha.
+      if (resultado === 'nuevo') await guardarAceptacion();
       // 'existente': el email de Google ya tenía cuenta en GFH (con
       // contraseña o de una sesión anterior) y ya había aceptado el
       // disclaimer — entra directo, sin repetir el paso.
@@ -56,6 +73,7 @@ export default function Registro() {
 
   const enviar = async () => {
     setError(null);
+    if (!acepta) return setError('Aceptá los términos y la política de privacidad para continuar.');
     if (c.password !== c.confirmar) return setError('Las contraseñas no coinciden.');
     if (c.password.length < 10) return setError('La contraseña necesita al menos 10 caracteres.');
 
@@ -74,6 +92,7 @@ export default function Registro() {
       // El registro ya devuelve tokens, pero se hace login para reusar el
       // mismo camino de guardado y no duplicar la lógica de sesión.
       await iniciarSesion(c.email, c.password);
+      await guardarAceptacion();
       router.replace('/disclaimer');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'No se pudo crear la cuenta.');
@@ -93,6 +112,37 @@ export default function Registro() {
       <EncabezadoConTitulo titulo="Crear cuenta" alVolver={volver} />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerClassName="px-margen pb-4 pt-3" keyboardShouldPersistTaps="handled">
+        {/* Arriba de todo y no al final: vale para las dos formas de crear la
+            cuenta, y al final del formulario Google quedaba por encima de algo
+            que todavía no se había leído. */}
+        <View className="mb-4">
+          <CasillaAceptacion
+            marcada={acepta}
+            onAlternar={() => setAcepta((a) => !a)}
+            etiquetaAccesible="Acepto los términos y condiciones y la política de privacidad"
+          >
+            <Text className="font-sans text-meta leading-5 text-ink">
+              {ACEPTACION_TERMINOS.antes}
+              <Text
+                className="font-medio text-accent"
+                onPress={() => router.push('/legal?clave=terminos' as never)}
+                accessibilityRole="link"
+              >
+                {ACEPTACION_TERMINOS.terminos}
+              </Text>
+              {ACEPTACION_TERMINOS.medio}
+              <Text
+                className="font-medio text-accent"
+                onPress={() => router.push('/legal?clave=privacidad' as never)}
+                accessibilityRole="link"
+              >
+                {ACEPTACION_TERMINOS.privacidad}
+              </Text>
+              {ACEPTACION_TERMINOS.despues}
+            </Text>
+          </CasillaAceptacion>
+        </View>
+
         <BotonGoogle
           texto="Crear cuenta con Google"
           onPress={entrarConGoogle}
@@ -198,7 +248,7 @@ export default function Registro() {
       </ScrollView>
 
       <BarraAccion>
-        <Boton onPress={enviar} cargando={enviando} deshabilitado={!listo}>
+        <Boton onPress={enviar} cargando={enviando} deshabilitado={!listo || !acepta}>
           Crear cuenta
         </Boton>
       </BarraAccion>

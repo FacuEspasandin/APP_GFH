@@ -5,6 +5,8 @@ export * from './especialidad';
 export * from './hba1c';
 export * from './historial-filtros';
 export * from './imc';
+export * from './legal';
+export * from './legal-documentos';
 export * from './lipidos';
 export * from './meta-ldl-cardiovascular';
 export * from './molde';

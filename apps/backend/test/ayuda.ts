@@ -4,6 +4,7 @@ import { Test } from '@nestjs/testing';
 import { ThrottlerStorage } from '@nestjs/throttler';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { PrismaClient } from '@prisma/client';
+import { VERSION_CONSENTIMIENTO } from '@gfh/shared-types';
 
 import { AppModule } from '../src/app.module';
 import { configurarApp } from '../src/configurar-app';
@@ -259,4 +260,23 @@ export async function buscarPrincipioActivo(
   ) ?? r.cuerpo?.data?.[0];
   if (!pa) throw new Error(`No hay principio activo "${nombre}". ¿Corriste el seed?`);
   return pa;
+}
+
+/**
+ * Los permisos de Vera y de fotos, con la versión vigente.
+ *
+ * Los tests que llaman a `/chat/mensajes` o a `/pacientes/:id/foto` necesitan
+ * esto antes: sin el permiso el backend responde 403 `CONSENTIMIENTO_REQUERIDO`
+ * y la prueba no llegaría a lo que mide (el cupo, el tope, el cuerpo).
+ */
+export async function darConsentimientos(prisma: PrismaClient, medicoId: string): Promise<void> {
+  await prisma.medico.update({
+    where: { id: medicoId },
+    data: {
+      consentimientoVeraVersion: VERSION_CONSENTIMIENTO.VERA,
+      consentimientoVeraAt: new Date(),
+      consentimientoFotoVersion: VERSION_CONSENTIMIENTO.FOTO,
+      consentimientoFotoAt: new Date(),
+    },
+  });
 }

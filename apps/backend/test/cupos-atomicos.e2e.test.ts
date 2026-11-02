@@ -12,6 +12,7 @@ import {
   cliente,
   crearMedico,
   crearPaciente,
+  darConsentimientos,
   darSuscripcion,
   levantarApp,
   type Contexto,
@@ -109,7 +110,9 @@ describe('cupos atómicos', () => {
       const intruso = await crearMedico(api);
       medicos.push(dueno.id, intruso.id);
       await darSuscripcion(ctx.prisma, dueno.id);
+      await darConsentimientos(ctx.prisma, dueno.id);
       await darSuscripcion(ctx.prisma, intruso.id);
+      await darConsentimientos(ctx.prisma, intruso.id);
       const pacienteAjeno = await crearPaciente(api, dueno.token);
       const antes = llamadasAVision;
 
@@ -124,6 +127,7 @@ describe('cupos atómicos', () => {
       const m = await crearMedico(api);
       medicos.push(m.id);
       await darSuscripcion(ctx.prisma, m.id);
+      await darConsentimientos(ctx.prisma, m.id);
       const paciente = await crearPaciente(api, m.token);
       await ctx.prisma.auditLog.createMany({
         data: Array.from({ length: LIMITE_FOTOS_24H }, () => ({
@@ -145,6 +149,7 @@ describe('cupos atómicos', () => {
       const m = await crearMedico(api);
       medicos.push(m.id);
       await darSuscripcion(ctx.prisma, m.id);
+      await darConsentimientos(ctx.prisma, m.id);
       const paciente = await crearPaciente(api, m.token);
       await ctx.prisma.auditLog.createMany({
         data: Array.from({ length: LIMITE_FOTOS_24H - 3 }, () => ({
@@ -164,6 +169,7 @@ describe('cupos atómicos', () => {
       const m = await crearMedico(api);
       medicos.push(m.id);
       await darSuscripcion(ctx.prisma, m.id);
+      await darConsentimientos(ctx.prisma, m.id);
       const paciente = await crearPaciente(api, m.token);
 
       visionOk = false;
@@ -211,6 +217,7 @@ describe('cupos atómicos', () => {
       const m = await crearMedico(api);
       medicos.push(m.id);
       await darSuscripcion(ctx.prisma, m.id);
+      await darConsentimientos(ctx.prisma, m.id);
 
       demoraClaudeMs = 400;
       try {
@@ -228,6 +235,7 @@ describe('cupos atómicos', () => {
       const m = await crearMedico(api);
       medicos.push(m.id);
       await darSuscripcion(ctx.prisma, m.id);
+      await darConsentimientos(ctx.prisma, m.id);
       const antes = llamadasAClaude;
 
       const conNul = await api.post('/chat/mensajes', { pregunta: 'hola\u0000mundo' }, m.token);
@@ -242,6 +250,7 @@ describe('cupos atómicos', () => {
       const m = await crearMedico(api);
       medicos.push(m.id);
       await darSuscripcion(ctx.prisma, m.id);
+      await darConsentimientos(ctx.prisma, m.id);
 
       const original = claudeFalso.enviarMensaje;
       claudeFalso.enviarMensaje = async () => {

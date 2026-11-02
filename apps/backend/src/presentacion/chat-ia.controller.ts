@@ -6,6 +6,7 @@ import { ChatIaService } from '../aplicacion/chat-ia/chat-ia.service';
 import { Cuerpo } from './comun/cuerpo';
 import { LimiteChatDiarioGuard } from './comun/limite-chat-diario.guard';
 import { JwtGuard, MedicoActual } from './comun/medico-actual';
+import { RequiereConsentimiento } from './comun/requiere-consentimiento';
 import { DePago } from './comun/requiere-suscripcion';
 
 export class EnviarMensajeChatDto {
@@ -27,6 +28,7 @@ export class ChatIaController {
   constructor(@Inject(ChatIaService) private readonly chat: ChatIaService) {}
 
   @DePago('Vera')
+  @RequiereConsentimiento('VERA')
   @UseGuards(LimiteChatDiarioGuard)
   @Post('mensajes')
   @HttpCode(200)

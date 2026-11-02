@@ -7,6 +7,7 @@ import {
   cliente,
   crearMedico,
   crearPaciente,
+  darConsentimientos,
   darSuscripcion,
   levantarApp,
   type Contexto,
@@ -48,6 +49,7 @@ describe('contrato con el mobile', () => {
     medico = await crearMedico(api);
     medicos.push(medico.id);
     await darSuscripcion(ctx.prisma, medico.id);
+    await darConsentimientos(ctx.prisma, medico.id);
 
     paciente = await crearPaciente(api, medico.token);
     productoId = (await buscarProducto(api, medico.token, 'Ibuprofeno')).id;

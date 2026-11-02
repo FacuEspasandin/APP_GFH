@@ -15,6 +15,7 @@ import {
 import { AlternativasService } from '../aplicacion/alternativas/alternativas.service';
 import { FotoService } from '../aplicacion/foto/foto.service';
 import { Cuerpo } from './comun/cuerpo';
+import { RequiereConsentimiento } from './comun/requiere-consentimiento';
 import { DePago } from './comun/requiere-suscripcion';
 import { JwtGuard, MedicoActual } from './comun/medico-actual';
 import { SuscripcionGuard } from './comun/suscripcion.guard';
@@ -120,6 +121,7 @@ export class AlternativasController {
    * no se persiste nunca. Sin proveedor configurado responde 501 con el motivo
    * — nunca una lista vacía, que se leería como "la foto no tenía nada".
    */
+  @RequiereConsentimiento('FOTO')
   @Post('foto')
   procesarFoto(
     @MedicoActual() medicoId: string,

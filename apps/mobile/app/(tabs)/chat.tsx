@@ -16,6 +16,7 @@ import * as API from '@/api/endpoints';
 import { ErrorApi } from '@/api/cliente';
 import type { MensajeSesionChat } from '@/api/tipos';
 import { chipsDeFuente, type ChipFuente } from '@/dominio/chat';
+import { useConsentimiento } from '@/ui/consentimiento';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { useColores } from '@/ui/tema';
@@ -63,6 +64,7 @@ export default function ChatIa() {
   const [mensajes, setMensajes] = useState<MensajeChat[]>([]);
   const [texto, setTexto] = useState('');
   const [sessionId, setSessionId] = useState<string | undefined>(undefined);
+  const permiso = useConsentimiento('VERA');
 
   // `sessionId=nueva` llega desde el botón "+" del historial; cualquier otro
   // valor es un id real a retomar. Se acuerda cuál ya se procesó para no
@@ -116,6 +118,8 @@ export default function ChatIa() {
     // muestra como si Vera hubiera contestado que no pudo, en vez de dejar
     // el "pensando…" colgado o perder la pregunta ya enviada.
     onError: (error) => {
+      // El permiso se retiró desde otro teléfono: la próxima vez se vuelve a pedir.
+      permiso.alRechazar(error);
       setMensajes((m) => [
         ...m,
         {
@@ -137,9 +141,14 @@ export default function ChatIa() {
   const mandar = () => {
     const pregunta = texto.trim();
     if (!pregunta || enviar.isPending || cargarSesion.isPending) return;
-    setMensajes((m) => [...m, { id: idLocal(), rol: 'usuario', contenido: pregunta }]);
-    setTexto('');
-    enviar.mutate(pregunta);
+    // La pregunta sale hacia un proveedor de IA de un tercero: la primera vez en
+    // toda la vida de la cuenta se pide el permiso, y nada se manda ni se
+    // muestra en el hilo hasta que se da. Lo escrito queda en el campo.
+    permiso.pedir(() => {
+      setMensajes((m) => [...m, { id: idLocal(), rol: 'usuario', contenido: pregunta }]);
+      setTexto('');
+      enviar.mutate(pregunta);
+    });
   };
 
   const hayHilo = mensajes.length > 0 || enviar.isPending || cargarSesion.isPending;
@@ -185,6 +194,12 @@ export default function ChatIa() {
               </Text>
               <Text className="mt-1 text-center text-meta leading-5 text-ink-suave">
                 Responde apoyándose en la base propia de GFH — nunca de memoria.
+              </Text>
+              {/* Dice de entrada lo que el permiso va a pedir después: la pregunta
+                  sale hacia un proveedor de IA externo. */}
+              <Text className="mt-3 text-center text-eyebrow leading-4 text-tenue">
+                Asistente con inteligencia artificial. Tus preguntas se envían a un proveedor
+                externo; no escribas datos que identifiquen a un paciente.
               </Text>
             </View>
           ) : (
@@ -238,6 +253,8 @@ export default function ChatIa() {
           </View>
         </View>
       </KeyboardAvoidingView>
+
+      {permiso.hoja}
     </View>
   );
 }

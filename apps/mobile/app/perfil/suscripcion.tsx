@@ -9,6 +9,7 @@ import { SkeletonLista } from '@/ui/estados-sistema';
 import { PantallaConError } from '@/ui/resultado-consulta';
 import { AvisoNeutro, Boton, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
+import { nombreDeLaTienda, tiendaDeLaCompra } from '@/ui/tienda';
 import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
 import type { EstadoSuscripcion as Estado } from '@/api/tipos';
@@ -70,7 +71,7 @@ export default function Suscripcion() {
           ) : null}
           {data?.store ? (
             <Text className="font-sans mt-0.5 text-meta text-ink-suave">
-              {data.store === 'APP_STORE' ? 'App Store' : 'Google Play'}
+              {tiendaDeLaCompra(data.store)}
             </Text>
           ) : null}
         </Superficie>
@@ -88,8 +89,8 @@ export default function Suscripcion() {
         )}
 
         <AvisoNeutro>
-          El estado lo define la tienda. Cancelar o cambiar de plan se hace desde App Store o Google
-          Play; puede tardar unos minutos en reflejarse acá.
+          El estado lo define la tienda. Cancelar o cambiar de plan se hace desde {nombreDeLaTienda()};
+          puede tardar unos minutos en reflejarse acá.
         </AvisoNeutro>
       </Pantalla>
     </View>

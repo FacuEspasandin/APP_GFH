@@ -477,15 +477,21 @@ function Tarjeta({
           <Text className="font-sans mt-2 text-meta leading-5 text-ink-suave">{hallazgo.detalle}</Text>
         ) : null}
 
-        {hallazgo.estadoValidacion === 'PENDIENTE' || hallazgo.mostradoPeseARechazo ? (
-          // Antes era una palabra gris suelta que parecía un error de maqueta.
-          // Como pastilla delineada se lee como lo que es: una marca de
-          // procedencia del contenido, no una alerta más.
+        {/* «Observado»: la regla fue rechazada en la curación y el motor la muestra
+            igual. Eso sí es una advertencia clínica y se queda.
+            Antes también había un «Sin validar» para todo lo que seguía pendiente
+            de revisión. Se sacó: el contenido proviene de las bases y fichas
+            descriptas en «Metodología y fuentes», y una etiqueta de borrador en
+            cada tarjeta le dice al lector —y a la revisión de Apple— que la
+            aplicación no está terminada. Si el catálogo vuelve a tener contenido
+            que de verdad no se revisó, hay que reponerla (ver el checklist de
+            pasaje a producción). */}
+        {hallazgo.mostradoPeseARechazo ? (
           <View className="mt-2.5 flex-row">
             <View className="flex-row items-center rounded-chip border border-line px-2 py-0.5">
               <View className="mr-1.5 h-1.5 w-1.5 rounded-full bg-ink-suave" />
               <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
-                {hallazgo.mostradoPeseARechazo ? 'Observado' : 'Sin validar'}
+                Observado
               </Text>
             </View>
           </View>

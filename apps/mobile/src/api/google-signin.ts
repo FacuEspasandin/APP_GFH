@@ -53,6 +53,25 @@ export function configurarGoogleSignIn(): void {
  * las dos pantallas (login o registro) se tocó el botón, el resultado real
  * lo decide el backend, no de dónde vino el toque.
  */
+/**
+ * Un id_token de Google recién emitido, sin iniciar sesión en GFH.
+ *
+ * Es para volver a probar quién es el médico antes de algo irreversible —eliminar
+ * la cuenta— cuando la cuenta no tiene contraseña. El backend verifica el token y
+ * que sea de la cuenta de Google vinculada. `null` si cerró el selector.
+ */
+export async function pedirTokenDeGoogle(): Promise<string | null> {
+  if (!configurado) {
+    throw new Error('Login con Google no está configurado en este build.');
+  }
+  await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+  const respuesta = await GoogleSignin.signIn();
+  if (respuesta.type !== 'success') return null;
+  const idToken = respuesta.data.idToken;
+  if (!idToken) throw new Error('Google no devolvió un token válido.');
+  return idToken;
+}
+
 export async function iniciarSesionGoogle(): Promise<'nuevo' | 'existente' | 'cancelado'> {
   if (!configurado) {
     throw new Error('Login con Google no está configurado en este build.');

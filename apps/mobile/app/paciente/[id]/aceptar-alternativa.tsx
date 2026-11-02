@@ -11,12 +11,11 @@ import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
-import { VIAS_OFRECIDAS } from '@gfh/shared-types';
+import { VERSION_DISCLAIMER, VIAS_OFRECIDAS } from '@gfh/shared-types';
 
 /** Las que se ofrecen salen de `shared-types`: estaban copiadas acá y en
  *  Reemplazar fármaco, y dos listas de vocabulario clínico divergen solas. */
 const VIAS = VIAS_OFRECIDAS;
-const VERSION_DISCLAIMER = '1.0';
 
 /**
  * Aceptar una alternativa (3.6.3).

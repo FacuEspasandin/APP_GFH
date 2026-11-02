@@ -6,7 +6,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { DIAS_DE_GRACIA_BAJA } from '@gfh/shared-types';
+import { DIAS_DE_GRACIA_BAJA, VERSION_CONSENTIMIENTO, type TipoConsentimiento } from '@gfh/shared-types';
 import { JwtService } from '@nestjs/jwt';
 import { randomInt } from 'node:crypto';
 import type { TipoDispositivo } from '@prisma/client';
@@ -23,6 +23,32 @@ export const CODIGO_SESION_REEMPLAZADA = 'SESION_REEMPLAZADA';
 
 /** Sin dominio propio todavía: mismo remitente de prueba que `AyudaService`. */
 const REMITENTE_RECUPERACION = 'GFH <onboarding@resend.dev>';
+
+/**
+ * Qué columnas de `Medico` guarda cada consentimiento. Un mapa y no un `if` por
+ * tipo: agregar un cuarto consentimiento es agregar una entrada, y TypeScript
+ * obliga a decir las dos direcciones, aceptar y retirar.
+ */
+export const CAMPOS_CONSENTIMIENTO: Record<
+  TipoConsentimiento,
+  {
+    aceptar: (version: string) => Record<string, string | Date | null>;
+    retirar: () => Record<string, string | Date | null>;
+  }
+> = {
+  TERMINOS: {
+    aceptar: (v) => ({ terminosVersion: v, terminosAceptadosAt: new Date() }),
+    retirar: () => ({ terminosVersion: null, terminosAceptadosAt: null }),
+  },
+  VERA: {
+    aceptar: (v) => ({ consentimientoVeraVersion: v, consentimientoVeraAt: new Date() }),
+    retirar: () => ({ consentimientoVeraVersion: null, consentimientoVeraAt: null }),
+  },
+  FOTO: {
+    aceptar: (v) => ({ consentimientoFotoVersion: v, consentimientoFotoAt: new Date() }),
+    retirar: () => ({ consentimientoFotoVersion: null, consentimientoFotoAt: null }),
+  },
+};
 
 /** Corto a propósito: 6 dígitos son pocos, así que dura poco y se prueba poco. */
 const MINUTOS_CODIGO_RECUPERACION = 15;
@@ -549,9 +575,13 @@ export class AuthService {
   }
 
   async perfil(medicoId: string) {
-    return this.prisma.medico.findUniqueOrThrow({
+    const { passwordHash, googleId, ...medico } = await this.prisma.medico.findUniqueOrThrow({
       where: { id: medicoId },
       select: {
+        // Sólo para decir CÓMO entra esta cuenta: la pantalla de eliminar cuenta
+        // pide contraseña o Google según el caso. Ninguno de los dos sale.
+        passwordHash: true,
+        googleId: true,
         id: true,
         email: true,
         nombreUsuario: true,
@@ -561,15 +591,62 @@ export class AuthService {
         rol: true,
         disclaimerVersion: true,
         disclaimerAceptadoAt: true,
+        terminosVersion: true,
+        terminosAceptadosAt: true,
+        consentimientoVeraVersion: true,
+        consentimientoVeraAt: true,
+        consentimientoFotoVersion: true,
+        consentimientoFotoAt: true,
         createdAt: true,
       },
     });
+    return { ...medico, tienePassword: passwordHash !== null, tieneGoogle: googleId !== null };
   }
 
   async aceptarDisclaimer(medicoId: string, version: string): Promise<void> {
     await this.prisma.medico.update({
       where: { id: medicoId },
       data: { disclaimerVersion: version, disclaimerAceptadoAt: new Date() },
+    });
+  }
+
+  /**
+   * Guarda que el médico aceptó un texto, y cuál.
+   *
+   * Sólo se acepta la versión VIGENTE: la app que manda una anterior mostró un
+   * texto que ya no es el nuestro, y guardarlo daría por probado algo que no se
+   * leyó. El rechazo la obliga a actualizarse.
+   */
+  async aceptarConsentimiento(medicoId: string, tipo: TipoConsentimiento, version: string): Promise<void> {
+    if (version !== VERSION_CONSENTIMIENTO[tipo]) {
+      throw new ConflictException({
+        codigo: 'VERSION_DESACTUALIZADA',
+        mensaje: 'El texto que viste ya no es el vigente. Actualizá la aplicación.',
+      });
+    }
+    await this.prisma.medico.update({
+      where: { id: medicoId },
+      data: { ...CAMPOS_CONSENTIMIENTO[tipo].aceptar(version) },
+    });
+    await this.prisma.auditLog.create({
+      data: { medicoId, accion: 'ADMIN_ACTION', detalle: `consentimiento ${tipo} aceptado v${version}` },
+    });
+  }
+
+  /**
+   * Retira un permiso. Sólo los de Vera y fotos: los términos no se «retiran»,
+   * se termina el contrato eliminando la cuenta.
+   */
+  async retirarConsentimiento(medicoId: string, tipo: TipoConsentimiento): Promise<void> {
+    if (tipo === 'TERMINOS') {
+      throw new BadRequestException('Los términos se dejan de aceptar eliminando la cuenta.');
+    }
+    await this.prisma.medico.update({
+      where: { id: medicoId },
+      data: { ...CAMPOS_CONSENTIMIENTO[tipo].retirar() },
+    });
+    await this.prisma.auditLog.create({
+      data: { medicoId, accion: 'ADMIN_ACTION', detalle: `consentimiento ${tipo} retirado` },
     });
   }
 

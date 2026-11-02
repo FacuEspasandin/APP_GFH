@@ -297,6 +297,10 @@ function Navegacion() {
         <Stack.Screen name="perfil/ayuda" options={{ headerShown: false }} />
         {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
         <Stack.Screen name="perfil/legales" options={{ headerShown: false }} />
+        {/* Un documento legal completo (?clave=terminos|privacidad|metodologia). Fuera de perfil/ a propósito: se lee también antes de tener cuenta, desde el registro, y ahí no hay menú que mostrar. */}
+        <Stack.Screen name="legal" options={{ headerShown: false }} />
+        {/* Permisos a terceros, derechos y baja — ver `privacidad.tsx`. */}
+        <Stack.Screen name="perfil/privacidad" options={{ headerShown: false }} />
         {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
         <Stack.Screen name="perfil/acerca" options={{ headerShown: false }} />
         {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}

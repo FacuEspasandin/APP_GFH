@@ -133,36 +133,30 @@ export class PerfilService {
    * No borra nada todavía: marca la cuenta y anota cuándo. Entrar dentro de
    * los siete días la revive —ver `AuthService`— y recién pasados se purga.
    *
-   * **No se puede dar de baja con la suscripción vigente.** Nosotros no
-   * cobramos ni reembolsamos: eso pasa entero por Apple y Google, así que una
-   * cuenta borrada con una suscripción viva dejaría al médico pagando por algo
-   * a lo que no puede entrar, y sin nada que podamos hacer desde acá. Primero
-   * se cancela en la tienda.
+   * **Con una suscripción vigente se puede dar de baja.** Antes se rechazaba y
+   * obligaba a cancelar primero en la tienda, pero eso es lo que Apple lee como
+   * «no se puede eliminar la cuenta» (guideline 5.1.1(v)): borrarla es un
+   * derecho que no puede depender de otro trámite. Lo que no podemos hacer es
+   * cancelar el cobro —pasa entero por Apple y Google—, así que la pantalla lo
+   * dice antes de confirmar y lleva a la gestión de la suscripción.
+   *
+   * `reautenticar` recibe cómo entra esta cuenta (contraseña o Google) y decide
+   * si lo que mandó el médico lo prueba. Devolver `false` rechaza la baja.
    */
-  async eliminarCuenta(medicoId: string, password: string, verificar: (hash: string) => Promise<boolean>) {
-    const medico = await this.prisma.medico.findUniqueOrThrow({ where: { id: medicoId } });
-    // Una cuenta de sólo Google no tiene contraseña que confirmar: el JWT ya
-    // acreditó la sesión, y pedir una contraseña que nunca existió sólo
-    // bloquearía la baja sin sumar seguridad real.
-    if (medico.passwordHash !== null && !(await verificar(medico.passwordHash))) {
-      throw new ConflictException('La contraseña no es correcta.');
-    }
-
-    const suscripcion = await this.prisma.suscripcion.findUnique({ where: { medicoId } });
-    const vigente =
-      suscripcion !== null &&
-      (suscripcion.estado === 'ACTIVA' ||
-        suscripcion.estado === 'GRACIA' ||
-        suscripcion.estado === 'CANCELADA') &&
-      suscripcion.periodoActualFin > new Date();
-
-    if (vigente) {
-      throw new ConflictException({
-        codigo: 'SUSCRIPCION_ACTIVA',
-        mensaje:
-          'Cancelá la suscripción en App Store o Google Play antes de eliminar la cuenta. ' +
-          'Desde acá no podemos cancelarla ni devolver lo pagado.',
-      });
+  async eliminarCuenta(
+    medicoId: string,
+    reautenticar: (cuenta: { passwordHash: string | null; googleId: string | null }) => Promise<boolean>,
+  ) {
+    const medico = await this.prisma.medico.findUniqueOrThrow({
+      where: { id: medicoId },
+      select: { passwordHash: true, googleId: true },
+    });
+    if (!(await reautenticar(medico))) {
+      throw new ConflictException(
+        medico.passwordHash !== null
+          ? 'La contraseña no es correcta.'
+          : 'No pudimos confirmar que sos vos. Volvé a elegir tu cuenta de Google.',
+      );
     }
 
     await this.prisma.$transaction([

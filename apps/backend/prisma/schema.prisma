@@ -945,6 +945,18 @@ model Medico {
   disclaimerVersion    String?
   disclaimerAceptadoAt DateTime?
 
+  /// Consentimientos, cada uno con la versión del texto que se aceptó y cuándo.
+  /// `null` = nunca aceptado (o retirado). El backend compara la versión contra
+  /// la vigente (`VERSION_CONSENTIMIENTO`, en shared-types): subirla vuelve a
+  /// pedirlo. VERA y FOTO mandan datos a un proveedor de IA / OCR de terceros,
+  /// así que sin esto no se llama (guideline 5.1.2(i) de Apple).
+  terminosVersion           String?
+  terminosAceptadosAt       DateTime?
+  consentimientoVeraVersion String?
+  consentimientoVeraAt      DateTime?
+  consentimientoFotoVersion String?
+  consentimientoFotoAt      DateTime?
+
   /// Para el reenganche por inactividad (7/30 días) — evita escanear
   /// `AuditLog` entero cada vez que corre el job de notificaciones. Se
   /// actualiza en cada login exitoso.

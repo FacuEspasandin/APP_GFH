@@ -57,6 +57,7 @@ const SIN_MENU = new Set([
   'registro',
   'recuperar',
   'disclaimer',
+  'legal',
   'suscripcion-vencida',
   'paywall',
 ]);

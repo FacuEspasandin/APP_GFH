@@ -15,6 +15,7 @@ import { Icono, type NombreIcono } from '@/ui/iconos';
 import { Boton } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { VERSION_CONSENTIMIENTO } from '@gfh/shared-types';
 
 const esquema = z.object({
   identificador: z.string().min(3, 'Ingresá tu email.'),
@@ -77,6 +78,9 @@ export default function Login() {
       // La cuenta se acaba de crear con este toque: falta el disclaimer de
       // primer ingreso, igual que el registro con contraseña.
       if (resultado === 'nuevo') {
+        // Crear la cuenta con Google desde acá es aceptar lo que dice el aviso
+        // de abajo. Se deja constancia de la versión; si falla, no frena el alta.
+        await API.aceptarConsentimiento('TERMINOS', VERSION_CONSENTIMIENTO.TERMINOS).catch(() => undefined);
         router.replace('/disclaimer');
         return;
       }
@@ -165,6 +169,28 @@ export default function Login() {
         </View>
 
         <BotonGoogle onPress={entrarConGoogle} cargando={entrandoConGoogle} />
+
+        {/* Con Google se puede crear la cuenta sin pasar por Registro, y ahí no
+            hay casilla: el aviso dice qué se acepta al continuar. */}
+        <Text className="font-sans mt-3 px-2 text-center text-eyebrow leading-4 text-ink-suave">
+          Si es tu primera vez, al continuar con Google aceptás los{' '}
+          <Text
+            className="font-medio text-accent"
+            onPress={() => router.push('/legal?clave=terminos' as never)}
+            accessibilityRole="link"
+          >
+            Términos y condiciones
+          </Text>{' '}
+          y la{' '}
+          <Text
+            className="font-medio text-accent"
+            onPress={() => router.push('/legal?clave=privacidad' as never)}
+            accessibilityRole="link"
+          >
+            Política de privacidad
+          </Text>
+          .
+        </Text>
       </ScrollView>
 
       <Disclaimer />

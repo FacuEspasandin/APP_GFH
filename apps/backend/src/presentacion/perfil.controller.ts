@@ -28,6 +28,7 @@ import {
   Min,
 } from 'class-validator';
 
+import { GoogleAuthService } from '../aplicacion/auth/google-auth.service';
 import { HashService } from '../aplicacion/auth/hash.service';
 import { PushService } from '../aplicacion/notificaciones/push.service';
 import { PerfilService } from '../aplicacion/perfil/perfil.service';
@@ -53,7 +54,10 @@ export class DatosMedicoDto {
 }
 
 export class EliminarCuentaDto {
-  @IsString() @Length(1, 200) password!: string;
+  /** Cuentas con contraseña. */
+  @IsOptional() @IsString() @Length(1, 200) password?: string;
+  /** Cuentas que entran sólo por Google: un id_token recién emitido. */
+  @IsOptional() @IsString() @Length(20, 5000) googleIdToken?: string;
 }
 
 export class RegistrarPushTokenDto {
@@ -72,6 +76,7 @@ export class PerfilController {
     @Inject(PerfilService) private readonly perfil: PerfilService,
     @Inject(SuscripcionService) private readonly suscripcion: SuscripcionService,
     @Inject(HashService) private readonly hash: HashService,
+    @Inject(GoogleAuthService) private readonly google: GoogleAuthService,
     @Inject(PushService) private readonly push: PushService,
   ) {}
 
@@ -113,14 +118,30 @@ export class PerfilController {
     return this.suscripcion.estado(medicoId);
   }
 
-  /** Pide la contraseña: es irreversible desde el punto de vista del usuario. */
+  /**
+   * Pide volver a probar quién sos: es irreversible desde el punto de vista del
+   * usuario. Una cuenta con contraseña manda la contraseña; una que entra sólo
+   * por Google manda un id_token fresco de Google, que tiene que ser de la misma
+   * cuenta de Google vinculada. Antes una cuenta de Google confirmaba con
+   * cualquier texto — no sumaba seguridad real.
+   */
   @Post('eliminar-cuenta')
   @HttpCode(204)
   @Throttle({ default: { limit: 3, ttl: 300_000 } })
   async eliminar(@MedicoActual() medicoId: string, @Cuerpo(EliminarCuentaDto) dto: EliminarCuentaDto) {
-    await this.perfil.eliminarCuenta(medicoId, dto.password, (hash) =>
-      this.hash.verificarPassword(dto.password, hash),
-    );
+    await this.perfil.eliminarCuenta(medicoId, async (cuenta) => {
+      if (cuenta.passwordHash !== null) {
+        return dto.password ? this.hash.verificarPassword(dto.password, cuenta.passwordHash) : false;
+      }
+      if (cuenta.googleId !== null && dto.googleIdToken) {
+        try {
+          return (await this.google.verificar(dto.googleIdToken)).googleId === cuenta.googleId;
+        } catch {
+          return false;
+        }
+      }
+      return false;
+    });
   }
 
   /**

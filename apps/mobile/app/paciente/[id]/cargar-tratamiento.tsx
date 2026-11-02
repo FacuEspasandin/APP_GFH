@@ -13,6 +13,7 @@ import {
   elegirTodas,
   listasParaCrear,
 } from '@/dominio/carga-tratamiento';
+import { useConsentimiento } from '@/ui/consentimiento';
 import { ConsultaPlegada, Veredicto } from '@/ui/herramienta';
 import { EncabezadoModal } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
@@ -101,6 +102,10 @@ export default function CargarTratamiento() {
     },
   });
 
+  // La imagen sale hacia un proveedor de reconocimiento de texto de un tercero
+  // (Google Cloud Vision): antes de la primera foto se pide el permiso expreso.
+  const permisoFoto = useConsentimiento('FOTO');
+
   const subirFoto = useMutation({
     mutationFn: (imagenBase64: string) => API.subirFoto<Linea[]>(pacienteId, imagenBase64),
     onMutate: () => setErrorFoto(null),
@@ -108,8 +113,11 @@ export default function CargarTratamiento() {
       setOrigen('foto');
       setLineas(aRevisadas(r));
     },
-    onError: (e) =>
-      setErrorFoto(e instanceof ErrorApi ? e.message : 'No se pudo procesar la foto. Cargá el tratamiento a mano.'),
+    onError: (e) => {
+      // El permiso se retiró desde otro teléfono: la próxima vez se vuelve a pedir.
+      permisoFoto.alRechazar(e);
+      setErrorFoto(e instanceof ErrorApi ? e.message : 'No se pudo procesar la foto. Cargá el tratamiento a mano.');
+    },
   });
 
   /**
@@ -120,14 +128,16 @@ export default function CargarTratamiento() {
    * tocar no reconoce más letras, tarda más en subir y en procesarse.
    */
   const elegirDesdeFoto = async (origen: 'camara' | 'galeria') => {
-    const permiso =
-      origen === 'camara'
-        ? await ImagePicker.requestCameraPermissionsAsync()
-        : await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (!permiso.granted) {
-      setErrorFoto('Sin permiso para usar la cámara o la galería. Habilitalo en Ajustes del teléfono.');
-      return;
+    // Sólo la cámara pide permiso. El selector de la galería es el del sistema
+    // (PHPicker en iOS, Photo Picker en Android): la app recibe únicamente la
+    // foto que el médico elige, sin acceso a las demás — así que no hay permiso
+    // de fotos que pedir.
+    if (origen === 'camara') {
+      const permiso = await ImagePicker.requestCameraPermissionsAsync();
+      if (!permiso.granted) {
+        setErrorFoto('Sin permiso para usar la cámara. Habilitalo en Ajustes del teléfono.');
+        return;
+      }
     }
 
     const resultado =
@@ -217,7 +227,7 @@ export default function CargarTratamiento() {
               style={{ textAlignVertical: 'top' }}
             />
             <Pressable
-              onPress={() => void elegirDesdeFoto('camara')}
+              onPress={() => permisoFoto.pedir(() => void elegirDesdeFoto('camara'))}
               disabled={subirFoto.isPending}
               accessibilityRole="button"
               accessibilityLabel="Cargar desde una foto"
@@ -232,7 +242,7 @@ export default function CargarTratamiento() {
           </View>
 
           <Pressable
-            onPress={() => void elegirDesdeFoto('galeria')}
+            onPress={() => permisoFoto.pedir(() => void elegirDesdeFoto('galeria'))}
             disabled={subirFoto.isPending}
             accessibilityRole="button"
             className="mb-3 items-center py-1"
@@ -240,7 +250,13 @@ export default function CargarTratamiento() {
             <Text className="font-medio text-meta text-accent">O elegir una foto de la galería</Text>
           </Pressable>
 
-          {/* La foto se procesa y se descarta: no se guarda nunca. */}
+          {/* La foto se procesa y se descarta: no se guarda nunca. Se dice acá
+              mismo, antes de tocar el botón, y el permiso lo repite con todo el
+              detalle la primera vez. */}
+          <Text className="font-sans mb-3 text-center text-eyebrow leading-4 text-ink-suave">
+            Con una foto, la imagen se envía a un servicio externo para leer el texto y se descarta:
+            GFH no la guarda.
+          </Text>
           {errorFoto ? (
             <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
               <Text className="font-sans text-meta leading-5 text-ink-suave">{errorFoto}</Text>
@@ -260,6 +276,8 @@ export default function CargarTratamiento() {
           </Boton>
         </BarraAccion>
         </KeyboardAvoidingView>
+
+        {permisoFoto.hoja}
       </View>
     );
   }

@@ -17,9 +17,10 @@ import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto, Chip, Estado, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
+import { EMAIL_CONTACTO, urlPublica } from '@gfh/shared-types';
 
 /** El email real de soporte — no el `soporte@gfh.app` del wireframe viejo. */
-const SOPORTE = 'info@gfh.com';
+const SOPORTE = EMAIL_CONTACTO;
 
 const esquema = z.object({
   nombre: z.string().min(1, 'Ingresá tu nombre.'),
@@ -242,6 +243,20 @@ export default function Ayuda() {
           </View>
           <Icono nombre="chevron" tamano={16} color={col.tenue} />
         </Pressable>
+
+        {/* La misma página que se carga como «URL de soporte» en App Store
+            Connect. Sólo aparece cuando existe el dominio. */}
+        {urlPublica('soporte') ? (
+          <Pressable
+            onPress={() => void Linking.openURL(urlPublica('soporte')!)}
+            accessibilityRole="link"
+            className="flex-row items-center justify-between border-t py-3.5"
+            style={{ borderColor: col.line }}
+          >
+            <Text className="text-body font-medio text-ink">Centro de ayuda en la web</Text>
+            <Icono nombre="chevron" tamano={16} color={col.tenue} />
+          </Pressable>
+        ) : null}
       </Pantalla>
     </View>
   );

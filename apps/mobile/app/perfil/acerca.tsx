@@ -1,4 +1,5 @@
-import { Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Pressable, Text, View } from 'react-native';
 
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
@@ -10,6 +11,7 @@ import { useColores } from '@/ui/tema';
 /** Acerca de GFH (6.13). */
 export default function Acerca() {
   const col = useColores();
+  const router = useRouter();
   const donde = dondeCorre();
 
   return (
@@ -64,9 +66,17 @@ export default function Acerca() {
           <Text className="font-sans text-meta leading-5 text-ink">
             Las tablas de ajuste renal son transcripción de{' '}
             <Text className="font-medio">Nefrología al día</Text>, Sociedad Española de Nefrología
-            (mayo 2025). Los textos de interacciones, alertas y alternativas son de redacción propia
-            y están pendientes de validación profesional.
+            (mayo 2025). Las fichas, monografías, interacciones y alertas provienen de bases de
+            datos farmacéuticas profesionales y de las fichas técnicas oficiales, y las calculadoras
+            usan la fórmula o escala original de cada una.
           </Text>
+          <Pressable
+            onPress={() => router.push('/legal?clave=metodologia' as never)}
+            accessibilityRole="link"
+            className="mt-2 self-start py-1"
+          >
+            <Text className="font-medio text-meta text-accent">Ver metodología y fuentes</Text>
+          </Pressable>
         </Superficie>
       </Pantalla>
     </View>

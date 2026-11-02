@@ -149,7 +149,10 @@ Rota el token: la sesión nueva ocupa el lugar de la vieja y **no desplaza a nad
 Revoca la sesión actual.
 
 ### `GET /auth/yo` · 🔒
-El médico: nombre, email, si aceptó el disclaimer y con qué versión.
+El médico: nombre, email, si aceptó el disclaimer y con qué versión, y sus consentimientos
+(`terminosVersion`, `consentimientoVeraVersion`, `consentimientoFotoVersion`, cada uno con su
+`…At`; `null` = nunca o retirado). Dice además CÓMO entra la cuenta —`tienePassword`,
+`tieneGoogle`— sin devolver la contraseña ni el id de Google.
 
 ### Una sesión por tipo de dispositivo
 
@@ -202,8 +205,23 @@ nada distinga cuentas reales de inventadas.
 
 ### `POST /auth/disclaimer` · 🔒
 ```json
-{ "version": "1.0" }
+{ "version": "1.1" }
 ```
+
+### Consentimientos · 🔒
+
+Quedan guardados por médico con la versión del texto aceptado y la fecha. Los de **Vera** y
+**foto** mandan datos a un tercero (Anthropic, Google Cloud Vision), así que el backend los
+exige: sin el permiso vigente, `POST /chat/mensajes` y `POST /pacientes/:id/foto` responden
+**403** `CONSENTIMIENTO_REQUERIDO` con el `tipo`. Subir `VERSION_CONSENTIMIENTO` (en
+`shared-types`) vuelve a pedirlo a todos.
+
+| Ruta | Qué |
+|---|---|
+| `POST /auth/consentimientos` | `{ "tipo": "TERMINOS"|"VERA"|"FOTO", "version": "1.0" }`. **204**. **409** `VERSION_DESACTUALIZADA` si la versión no es la vigente; **400** si el tipo no existe |
+| `DELETE /auth/consentimientos/:tipo` | retira `VERA` o `FOTO`. **204**. **400** con `TERMINOS` (se termina eliminando la cuenta) |
+
+Ambos dejan una huella en el rastro de auditoría (`consentimiento VERA aceptado v1.0`).
 
 ---
 
@@ -458,7 +476,7 @@ obligatorio y UUID (**400** si falta o no lo es; **404** si no existe).
 | `PATCH /perfil/datos` | nombre, apellido, email. **Cambiar el email exige `password`** (la actual; **409** si falta o no coincide, y en una cuenta de sólo Google): cierra las otras sesiones, deja el email sin verificar y avisa por push |
 | `GET /perfil/plan` | lo que la app necesita para decidir si muestra el paywall: `vigente`, `pacientes`, `limitePacientes`, `puedeCrearPaciente`, `consultas` |
 | `GET /perfil/suscripcion` | estado, plan y vencimiento |
-| `POST /perfil/eliminar-cuenta` | pide la contraseña. **204** |
+| `POST /perfil/eliminar-cuenta` | vuelve a probar quién sos: `{ "password" }` en una cuenta con contraseña, `{ "googleIdToken" }` (un id_token recién emitido de la misma cuenta de Google) en una que entra sólo por Google. **204**; **409** si no se prueba. **Se puede con una suscripción vigente**: el cobro sigue hasta cancelarla en la tienda, y la app lo avisa antes |
 | `GET /perfil/pacientes/:pacienteId/condiciones-alergias` | las dos listas de un paciente |
 | `POST /perfil/push-token` | `{ "token": "ExponentPushToken[…]", "plataforma": "IOS"\|"ANDROID" }`. **204** |
 | `POST /perfil/push-token/eliminar` | `{ "token": "…" }` — da de baja ese dispositivo. **204**, aunque el token sea de otro médico o no exista |

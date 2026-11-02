@@ -3,7 +3,15 @@ import { randomUUID } from 'node:crypto';
 import { JwtService } from '@nestjs/jwt';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { borrarMedicos, cliente, crearMedico, darSuscripcion, levantarApp, type Contexto } from './ayuda';
+import {
+  borrarMedicos,
+  cliente,
+  crearMedico,
+  darConsentimientos,
+  darSuscripcion,
+  levantarApp,
+  type Contexto,
+} from './ayuda';
 
 /**
  * Sesiones (una viva por tipo de dispositivo), `JwtGuard` que consulta la
@@ -219,6 +227,7 @@ describe('sesiones y topes', () => {
       const m = await crearMedico(api);
       medicos.push(m.id);
       await darSuscripcion(ctx.prisma, m.id);
+      await darConsentimientos(ctx.prisma, m.id);
 
       // 7 MB: pasa el tope de cuerpo de /foto (8 MiB) y lo frena el del DTO.
       const r = await api.post(

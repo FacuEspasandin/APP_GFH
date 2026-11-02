@@ -26,6 +26,14 @@ const BASE = resolverBase();
 function resolverBase(): string {
   const deEntorno = process.env.EXPO_PUBLIC_API_URL;
   if (deEntorno) return deEntorno.replace(/\/$/, '');
+  // Un build de tienda sin la URL del backend no puede caer a localhost en
+  // silencio: saldría a revisión hablando con una dirección que no existe en el
+  // teléfono del revisor. Mejor que se rompa al abrir, en el primer build que
+  // se prueba, y no que parezca una app caída. `__DEV__` es falso en cualquier
+  // build de release; el `typeof` es para los tests, donde no está definido.
+  if (typeof __DEV__ !== 'undefined' && !__DEV__) {
+    throw new Error('Falta EXPO_PUBLIC_API_URL en este build. Definila en el perfil de eas.json.');
+  }
   // En emulador Android, `localhost` es el propio emulador.
   if (Platform.OS === 'android') return 'http://10.0.2.2:3333';
   return 'http://127.0.0.1:3333';

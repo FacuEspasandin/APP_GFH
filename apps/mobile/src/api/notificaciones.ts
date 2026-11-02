@@ -24,16 +24,51 @@ Notifications.setNotificationHandler({
 });
 
 /**
- * Pide permiso y registra este dispositivo contra el médico logueado.
+ * Si el teléfono ya dio permiso para mostrar notificaciones.
+ *
+ * `as unknown as PermissionResponse`: el tipo que expone expo-notifications
+ * importa `PermissionResponse` desde `expo`, que en esta versión no lo
+ * reexporta — el campo existe en tiempo de ejecución (lo pone
+ * expo-modules-core), pero TypeScript no lo ve. Se castea contra la interfaz
+ * real en vez de tipar todo como `any`.
+ */
+export async function permisoDeNotificaciones(): Promise<boolean> {
+  const actual = (await Notifications.getPermissionsAsync()) as unknown as PermissionResponse;
+  return actual.granted;
+}
+
+/**
+ * El pedido de permiso, a pedido del médico y con contexto.
+ *
+ * Es lo único que abre el diálogo del sistema. Antes se abría solo, en el primer
+ * arranque con sesión, sin que nadie hubiera dicho que quería notificaciones:
+ * Apple lo rechaza (guideline 4.5.4) porque los avisos de GFH incluyen
+ * recordatorios de uso, que son promocionales y exigen un sí explícito con el
+ * texto delante. Se llama desde Perfil → Notificaciones, al prender el
+ * interruptor, con ese texto en pantalla.
+ *
+ * Devuelve `true` si quedó activado. Si el médico ya había negado el permiso, el
+ * sistema no vuelve a preguntar: la pantalla lo manda a Ajustes.
+ */
+export async function activarNotificaciones(): Promise<boolean> {
+  const pedido = (await Notifications.requestPermissionsAsync()) as unknown as PermissionResponse;
+  if (!pedido.granted) return false;
+  await registrarToken();
+  return true;
+}
+
+/**
+ * Registra este dispositivo contra el médico logueado — SIN pedir permiso.
  *
  * `habilitado` es el interruptor de Perfil → Notificaciones — server-side,
- * vale para todos los dispositivos. Si está apagado, en vez de pedir permiso
- * se da de baja el token que hubiera, para no dejar un registro que el
- * backend después manda igual.
+ * vale para todos los dispositivos. Si está apagado, se da de baja el token que
+ * hubiera, para no dejar un registro que el backend después manda igual. Si
+ * está prendido pero el teléfono no dio permiso, no se hace nada y NO se pregunta
+ * (ver `activarNotificaciones`).
  *
  * Idempotente a propósito: se llama en cada arranque con sesión activa, y
- * pedir permiso o volver a registrar el mismo token cada vez sería ruido —
- * por eso compara contra lo último guardado antes de tocar la red.
+ * volver a registrar el mismo token cada vez sería ruido — por eso compara
+ * contra lo último guardado antes de tocar la red.
  */
 export async function sincronizarPushToken(habilitado: boolean): Promise<void> {
   if (!habilitado) {
@@ -41,16 +76,11 @@ export async function sincronizarPushToken(habilitado: boolean): Promise<void> {
     return;
   }
 
-  // `as unknown as PermissionResponse`: el tipo que expone expo-notifications
-  // importa `PermissionResponse` desde `expo`, que en esta versión no lo
-  // reexporta — el campo existe en tiempo de ejecución (lo pone
-  // expo-modules-core), pero TypeScript no lo ve. Se castea contra la
-  // interfaz real en vez de tipar todo como `any`.
-  const actual = (await Notifications.getPermissionsAsync()) as unknown as PermissionResponse;
-  const concedido =
-    actual.granted || ((await Notifications.requestPermissionsAsync()) as unknown as PermissionResponse).granted;
-  if (!concedido) return;
+  if (!(await permisoDeNotificaciones())) return;
+  await registrarToken();
+}
 
+async function registrarToken(): Promise<void> {
   // Sin proyecto de EAS vinculado (falta `eas init`), pedir el token explota
   // en vez de devolver null — se corta acá con un aviso, mismo criterio que
   // el resto de las claves externas de la app (Sentry, RevenueCat).
