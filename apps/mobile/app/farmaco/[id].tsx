@@ -186,7 +186,11 @@ function ConfirmarConsulta({
 
       <Boton onPress={onSeguir}>Ver, y usar una</Boton>
 
-      <Pressable onPress={onCerrar} accessibilityRole="button" className="items-center py-3">
+      <Pressable
+        onPress={onCerrar}
+        accessibilityRole="button"
+        className="min-h-11 items-center justify-center"
+      >
         <Text className="font-medio text-meta text-ink-suave">Ahora no</Text>
       </Pressable>
     </HojaInferior>

@@ -566,7 +566,11 @@ export default function CockpitPaciente() {
 
       {/* Los ··· : lo que ya existe. Las tres pantallas de datos clínicos van
           juntas porque se usan juntas, y el historial cierra la lista. */}
-      <HojaInferior visible={menu === 'paciente'} onCerrar={() => setMenu('ninguno')}>
+      <HojaInferior
+        visible={menu === 'paciente'}
+        onCerrar={() => setMenu('ninguno')}
+        titulo="Opciones del paciente"
+      >
         {/* Cada opción dice qué hay cargado antes de abrirla: así se ve de un
             vistazo qué le falta al paciente sin entrar a las cuatro. */}
         {opcionesDelPaciente(id!, p).map((o) => (

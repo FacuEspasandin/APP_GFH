@@ -9,8 +9,8 @@ import { SkeletonLista } from '@/ui/estados-sistema';
 import { PantallaConError } from '@/ui/resultado-consulta';
 import { AvisoNeutro, Boton, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
+import { useColores } from '@/ui/tema';
 import { nombreDeLaTienda, tiendaDeLaCompra } from '@/ui/tienda';
-import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
 import type { EstadoSuscripcion as Estado } from '@/api/tipos';
 
@@ -25,6 +25,7 @@ const TEXTO: Record<Estado['estado'], string> = {
 /** Facturación (6.6). El estado lo define la tienda; acá sólo se lee. */
 export default function Suscripcion() {
   const router = useRouter();
+  const col = useColores();
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['suscripcion'],
     queryFn: API.estadoSuscripcion,
@@ -48,21 +49,22 @@ export default function Suscripcion() {
     );
   }
 
-  const color = data?.vigente
-    ? COLOR_SEVERIDAD.ok
-    : data?.estado === 'GRACIA'
-      ? COLOR_SEVERIDAD.media
-      : COLOR_SEVERIDAD.neutro;
+  // El estado de una suscripción no es gravedad clínica: un punto con los
+  // colores de la interfaz, no franja ni texto con la escala de severidad.
+  const color = data?.vigente ? col.exito : data?.estado === 'GRACIA' ? col.aviso : col.tenue;
 
   return (
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Suscripción" />
       <Pantalla>
         <Eyebrow>Estado</Eyebrow>
-        <Superficie elevacion="media" className="mb-4 px-3.5 py-3.5" style={{ borderLeftWidth: 4, borderLeftColor: color }}>
-          <Text className="text-fila font-fuerte" style={{ color }}>
-            {TEXTO[data?.estado ?? 'SIN_SUSCRIPCION']}
-          </Text>
+        <Superficie elevacion="media" className="mb-4 px-3.5 py-3.5">
+          <View className="flex-row items-center gap-2">
+            <View className="rounded-full" style={{ width: 9, height: 9, backgroundColor: color }} />
+            <Text className="text-fila font-fuerte text-ink">
+              {TEXTO[data?.estado ?? 'SIN_SUSCRIPCION']}
+            </Text>
+          </View>
           {data?.periodoActualFin ? (
             <Text className="font-sans mt-1 text-meta text-ink-suave">
               {data.vigente ? 'Vigente hasta' : 'Venció el'}{' '}

@@ -168,7 +168,7 @@ export default function Pacientes() {
         )}
       </Pantalla>
 
-      <HojaInferior visible={menuAbierto} onCerrar={() => setMenuAbierto(false)}>
+      <HojaInferior visible={menuAbierto} onCerrar={() => setMenuAbierto(false)} titulo="Crear">
         {[
           {
             titulo: 'Crear paciente',
