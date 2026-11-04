@@ -11,7 +11,7 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 | 2 · Escala tipográfica | hecha | 2026-10-28 | main | Escala nueva, mínimo 12 px, Inter 500 y 800. |
 | 3 · Superficies, radios, sombras | hecha | 2026-10-27 | `rediseno-visual/fase-1` | Hecho: sombras (valores del paquete), tarjetas con borde → `Superficie`, cero sombras a mano. Radios 10/14/20/24/28 y margen 18 aplicados el 28/10. |
 | 4 · Kit de piezas | hecha en código, falta mirarla en teléfono | 2026-11-04 | `rediseno-visual/fase-4` | Se suma `TarjetaHero`, `Boton` normal en píldora y el catálogo `/dev/componentes` (sólo `__DEV__`). Sin capturas: el web no compila (`react-native-pager-view`), hay que abrirlo en el teléfono, claro y oscuro. |
-| 5 · Pantallas por familias | pendiente | | | |
+| 5 · Pantallas por familias | en curso: familia 1 (pestañas) hecha en código | 2026-11-04 | main | Sin pushear. Falta mirarla en teléfono, claro y oscuro. Siguen: Paciente, Fármaco, Herramientas, Perfil, Acceso. |
 | 6 · Cierre visual | parcial | 2026-10-28 | main | Auditoría estricta en CI. Falta pasada de accesibilidad y mirar en teléfono. |
 | Etapa B · Eficiencia | no iniciada | | | |
 
@@ -42,6 +42,9 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 - 2026-11-04 · `TarjetaHero` (`src/ui/tarjeta-hero.tsx`): degradé `primary` → `primaryHover` en claro, `surfaceAlt` con filo `primary` arriba en oscuro, radio `hero`, sombra `media`. `useColoresHero()` da el color del texto de adentro, que sigue a la tarjeta y no a `ink`. Una por pantalla como máximo. Todavía no la usa ninguna pantalla: entra en la Fase 5.
 - 2026-11-04 · Catálogo `/dev/componentes` (`app/dev/componentes.tsx`): todas las piezas con sus estados y un selector claro/oscuro que cambia sólo el teléfono (no la preferencia de la cuenta). En producción redirige al inicio. Quedan fuera `EncabezadoApp`, `MenuInferior`, `SinConexion` y `ErrorGenerico`, que dependen de la ruta o ocupan la pantalla entera.
 
+- 2026-11-04 · Fase 5, familia 1 (pestañas). Pacientes: el `+` circular pasa a `Boton` chico con ícono «Nuevo». Perfil: «Cerrar sesión» y «Editar perfil» usan `Boton` secundario en vez de `Pressable` armados a mano; «Eliminar cuenta» sube a 44 px de alto táctil; la franja gris de la tarjeta de identidad se saca (la franja es de gravedad, no decoración). Los puntos de estado de la suscripción dejan los colores de severidad y usan `exito`/`aviso`/`tenue`. Grupos: el chevron deja `COLOR_SEVERIDAD.neutro`. Chat: el aviso de IA pasa de `tenue` a `ink-suave` (no llegaba a contraste AA) y el botón enviar suma `hitSlop`. Buscador y Herramientas: sin cambios propios, ya cumplían el checklist.
+- 2026-11-04 · Radio: los 9 `rounded` por defecto (4 px) de azulejos de ícono y etiquetas pasan a `rounded-chip`. Las 3 barras de `restricciones.tsx` se quedan en 4 px: son geometría de gráfico.
+
 ## Métricas (de `node scripts/auditar-visual.mjs`)
 
 | Fecha | Fase | hexSueltos | hexMarca | valoresArbitrarios | textoMenorA12 | bordesLinea | adopciónSuperficie |
@@ -64,4 +67,6 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 - **Dos encabezados con «cerrar»** copiados dentro de pantallas (`cargar-tratamiento`, `paywall`): candidatos a una pieza `EncabezadoModal`.
 - **Chips activos sólidos** repetidos (`herramientas` pestaña, `perfil/umbral`, `prescripcion`, selector de unidades de LDL): candidatos a una variante de `Chip`; cada uno tiene forma distinta, hay que decidir la forma.
 
+- **`aviso` usado como gravedad clínica** (`grupos.tsx`, «gravedad alta» en `TarjetaGrupo`) y `peligro` para los conteos «contraindicado»/«grave»: es la pregunta abierta sobre `#B45309`. No se tocó: es presentación de severidad y se decide con la persona.
+- **Pastilla duplicada en Perfil**: la `Identidad` y la `TarjetaPlan` justo debajo dicen las dos «Suscripción activa / Plan gratis». Candidata a sacar la pastilla; decide la persona.
 - **Capturas**: no se tomaron. Todo se verificó por código, tipos y pruebas; falta mirarlo en un teléfono, claro y oscuro.
