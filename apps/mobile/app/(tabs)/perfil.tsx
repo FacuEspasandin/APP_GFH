@@ -65,7 +65,6 @@ export default function PerfilPantalla() {
       <Identidad
         nombre={nombreCompleto}
         email={data?.email ?? ''}
-        suscripcion={suscripcion.data}
         onEditar={() => router.push('/perfil/cuenta')}
       />
 
@@ -188,12 +187,10 @@ function textoSesiones(n?: number): string | null {
 function Identidad({
   nombre,
   email,
-  suscripcion,
   onEditar,
 }: {
   nombre: string;
   email: string;
-  suscripcion?: EstadoSuscripcion;
   onEditar: () => void;
 }) {
   const col = useColores();
@@ -217,28 +214,8 @@ function Identidad({
         {email}
       </Text>
 
-      {/* Acá iba el rol ("MEDICO"), que es vocabulario del sistema y además el
-          único rol con pantallas en v1. El lugar más visible de la pantalla lo
-          ocupa ahora el dato que cambia lo que la app deja hacer. */}
-      {suscripcion ? (
-        <View
-          className="mt-2.5 flex-row items-center gap-1.5 rounded-full px-3 py-1"
-          style={{ backgroundColor: col.paper, borderWidth: 1, borderColor: col.line }}
-        >
-          <View
-            className="rounded-full"
-            style={{
-              width: 8,
-              height: 8,
-              backgroundColor: suscripcion.vigente ? col.exito : col.tenue,
-            }}
-          />
-          <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
-            {suscripcion.vigente ? 'Suscripción activa' : 'Plan gratis'}
-          </Text>
-        </View>
-      ) : null}
-
+      {/* Acá iba el rol ("MEDICO") y después una pastilla con el plan. El plan
+          vive en `TarjetaPlan`, justo debajo: decirlo dos veces era ruido. */}
       <View className="mt-4">
         <Boton tamano="chico" variante="secundario" onPress={onEditar}>
           Editar perfil

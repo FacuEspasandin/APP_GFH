@@ -19,7 +19,7 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 
 - [x] Botones: píldora (decidido el 4/11).
 - [x] Tipografía: se queda Inter (decidido el 4/11).
-- [ ] Color de aviso (`#B45309`): ¿es gravedad clínica o aviso de interfaz?
+- [x] Color de aviso (`#B45309`): puede ser el mismo para aviso de interfaz y para «gravedad alta» (decidido el 4/11). Un solo color, dos usos.
 - [ ] ¿Se agrega la auditoría visual estricta al CI al cerrar la Fase 6?
 
 ## Decisiones tomadas
@@ -45,6 +45,9 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 - 2026-11-04 · Fase 5, familia 1 (pestañas). Pacientes: el `+` circular pasa a `Boton` chico con ícono «Nuevo». Perfil: «Cerrar sesión» y «Editar perfil» usan `Boton` secundario en vez de `Pressable` armados a mano; «Eliminar cuenta» sube a 44 px de alto táctil; la franja gris de la tarjeta de identidad se saca (la franja es de gravedad, no decoración). Los puntos de estado de la suscripción dejan los colores de severidad y usan `exito`/`aviso`/`tenue`. Grupos: el chevron deja `COLOR_SEVERIDAD.neutro`. Chat: el aviso de IA pasa de `tenue` a `ink-suave` (no llegaba a contraste AA) y el botón enviar suma `hitSlop`. Buscador y Herramientas: sin cambios propios, ya cumplían el checklist.
 - 2026-11-04 · Radio: los 9 `rounded` por defecto (4 px) de azulejos de ícono y etiquetas pasan a `rounded-chip`. Las 3 barras de `restricciones.tsx` se quedan en 4 px: son geometría de gráfico.
 
+- 2026-11-04 · `#B45309` se queda como `aviso`, sin separar en dos tokens: puede ser el mismo color para el aviso de interfaz y para «gravedad alta» en Grupos · decisión de la persona. La regla no cambia: los colores de severidad no se usan para decorar, y el color de marca no dice gravedad.
+- 2026-11-04 · Perfil: se saca la pastilla «Suscripción activa / Plan gratis» de la tarjeta de identidad; el plan queda sólo en `TarjetaPlan` · decisión de la persona.
+
 ## Métricas (de `node scripts/auditar-visual.mjs`)
 
 | Fecha | Fase | hexSueltos | hexMarca | valoresArbitrarios | textoMenorA12 | bordesLinea | adopciónSuperficie |
@@ -67,6 +70,4 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 - **Dos encabezados con «cerrar»** copiados dentro de pantallas (`cargar-tratamiento`, `paywall`): candidatos a una pieza `EncabezadoModal`.
 - **Chips activos sólidos** repetidos (`herramientas` pestaña, `perfil/umbral`, `prescripcion`, selector de unidades de LDL): candidatos a una variante de `Chip`; cada uno tiene forma distinta, hay que decidir la forma.
 
-- **`aviso` usado como gravedad clínica** (`grupos.tsx`, «gravedad alta» en `TarjetaGrupo`) y `peligro` para los conteos «contraindicado»/«grave»: es la pregunta abierta sobre `#B45309`. No se tocó: es presentación de severidad y se decide con la persona.
-- **Pastilla duplicada en Perfil**: la `Identidad` y la `TarjetaPlan` justo debajo dicen las dos «Suscripción activa / Plan gratis». Candidata a sacar la pastilla; decide la persona.
 - **Capturas**: no se tomaron. Todo se verificó por código, tipos y pruebas; falta mirarlo en un teléfono, claro y oscuro.
