@@ -241,14 +241,16 @@ export default function CargarTratamiento() {
             </Pressable>
           </View>
 
-          <Pressable
-            onPress={() => permisoFoto.pedir(() => void elegirDesdeFoto('galeria'))}
-            disabled={subirFoto.isPending}
-            accessibilityRole="button"
-            className="mb-3 items-center py-1"
-          >
-            <Text className="font-medio text-meta text-accent">O elegir una foto de la galería</Text>
-          </Pressable>
+          <View className="mb-3">
+            <Boton
+              variante="secundario"
+              icono="carpeta"
+              deshabilitado={subirFoto.isPending}
+              onPress={() => permisoFoto.pedir(() => void elegirDesdeFoto('galeria'))}
+            >
+              O elegir una foto de la galería
+            </Boton>
+          </View>
 
           {/* La foto se procesa y se descarta: no se guarda nunca. Se dice acá
               mismo, antes de tocar el botón, y el permiso lo repite con todo el
@@ -324,14 +326,14 @@ export default function CargarTratamiento() {
           <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             {elegidas.length} de {reconocidas.length} elegidas
           </Text>
-          <Pressable
-            onPress={() =>
-              setLineas((ls) => elegirTodas(ls ?? []))
-            }
-            accessibilityRole="button"
+          <Boton
+            tamano="chico"
+            variante="secundario"
+            icono="check"
+            onPress={() => setLineas((ls) => elegirTodas(ls ?? []))}
           >
-            <Text className="font-medio text-meta text-accent">Elegir todas</Text>
-          </Pressable>
+            Elegir todas
+          </Boton>
         </View>
 
         {lineas.map((l, i) => (

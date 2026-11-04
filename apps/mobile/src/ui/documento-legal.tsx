@@ -1,6 +1,7 @@
 import { Linking, Pressable, Text, View } from 'react-native';
 
 import { Icono } from './iconos';
+import { Boton } from './kit';
 import { Superficie } from './superficie';
 import { useColores } from './tema';
 import { VIGENTE_DESDE, urlPublica, type DocumentoLegal } from '@gfh/shared-types';
@@ -58,14 +59,16 @@ export function DocumentoLegalVista({ documento }: { documento: DocumentoLegal }
       {/* Sólo cuando ya existe el dominio: un enlace que no lleva a ningún lado
           es peor que ninguno. Mientras tanto el texto completo está arriba. */}
       {publica ? (
-        <Pressable
-          onPress={() => void Linking.openURL(publica)}
-          accessibilityRole="link"
-          className="mt-1 flex-row items-center gap-2 py-2"
-        >
-          <Icono nombre="documento" tamano={16} color={col.accent} />
-          <Text className="font-medio text-meta text-accent">Ver en la web</Text>
-        </Pressable>
+        <View className="mt-1">
+          <Boton
+            tamano="chico"
+            variante="secundario"
+            icono="documento"
+            onPress={() => void Linking.openURL(publica)}
+          >
+            Ver en la web
+          </Boton>
+        </View>
       ) : null}
     </View>
   );

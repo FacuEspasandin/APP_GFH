@@ -132,15 +132,16 @@ export default function AgregarFarmaco() {
                   {producto.principiosActivos.join(' + ')}
                 </Text>
               </View>
-              <Pressable
+              <Boton
+                tamano="chico"
+                variante="secundario"
                 onPress={() => {
                   setProducto(null);
                   setConflicto(null);
                 }}
-                accessibilityRole="button"
               >
-                <Text className="font-medio text-meta text-accent">Cambiar</Text>
-              </Pressable>
+                Cambiar
+              </Boton>
             </View>
           ) : (
             <>

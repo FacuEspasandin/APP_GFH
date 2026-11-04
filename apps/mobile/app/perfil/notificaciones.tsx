@@ -9,7 +9,7 @@ import {
 } from '@/api/notificaciones';
 import * as API from '@/api/endpoints';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
-import { Pantalla } from '@/ui/kit';
+import { Boton, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores, useTema } from '@/ui/tema';
 
@@ -117,13 +117,16 @@ export default function Notificaciones() {
           ) : null}
 
           {permiso === false ? (
-            <Pressable
-              onPress={() => void Linking.openSettings()}
-              accessibilityRole="button"
-              className="mt-3 self-start py-1"
-            >
-              <Text className="font-medio text-meta text-accent">Abrir Ajustes del teléfono</Text>
-            </Pressable>
+            <View className="mt-3">
+              <Boton
+                tamano="chico"
+                variante="secundario"
+                icono="dispositivo"
+                onPress={() => void Linking.openSettings()}
+              >
+                Abrir Ajustes del teléfono
+              </Boton>
+            </View>
           ) : null}
         </Superficie>
       </Pantalla>

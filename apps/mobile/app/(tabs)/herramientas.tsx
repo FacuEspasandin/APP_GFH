@@ -23,7 +23,7 @@ import { esDePago, rutaHerramienta } from '@/dominio/plan-gratis';
 import { mostrarRecientes, recientesVigentes } from '@/dominio/recientes';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
-import { CampoTexto, Eyebrow, Pantalla, Chip } from '@/ui/kit';
+import { Boton, CampoTexto, Eyebrow, Pantalla, Chip } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
@@ -332,13 +332,16 @@ function SinCoincidencias({ consulta }: { consulta: string }) {
         Los fármacos se buscan en el Buscador, que es donde está la ficha con sus restricciones e
         interacciones.
       </Text>
-      <Pressable
-        onPress={() => router.push(`/buscador?q=${encodeURIComponent(consulta)}` as never)}
-        accessibilityRole="button"
-        className="mt-3 py-1"
-      >
-        <Text className="font-medio text-meta text-accent">Buscar «{consulta}» en fármacos</Text>
-      </Pressable>
+      <View className="mt-3">
+        <Boton
+          tamano="chico"
+          variante="secundario"
+          icono="buscar"
+          onPress={() => router.push(`/buscador?q=${encodeURIComponent(consulta)}` as never)}
+        >
+          {`Buscar «${consulta}» en fármacos`}
+        </Boton>
+      </View>
     </Superficie>
   );
 }

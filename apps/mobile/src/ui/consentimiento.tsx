@@ -170,16 +170,19 @@ function PedidoDePermiso({
         </View>
       ))}
 
-      <Pressable
-        onPress={() => {
-          onCancelar();
-          router.push('/legal?clave=privacidad' as never);
-        }}
-        accessibilityRole="link"
-        className="mb-4 mt-1 self-start py-1"
-      >
-        <Text className="font-medio text-meta text-accent">Leer la política de privacidad</Text>
-      </Pressable>
+      <View className="mb-4 mt-1">
+        <Boton
+          tamano="chico"
+          variante="secundario"
+          icono="documento"
+          onPress={() => {
+            onCancelar();
+            router.push('/legal?clave=privacidad' as never);
+          }}
+        >
+          Leer la política de privacidad
+        </Boton>
+      </View>
 
       <View className="mb-4">
         <CasillaAceptacion marcada={marcada} onAlternar={onAlternar}>

@@ -457,13 +457,14 @@ export default function CockpitPaciente() {
         {/* ---------- 3. Tratamiento activo ---------- */}
         <View className="mb-2 flex-row items-center justify-between">
           <Eyebrow>Tratamiento activo · {data.prescripciones.length}</Eyebrow>
-          <Pressable
+          <Boton
+            tamano="chico"
+            variante="secundario"
+            icono="camara"
             onPress={() => abrir(`/paciente/${id}/cargar-tratamiento`)}
-            accessibilityRole="button"
-            hitSlop={10}
           >
-            <Text className="mb-2 text-meta font-medio text-accent">Cargar tratamiento</Text>
-          </Pressable>
+            Cargar tratamiento
+          </Boton>
         </View>
 
         {data.prescripciones.length === 0 ? (

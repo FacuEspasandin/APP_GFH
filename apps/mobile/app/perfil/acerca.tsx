@@ -4,7 +4,7 @@ import { Pressable, Text, View } from 'react-native';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { dondeCorre, versionApp } from '@/ui/dispositivo';
-import { Eyebrow, Pantalla } from '@/ui/kit';
+import { Boton, Eyebrow, Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 
@@ -70,13 +70,16 @@ export default function Acerca() {
             datos farmacéuticas profesionales y de las fichas técnicas oficiales, y las calculadoras
             usan la fórmula o escala original de cada una.
           </Text>
-          <Pressable
-            onPress={() => router.push('/legal?clave=metodologia' as never)}
-            accessibilityRole="link"
-            className="mt-2 self-start py-1"
-          >
-            <Text className="font-medio text-meta text-accent">Ver metodología y fuentes</Text>
-          </Pressable>
+          <View className="mt-3">
+            <Boton
+              tamano="chico"
+              variante="secundario"
+              icono="documento"
+              onPress={() => router.push('/legal?clave=metodologia' as never)}
+            >
+              Ver metodología y fuentes
+            </Boton>
+          </View>
         </Superficie>
       </Pantalla>
     </View>
