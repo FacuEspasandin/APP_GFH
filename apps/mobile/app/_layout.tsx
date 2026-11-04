@@ -305,6 +305,8 @@ function Navegacion() {
         <Stack.Screen name="perfil/acerca" options={{ headerShown: false }} />
         {/* Cabecera propia (rediseño) — ver `EncabezadoConTitulo`. */}
         <Stack.Screen name="perfil/eliminar-cuenta" options={{ headerShown: false }} />
+        {/* Catálogo de piezas; en producción redirige al inicio. */}
+        <Stack.Screen name="dev/componentes" options={{ headerShown: false }} />
       </Stack>
 
       {/* Fuera del Stack a propósito: así sobrevive a cualquier navegación. */}

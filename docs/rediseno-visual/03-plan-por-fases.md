@@ -31,7 +31,7 @@ Se avanza **de a una fase**. Nunca se empieza la siguiente sin cerrar la anterio
 
 - Sumar Inter 500 y 800 en `fuentes.ts` y las clases `font-suave` y `font-extra`.
 - Aplicar la escala nueva de `02-tokens-objetivo.md` (sube `body` a 15, `meta` a 13, `eyebrow` a 12, `pantalla` a 17, `titulo` y `display`).
-- **[DECIDIR]** prueba opcional de otra familia en 3 pantallas (`04-librerias.md`).
+- ~~Prueba opcional de otra familia~~: descartada el 4/11, se queda Inter.
 - **Revisión:** las 10 pantallas de la Fase 0. Preguntas: ¿se entiende en 2 segundos qué es lo más importante?, ¿se sigue leyendo bien una tabla de cifras?
 - **Cierre:** `fontSizeSuelto` y `textoMenorA12` en 0.
 

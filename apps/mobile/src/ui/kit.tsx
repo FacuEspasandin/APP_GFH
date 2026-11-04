@@ -136,7 +136,7 @@ export function FilaAccion({
  * El botón. Una sola pieza para toda la app: lo que cambia es el `tamano`, no
  * quién lo dibuja.
  *
- *   normal  48 px, esquina de chip. El de formularios y diálogos.
+ *   normal  48 px, píldora. El de formularios y diálogos.
  *   grande  56 px, píldora. La acción principal de una pantalla (analizar,
  *           calcular, entrar, crear).
  *   chico   40 px, píldora, ancho del contenido. Acción secundaria al costado.
@@ -173,7 +173,7 @@ export function Boton({
       ? 'h-14 w-full gap-3 rounded-full'
       : tamano === 'chico'
         ? 'h-10 gap-2 rounded-full px-6'
-        : 'h-12 rounded-control';
+        : 'h-12 rounded-full';
 
   // Cede 3% bajo el dedo y vuelve. Sutil a propósito: en una herramienta clínica
   // un rebote grande se vuelve ruido a la décima vez. Es la misma respuesta que

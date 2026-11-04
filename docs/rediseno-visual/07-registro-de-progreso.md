@@ -10,15 +10,15 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 | 1 · Tokens única fuente | hecha, sin commit | 2026-10-27 | `rediseno-visual/fase-1` | Pendiente: `fontSize`/texto < 12 px (Fase 2) y pasar `theme.extend` a `theme` (ver pendientes). |
 | 2 · Escala tipográfica | hecha | 2026-10-28 | main | Escala nueva, mínimo 12 px, Inter 500 y 800. |
 | 3 · Superficies, radios, sombras | hecha | 2026-10-27 | `rediseno-visual/fase-1` | Hecho: sombras (valores del paquete), tarjetas con borde → `Superficie`, cero sombras a mano. Radios 10/14/20/24/28 y margen 18 aplicados el 28/10. |
-| 4 · Kit de piezas | parcial | 2026-10-28 | main | Hechas: EtiquetaEstado, TituloConEtiqueta, EncabezadoModal, Chip suave/sólido, Segmentado, AvisoPeligro, BarraAccion, EncabezadoHerramienta. Falta /dev/componentes. |
+| 4 · Kit de piezas | hecha en código, falta mirarla en teléfono | 2026-11-04 | `rediseno-visual/fase-4` | Se suma `TarjetaHero`, `Boton` normal en píldora y el catálogo `/dev/componentes` (sólo `__DEV__`). Sin capturas: el web no compila (`react-native-pager-view`), hay que abrirlo en el teléfono, claro y oscuro. |
 | 5 · Pantallas por familias | pendiente | | | |
 | 6 · Cierre visual | parcial | 2026-10-28 | main | Auditoría estricta en CI. Falta pasada de accesibilidad y mirar en teléfono. |
 | Etapa B · Eficiencia | no iniciada | | | |
 
 ## Decisiones abiertas para la persona
 
-- [ ] Botones: ¿radio 14 px o píldora?
-- [ ] Tipografía: ¿se queda Inter o se prueba otra familia?
+- [x] Botones: píldora (decidido el 4/11).
+- [x] Tipografía: se queda Inter (decidido el 4/11).
 - [ ] Color de aviso (`#B45309`): ¿es gravedad clínica o aviso de interfaz?
 - [ ] ¿Se agrega la auditoría visual estricta al CI al cerrar la Fase 6?
 
@@ -37,6 +37,10 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 - 2026-10-28 · Deslizar una prescripción del cockpit muestra «Ajustar» y «Suspender» (`FilaDeslizable`). El gesto **no ejecuta nada**: «Suspender» abre una confirmación y después `avisar(..., { etiqueta: 'Deshacer' })` deja 7 s para reactivar. Reactivar usa el mismo `PATCH` con `estado: ACTIVO`.
 - 2026-10-28 · Teclado: la barra «Siguiente · Listo» sobre el teclado numérico de iOS (que no tiene tecla de retorno) y `useCadena(n)` para encadenar campos (Registro, Crear paciente, calculadoras en formulario). `Pantalla` ajusta el teclado en iOS (`automaticallyAdjustKeyboardInsets`).
 - 2026-10-28 · Ocho pantallas que quedaban en esqueleto para siempre si la consulta fallaba ahora muestran el error con «reintentar» (`PantallaConError`).
+
+- 2026-11-04 · Botones en píldora y Inter se queda · decisión de la persona. `Boton` normal (48 px) pasa de `rounded-control` a `rounded-full`, como ya eran el grande y el chico. `control` (14 px) queda sólo para campos de texto. Se descarta probar otra familia tipográfica.
+- 2026-11-04 · `TarjetaHero` (`src/ui/tarjeta-hero.tsx`): degradé `primary` → `primaryHover` en claro, `surfaceAlt` con filo `primary` arriba en oscuro, radio `hero`, sombra `media`. `useColoresHero()` da el color del texto de adentro, que sigue a la tarjeta y no a `ink`. Una por pantalla como máximo. Todavía no la usa ninguna pantalla: entra en la Fase 5.
+- 2026-11-04 · Catálogo `/dev/componentes` (`app/dev/componentes.tsx`): todas las piezas con sus estados y un selector claro/oscuro que cambia sólo el teléfono (no la preferencia de la cuenta). En producción redirige al inicio. Quedan fuera `EncabezadoApp`, `MenuInferior`, `SinConexion` y `ErrorGenerico`, que dependen de la ruta o ocupan la pantalla entera.
 
 ## Métricas (de `node scripts/auditar-visual.mjs`)
 

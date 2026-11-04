@@ -75,10 +75,10 @@ module.exports = {
       },
       borderRadius: {
         chip: '10px',
-        // Campos y botones de tamaño normal.
+        // Campos de texto. Los botones son píldora (`rounded-full`), decidido el 4/11.
         control: '14px',
         card: '20px',
-        // Tarjeta protagonista (reservado: aún no hay `TarjetaHero`).
+        // Tarjeta protagonista: `TarjetaHero`.
         hero: '24px',
         sheet: '28px',
         // Esquina de la burbuja de chat que apunta a quien habla, y casilla de verificación.

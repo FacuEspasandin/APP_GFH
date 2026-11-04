@@ -60,6 +60,8 @@ const SIN_MENU = new Set([
   'legal',
   'suscripcion-vencida',
   'paywall',
+  // Catálogo de piezas, sólo en builds de desarrollo.
+  'dev',
 ]);
 
 /**

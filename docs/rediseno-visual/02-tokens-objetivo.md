@@ -24,7 +24,7 @@ La regla de oro no cambia: **los colores de severidad no se usan para decorar** 
 
 ## Tipografía
 
-**Familia:** Inter para todo el texto; IBM Plex Mono solo para cifras que tienen que alinearse (Clcr, dosis, tablas). **[DECIDIR]** si se prueba otra familia (ver `04-librerias.md`).
+**Familia:** Inter para todo el texto; IBM Plex Mono solo para cifras que tienen que alinearse (Clcr, dosis, tablas). Decidido el 4/11: se queda Inter, no se prueba otra familia.
 
 **Pesos:** se mantienen `font-sans` (400), `font-medio` (600) y `font-fuerte` (700) y se agregan `font-suave` (Inter 500) y `font-extra` (Inter 800, solo para cifras y títulos grandes). Se suman en `src/ui/fuentes.ts`.
 
@@ -46,7 +46,7 @@ La regla de oro no cambia: **los colores de severidad no se usan para decorar** 
 | Token | Hoy | Objetivo | Uso |
 |---|---|---|---|
 | `chip` | 7 | 10 | Etiquetas y chips |
-| `control` (nuevo) | — | 14 | Campos y botones **[DECIDIR: 14 px o píldora]** |
+| `control` (nuevo) | — | 14 | Campos de texto. Los botones son píldora (999), decidido el 4/11 |
 | `card` | 12 | 20 | Tarjetas y filas agrupadas |
 | `hero` (nuevo) | — | 24 | Tarjeta protagonista |
 | `sheet` | 16 | 28 | Hojas inferiores |
