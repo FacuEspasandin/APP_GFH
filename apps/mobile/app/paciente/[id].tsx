@@ -526,18 +526,39 @@ export default function CockpitPaciente() {
       </Pantalla>
 
       {/* El + : sólo lo que crea un registro nuevo (3.1.5) */}
-      <HojaInferior visible={menu === 'agregar'} onCerrar={() => setMenu('ninguno')}>
+      <HojaInferior
+        visible={menu === 'agregar'}
+        onCerrar={() => setMenu('ninguno')}
+        titulo="Agregar al paciente"
+      >
         {[
-          ['Agregar fármaco', `/paciente/${id}/agregar-farmaco`],
-          ['Agregar condición', `/paciente/${id}/agregar-condicion`],
-          ['Agregar alergia', `/paciente/${id}/agregar-alergia`],
-        ].map(([titulo, ruta]) => (
+          {
+            titulo: 'Fármaco',
+            detalle: 'Buscar y sumar al tratamiento',
+            icono: 'capsula' as const,
+            ruta: `/paciente/${id}/agregar-farmaco`,
+          },
+          {
+            titulo: 'Condición',
+            detalle: 'Diagnósticos y estados del paciente',
+            icono: 'pulso' as const,
+            ruta: `/paciente/${id}/agregar-condicion`,
+          },
+          {
+            titulo: 'Alergia',
+            detalle: 'Reacciones conocidas a fármacos',
+            icono: 'alerta' as const,
+            ruta: `/paciente/${id}/agregar-alergia`,
+          },
+        ].map((o) => (
           <OpcionHoja
-            key={ruta}
-            titulo={titulo!}
+            key={o.ruta}
+            titulo={o.titulo}
+            detalle={o.detalle}
+            icono={o.icono}
             onPress={() => {
               setMenu('ninguno');
-              abrir(ruta!);
+              abrir(o.ruta);
             }}
           />
         ))}
