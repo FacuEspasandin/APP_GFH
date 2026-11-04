@@ -34,6 +34,7 @@ export function GrupoOpciones({ children }: { children: ReactNode }) {
  */
 export function Opcion({
   titulo,
+  detalle,
   valor,
   icono,
   onPress,
@@ -41,6 +42,9 @@ export function Opcion({
   primera,
 }: {
   titulo: string;
+  /** Una línea que dice qué hay detrás. Sólo donde ayuda a elegir: en una lista de
+   *  doce accesos (Perfil) cargaría la pantalla. */
+  detalle?: string;
   valor?: string | null;
   icono: NombreIcono;
   onPress?: () => void;
@@ -63,7 +67,7 @@ export function Opcion({
       }
       disabled={!onPress}
       accessibilityRole={onPress ? 'button' : undefined}
-      accessibilityLabel={valor ? `${titulo}, ${valor}` : titulo}
+      accessibilityLabel={[titulo, valor, detalle].filter(Boolean).join(', ')}
       className={`flex-row items-center px-3.5 py-3 ${primera ? '' : 'border-t border-line'}`}
     >
       <View
@@ -77,9 +81,12 @@ export function Opcion({
         <Icono nombre={icono} tamano={15} color={destructiva ? col.peligro : col.primary} />
       </View>
 
-      <Text className="flex-1 text-body font-medio" style={{ color: colorTexto }}>
-        {titulo}
-      </Text>
+      <View className="flex-1">
+        <Text className="text-body font-medio" style={{ color: colorTexto }}>
+          {titulo}
+        </Text>
+        {detalle ? <Text className="font-sans mt-0.5 text-meta text-ink-suave">{detalle}</Text> : null}
+      </View>
 
       {valor ? (
         <Text className="font-sans mr-1.5 text-meta text-ink-suave" numberOfLines={1}>

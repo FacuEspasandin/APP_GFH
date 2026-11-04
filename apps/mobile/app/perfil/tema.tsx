@@ -1,15 +1,16 @@
 import { Pressable, Text, View } from 'react-native';
 
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
+import { Icono, type NombreIcono } from '@/ui/iconos';
 import { Pantalla } from '@/ui/kit';
 import { Superficie } from '@/ui/superficie';
 import { hapticaSeleccion } from '@/ui/haptica';
 import { useColores, useTema, type Tema } from '@/ui/tema';
 
-const OPCIONES: { valor: Tema; etiqueta: string }[] = [
-  { valor: 'CLARO', etiqueta: 'Claro' },
-  { valor: 'OSCURO', etiqueta: 'Oscuro' },
-  { valor: 'SISTEMA', etiqueta: 'Sistema' },
+const OPCIONES: { valor: Tema; etiqueta: string; detalle?: string; icono: NombreIcono }[] = [
+  { valor: 'CLARO', etiqueta: 'Claro', icono: 'sol' },
+  { valor: 'OSCURO', etiqueta: 'Oscuro', icono: 'luna' },
+  { valor: 'SISTEMA', etiqueta: 'Sistema', detalle: 'Sigue la configuración de tu teléfono', icono: 'dispositivo' },
 ];
 
 /**
@@ -27,10 +28,10 @@ export default function TemaPantalla() {
       <EncabezadoConTitulo titulo="Apariencia" />
       <Pantalla>
         <Text className="mb-4 font-sans text-meta leading-5 text-ink-suave">
-          Elegí el tema que prefieras. "Sistema" sigue la configuración de tu teléfono.
+          Elegí el tema que prefieras.
         </Text>
 
-        <Superficie elevacion="plana" className="border p-2" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="p-2">
           {OPCIONES.map((o, i) => {
             const activo = tema === o.valor;
             return (
@@ -42,10 +43,22 @@ export default function TemaPantalla() {
                 }}
                 accessibilityRole="radio"
                 accessibilityState={{ selected: activo }}
-                className="flex-row items-center justify-between rounded-chip px-3 py-3.5"
+                accessibilityLabel={o.detalle ? `${o.etiqueta}. ${o.detalle}` : o.etiqueta}
+                className="flex-row items-center rounded-chip px-3 py-3"
                 style={i > 0 ? { borderTopWidth: 1, borderTopColor: col.line } : undefined}
               >
-                <Text className="text-body font-medio text-ink">{o.etiqueta}</Text>
+                <View
+                  className="mr-3 items-center justify-center rounded-chip"
+                  style={{ width: 36, height: 36, backgroundColor: col.primaryLight }}
+                >
+                  <Icono nombre={o.icono} tamano={18} color={col.primary} />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-body font-medio text-ink">{o.etiqueta}</Text>
+                  {o.detalle ? (
+                    <Text className="font-sans mt-0.5 text-meta text-ink-suave">{o.detalle}</Text>
+                  ) : null}
+                </View>
                 <View
                   className="items-center justify-center rounded-full border"
                   style={{

@@ -28,16 +28,19 @@ export default function Legales() {
             primera
             icono="documento"
             titulo="Términos y condiciones"
+            detalle="Reglas de uso de GFH"
             onPress={() => abrir('terminos')}
           />
           <Opcion
             icono="candado"
             titulo="Política de privacidad"
+            detalle="Qué datos se guardan y dónde"
             onPress={() => abrir('privacidad')}
           />
           <Opcion
             icono="info"
             titulo="Metodología y fuentes"
+            detalle="De dónde sale cada dato"
             onPress={() => abrir('metodologia')}
           />
         </GrupoOpciones>
@@ -48,6 +51,7 @@ export default function Legales() {
             primera
             icono="usuario"
             titulo="Privacidad y datos"
+            detalle="Permisos, copia y baja de tu cuenta"
             onPress={() => router.push('/perfil/privacidad' as never)}
           />
         </GrupoOpciones>

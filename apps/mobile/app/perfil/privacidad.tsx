@@ -62,16 +62,19 @@ export default function Privacidad() {
             primera
             icono="candado"
             titulo="Política de privacidad"
+            detalle="Qué datos se guardan y dónde"
             onPress={() => router.push('/legal?clave=privacidad' as never)}
           />
           <Opcion
             icono="documento"
             titulo="Términos y condiciones"
+            detalle="Reglas de uso de GFH"
             onPress={() => router.push('/legal?clave=terminos' as never)}
           />
           <Opcion
             icono="info"
             titulo="Metodología y fuentes"
+            detalle="De dónde sale cada dato"
             onPress={() => router.push('/legal?clave=metodologia' as never)}
           />
         </GrupoOpciones>
