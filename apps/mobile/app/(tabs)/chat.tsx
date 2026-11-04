@@ -197,7 +197,7 @@ export default function ChatIa() {
               </Text>
               {/* Dice de entrada lo que el permiso va a pedir después: la pregunta
                   sale hacia un proveedor de IA externo. */}
-              <Text className="mt-3 text-center text-eyebrow leading-4 text-tenue">
+              <Text className="mt-3 text-center text-eyebrow leading-4 text-ink-suave">
                 Asistente con inteligencia artificial. Tus preguntas se envían a un proveedor
                 externo; no escribas datos que identifiquen a un paciente.
               </Text>
@@ -242,6 +242,7 @@ export default function ChatIa() {
               disabled={!texto.trim() || entradaDeshabilitada}
               accessibilityRole="button"
               accessibilityLabel="Enviar"
+              hitSlop={6}
               className="mb-1 h-8 w-8 items-center justify-center rounded-full"
               style={{
                 backgroundColor: col.primary,

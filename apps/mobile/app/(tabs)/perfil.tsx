@@ -6,11 +6,10 @@ import { api, cerrarSesionLocal } from '@/api/cliente';
 import * as API from '@/api/endpoints';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
-import { Eyebrow, Pantalla } from '@/ui/kit';
+import { Boton, Eyebrow, Pantalla } from '@/ui/kit';
 import { GrupoOpciones, Opcion } from '@/ui/lista-opciones';
 import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { useColores, useTema, type Tema } from '@/ui/tema';
-import { COLOR_SEVERIDAD } from '@gfh/shared-types';
 
 import type { EstadoSuscripcion, Medico as Perfil } from '@/api/tipos';
 import { tiendaDeLaCompra } from '@/ui/tienda';
@@ -151,23 +150,23 @@ export default function PerfilPantalla() {
         <Opcion icono="info" titulo="Acerca de GFH" onPress={() => router.push('/perfil/acerca')} />
       </GrupoOpciones>
 
-      <Pressable
-        onPress={async () => {
-          await cerrarSesionLocal();
-          router.replace('/login');
-        }}
-        accessibilityRole="button"
-        className="mt-4 flex-row items-center justify-center gap-2 rounded-full border px-6 py-3.5"
-        style={{ borderColor: col.tenue }}
-      >
-        <Icono nombre="salir" tamano={18} color={col.ink} />
-        <Text className="text-body font-medio text-ink">Cerrar sesión</Text>
-      </Pressable>
+      <View className="mt-4">
+        <Boton
+          variante="secundario"
+          icono="salir"
+          onPress={async () => {
+            await cerrarSesionLocal();
+            router.replace('/login');
+          }}
+        >
+          Cerrar sesión
+        </Boton>
+      </View>
 
       <Pressable
         onPress={() => router.push('/perfil/eliminar-cuenta')}
         accessibilityRole="button"
-        className="mt-3.5 items-center py-1"
+        className="mt-1.5 min-h-11 items-center justify-center"
       >
         <Text className="text-meta font-medio" style={{ color: col.peligro }}>
           Eliminar cuenta
@@ -200,7 +199,7 @@ function Identidad({
   const col = useColores();
 
   return (
-    <Superficie elevacion="media" franja={col.tenue} className="mb-3.5 items-center px-5 py-6">
+    <Superficie elevacion="media" className="mb-3.5 items-center px-5 py-6">
 
       <View
         className="mb-3 items-center justify-center rounded-full"
@@ -240,16 +239,11 @@ function Identidad({
         </View>
       ) : null}
 
-      <Pressable
-        onPress={onEditar}
-        accessibilityRole="button"
-        className="mt-4 rounded-full border px-5 py-2"
-        style={{ borderColor: col.tenue }}
-      >
-        <Text className="text-meta font-medio" style={{ color: col.primary }}>
+      <View className="mt-4">
+        <Boton tamano="chico" variante="secundario" onPress={onEditar}>
           Editar perfil
-        </Text>
-      </Pressable>
+        </Boton>
+      </View>
     </Superficie>
   );
 }
@@ -264,11 +258,9 @@ function TarjetaPlan({
   const col = useColores();
   if (!estado) return null;
 
-  const color = estado.vigente
-    ? COLOR_SEVERIDAD.ok
-    : estado.estado === 'GRACIA'
-      ? COLOR_SEVERIDAD.media
-      : COLOR_SEVERIDAD.neutro;
+  // El estado de una suscripción no es gravedad clínica: usa los colores de la
+  // interfaz, no los de la escala de severidad.
+  const color = estado.vigente ? col.exito : estado.estado === 'GRACIA' ? col.aviso : col.tenue;
 
   const fecha = estado.periodoActualFin
     ? new Date(estado.periodoActualFin).toLocaleDateString('es-UY', {
