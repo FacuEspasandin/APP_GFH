@@ -133,3 +133,24 @@ function detalleGestacion(semana: number | null, lactando: boolean | null): stri
 
   return partes.length === 0 ? 'Sin cargar' : partes.join(' · ');
 }
+
+/**
+ * La ruta de la pantalla de editar una prescripción, que lee la pauta por
+ * parámetros. La comparten el cockpit (deslizar) y la pantalla del fármaco
+ * (botón «Editar»).
+ */
+export function rutaEditarPrescripcion(
+  pacienteId: string,
+  pr: { id: string; nombre: string; dosis: string; frecuencia: string; via: string },
+): string {
+  const q = Object.entries({
+    paciente: pacienteId,
+    nombre: pr.nombre,
+    dosis: pr.dosis,
+    frecuencia: pr.frecuencia,
+    via: pr.via,
+  })
+    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+    .join('&');
+  return `/prescripcion/${pr.id}?${q}`;
+}

@@ -48,6 +48,9 @@ Lo actualiza Claude al cerrar cada fase (`/cerrar-fase`). Lo lee al empezar una 
 - 2026-11-04 · `#B45309` se queda como `aviso`, sin separar en dos tokens: puede ser el mismo color para el aviso de interfaz y para «gravedad alta» en Grupos · decisión de la persona. La regla no cambia: los colores de severidad no se usan para decorar, y el color de marca no dice gravedad.
 - 2026-11-04 · Perfil: se saca la pastilla «Suscripción activa / Plan gratis» de la tarjeta de identidad; el plan queda sólo en `TarjetaPlan` · decisión de la persona.
 
+- 2026-11-04 · Fase 5, familia 2 (Paciente). Fila de tratamiento del cockpit: se sacan los «···» (no abrían nada) y la etiqueta de gravedad queda centrada a la derecha; en la lista de Pacientes la etiqueta sigue arriba a la derecha, a propósito. Pantalla del fármaco (`hallazgos?prescripcion=`): el enlace «Editar o suspender» pasa a dos botones en línea, «Editar» (secundario) y «Suspender» (nueva variante `destructivoSuave` de `Boton`, fondo `peligroLight` y texto `peligroInk`, sin borde) · decidido por la persona sobre un render. No se ponen en el cockpit: ahí ya está el deslizar. «Suspender» no borra: saca el fármaco de las verificaciones y queda en el historial. Para no duplicar: la confirmación y el «Deshacer» salen a `useSuspenderPrescripcion` (`src/ui/suspender-prescripcion.tsx`), que usan el cockpit y la pantalla del fármaco, y la ruta de editar a `rutaEditarPrescripcion` (`src/dominio/cockpit.ts`, con prueba). Tras suspender desde la pantalla del fármaco se vuelve al cockpit.
+- 2026-11-04 · `TarjetaHero` NO va sobre datos clínicos: en claro es verde de marca y el anillo de Clcr y el KDIGO usan colores de gravedad. Pendiente de elegir con la persona (opciones 1, 2 o 3 del 4/11).
+
 ## Métricas (de `node scripts/auditar-visual.mjs`)
 
 | Fecha | Fase | hexSueltos | hexMarca | valoresArbitrarios | textoMenorA12 | bordesLinea | adopciónSuperficie |

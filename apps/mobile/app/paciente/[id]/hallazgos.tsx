@@ -6,6 +6,8 @@ import PagerView from 'react-native-pager-view';
 
 import type { Cockpit, Hallazgo } from '@/api/tipos';
 import * as API from '@/api/endpoints';
+import { rutaEditarPrescripcion } from '@/dominio/cockpit';
+import { rutaPaywall } from '@/dominio/plan-gratis';
 import {
   agruparHallazgos,
   descripcionDeVista,
@@ -21,7 +23,8 @@ import { FilaAnimada } from '@/ui/animacion';
 import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { Icono } from '@/ui/iconos';
-import { AvisoPeligro, Pantalla, TituloConEtiqueta } from '@/ui/kit';
+import { AvisoPeligro, Boton, Pantalla, TituloConEtiqueta } from '@/ui/kit';
+import { useSuspenderPrescripcion } from '@/ui/suspender-prescripcion';
 import { ControlRefrescar, useRefrescar } from '@/ui/refrescar';
 import { ResultadoConsulta } from '@/ui/resultado-consulta';
 import { Superficie } from '@/ui/superficie';
@@ -68,6 +71,15 @@ export default function Hallazgos() {
   const refresco = useRefrescar([['cockpit', id]]);
 
   const derecha = <BotonAvatar onPress={() => router.push('/(tabs)/perfil')} />;
+
+  // Al suspender desde acá el fármaco deja de existir en esta vista: se vuelve al
+  // cockpit, donde el «Deshacer» sigue a la vista.
+  const suspender = useSuspenderPrescripcion(id, { alSuspender: () => router.back() });
+
+  // Mismo criterio que el cockpit con el paciente de demostración: se mira
+  // entero, pero cualquier acción que lo toque abre el paywall.
+  const accionSobrePaciente = (ruta: string) =>
+    router.push((data?.esDemostracion ? rutaPaywall('paciente') : ruta) as never);
 
   if (isLoading) {
     return (
@@ -165,25 +177,31 @@ export default function Hallazgos() {
               .filter(Boolean)
               .join(' · ')}
           </Text>
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: '/prescripcion/[id]',
-                params: {
-                  id: prescripcionActual.id,
-                  paciente: id,
-                  nombre: prescripcionActual.nombre,
-                  dosis: prescripcionActual.dosis,
-                  frecuencia: prescripcionActual.frecuencia,
-                  via: prescripcionActual.via,
-                },
-              } as never)
-            }
-            accessibilityRole="button"
-            className="mt-2 self-start"
-          >
-            <Text className="text-meta font-medio text-accent">Editar o suspender</Text>
-          </Pressable>
+          {/* Las dos acciones a la vista, una al lado de la otra. «Suspender» en
+              rojo suave: saca el fármaco de las verificaciones (no lo borra) y
+              tiene que leerse distinto de «Editar». */}
+          <View className="mt-3 flex-row gap-2.5">
+            <View className="flex-1">
+              <Boton
+                variante="secundario"
+                icono="editar"
+                onPress={() =>
+                  accionSobrePaciente(rutaEditarPrescripcion(id!, prescripcionActual))
+                }
+              >
+                Editar
+              </Boton>
+            </View>
+            <View className="flex-1">
+              <Boton
+                variante="destructivoSuave"
+                icono="prohibido"
+                onPress={() => (data.esDemostracion ? accionSobrePaciente('') : suspender.pedir(prescripcionActual))}
+              >
+                Suspender
+              </Boton>
+            </View>
+          </View>
         </Superficie>
       ) : null}
 
@@ -213,6 +231,7 @@ export default function Hallazgos() {
         </Superficie>
       ))}
       </ScrollView>
+      {suspender.hoja}
     </View>
   );
 }

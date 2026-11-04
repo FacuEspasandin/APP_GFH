@@ -155,7 +155,7 @@ export function Boton({
 }: {
   children: string;
   onPress: () => void;
-  variante?: 'primario' | 'secundario' | 'destructivo';
+  variante?: 'primario' | 'secundario' | 'destructivo' | 'destructivoSuave';
   tamano?: 'normal' | 'grande' | 'chico';
   /** Ícono a la izquierda del texto. */
   icono?: NombreIcono;
@@ -164,10 +164,20 @@ export function Boton({
 }) {
   const col = useColores();
 
-  const fondo = variante === 'primario' ? 'bg-primary' : 'bg-surface';
-  const borde = variante === 'primario' ? '' : 'border border-line';
+  // `destructivoSuave`: fondo rojo suave y sin borde, los colores de `AvisoPeligro`.
+  // Para una acción que saca algo de circulación (suspender) puesta junto a otra
+  // neutra: el rojo avisa sin gritar.
+  const fondo =
+    variante === 'primario' ? 'bg-primary' : variante === 'destructivoSuave' ? 'bg-peligro-light' : 'bg-surface';
+  const borde = variante === 'primario' || variante === 'destructivoSuave' ? '' : 'border border-line';
   const colorTexto =
-    variante === 'primario' ? col.onPrimary : variante === 'destructivo' ? col.peligro : col.ink;
+    variante === 'primario'
+      ? col.onPrimary
+      : variante === 'destructivo'
+        ? col.peligro
+        : variante === 'destructivoSuave'
+          ? col.peligroInk
+          : col.ink;
   const forma =
     tamano === 'grande'
       ? 'h-14 w-full gap-3 rounded-full'

@@ -5,6 +5,7 @@ import {
   hepaticoSinEvaluar,
   opcionesDelPaciente,
   peoresPorCategoria,
+  rutaEditarPrescripcion,
   type HallazgoResumible,
 } from './cockpit';
 
@@ -136,5 +137,20 @@ describe('opciones del paciente', () => {
       '/paciente/abc/embarazo-lactancia',
       '/paciente/abc/historial',
     ]);
+  });
+});
+
+describe('rutaEditarPrescripcion', () => {
+  it('lleva la pauta por parámetros y escapa lo que hace falta', () => {
+    const ruta = rutaEditarPrescripcion('pac1', {
+      id: 'pr9',
+      nombre: 'Coumadin',
+      dosis: '5 mg',
+      frecuencia: 'cada 24 h',
+      via: 'ORAL',
+    });
+    expect(ruta).toBe(
+      '/prescripcion/pr9?paciente=pac1&nombre=Coumadin&dosis=5%20mg&frecuencia=cada%2024%20h&via=ORAL',
+    );
   });
 });

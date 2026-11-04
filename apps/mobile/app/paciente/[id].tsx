@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -24,11 +24,13 @@ import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
 import { Boton, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { useRefrescar } from '@/ui/refrescar';
 import { EtiquetaEstado } from '@/ui/severidad';
+import { useSuspenderPrescripcion } from '@/ui/suspender-prescripcion';
 import {
   destacados as hallazgosDestacados,
   hepaticoSinEvaluar,
   opcionesDelPaciente,
   peoresPorCategoria,
+  rutaEditarPrescripcion,
 } from '@/dominio/cockpit';
 import {
   claveColorPorClcr,
@@ -76,30 +78,10 @@ export default function CockpitPaciente() {
   // que ya existe. Antes «Editar datos del paciente» vivía adentro del +,
   // que es justo lo que no hace.
   const [menu, setMenu] = useState<'ninguno' | 'agregar' | 'paciente'>('ninguno');
-  /** El fármaco que el médico deslizó para suspender y todavía no confirmó. */
-  const [porSuspender, setPorSuspender] = useState<PrescripcionCockpit | null>(null);
-  const qc = useQueryClient();
+  // Suspender: confirmación, llamada y «Deshacer» viven en un hook compartido con
+  // la pantalla del fármaco.
+  const suspender = useSuspenderPrescripcion(id);
   const refresco = useRefrescar([['cockpit', id]]);
-
-  // Suspender no borra: el fármaco deja de entrar a las verificaciones pero la
-  // fila queda en el historial. Reactivar es la misma llamada con otro estado, y
-  // es lo que hace «Deshacer».
-  const cambiarEstado = useMutation({
-    mutationFn: ({ prescripcionId, estado }: { prescripcionId: string; estado: 'ACTIVO' | 'SUSPENDIDO'; nombre: string }) =>
-      API.actualizarPrescripcion(prescripcionId, { estado }),
-    onSuccess: async (_r, { prescripcionId, estado, nombre }) => {
-      await qc.invalidateQueries({ queryKey: ['cockpit', id] });
-      if (estado === 'SUSPENDIDO') {
-        aviso.avisar(`${nombre} suspendido`, 'exito', {
-          etiqueta: 'Deshacer',
-          onPress: () => cambiarEstado.mutate({ prescripcionId, estado: 'ACTIVO', nombre }),
-        });
-      } else {
-        aviso.avisar(`${nombre} reactivado`, 'exito');
-      }
-    },
-    onError: () => aviso.avisar('No se pudo cambiar el estado. Probá de nuevo.', 'error'),
-  });
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['cockpit', id],
@@ -491,7 +473,7 @@ export default function CockpitPaciente() {
                   {
                     etiqueta: 'Ajustar',
                     icono: 'editar',
-                    onPress: () => abrir(rutaEditar(id!, pr)),
+                    onPress: () => abrir(rutaEditarPrescripcion(id!, pr)),
                   },
                   {
                     etiqueta: 'Suspender',
@@ -501,7 +483,7 @@ export default function CockpitPaciente() {
                       // `abrir` ya sabe qué hacer sin conexión (avisa) y con el
                       // paciente de demostración (paywall): no se repite acá.
                       if (data.offline || data.esDemostracion) return abrir('');
-                      setPorSuspender(pr);
+                      suspender.pedir(pr);
                     },
                   },
                 ]}
@@ -568,58 +550,10 @@ export default function CockpitPaciente() {
       </HojaInferior>
 
       {/* Suspender pide confirmación: lo abre el botón que muestra deslizar la
-          fila, nunca el gesto solo. Dice qué pasa y que se puede deshacer. */}
-      <HojaInferior
-        visible={porSuspender !== null}
-        onCerrar={() => setPorSuspender(null)}
-        titulo="Suspender fármaco"
-      >
-        <Text className="mb-1.5 mt-1 text-fila font-fuerte text-ink">
-          ¿Suspender {porSuspender?.nombre}?
-        </Text>
-        <Text className="font-sans mb-4 text-meta leading-5 text-ink-suave">
-          Deja de entrar a las verificaciones de este paciente. Queda en el historial y lo
-          podés reactivar.
-        </Text>
-        <Boton
-          variante="destructivo"
-          cargando={cambiarEstado.isPending}
-          onPress={() => {
-            if (!porSuspender) return;
-            cambiarEstado.mutate({
-              prescripcionId: porSuspender.id,
-              estado: 'SUSPENDIDO',
-              nombre: porSuspender.nombre,
-            });
-            setPorSuspender(null);
-          }}
-        >
-          Suspender
-        </Boton>
-        <Pressable
-          onPress={() => setPorSuspender(null)}
-          accessibilityRole="button"
-          className="min-h-11 items-center justify-center"
-        >
-          <Text className="font-medio text-meta text-ink-suave">Cancelar</Text>
-        </Pressable>
-      </HojaInferior>
+          fila, nunca el gesto solo. Ver `useSuspenderPrescripcion`. */}
+      {suspender.hoja}
     </View>
   );
-}
-
-/** La pantalla de editar una prescripción lee la pauta por parámetros de ruta. */
-function rutaEditar(pacienteId: string, pr: PrescripcionCockpit): string {
-  const q = Object.entries({
-    paciente: pacienteId,
-    nombre: pr.nombre,
-    dosis: pr.dosis,
-    frecuencia: pr.frecuencia,
-    via: pr.via,
-  })
-    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
-    .join('&');
-  return `/prescripcion/${pr.id}?${q}`;
 }
 
 /**

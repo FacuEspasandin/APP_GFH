@@ -98,6 +98,18 @@ function Catalogo() {
             <Boton variante="destructivo" onPress={() => {}}>
               Destructivo normal
             </Boton>
+            <View className="flex-row gap-2.5">
+              <View className="flex-1">
+                <Boton variante="secundario" icono="editar" onPress={() => {}}>
+                  Editar
+                </Boton>
+              </View>
+              <View className="flex-1">
+                <Boton variante="destructivoSuave" icono="prohibido" onPress={() => {}}>
+                  Suspender
+                </Boton>
+              </View>
+            </View>
             <Boton tamano="grande" icono="check" onPress={() => {}}>
               Primario grande con ícono
             </Boton>
