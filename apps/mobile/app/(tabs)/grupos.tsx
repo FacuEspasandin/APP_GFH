@@ -144,7 +144,7 @@ function TarjetaGrupo({
             <Icono nombre="candado" tamano={14} color={col.primary} />
           </View>
         ) : (
-          <Icono nombre="chevron" tamano={16} color={COLOR_SEVERIDAD.neutro} />
+          <Icono nombre="chevron" tamano={16} color={col.tenue} />
         )}
       </View>
 

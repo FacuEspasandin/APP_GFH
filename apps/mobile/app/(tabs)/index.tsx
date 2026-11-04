@@ -11,8 +11,7 @@ import * as API from '@/api/endpoints';
 import { FilaAnimada } from '@/ui/animacion';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
-import { Icono } from '@/ui/iconos';
-import { CampoTexto, Estado, Eyebrow, Pantalla, TituloConEtiqueta } from '@/ui/kit';
+import { Boton, CampoTexto, Estado, Eyebrow, Pantalla, TituloConEtiqueta } from '@/ui/kit';
 import { EtiquetaEstado } from '@/ui/severidad';
 import { Pestanas } from '@/ui/pestanas';
 import { useRefrescar } from '@/ui/refrescar';
@@ -90,15 +89,9 @@ export default function Pacientes() {
           <Text className="text-display font-extra" style={{ color: col.primary }}>
             Pacientes
           </Text>
-          <Pressable
-            onPress={() => setMenuAbierto(true)}
-            accessibilityRole="button"
-            accessibilityLabel="Crear"
-            className="h-12 w-12 items-center justify-center rounded-full"
-            style={{ backgroundColor: col.primary }}
-          >
-            <Icono nombre="mas" tamano={18} color={col.onPrimary} />
-          </Pressable>
+          <Boton tamano="chico" icono="mas" onPress={() => setMenuAbierto(true)}>
+            Nuevo
+          </Boton>
         </View>
 
         <Pestanas
