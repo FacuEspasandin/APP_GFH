@@ -21,7 +21,7 @@ import { Superficie, SuperficieTocable } from '@/ui/superficie';
 import { CifraAnimada, FilaAnimada } from '@/ui/animacion';
 import { FilaDeslizable } from '@/ui/fila-deslizable';
 import { HojaInferior, OpcionHoja } from '@/ui/hoja-inferior';
-import { Boton, Estado, Eyebrow, Pantalla, TituloConEtiqueta } from '@/ui/kit';
+import { Boton, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { useRefrescar } from '@/ui/refrescar';
 import { EtiquetaEstado } from '@/ui/severidad';
 import {
@@ -640,7 +640,6 @@ function FilaTratamiento({
   prescripcion: PrescripcionCockpit;
   onPress: () => void;
 }) {
-  const col = useColores();
   // Con hallazgos se eleva, sin hallazgos queda plano. El fármaco tranquilo no
   // tiene que competir por atención con el que tiene una interacción grave.
   const conHallazgos = prescripcion.conteoHallazgos > 0;
@@ -657,13 +656,7 @@ function FilaTratamiento({
     >
       <View className="flex-1 flex-row items-center px-3.5 py-3.5">
         <View className="flex-1">
-          {/* La palabra de severidad, no el conteo: el rediseño de Figma prioriza
-            «qué tan grave es lo peor que tiene». El conteo por fármaco sigue
-            disponible entrando a "Ver hallazgos". */}
-          <TituloConEtiqueta
-            titulo={prescripcion.nombre}
-            etiqueta={rango !== null ? <EtiquetaEstado rango={rango} /> : null}
-          />
+          <Text className="text-fila font-medio text-ink">{prescripcion.nombre}</Text>
           <Text className="font-sans mt-1 text-meta text-ink-suave">
             {/* La pauta en mono: son cifras, y alineadas se comparan de un
                 vistazo entre filas. */}
@@ -679,7 +672,15 @@ function FilaTratamiento({
             </View>
           ) : null}
         </View>
-        <Icono nombre="mas-opciones" tamano={16} color={col.tenue} />
+        {/* La palabra de severidad, no el conteo: el rediseño de Figma prioriza
+            «qué tan grave es lo peor que tiene». Centrada a la derecha, donde
+            antes iban unos «···» que no abrían nada. El conteo por fármaco
+            sigue disponible entrando a "Ver hallazgos". */}
+        {rango !== null ? (
+          <View className="ml-2 flex-none">
+            <EtiquetaEstado rango={rango} />
+          </View>
+        ) : null}
       </View>
     </SuperficieTocable>
   );
