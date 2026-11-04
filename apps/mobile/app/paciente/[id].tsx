@@ -25,6 +25,7 @@ import { Boton, Estado, Eyebrow, Pantalla } from '@/ui/kit';
 import { useRefrescar } from '@/ui/refrescar';
 import { EtiquetaEstado } from '@/ui/severidad';
 import { useSuspenderPrescripcion } from '@/ui/suspender-prescripcion';
+import { TarjetaHero, useColoresHero } from '@/ui/tarjeta-hero';
 import {
   destacados as hallazgosDestacados,
   hepaticoSinEvaluar,
@@ -69,6 +70,7 @@ const ICONO_CATEGORIA: Record<CategoriaHallazgo, NombreIcono> = {
  */
 export default function CockpitPaciente() {
   const col = useColores();
+  const hero = useColoresHero();
 
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
@@ -206,17 +208,28 @@ export default function CockpitPaciente() {
           forma de volver a calcular era salir y entrar. */}
       <Pantalla onRefrescar={refresco.onRefrescar} refrescando={refresco.refrescando}>
         {/* ---------- Encabezado: nombre + agregar ---------- */}
-        <View className="mb-4 flex-row items-start justify-between">
-          <View className="flex-1 pr-3">
-            <Text className="text-display font-extra leading-10 text-ink">
-              {p.nombre} {p.apellido}
-            </Text>
-            <Text className="mt-0.5 text-body text-ink-suave">{p.edadAnios} años</Text>
+        {/* La tarjeta protagonista de la pantalla: sólo el nombre y la edad. Los
+            datos clínicos (anillo de Clcr, KDIGO) quedan en la tarjeta blanca de
+            abajo a propósito: sus colores son de gravedad y no se mezclan con el
+            verde de marca. */}
+        <TarjetaHero className="mb-3.5">
+          <View className="flex-row items-center justify-between gap-3">
+            <View className="flex-1">
+              <Text className="text-titular font-extra" style={{ color: hero.texto }}>
+                {p.nombre} {p.apellido}
+              </Text>
+              <Text
+                className="mt-0.5 text-body"
+                style={{ color: hero.suave, opacity: hero.opacidadSuave }}
+              >
+                {p.edadAnios} años
+              </Text>
+            </View>
+            <Boton tamano="chico" variante="secundario" icono="mas" onPress={() => setMenu('agregar')}>
+              Agregar
+            </Boton>
           </View>
-          <Boton tamano="chico" icono="mas" onPress={() => setMenu('agregar')}>
-            Agregar
-          </Boton>
-        </View>
+        </TarjetaHero>
 
         {/* ---------- 1. Datos del paciente ---------- */}
         {/* La única superficie con elevación alta de la pantalla: es el sujeto

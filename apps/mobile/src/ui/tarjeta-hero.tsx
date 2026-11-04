@@ -30,6 +30,7 @@ export function TarjetaHero({ children, className = '' }: { children: ReactNode;
           estiloSombra('media'),
           {
             backgroundColor: col.surfaceAlt,
+            padding: 20,
             borderWidth: 1,
             borderColor: PALETA.oscuro.line,
             borderTopWidth: 3,
