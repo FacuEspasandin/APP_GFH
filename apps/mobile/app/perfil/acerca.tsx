@@ -62,7 +62,7 @@ export default function Acerca() {
         </Superficie>
 
         <Eyebrow>Contenido clínico</Eyebrow>
-        <Superficie elevacion="plana" className="border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="p-4">
           <Text className="font-sans text-meta leading-5 text-ink">
             Las tablas de ajuste renal son transcripción de{' '}
             <Text className="font-medio">Nefrología al día</Text>, Sociedad Española de Nefrología

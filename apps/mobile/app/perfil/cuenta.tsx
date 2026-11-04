@@ -69,7 +69,7 @@ export default function Cuenta() {
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Datos Personales" />
       <Pantalla>
-        <Superficie elevacion="plana" className="mb-3.5 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-3.5 p-4">
           <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             Tus datos
           </Text>
@@ -106,7 +106,7 @@ export default function Cuenta() {
 
         {/* El usuario es identificador de login: cambiarlo rompería sesiones y
             referencias, así que se muestra pero no se edita. */}
-        <Superficie elevacion="plana" className="mb-4 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-4 p-4">
           <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             Nombre de usuario
           </Text>

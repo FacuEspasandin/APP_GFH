@@ -72,7 +72,7 @@ export default function RecuperarConfirmar() {
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Elegir Contraseña" />
       <Pantalla>
-        <Superficie elevacion="plana" className="mb-3.5 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-3.5 p-4">
           <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             Código que te llegó por email
           </Text>
@@ -94,7 +94,7 @@ export default function RecuperarConfirmar() {
           />
         </Superficie>
 
-        <Superficie elevacion="plana" className="mb-4 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-4 p-4">
           <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             Contraseña nueva
           </Text>

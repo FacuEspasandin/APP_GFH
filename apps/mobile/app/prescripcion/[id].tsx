@@ -70,7 +70,7 @@ export default function EditarPrescripcion() {
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Editar Prescripción" />
       <ScrollView contentContainerClassName="px-margen pb-8 pt-4" keyboardShouldPersistTaps="handled">
-        <Superficie elevacion="plana" className="mb-6 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-6 p-4">
           <Text className="text-grande font-medio text-ink">{nombre || 'Pauta'}</Text>
           {f.dosis ? (
             <Text className="mt-0.5 font-sans text-body text-ink-suave">{f.dosis}</Text>
@@ -190,11 +190,7 @@ function CampoBento({
 }) {
   const col = useColores();
   return (
-    <Superficie
-      elevacion="plana"
-      className={`border p-4 ${ultimo ? '' : 'mb-3'}`}
-      style={{ borderColor: col.line }}
-    >
+    <Superficie elevacion="plana" className={`p-4 ${ultimo ? '' : 'mb-3'}`}>
       <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
         {etiqueta}
       </Text>

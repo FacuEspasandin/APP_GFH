@@ -46,7 +46,7 @@ export default function Recuperar() {
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Recuperar Contraseña" />
       <Pantalla>
-        <Superficie elevacion="plana" className="mb-4 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-4 p-4">
           <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             Email de tu cuenta
           </Text>

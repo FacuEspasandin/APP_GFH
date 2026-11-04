@@ -177,7 +177,7 @@ export default function Ayuda() {
         <Text className="mb-3 mt-6 text-grande font-medio text-ink">
           Reportar un error o sugerencia
         </Text>
-        <Superficie elevacion="plana" className="mb-4 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-4 p-4">
           <View className="mb-3 flex-row gap-2">
             <Chip
               texto="Reportar un error"
@@ -275,7 +275,7 @@ function PreguntaAcordeon({
 }) {
   const col = useColores();
   return (
-    <Superficie elevacion="plana" className="mb-3.5 border" style={{ borderColor: col.line }}>
+    <Superficie elevacion="plana" className="mb-3.5">
       <Pressable
         onPress={onPress}
         accessibilityRole="button"

@@ -82,7 +82,7 @@ export default function Notificaciones() {
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Notificaciones" />
       <Pantalla>
-        <Superficie elevacion="plana" className="mb-3.5 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-3.5 p-4">
           <Text className="mb-1.5 text-body font-fuerte text-ink">Qué vas a recibir</Text>
           <Text className="font-sans text-meta leading-5 text-ink">
             Avisos de tu cuenta y tu suscripción (por ejemplo, un cambio de contraseña, una prueba
@@ -91,7 +91,7 @@ export default function Notificaciones() {
           </Text>
         </Superficie>
 
-        <Superficie elevacion="plana" className="border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="p-4">
           <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             Notificaciones push
           </Text>

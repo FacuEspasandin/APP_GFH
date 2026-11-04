@@ -56,7 +56,7 @@ export default function BloqueoPantalla() {
           sobre un escritorio no muestre la medicación de un paciente.
         </Text>
 
-        <Superficie elevacion="plana" className="border p-2" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="p-2">
           <View className="flex-row items-center justify-between rounded-chip px-3 py-3.5">
             <View className="flex-1 pr-3">
               <Text className="text-body font-medio text-ink">Pedir huella al abrir</Text>

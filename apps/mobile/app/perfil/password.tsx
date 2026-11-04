@@ -41,14 +41,14 @@ export default function CambiarPassword() {
     <View className="flex-1 bg-paper">
       <EncabezadoConTitulo titulo="Cambiar Contraseña" />
       <Pantalla>
-        <Superficie elevacion="plana" className="mb-3.5 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-3.5 p-4">
           <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             Contraseña actual
           </Text>
           <CampoTexto value={actual} onChangeText={setActual} secureTextEntry />
         </Superficie>
 
-        <Superficie elevacion="plana" className="mb-4 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-4 p-4">
           <Text className="mb-2 font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             Nueva contraseña
           </Text>

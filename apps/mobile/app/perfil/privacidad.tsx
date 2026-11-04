@@ -80,7 +80,7 @@ export default function Privacidad() {
         </GrupoOpciones>
 
         <Eyebrow>Tus derechos</Eyebrow>
-        <Superficie elevacion="plana" className="mb-4 border p-4" style={{ borderColor: col.line }}>
+        <Superficie elevacion="plana" className="mb-4 p-4">
           <Text className="font-sans text-meta leading-5 text-ink">
             Podés pedir una copia de tus datos, corregirlos o que los borremos. Escribinos y te
             respondemos dentro del plazo legal.
@@ -161,7 +161,7 @@ function TarjetaPermiso({
     : null;
 
   return (
-    <Superficie elevacion="plana" className="mb-3 border p-4" style={{ borderColor: col.line }}>
+    <Superficie elevacion="plana" className="mb-3 p-4">
       <View className="flex-row items-center">
         <View
           className="mr-2 rounded-full"
