@@ -282,7 +282,7 @@ function Encabezado({ f }: { f: Ficha }) {
           </Text>
           <View className="mt-1.5 flex-row flex-wrap gap-1.5">
             {codigosATC.map((c) => (
-              <View key={c} className="rounded px-2 py-1" style={{ backgroundColor: col.paper }}>
+              <View key={c} className="rounded-chip px-2 py-1" style={{ backgroundColor: col.paper }}>
                 <Text className="font-mono-fuerte text-meta text-ink">{c}</Text>
               </View>
             ))}
@@ -315,7 +315,7 @@ function FilaInteracciones({ f, onPress }: { f: Ficha; onPress: () => void }) {
     >
       <Text className="flex-1 text-fila font-medio text-ink">Interacciones</Text>
       {total > 0 ? (
-        <View className="mr-2 rounded px-2 py-0.5" style={{ backgroundColor: col.paper }}>
+        <View className="mr-2 rounded-chip px-2 py-0.5" style={{ backgroundColor: col.paper }}>
           <Text className="font-mono-fuerte text-meta" style={{ color }}>
             {total}
           </Text>

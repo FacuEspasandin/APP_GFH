@@ -257,7 +257,7 @@ function Fila({
           teñir las calculadoras de verde y las dosis de naranja le pondría una
           escala clínica a algo que no la tiene. Distingue el dibujo. */}
       <View
-        className="mr-3 h-9 w-9 items-center justify-center rounded"
+        className="mr-3 h-9 w-9 items-center justify-center rounded-chip"
         style={{ backgroundColor: col.infoLight }}
       >
         <Icono nombre={h.icono} tamano={18} color={col.info} />

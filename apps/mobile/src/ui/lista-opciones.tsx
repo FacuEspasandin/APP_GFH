@@ -67,7 +67,7 @@ export function Opcion({
       className={`flex-row items-center px-3.5 py-3 ${primera ? '' : 'border-t border-line'}`}
     >
       <View
-        className="mr-3 items-center justify-center rounded"
+        className="mr-3 items-center justify-center rounded-chip"
         style={{
           width: 26,
           height: 26,

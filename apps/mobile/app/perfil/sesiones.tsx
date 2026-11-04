@@ -62,7 +62,7 @@ export default function Sesiones() {
 
       {data?.map((s) => (
         <Superficie key={s.id} elevacion="plana" className="mb-3.5 flex-row items-center px-3.5 py-3">
-          <View className="mr-3 items-center justify-center rounded" style={{ width: 26, height: 26, backgroundColor: col.primaryLight }}>
+          <View className="mr-3 items-center justify-center rounded-chip" style={{ width: 26, height: 26, backgroundColor: col.primaryLight }}>
             <Icono nombre="dispositivo" tamano={15} color={col.primary} />
           </View>
 

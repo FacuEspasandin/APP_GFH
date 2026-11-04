@@ -145,7 +145,7 @@ export function TextoSeccion({ texto }: { texto: string }) {
                 {lista.items.map((item, j) => (
                   <View
                     key={j}
-                    className="rounded px-2 py-1"
+                    className="rounded-chip px-2 py-1"
                     style={{ backgroundColor: col.paper }}
                   >
                     <Text className="font-sans text-meta leading-4 text-ink">{item}</Text>

@@ -149,7 +149,7 @@ function GrupoFamilia({
       <Superficie elevacion="plana" className="mb-3.5 px-3.5 py-3">
         <View className="mb-2 flex-row items-center">
           <Text className="flex-1 text-fila font-medio text-ink">{nombreFamilia(nombre)}</Text>
-          <View className="flex-row items-center rounded px-2 py-0.5" style={{ backgroundColor: col.paper }}>
+          <View className="flex-row items-center rounded-chip px-2 py-0.5" style={{ backgroundColor: col.paper }}>
             <Text className="font-mono-fuerte text-meta" style={{ color }}>
               {miembros.length}
             </Text>

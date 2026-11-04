@@ -81,7 +81,7 @@ export function ContenidoSimilares({ s }: { s: Similares }) {
   return (
     <>
       <View className="mb-3 flex-row items-center gap-2">
-        <View className="rounded px-2 py-1" style={{ backgroundColor: col.paper }}>
+        <View className="rounded-chip px-2 py-1" style={{ backgroundColor: col.paper }}>
           <Text className="font-mono-fuerte text-meta text-ink">{s.codigoATC}</Text>
         </View>
         {porGrupoTerapeutico ? (

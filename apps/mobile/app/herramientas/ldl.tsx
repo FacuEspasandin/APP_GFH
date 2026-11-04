@@ -139,7 +139,7 @@ export default function CalculadoraLdl() {
                 si los triglicéridos superan el umbral de la fórmula.
               </Text>
               <View
-                className="mt-2 items-center rounded px-2 py-2"
+                className="mt-2 items-center rounded-chip px-2 py-2"
                 style={{ backgroundColor: col.surfaceAlt, borderWidth: 1, borderColor: col.line, borderStyle: 'dashed' }}
               >
                 <Text className="font-mono text-meta text-ink-suave">
