@@ -231,15 +231,9 @@ export default function CockpitPaciente() {
             </Text>
             <Text className="mt-0.5 text-body text-ink-suave">{p.edadAnios} años</Text>
           </View>
-          <Pressable
-            onPress={() => setMenu('agregar')}
-            accessibilityRole="button"
-            accessibilityLabel="Agregar"
-            className="h-11 w-11 items-center justify-center rounded-full"
-            style={{ backgroundColor: col.primary }}
-          >
-            <Icono nombre="mas" tamano={18} color={col.onPrimary} />
-          </Pressable>
+          <Boton tamano="chico" icono="mas" onPress={() => setMenu('agregar')}>
+            Agregar
+          </Boton>
         </View>
 
         {/* ---------- 1. Datos del paciente ---------- */}
@@ -289,7 +283,7 @@ export default function CockpitPaciente() {
               </View>
               {p.gradoKdigo ? (
                 <View
-                  className="self-start rounded-sm px-2 py-0.5"
+                  className="self-start rounded-chip px-2 py-0.5"
                   style={{
                     backgroundColor:
                       p.clcrMlMin !== null
@@ -471,6 +465,7 @@ export default function CockpitPaciente() {
           <Pressable
             onPress={() => abrir(`/paciente/${id}/cargar-tratamiento`)}
             accessibilityRole="button"
+            hitSlop={10}
           >
             <Text className="mb-2 text-meta font-medio text-accent">Cargar tratamiento</Text>
           </Pressable>
@@ -604,7 +599,7 @@ export default function CockpitPaciente() {
         <Pressable
           onPress={() => setPorSuspender(null)}
           accessibilityRole="button"
-          className="items-center py-3"
+          className="min-h-11 items-center justify-center"
         >
           <Text className="font-medio text-meta text-ink-suave">Cancelar</Text>
         </Pressable>

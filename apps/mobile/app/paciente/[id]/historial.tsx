@@ -398,7 +398,7 @@ function TablaCambios({ cambios }: { cambios: CambioEvento[] }) {
   const col = useColores();
 
   return (
-    <View className="mt-2.5 overflow-hidden rounded-md border" style={{ borderColor: col.line }}>
+    <View className="mt-2.5 overflow-hidden rounded-chip border" style={{ borderColor: col.line }}>
       <View
         className="flex-row border-b px-2.5 py-2"
         style={{ backgroundColor: col.paper, borderColor: col.line }}
