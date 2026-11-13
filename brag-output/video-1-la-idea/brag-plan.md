@@ -1,29 +1,24 @@
-# Brag Plan: GFH — Video 1 de la serie, "La idea"
+# Brag Plan: GFH — Video 1 de la serie, "La idea" (versión 2, vertical)
 
 ## Qué es
-App móvil para médicos que responde una pregunta sobre cada paciente: ¿este fármaco es seguro para este paciente, hoy?
+App móvil para médicos que responde una pregunta sobre cada paciente: ¿es seguro este fármaco para este paciente, hoy?
 
-## Fuentes (por pedido del dueño: la app y el documento funcional, no la landing)
-- `documento-funcional-cockpit-movil.md` §1, §2, §6.2 y §7.
-- Pantalla del cockpit: `apps/mobile/app/paciente/[id].tsx` (tarjeta de paciente, anillo de Clcr, "Lo más grave", "Por categoría", "Tratamiento activo").
-- Paciente de demostración: `apps/backend/src/aplicacion/demo/paciente-demo.ts`.
-- Reglas reales: `docs/data/reglas-interaccion.json`, `alertas-condicion-farmaco.json`, `farmacos-ajuste-renal.json`.
-- Colores y tipografía: `apps/mobile/global.css`, `packages/shared-types/src/severidad.ts`, Inter e IBM Plex Mono.
+## Fuente
+Por pedido del dueño, el guion sigue la landing (`landing/src/cuerpo.html`): el problema, qué verifica, el cockpit, la demostración renal, las herramientas y el aviso de tiendas. Colores de la landing (`landing/src/estilos.css`), Inter e IBM Plex Mono.
 
 ## Formato y duración
-Horizontal 1920x1080, 30 s. Tono sobrio (preset polished), música a volumen bajo y pocos efectos.
+Vertical 9:16, 1080x1920, 46 s. Tono sobrio, música a volumen bajo y pocos efectos. Supera los 25 s del skill por pedido del dueño, que quería más información.
 
 ## Storyboard
-1. La pregunta (0–4 s): "¿Este fármaco es seguro para este paciente, hoy?"
-2. Cockpit (4–9,5 s): "Cada paciente, en una sola pantalla." Paciente, Clcr 27,9 mL/min, KDIGO G4, condiciones y "Lo más grave".
-3. Verificaciones (9,5–15,5 s): "Interacciones, condiciones y alergias, ajuste renal y hepático." Las cuatro categorías.
-4. Tratamiento (15,5–20,5 s): "Qué da problema, fármaco por fármaco." Seis fármacos con su etiqueta de gravedad.
-5. Motor determinista (20,5–25,5 s): "Cero decisiones clínicas salen de un modelo de lenguaje." / "Tablas y reglas deterministas, trazables a una fuente."
-6. Cierre (25,5–30 s): GFH, "Verificación clínica", "Próximamente", aviso de uso profesional.
+1. La pregunta (0–4,5 s): "¿Es seguro este fármaco para este paciente, hoy?"
+2. El problema (4,5–13 s): "Ocho fármacos exigen ochenta y cuatro verificaciones cruzadas." Suma 28 + 24 + 8 + 8 + 8 + 8 = 84 y "<1 s en completarlas todas".
+3. Qué verifica (13–22 s): "Todo se cruza contra el mismo paciente." Interacciones, ajuste renal, ajuste hepático, condiciones, alergias, embarazo y lactancia.
+4. El cockpit (22–29 s): "Verificado sobre los datos del paciente, no sobre un perfil promedio." Pantalla de la landing: Rodríguez, Ana María, 23,6 mL/min, KDIGO G4, "Lo más grave" y las cuatro categorías.
+5. Demostración renal (29–36 s): "Al modificar la creatinina, el ajuste se recalcula." La creatinina pasa de 0,80 a 1,80; el clearance baja de 55 a 24, el grado de G3a a G4 y los fármacos a ajustar de 0 a 4. Misma fórmula y mismos cortes que el script de la landing.
+6. Herramientas (36–41 s): "Las calculadoras de uso habitual, incluidas y sin costo." Las seis de la landing.
+7. Cierre (41–46 s): GFH, la pregunta, "Próximamente en App Store / Google Play", "Uruguay · uso profesional · en desarrollo" y el aviso legal.
 
-## Lo que es recreación y no salida del motor
-- El paciente de demostración trae además embarazo de 24 semanas; se omitió porque con 77 años resulta inverosímil en un video.
-- Clcr 27,9 mL/min calculado a mano con Cockcroft-Gault sobre los datos de la demo (77 años, 60 kg, creatinina 1,6, mujer).
-- Los dos hallazgos de "Lo más grave" son reglas reales del catálogo. Los conteos por categoría (1, 6, 3) y las etiquetas por fármaco se dedujeron de las reglas; no se corrió el motor.
-- Ajuste hepático se muestra en neutro ("—"), como hace la app cuando falta la tabla por fármaco.
-- No se muestran precios, cantidad de calculadoras, Vera ni el proveedor de monografías.
+## Notas
+- No se muestran precios (el documento funcional y la landing no coinciden), Vera ni el proveedor de monografías.
+- La paciente de la landing tiene 78 años y embarazo de 24 semanas; se dejó tal cual está en la landing.
+- La versión 1 (horizontal, 30 s, armada desde la pantalla del cockpit) queda en el historial de la rama.

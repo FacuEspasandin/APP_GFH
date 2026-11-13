@@ -1,2 +1,2 @@
-¿Este fármaco es seguro para este paciente, hoy?
-GFH verifica interacciones, condiciones y alergias, y ajuste renal sobre cada paciente, con un motor determinista. Próximamente.
+Ocho fármacos exigen ochenta y cuatro verificaciones cruzadas. GFH las completa en menos de un segundo, sobre los datos del paciente.
+¿Es seguro este fármaco para este paciente, hoy? Próximamente en App Store y Google Play.

@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="es" data-resolution="landscape">
+<html lang="es" data-resolution="portrait">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1920, height=1080" />
+    <meta name="viewport" content="width=1080, height=1920" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
     <style>
       @font-face { font-family: "Inter"; font-weight: 400; src: url("assets/fonts/inter-latin-400-normal.woff2"); }
@@ -13,157 +13,263 @@
       @font-face { font-family: "Plex"; font-weight: 400; src: url("assets/fonts/ibm-plex-mono-latin-400-normal.woff2"); }
       @font-face { font-family: "Plex"; font-weight: 600; src: url("assets/fonts/ibm-plex-mono-latin-600-normal.woff2"); }
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #00261a; }
-      #root { position: relative; width: 1920px; height: 1080px; font-family: "Inter", sans-serif; color: #fff; overflow: hidden; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #08120f; }
+      #root { position: relative; width: 1080px; height: 1920px; font-family: "Inter", sans-serif; color: #fff; overflow: hidden; }
       .clip { position: absolute; inset: 0; overflow: hidden; }
-      .dark { background: radial-gradient(circle at 80% 10%, #005228 0%, #00261a 65%); }
-      .paper { background: #f3f6f3; color: #122a23; }
-      #sApp, #s5, #s6 { opacity: 0; }
+      .dark { background: radial-gradient(circle at 80% 8%, #1f5e4a 0%, #08120f 58%); }
+      .paper { background: #f3f6f3; color: #0e1f1a; }
+      #s2, #s3, #s4, #s5, #s6, #s7 { opacity: 0; }
+      .num { font-family: "Plex", monospace; font-weight: 600; }
+      .pad { position: absolute; left: 80px; right: 80px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+      .top { position: absolute; left: 80px; right: 80px; top: 150px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: #4fd1a5; margin-bottom: 30px; }
+      .paper .eyebrow { color: #1f5e4a; }
+      .h1 { font-size: 132px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; }
+      .h1 em, .h2 em { font-style: normal; color: #4fd1a5; }
+      .h2 { font-size: 76px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; }
+      .paper .h2 em { color: #1f5e4a; }
 
-      /* Dark statement scenes */
-      .stmt { position: absolute; left: 160px; right: 160px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
-      .eyebrow { font-size: 32px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #9fe3c7; margin-bottom: 36px; }
-      .big { font-size: 124px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.06; }
-      .big em { font-style: normal; color: #4fd1a5; }
-      .mid { font-size: 96px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; }
-      .sub { font-size: 50px; font-weight: 500; line-height: 1.25; color: #d5ece2; margin-top: 44px; max-width: 1400px; }
+      /* S2 problema */
+      .calc { margin-top: 56px; }
+      .crow { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; border-top: 2px solid #23382f; font-size: 38px; font-weight: 500; color: #d7e6de; }
+      .crow b { font-size: 44px; color: #fff; }
+      .total { display: flex; align-items: baseline; gap: 24px; margin-top: 30px; padding-top: 34px; border-top: 4px solid #4fd1a5; }
+      .total .n { font-size: 170px; line-height: 1; color: #4fd1a5; }
+      .total span { font-size: 40px; font-weight: 600; line-height: 1.2; }
+      .fast { margin-top: 40px; font-size: 44px; font-weight: 700; }
+      .fast b { color: #4fd1a5; }
 
-      /* App scene */
-      .hl { position: absolute; left: 140px; top: 0; bottom: 0; width: 900px; display: flex; flex-direction: column; justify-content: center; opacity: 0; }
-      .kicker { font-size: 30px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #005228; margin-bottom: 26px; }
-      .hl h2 { font-size: 88px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.06; color: #122a23; }
-      .phone { position: absolute; right: 170px; top: 40px; width: 580px; height: 1000px; background: #0d1a15; border-radius: 76px; padding: 14px; }
-      .screen { width: 100%; height: 100%; background: #f3f6f3; border-radius: 62px; overflow: hidden; color: #122a23; zoom: 1.18; }
-      .scroll { padding: 40px 22px 40px; }
-      .hero { background: linear-gradient(135deg, #005228, #003d1e); border-radius: 28px; padding: 24px 24px; color: #fff; display: flex; align-items: center; justify-content: space-between; }
-      .hero .nm { font-size: 22px; font-weight: 700; line-height: 1.2; white-space: nowrap; }
-      .hero .ag { font-size: 18px; font-weight: 500; margin-top: 4px; color: #d5ece2; }
-      .hero .add { background: #fff; color: #005228; font-size: 17px; font-weight: 600; padding: 10px 16px; border-radius: 30px; white-space: nowrap; }
-      .sup { background: #fff; border-radius: 24px; box-shadow: 0 6px 18px rgba(18, 42, 35, 0.08); }
-      .clcr { margin-top: 16px; padding: 22px; display: flex; align-items: center; gap: 22px; }
-      .ring { position: relative; width: 110px; height: 110px; flex: none; }
-      .ring svg { width: 110px; height: 110px; transform: rotate(-90deg); }
-      .ring .v { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: "Plex", monospace; font-size: 27px; font-weight: 600; line-height: 1; }
-      .ring .v small { font-family: "Inter", sans-serif; font-size: 12px; font-weight: 500; color: #5c6b64; margin-top: 4px; }
-      .clcr .t { font-size: 20px; font-weight: 600; color: #b91c1c; }
-      .kd { display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 10px; background: #fde3e3; color: #991b1b; margin: 6px 0; }
-      .clcr .o { font-size: 13px; color: #5c6b64; }
-      .conds { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding: 0 4px; }
-      .cond { font-size: 14px; font-weight: 600; color: #005228; background: #e6efea; padding: 5px 12px; border-radius: 20px; }
-      .cond.s { background: transparent; border: 1.5px solid #c5d3cc; }
-      .eb { font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #5c6b64; margin: 24px 4px 10px; }
-      .find { display: flex; margin-bottom: 12px; overflow: hidden; }
-      .find i { width: 6px; flex: none; }
-      .find div { padding: 14px 16px; }
-      .find b { display: block; font-size: 19px; font-weight: 600; }
-      .find span { display: block; font-size: 15px; line-height: 1.35; color: #5c6b64; margin-top: 4px; }
-      .grid { display: flex; flex-wrap: wrap; gap: 12px; }
-      .cat { width: calc(50% - 6px); padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; position: relative; }
-      .cat i { position: absolute; left: 0; top: 0; bottom: 0; width: 6px; }
-      .cat .n { align-self: flex-end; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #fff; }
-      .cat .l { font-size: 16px; font-weight: 600; }
-      .rx { display: flex; align-items: center; margin-bottom: 12px; overflow: hidden; }
-      .rx i { width: 6px; align-self: stretch; flex: none; }
-      .rx .w { flex: 1; padding: 14px 16px; }
-      .rx b { display: block; font-size: 19px; font-weight: 600; }
-      .rx span { font-size: 15px; color: #5c6b64; }
-      .rx span tt { font-family: "Plex", monospace; }
-      .pill { font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #fff; padding: 5px 11px; border-radius: 20px; margin-right: 14px; }
+      /* S3 qué verifica */
+      .vlist { margin-top: 50px; display: flex; flex-direction: column; gap: 20px; }
+      .v { background: #fff; border-radius: 28px; padding: 28px 32px; box-shadow: 0 8px 24px rgba(14, 31, 26, 0.08); border-left: 10px solid #1f5e4a; }
+      .v b { display: block; font-size: 42px; font-weight: 800; letter-spacing: -0.01em; }
+      .v span { display: block; font-size: 31px; line-height: 1.3; color: #55655d; margin-top: 6px; }
 
-      /* Outro */
-      .lock { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-      .logo { width: 210px; height: 210px; border-radius: 52px; background: #1f5e4a; display: flex; align-items: center; justify-content: center; font-size: 150px; font-weight: 800; color: #4fd1a5; line-height: 1; }
-      .brand { font-size: 140px; font-weight: 800; letter-spacing: -0.03em; margin-top: 26px; line-height: 1.1; }
-      .tagl { font-size: 54px; font-weight: 600; color: #d5ece2; margin-top: 6px; }
-      .soon { margin-top: 40px; font-size: 32px; font-weight: 700; color: #00261a; background: #4fd1a5; padding: 14px 34px; border-radius: 40px; }
-      .legal { position: absolute; left: 0; right: 0; bottom: 70px; text-align: center; font-size: 30px; font-weight: 500; color: #b9d6c9; }
+      /* S4 cockpit */
+      .phone { position: absolute; left: 150px; top: 640px; width: 780px; height: 1500px; background: #0d1a15; border-radius: 96px; padding: 16px; }
+      .screen { width: 100%; height: 100%; background: #f3f6f3; border-radius: 80px; overflow: hidden; color: #122a23; zoom: 1.56; padding: 34px 20px; }
+      .appbar { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: #1f5e4a; margin-bottom: 16px; }
+      .appbar i { width: 30px; height: 30px; border-radius: 9px; background: #1f5e4a; color: #4fd1a5; font-style: normal; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+      .sup { background: #fff; border-radius: 22px; box-shadow: 0 5px 16px rgba(18, 42, 35, 0.08); }
+      .pt { padding: 18px 20px; }
+      .pt .nm { font-size: 22px; font-weight: 700; }
+      .pt .ag { font-size: 15px; color: #5c6b64; margin-top: 2px; }
+      .pt .cl { display: flex; align-items: center; gap: 18px; margin-top: 14px; }
+      .ring { position: relative; width: 96px; height: 96px; flex: none; }
+      .ring svg { width: 96px; height: 96px; transform: rotate(-90deg); }
+      .ring .rv { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: "Plex", monospace; font-size: 23px; font-weight: 600; line-height: 1; }
+      .ring .rv small { font-family: "Inter", sans-serif; font-size: 11px; font-weight: 500; color: #5c6b64; margin-top: 3px; }
+      .cl .t { font-size: 18px; font-weight: 600; color: #b91c1c; }
+      .kd { display: inline-block; font-family: "Plex", monospace; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: #fde3e3; color: #991b1b; margin: 5px 0; }
+      .cl .o { font-size: 12px; color: #5c6b64; }
+      .eb { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #5c6b64; margin: 18px 4px 9px; }
+      .conds { display: flex; flex-wrap: wrap; gap: 7px; }
+      .cond { font-size: 13px; font-weight: 600; color: #1f5e4a; background: #e7f0ea; padding: 5px 11px; border-radius: 18px; }
+      .find { display: flex; margin-bottom: 10px; overflow: hidden; }
+      .find i { width: 6px; flex: none; background: #991b1b; }
+      .find div { padding: 12px 14px; }
+      .find b { display: block; font-size: 17px; font-weight: 600; }
+      .find span { display: block; font-size: 13.5px; line-height: 1.35; color: #5c6b64; margin-top: 3px; }
+      .grid { display: flex; flex-wrap: wrap; gap: 10px; }
+      .cat { width: calc(50% - 5px); padding: 14px; display: flex; align-items: center; gap: 12px; }
+      .cat .n { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: "Plex", monospace; font-size: 15px; font-weight: 600; color: #fff; flex: none; }
+      .cat .l { font-size: 15px; font-weight: 600; }
+
+      /* S5 demo renal */
+      .demo { margin-top: 50px; background: #fff; border-radius: 40px; padding: 44px 44px 40px; box-shadow: 0 10px 30px rgba(14, 31, 26, 0.1); }
+      .who { font-size: 30px; font-weight: 500; color: #55655d; }
+      .who b { color: #0e1f1a; font-weight: 700; }
+      .crea { display: flex; align-items: baseline; gap: 16px; margin-top: 30px; }
+      .crea .lb { font-size: 32px; font-weight: 600; flex: 1; }
+      .crea .n { font-size: 96px; line-height: 1; color: #1f5e4a; }
+      .crea small { font-size: 30px; color: #55655d; }
+      .track { position: relative; height: 16px; border-radius: 8px; background: #dce5df; margin: 34px 0 10px; }
+      .trackfill { position: absolute; left: 0; top: 0; height: 16px; width: 96px; border-radius: 8px; background: #1f5e4a; }
+      .knob { position: absolute; left: 68px; top: -20px; width: 56px; height: 56px; border-radius: 50%; background: #fff; border: 8px solid #1f5e4a; box-shadow: 0 4px 12px rgba(14, 31, 26, 0.25); }
+      .scale { display: flex; justify-content: space-between; font-size: 24px; color: #55655d; margin-top: 26px; }
+      .stats { display: flex; gap: 18px; margin-top: 34px; }
+      .st { flex: 1; background: #f3f6f3; border-radius: 26px; padding: 24px 22px; }
+      .st span { display: block; font-size: 24px; font-weight: 600; color: #55655d; line-height: 1.2; height: 58px; }
+      .st b { display: block; font-size: 72px; line-height: 1.1; margin-top: 8px; }
+      .drugs { margin-top: 30px; display: flex; flex-direction: column; gap: 14px; }
+      .dr { display: flex; align-items: center; justify-content: space-between; border-left: 8px solid #f59e0b; background: #f3f6f3; border-radius: 18px; padding: 18px 24px; font-size: 32px; font-weight: 700; opacity: 0; }
+      .dr span { font-size: 27px; font-weight: 600; color: #8a4b00; }
+      .dr.g { border-left-color: #ef4444; }
+      .dr.g span { color: #991b1b; }
+      .formula { margin-top: 36px; font-family: "Plex", monospace; font-size: 27px; color: #55655d; text-align: center; }
+
+      /* S6 herramientas */
+      .chips { margin-top: 60px; display: flex; flex-direction: column; gap: 22px; }
+      .chip { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.08); border: 2px solid rgba(255, 255, 255, 0.16); border-radius: 30px; padding: 28px 34px; font-size: 40px; font-weight: 700; }
+      .chip span { font-family: "Plex", monospace; font-size: 26px; font-weight: 400; color: #4fd1a5; }
+
+      /* S7 cierre */
+      .lock { position: absolute; left: 80px; right: 80px; top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+      .logo { width: 230px; height: 230px; border-radius: 58px; background: #1f5e4a; display: flex; align-items: center; justify-content: center; font-size: 165px; font-weight: 800; color: #4fd1a5; line-height: 1; }
+      .brand { font-size: 150px; font-weight: 800; letter-spacing: -0.03em; margin-top: 30px; line-height: 1.1; }
+      .q { font-size: 58px; font-weight: 700; line-height: 1.2; margin-top: 16px; letter-spacing: -0.02em; }
+      .stores { display: flex; gap: 22px; margin-top: 70px; }
+      .store { border: 2px solid rgba(255, 255, 255, 0.35); border-radius: 26px; padding: 22px 34px; text-align: left; }
+      .store small { display: block; font-family: "Plex", monospace; font-size: 28px; letter-spacing: 0.04em; text-transform: uppercase; color: #b9d6c9; }
+      .store b { font-size: 44px; font-weight: 700; }
+      .meta { margin-top: 44px; font-size: 32px; font-weight: 600; color: #4fd1a5; }
+      .legal { position: absolute; left: 100px; right: 100px; bottom: 130px; text-align: center; font-size: 30px; font-weight: 500; line-height: 1.35; color: #b9d6c9; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="30" data-width="1920" data-height="1080">
-      <!-- Scene 1: la pregunta -->
-      <section id="s1" class="clip dark" data-start="0" data-duration="4.2" data-track-index="0">
-        <div class="stmt">
-          <div class="eyebrow" id="e1">Una sola pregunta</div>
-          <div class="big" id="q1">¿Este fármaco es seguro</div>
-          <div class="big" id="q2">para este paciente, <em>hoy</em>?</div>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="46" data-width="1080" data-height="1920">
+      <!-- S1: la pregunta -->
+      <section id="s1" class="clip dark" data-start="0" data-duration="4.7" data-track-index="0">
+        <div class="pad">
+          <div class="eyebrow" id="e1">Verificación clínica en el punto de atención</div>
+          <div class="h1" id="q1">¿Es seguro<br />este fármaco</div>
+          <div class="h1" id="q2">para este<br />paciente, <em>hoy</em>?</div>
         </div>
       </section>
 
-      <!-- Scenes 2-4: el cockpit, una sola pantalla que se recorre -->
-      <section id="sApp" class="clip paper" data-start="4" data-duration="16.7" data-track-index="1">
-        <div class="hl" id="hA"><div class="kicker">Cockpit del paciente</div><h2>Cada paciente, en una sola pantalla.</h2></div>
-        <div class="hl" id="hB"><div class="kicker">Verificado en el momento</div><h2>Interacciones, condiciones y alergias, ajuste renal y hepático.</h2></div>
-        <div class="hl" id="hC"><div class="kicker">Tratamiento activo</div><h2>Qué da problema, fármaco por fármaco.</h2></div>
+      <!-- S2: el problema -->
+      <section id="s2" class="clip dark" data-start="4.5" data-duration="8.7" data-track-index="1">
+        <div class="pad">
+          <div class="eyebrow">El problema</div>
+          <div class="h2" id="p1">Ocho fármacos exigen <em>ochenta y cuatro</em> verificaciones cruzadas.</div>
+          <div class="calc">
+            <div class="crow" id="k1"><span>Interacciones entre ellos</span><b class="num">28</b></div>
+            <div class="crow" id="k2"><span>Contra cada condición</span><b class="num">24</b></div>
+            <div class="crow" id="k3"><span>Contra la alergia registrada</span><b class="num">8</b></div>
+            <div class="crow" id="k4"><span>Ajuste por función renal</span><b class="num">8</b></div>
+            <div class="crow" id="k5"><span>Embarazo, según la semana</span><b class="num">8</b></div>
+            <div class="crow" id="k6"><span>Lactancia</span><b class="num">8</b></div>
+            <div class="total" id="tot"><div class="n num" id="totn">0</div><span>verificaciones sobre un solo paciente</span></div>
+            <div class="fast" id="fast"><b class="num">&lt;1 s</b> en completarlas todas.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S3: qué verifica -->
+      <section id="s3" class="clip paper" data-start="13" data-duration="9.2" data-track-index="0">
+        <div class="pad">
+          <div class="eyebrow">Qué verifica</div>
+          <div class="h2" id="w1">Todo se cruza contra <em>el mismo paciente</em>.</div>
+          <div class="vlist">
+            <div class="v" id="v1"><b>Interacciones</b><span>Todos los pares del tratamiento, con su severidad y la conducta sugerida.</span></div>
+            <div class="v" id="v2"><b>Ajuste renal</b><span>Clearance por Cockcroft-Gault y qué fármacos requieren ajuste.</span></div>
+            <div class="v" id="v3"><b>Ajuste hepático</b><span>Aún sin tabla por fármaco: informa que no evaluó, en lugar de suponer.</span></div>
+            <div class="v" id="v4"><b>Condiciones</b><span>Cada fármaco contra las comorbilidades de la ficha.</span></div>
+            <div class="v" id="v5"><b>Alergias</b><span>La coincidencia exacta y grave bloquea. El cruce por familia pide confirmación.</span></div>
+            <div class="v" id="v6"><b>Embarazo y lactancia</b><span>Según la semana de gestación cargada.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S4: el cockpit -->
+      <section id="s4" class="clip dark" data-start="22" data-duration="7.2" data-track-index="1">
+        <div class="top">
+          <div class="eyebrow">Sobre cada paciente</div>
+          <div class="h2" id="c0">Verificado sobre los datos del paciente, <em>no sobre un perfil promedio</em>.</div>
+        </div>
         <div class="phone" id="phone">
           <div class="screen" data-layout-ignore>
-            <div class="scroll" id="scroll">
-              <div class="hero"><div><div class="nm">Rodríguez, Ana María</div><div class="ag">77 años</div></div><div class="add">+ Agregar</div></div>
-              <div class="sup clcr" id="clcr">
+            <div class="appbar"><i>G</i>GFH</div>
+            <div class="sup pt">
+              <div class="nm">Rodríguez, Ana María</div><div class="ag">78 años</div>
+              <div class="cl">
                 <div class="ring">
-                  <svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="46" fill="none" stroke="#e3e9e5" stroke-width="10" /><circle cx="55" cy="55" r="46" fill="none" stroke="#ef4444" stroke-width="10" stroke-linecap="round" stroke-dasharray="67 289" /></svg>
-                  <div class="v"><span id="cl">0,0</span><small>mL/min</small></div>
+                  <svg viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="none" stroke="#e3e9e5" stroke-width="9" /><circle cx="48" cy="48" r="40" fill="none" stroke="#ef4444" stroke-width="9" stroke-linecap="round" stroke-dasharray="50 252" /></svg>
+                  <div class="rv"><span id="cl">0,0</span><small>mL/min</small></div>
                 </div>
-                <div><div class="t">Clcr Est.</div><div class="kd">KDIGO G4</div><div class="o">Calculado · Cockcroft-Gault</div></div>
+                <div><div class="t">Clcr Est.</div><div class="kd">KDIGO G4</div><div class="o">Calculado · hace 2 meses</div></div>
               </div>
-              <div class="conds" id="conds"><span class="cond">HTA</span><span class="cond">Úlcera</span><span class="cond s">Adulto mayor</span></div>
-
-              <div class="eb" id="ebG">Lo más grave</div>
-              <div class="sup find" id="f1"><i style="background: #991b1b"></i><div><b>Coumadin — Úlcera</b><span>Contraindicado en úlcera gastroduodenal.</span></div></div>
-              <div class="sup find" id="f2"><i style="background: #ea580c"></i><div><b>Coumadin + Bactrim</b><span>Elevación del INR y riesgo hemorrágico. Vigilar INR.</span></div></div>
-
-              <div class="eb" id="ebC">Por categoría</div>
-              <div class="grid">
-                <div class="sup cat" id="c1"><i style="background: #ea580c"></i><div class="n" style="background: #ea580c">1</div><div class="l">Interacciones</div></div>
-                <div class="sup cat" id="c2"><i style="background: #991b1b"></i><div class="n" style="background: #991b1b">6</div><div class="l">Condiciones y alergias</div></div>
-                <div class="sup cat" id="c3"><i style="background: #d97706"></i><div class="n" style="background: #d97706">3</div><div class="l">Ajuste renal</div></div>
-                <div class="sup cat" id="c4"><div class="n" style="background: #dde5e0; color: #5c6b64">—</div><div class="l">Ajuste hepático</div></div>
-              </div>
-
-              <div class="eb" id="ebT">Tratamiento activo · 6</div>
-              <div class="sup rx" id="x1"><i style="background: #991b1b"></i><div class="w"><b>Coumadin</b><span><tt>5 mg</tt> · cada 24 h</span></div><div class="pill" style="background: #991b1b">Contraindicada</div></div>
-              <div class="sup rx" id="x2"><i style="background: #ea580c"></i><div class="w"><b>Bactrim</b><span><tt>800/160 mg</tt> · cada 12 h</span></div><div class="pill" style="background: #ea580c">Alta</div></div>
-              <div class="sup rx" id="x3"><i style="background: #cd9404"></i><div class="w"><b>Digoxina</b><span><tt>0.25 mg</tt> · cada 24 h</span></div><div class="pill" style="background: #cd9404">Atención</div></div>
-              <div class="sup rx" id="x4"><i style="background: #cd9404"></i><div class="w"><b>Enalapril</b><span><tt>10 mg</tt> · cada 24 h</span></div><div class="pill" style="background: #cd9404">Atención</div></div>
-              <div class="sup rx" id="x5"><i style="background: #cd9404"></i><div class="w"><b>Zocor</b><span><tt>20 mg</tt> · cada 24 h</span></div><div class="pill" style="background: #cd9404">Atención</div></div>
-              <div class="sup rx" id="x6"><i style="background: #22c55e"></i><div class="w"><b>Paracetamol</b><span><tt>500 mg</tt> · cada 8 h</span></div></div>
+            </div>
+            <div class="eb">Condiciones activas</div>
+            <div class="conds"><span class="cond">HTA</span><span class="cond">Úlcera</span><span class="cond">Embarazo · 24 sem</span></div>
+            <div class="eb">Lo más grave</div>
+            <div class="sup find" id="f1"><i></i><div><b>Zocor — Embarazo</b><span>Estatina en embarazo: el colesterol es necesario para el desarrollo fetal. Suspender.</span></div></div>
+            <div class="sup find" id="f2"><i></i><div><b>Ibuprofeno — Embarazo</b><span>AINE desde la semana 20: cierre prematuro del ductus arterioso. Usar paracetamol.</span></div></div>
+            <div class="eb">Por categoría</div>
+            <div class="grid">
+              <div class="sup cat" id="g1"><div class="n" style="background: #ea580c">2</div><div class="l">Interacciones</div></div>
+              <div class="sup cat" id="g2"><div class="n" style="background: #991b1b">3</div><div class="l">Condiciones</div></div>
+              <div class="sup cat" id="g3"><div class="n" style="background: #d97706">4</div><div class="l">Ajuste renal</div></div>
+              <div class="sup cat" id="g4"><div class="n" style="background: #dde5e0; color: #5c6b64">—</div><div class="l">Ajuste hepático</div></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Scene 5: determinista -->
-      <section id="s5" class="clip dark" data-start="20.5" data-duration="5.2" data-track-index="0">
-        <div class="stmt">
-          <div class="eyebrow" id="e5">Motor determinista</div>
-          <div class="mid" id="d1">Cero decisiones clínicas salen de un modelo de lenguaje.</div>
-          <div class="sub" id="d2">Tablas y reglas deterministas, trazables a una fuente.</div>
+      <!-- S5: demostración renal -->
+      <section id="s5" class="clip paper" data-start="29" data-duration="7.2" data-track-index="0">
+        <div class="pad">
+          <div class="eyebrow">Demostración · ajuste renal</div>
+          <div class="h2" id="r0">Al modificar la creatinina, <em>el ajuste se recalcula</em>.</div>
+          <div class="demo" id="demo">
+            <div class="who"><b>Ana María Rodríguez</b> · 78 años · mujer · 60 kg</div>
+            <div class="crea"><div class="lb">Creatinina</div><div class="n num" id="cr">0,80</div><small>mg/dL</small></div>
+            <div class="track"><div class="trackfill" id="tf"></div><div class="knob" id="kn"></div></div>
+            <div class="scale num"><span>0,5</span><span>2,0</span><span>3,5</span></div>
+            <div class="stats">
+              <div class="st"><span>Clearance estimado</span><b class="num" id="sc">55</b></div>
+              <div class="st"><span>Grado KDIGO</span><b class="num" id="sk">G3a</b></div>
+              <div class="st"><span>Fármacos a ajustar</span><b class="num" id="sa">0</b></div>
+            </div>
+            <div class="drugs">
+              <div class="dr" id="d1">Digoxina<span>Reducir dosis e intervalo</span></div>
+              <div class="dr" id="d2">Enalapril<span>Reducir dosis</span></div>
+              <div class="dr g" id="d3">Metotrexato<span id="d3s">Reducir dosis</span></div>
+              <div class="dr" id="d4">Claritromicina<span>Reducir dosis</span></div>
+            </div>
+            <div class="formula">Clcr = (140 − 78) × 60 ÷ (72 × creatinina) × 0,85</div>
+          </div>
         </div>
       </section>
 
-      <!-- Scene 6: cierre -->
-      <section id="s6" class="clip dark" data-start="25.5" data-duration="4.5" data-track-index="1">
+      <!-- S6: herramientas -->
+      <section id="s6" class="clip dark" data-start="36" data-duration="5.2" data-track-index="1">
+        <div class="pad">
+          <div class="eyebrow">Herramientas</div>
+          <div class="h2" id="t0">Las calculadoras de uso habitual, <em>incluidas y sin costo</em>.</div>
+          <div class="chips">
+            <div class="chip" id="h1">Clearance de creatinina<span>Cockcroft-Gault</span></div>
+            <div class="chip" id="h2">Child-Pugh<span>Clase A, B o C</span></div>
+            <div class="chip" id="h3">Colesterol LDL y no-HDL<span>Cuatro fórmulas</span></div>
+            <div class="chip" id="h4">Riesgo cardiovascular<span>OMS/ISH · 10 años</span></div>
+            <div class="chip" id="h5">Índice de masa corporal<span>Clasificación OMS</span></div>
+            <div class="chip" id="h6">HbA1c a glucemia<span>Estudio ADAG</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S7: cierre -->
+      <section id="s7" class="clip dark" data-start="41" data-duration="5" data-track-index="0">
         <div class="lock">
           <div class="logo" id="lg">G</div>
           <div class="brand" id="br">GFH</div>
-          <div class="tagl" id="tg">Verificación clínica</div>
-          <div class="soon" id="sn">Próximamente</div>
+          <div class="q" id="qq">¿Es seguro este fármaco para este paciente, hoy?</div>
+          <div class="stores" id="sts">
+            <div class="store"><small>Próximamente en</small><b>App Store</b></div>
+            <div class="store"><small>Próximamente en</small><b>Google Play</b></div>
+          </div>
+          <div class="meta" id="mt">Uruguay · uso profesional · en desarrollo</div>
         </div>
-        <div class="legal" id="lgl">Uso profesional. No sustituye el juicio médico.</div>
+        <div class="legal" id="lgl">Herramienta de apoyo a la decisión clínica. No sustituye el juicio médico.</div>
       </section>
 
       <!-- Audio -->
-      <audio id="music" data-start="0" data-duration="30" data-track-index="5" data-volume="0.38" data-fade-out="1.8" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"></audio>
+      <audio id="music" data-start="0" data-duration="46" data-track-index="5" data-volume="0.38" data-fade-out="2" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"></audio>
       <audio id="a1" data-start="0.9" data-duration="0.12" data-track-index="6" data-volume="0.45" src="assets/sfx/impactSoft_medium_000.ogg"></audio>
-      <audio id="a2" data-start="4.52" data-duration="0.18" data-track-index="6" data-volume="0.4" src="assets/sfx/impactSoft_medium_001.ogg"></audio>
-      <audio id="a3" data-start="7.02" data-duration="0.45" data-track-index="6" data-volume="0.22" src="assets/sfx/card-place-2.ogg"></audio>
-      <audio id="a4" data-start="7.52" data-duration="0.45" data-track-index="7" data-volume="0.22" src="assets/sfx/card-place-4.ogg"></audio>
-      <audio id="a5" data-start="10.52" data-duration="0.19" data-track-index="6" data-volume="0.3" src="assets/sfx/drop_002.ogg"></audio>
-      <audio id="a6" data-start="11.02" data-duration="0.19" data-track-index="7" data-volume="0.3" src="assets/sfx/drop_003.ogg"></audio>
-      <audio id="a7" data-start="11.52" data-duration="0.19" data-track-index="6" data-volume="0.3" src="assets/sfx/drop_002.ogg"></audio>
-      <audio id="a8" data-start="12.02" data-duration="0.19" data-track-index="7" data-volume="0.3" src="assets/sfx/drop_003.ogg"></audio>
-      <audio id="a9" data-start="20.6" data-duration="0.12" data-track-index="6" data-volume="0.45" src="assets/sfx/impactSoft_medium_000.ogg"></audio>
-      <audio id="a10" data-start="25.52" data-duration="0.18" data-track-index="6" data-volume="0.5" src="assets/sfx/impactSoft_medium_001.ogg"></audio>
+      <audio id="a2" data-start="6.52" data-duration="0.19" data-track-index="6" data-volume="0.3" src="assets/sfx/drop_002.ogg"></audio>
+      <audio id="a3" data-start="7.02" data-duration="0.19" data-track-index="7" data-volume="0.3" src="assets/sfx/drop_003.ogg"></audio>
+      <audio id="a4" data-start="7.52" data-duration="0.19" data-track-index="6" data-volume="0.3" src="assets/sfx/drop_002.ogg"></audio>
+      <audio id="a5" data-start="8.02" data-duration="0.19" data-track-index="7" data-volume="0.3" src="assets/sfx/drop_003.ogg"></audio>
+      <audio id="a6" data-start="8.52" data-duration="0.19" data-track-index="6" data-volume="0.3" src="assets/sfx/drop_002.ogg"></audio>
+      <audio id="a7" data-start="9.02" data-duration="0.19" data-track-index="7" data-volume="0.3" src="assets/sfx/drop_003.ogg"></audio>
+      <audio id="a8" data-start="10.52" data-duration="0.18" data-track-index="6" data-volume="0.45" src="assets/sfx/impactSoft_medium_001.ogg"></audio>
+      <audio id="a9" data-start="14.02" data-duration="0.45" data-track-index="6" data-volume="0.2" src="assets/sfx/card-place-2.ogg"></audio>
+      <audio id="a10" data-start="15.02" data-duration="0.45" data-track-index="7" data-volume="0.2" src="assets/sfx/card-place-4.ogg"></audio>
+      <audio id="a11" data-start="16.02" data-duration="0.45" data-track-index="6" data-volume="0.2" src="assets/sfx/card-place-2.ogg"></audio>
+      <audio id="a12" data-start="17.02" data-duration="0.45" data-track-index="7" data-volume="0.2" src="assets/sfx/card-place-4.ogg"></audio>
+      <audio id="a13" data-start="18.02" data-duration="0.45" data-track-index="6" data-volume="0.2" src="assets/sfx/card-place-2.ogg"></audio>
+      <audio id="a14" data-start="19.02" data-duration="0.45" data-track-index="7" data-volume="0.2" src="assets/sfx/card-place-4.ogg"></audio>
+      <audio id="a15" data-start="41.02" data-duration="0.18" data-track-index="6" data-volume="0.5" src="assets/sfx/impactSoft_medium_001.ogg"></audio>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
@@ -171,62 +277,87 @@
       const out = "power3.out";
       const pop = "back.out(1.5)";
       const up = (sel, t, d = 0.5, y = 50) => tl.fromTo(sel, { opacity: 0, y }, { opacity: 1, y: 0, duration: d, ease: out }, t);
-      const row = (sel, t) => tl.fromTo(sel, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.3, ease: out }, t);
+      const scene = (sel, a, b) => {
+        tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.25 }, a);
+        if (b) tl.to(sel, { opacity: 0, duration: 0.25 }, b);
+      };
+      const $ = (id) => document.getElementById(id);
 
-      // Scene 1 — the question
+      // S1 — the question
       up("#e1", 0.2, 0.4, 20);
       up("#q1", 0.5);
       up("#q2", 0.9);
-      tl.to("#s1", { opacity: 0, duration: 0.25 }, 3.85);
+      tl.to("#s1", { opacity: 0, duration: 0.25 }, 4.3);
 
-      // Scenes 2-4 — one cockpit, scrolled
-      tl.fromTo("#sApp", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 4.0);
-      tl.fromTo("#phone", { opacity: 0, y: 160 }, { opacity: 1, y: 0, duration: 0.6, ease: out }, 4.1);
-      tl.fromTo("#hA", { opacity: 0, x: -70 }, { opacity: 1, x: 0, duration: 0.5, ease: out }, 4.2);
-      // beat-locked: 4.53s — Clcr card
-      tl.fromTo("#clcr", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 4.52);
+      // S2 — the problem: 84 cross-checks
+      scene("#s2", 4.5, 12.9);
+      up("#p1", 4.7);
+      // beat-grid: rows at 6.52 / 7.02 / 7.52 / 8.02 / 8.52 / 9.02
+      const sums = [28, 52, 60, 68, 76, 84];
+      const totN = $("totn");
+      const acc = { v: 0 };
+      tl.fromTo("#tot", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 6.3);
+      ["#k1", "#k2", "#k3", "#k4", "#k5", "#k6"].forEach((s, i) => {
+        const t = 6.52 + i * 0.5;
+        tl.fromTo(s, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.3, ease: out }, t);
+        tl.to(acc, { v: sums[i], duration: 0.35, ease: "power1.out", onUpdate: () => { totN.textContent = Math.round(acc.v); } }, t);
+      });
+      // beat-locked: 10.52s
+      tl.fromTo("#fast", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.4, ease: pop }, 10.52);
+
+      // S3 — what it verifies
+      scene("#s3", 13.0, 21.9);
+      up("#w1", 13.2);
+      // beat-grid (one per second, readable): 14.02 … 19.02
+      ["#v1", "#v2", "#v3", "#v4", "#v5", "#v6"].forEach((s, i) => tl.fromTo(s, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.35, ease: out }, 14.02 + i));
+
+      // S4 — cockpit
+      scene("#s4", 22.0, 28.9);
+      up("#c0", 22.2);
+      tl.fromTo("#phone", { opacity: 0, y: 220 }, { opacity: 1, y: 0, duration: 0.7, ease: out }, 22.4);
       const c = { v: 0 };
-      const clEl = document.getElementById("cl");
-      tl.to(c, { v: 27.9, duration: 1.2, ease: "power2.out", onUpdate: () => { clEl.textContent = c.v.toFixed(1).replace(".", ","); } }, 4.7);
-      tl.fromTo("#conds", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 6.0);
-      tl.set(["#ebG", "#f1", "#f2", "#ebC", "#c1", "#c2", "#c3", "#c4", "#ebT", "#x1", "#x2", "#x3", "#x4", "#x5", "#x6"], { opacity: 0 }, 0);
+      tl.to(c, { v: 23.6, duration: 1.1, ease: "power2.out", onUpdate: () => { $("cl").textContent = c.v.toFixed(1).replace(".", ","); } }, 23.0);
+      tl.fromTo("#f1", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.3, ease: out }, 24.02);
+      tl.fromTo("#f2", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.3, ease: out }, 24.52);
+      ["#g1", "#g2", "#g3", "#g4"].forEach((s, i) => tl.fromTo(s, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.3, ease: pop }, 25.52 + i * 0.25));
 
-      // B — findings and categories
-      tl.to("#hA", { opacity: 0, x: -40, duration: 0.3 }, 9.3);
-      tl.fromTo("#hB", { opacity: 0, x: -70 }, { opacity: 1, x: 0, duration: 0.5, ease: out }, 9.6);
-      tl.to("#scroll", { y: -150, duration: 0.8, ease: "power2.inOut" }, 9.5);
-      tl.to("#ebG", { opacity: 1, duration: 0.3 }, 6.7);
-      // beat-grid: finding 1 at 7.02s, finding 2 at 7.52s
-      row("#f1", 7.02);
-      row("#f2", 7.52);
-      tl.to("#ebC", { opacity: 1, duration: 0.3 }, 10.2);
-      // beat-grid: categories at 10.52 / 11.02 / 11.52 / 12.02
-      ["#c1", "#c2", "#c3", "#c4"].forEach((s, i) => tl.fromTo(s, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.3, ease: pop }, [10.52, 11.02, 11.52, 12.02][i]));
+      // S5 — renal demo: same formula and cut-offs the landing demo uses
+      scene("#s5", 29.0, 35.9);
+      up("#r0", 29.2);
+      up("#demo", 29.5, 0.6, 80);
+      const cr = { v: 0.8 };
+      const kdigo = (v) => (v >= 90 ? "G1" : v >= 60 ? "G2" : v >= 45 ? "G3a" : v >= 30 ? "G3b" : v >= 15 ? "G4" : "G5");
+      const paint = () => {
+        const v = Math.round(((140 - 78) * 60) / (72 * cr.v) * 0.85);
+        $("cr").textContent = cr.v.toFixed(2).replace(".", ",");
+        $("sc").textContent = v;
+        $("sk").textContent = kdigo(v);
+        const on = [v <= 50, v <= 50, v <= 50, v <= 29];
+        ["d1", "d2", "d3", "d4"].forEach((id, i) => { $(id).style.opacity = on[i] ? 1 : 0; });
+        $("d3s").textContent = v < 30 ? "Evitar" : "Reducir dosis";
+        $("d3").className = v < 30 ? "dr g" : "dr";
+        $("sa").textContent = on.filter(Boolean).length;
+        const px = ((cr.v - 0.5) / 3) * 832;
+        $("kn").style.left = px - 28 + "px";
+        $("tf").style.width = px + "px";
+      };
+      tl.to(cr, { v: 1.8, duration: 3.2, ease: "power1.inOut", onUpdate: paint }, 30.6);
 
-      // C — treatment
-      tl.to("#hB", { opacity: 0, x: -40, duration: 0.3 }, 15.3);
-      tl.fromTo("#hC", { opacity: 0, x: -70 }, { opacity: 1, x: 0, duration: 0.5, ease: out }, 15.6);
-      tl.to("#scroll", { y: -690, duration: 0.9, ease: "power2.inOut" }, 15.4);
-      tl.to("#ebT", { opacity: 1, duration: 0.3 }, 16.1);
-      ["#x1", "#x2", "#x3", "#x4", "#x5", "#x6"].forEach((s, i) => row(s, 16.4 + i * 0.25));
-      tl.to("#sApp", { opacity: 0, duration: 0.25 }, 20.3);
+      // S6 — tools
+      scene("#s6", 36.0, 40.9);
+      up("#t0", 36.2);
+      ["#h1", "#h2", "#h3", "#h4", "#h5", "#h6"].forEach((s, i) => tl.fromTo(s, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 37.0 + i * 0.25));
 
-      // Scene 5 — deterministic engine
-      tl.fromTo("#s5", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 20.5);
-      up("#e5", 20.6, 0.4, 20);
-      up("#d1", 20.8);
-      up("#d2", 22.5, 0.5, 30);
-      tl.to("#s5", { opacity: 0, duration: 0.25 }, 25.3);
-
-      // Scene 6 — outro
-      tl.fromTo("#s6", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 25.5);
-      // beat-locked: 25.52s
-      tl.fromTo("#lg", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: pop }, 25.52);
-      up("#br", 25.85, 0.4, 40);
-      up("#tg", 26.15, 0.4, 30);
-      tl.fromTo("#sn", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.35, ease: pop }, 26.6);
-      tl.fromTo("#lgl", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 26.9);
-      tl.to({}, { duration: 0.01 }, 29.99);
+      // S7 — outro
+      scene("#s7", 41.0, null);
+      // beat-locked: 41.02s
+      tl.fromTo("#lg", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: pop }, 41.02);
+      up("#br", 41.35, 0.4, 40);
+      up("#qq", 41.65, 0.4, 30);
+      up("#sts", 42.2, 0.4, 30);
+      tl.fromTo("#mt", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 42.6);
+      tl.fromTo("#lgl", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 42.0);
+      tl.to({}, { duration: 0.01 }, 45.99);
 
       window.__timelines["main"] = tl;
       tl.seek(0);
