@@ -463,7 +463,7 @@ export default function CockpitPaciente() {
             icono="camara"
             onPress={() => abrir(`/paciente/${id}/cargar-tratamiento`)}
           >
-            Cargar tratamiento
+            Cargar
           </Boton>
         </View>
 

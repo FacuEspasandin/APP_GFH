@@ -1,6 +1,6 @@
 import { useQueryClient, type QueryKey } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
-import { RefreshControl } from 'react-native';
+import { useCallback, useState, type ReactNode } from 'react';
+import { Platform, RefreshControl, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { hapticaSeleccion } from './haptica';
 import { useColores } from './tema';
@@ -18,11 +18,21 @@ import { useColores } from './tema';
 export function ControlRefrescar({
   refrescando,
   onRefrescar,
+  style,
+  children,
 }: {
   refrescando: boolean;
   onRefrescar: () => void;
+  /** Los pone el `ScrollView` de react-native-web al clonar este elemento. */
+  style?: StyleProp<ViewStyle>;
+  children?: ReactNode;
 }) {
   const col = useColores();
+  // En web el `RefreshControl` no dibuja nada y, como `ScrollView` lo usa de
+  // envoltorio, se llevaba puesta la pantalla entera (sólo se vio al probar la app
+  // en el navegador). Deslizar para refrescar es un gesto de teléfono: acá sólo
+  // pasa el contenido.
+  if (Platform.OS === 'web') return <View style={[{ flex: 1 }, style]}>{children}</View>;
   return (
     <RefreshControl
       refreshing={refrescando}

@@ -17,4 +17,14 @@ config.resolver.nodeModulesPaths = [
 ];
 config.resolver.disableHierarchicalLookup = true;
 
+// Web de desarrollo: módulos que sólo existen en nativo se reemplazan por un stub.
+// No afecta a iOS ni a Android.
+const resolverPorDefecto = config.resolver.resolveRequest;
+config.resolver.resolveRequest = (contexto, nombre, plataforma) => {
+  if (plataforma === 'web' && nombre === 'react-native-pager-view') {
+    return { type: 'sourceFile', filePath: path.resolve(raizProyecto, 'web-stubs/pager-view.js') };
+  }
+  return (resolverPorDefecto ?? contexto.resolveRequest)(contexto, nombre, plataforma);
+};
+
 module.exports = withNativeWind(config, { input: './global.css' });
