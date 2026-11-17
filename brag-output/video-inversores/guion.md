@@ -1,4 +1,28 @@
-# GFH — Video para inversores (1:35, 16:9, con voz)
+# GFH — Video para inversores (versión 2: sin voz, 1:35, 16:9)
+
+Música de fondo leve; todo se lee en pantalla. Cambios del dueño del 2026-11-17 aplicados escena por escena (ver `fotogramas-gfh-inversores-v2.pdf`).
+
+| # | Tiempo | Escena | En pantalla |
+|---|---|---|---|
+| 01 | 0:00–0:05 | La pregunta | ¿Es seguro este fármaco para este paciente, hoy? |
+| 02 | 0:05–0:14 | El problema | Ocho fármacos exigen ochenta y cuatro verificaciones cruzadas (28 + 24 + 8 + 8 + 8 + 8). |
+| 03 | 0:14–0:24 | Cambiar un fármaco | Cambiar un solo fármaco obliga a cruzarlo otra vez contra todo: 7 interacciones, 3 condiciones, alergia, función renal, embarazo, lactancia. |
+| 04 | 0:24–0:31 | GFH las hace todas | 84 verificaciones, <1 s, 11 requieren revisión; se rehacen solas ante cada cambio. |
+| 05 | 0:31–0:42 | Cockpit | Todo el paciente, en una sola pantalla. |
+| 06 | 0:42–0:51 | Ajuste renal | Si sube la creatinina, el ajuste se recalcula. |
+| 07 | 0:51–0:57 | Alternativas | Alternativas evaluadas contra ese paciente; reemplazo registrado. |
+| 08 | 0:57–1:04 | Carga por foto | Cargá todo el tratamiento con una foto. |
+| 09 | 1:04–1:11 | Herramientas | Más de 35 herramientas clínicas (el código tiene 39). |
+| 10 | 1:11–1:19 | Buscador | Todos los fármacos y medicamentos comerciales del Uruguay; ficha de Eliquis 5 mg. |
+| 11 | 1:19–1:30 | Planes | Gratis y PRO, con lo que incluye cada uno. Sin precios. |
+| 12 | 1:30–1:35 | Cierre | Logo, GFH, Gestión Farmacológica Hospitalaria. |
+
+Eliminadas: dato faltante, "ninguna decisión sale de IA", catálogo de hoy.
+
+---
+
+## Versión 1 (con voz), para referencia
+
 
 | Tiempo | En pantalla | Voz |
 |---|---|---|

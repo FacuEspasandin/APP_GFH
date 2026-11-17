@@ -18,7 +18,7 @@
       .clip { position: absolute; inset: 0; overflow: hidden; }
       .dark { background: radial-gradient(circle at 80% 10%, #005228 0%, #00261a 62%); }
       .paper { background: #f3f6f3; color: #122a23; }
-      #s2, #s3, #s4, #s5, #s6, #s7, #s8, #s9, #s10 { opacity: 0; }
+      .later { opacity: 0; }
       .num { font-family: "Plex", monospace; font-weight: 600; }
       .stmt { position: absolute; left: 160px; right: 160px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
       .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: #9fe3c7; margin-bottom: 32px; }
@@ -160,24 +160,59 @@
       .sc span { display: block; font-size: 30px; color: #d5ece2; margin-top: 12px; line-height: 1.3; }
       .soon { margin-top: 40px; font-size: 32px; font-weight: 700; color: #00261a; background: #4fd1a5; padding: 14px 34px; border-radius: 40px; }
       .legal { position: absolute; left: 0; right: 0; bottom: 64px; text-align: center; font-size: 28px; font-weight: 500; color: #b9d6c9; }
+    
+      /* v2 */
+      .net { position: absolute; right: 120px; top: 90px; width: 760px; height: 760px; }
+      .net svg { position: absolute; inset: 0; width: 760px; height: 760px; }
+      .net svg line { stroke: #4fd1a5; stroke-width: 3; opacity: 0.18; }
+      .net svg line.hot { stroke: #ffcb66; stroke-width: 5; opacity: 0; }
+      .nd { position: absolute; width: 190px; margin-left: -95px; margin-top: -30px; text-align: center; background: #0d3a2b; border: 2px solid #2f6f58; border-radius: 30px; padding: 12px 8px; font-size: 26px; font-weight: 700; }
+      .nd.new { background: #ffcb66; color: #00261a; border-color: #ffcb66; }
+      .checks { position: absolute; left: 120px; right: 120px; bottom: 70px; display: flex; gap: 16px; }
+      .checks div { flex: 1; text-align: center; border: 2px solid rgba(255, 203, 102, 0.6); color: #ffcb66; border-radius: 22px; padding: 16px 8px; font-size: 26px; font-weight: 700; opacity: 0; }
+      .cells { position: absolute; right: 140px; top: 170px; width: 700px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
+      .cell { height: 46px; border-radius: 10px; background: rgba(255, 255, 255, 0.1); }
+      .cell i { display: block; width: 100%; height: 100%; border-radius: 10px; opacity: 0; }
+      .result { position: absolute; right: 140px; top: 820px; width: 700px; display: flex; gap: 20px; }
+      .result div { flex: 1; border-top: 4px solid #4fd1a5; padding-top: 16px; }
+      .result b { display: block; font-size: 62px; line-height: 1; }
+      .result span { display: block; font-size: 26px; color: #d5ece2; margin-top: 8px; }
+      .gridtools { position: absolute; right: 120px; top: 110px; width: 840px; display: flex; flex-wrap: wrap; gap: 12px; }
+      .gridtools span { background: #fff; border: 2px solid #dde5e0; border-radius: 18px; padding: 13px 18px; font-size: 24px; font-weight: 600; color: #122a23; }
+      .gridtools span.k { background: #005228; border-color: #005228; color: #fff; }
+      .tabs { display: flex; gap: 6px; background: #e6efea; border-radius: 16px; padding: 4px; margin: 14px 0; }
+      .tabs span { flex: 1; text-align: center; font-size: 14px; font-weight: 700; padding: 9px 4px; border-radius: 12px; color: #5c6b64; }
+      .tabs span.on { background: #fff; color: #122a23; }
+      .res { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; margin-bottom: 9px; }
+      .res b { display: block; font-size: 18px; }
+      .res span { font-size: 14px; color: #5c6b64; }
+      .rgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .rg { padding: 14px; }
+      .rg b { display: block; font-size: 16px; }
+      .rg span { display: inline-block; margin-top: 6px; font-size: 13px; font-weight: 700; padding: 3px 9px; border-radius: 10px; }
+      .plan li { font-size: 28px; padding: 7px 0 7px 42px; }
+      .plan li::before { top: 7px; }
+      .plan h3 { font-size: 46px; margin: 6px 0 14px; }
+      .plans { top: 300px; }
+      .s9top { top: 80px; }
     </style>
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="95" data-width="1920" data-height="1080">
-      <!-- S1: la pregunta -->
-      <section id="s1" class="clip dark" data-start="0" data-duration="7.3" data-track-index="0">
+      <!-- 01: la pregunta -->
+      <section id="s1" class="clip dark" data-start="0" data-duration="5.2" data-track-index="0">
         <div class="stmt">
-          <div class="eyebrow" id="e1">Frente a cada paciente</div>
-          <div class="big" id="q1">¿Es seguro este fármaco</div>
-          <div class="big" id="q2">para este paciente, <em>hoy</em>?</div>
+          <div class="eyebrow">Frente a cada paciente</div>
+          <div class="big">¿Es seguro este fármaco</div>
+          <div class="big">para este paciente, <em>hoy</em>?</div>
         </div>
       </section>
 
-      <!-- S2: el problema -->
-      <section id="s2" class="clip dark" data-start="7.1" data-duration="13.5" data-track-index="1">
+      <!-- 02: el problema -->
+      <section id="s2" class="clip dark later" data-start="5" data-duration="9.2" data-track-index="1">
         <div class="hl" style="width: 880px">
           <div class="eyebrow">El problema</div>
-          <h2 id="p1">Ocho fármacos exigen <em style="font-style: normal; color: #4fd1a5">ochenta y cuatro</em> verificaciones cruzadas.</h2>
+          <h2>Ocho fármacos exigen <em style="font-style: normal; color: #4fd1a5">ochenta y cuatro</em> verificaciones cruzadas.</h2>
           <p id="p2">Sostener ese volumen de memoria, en consulta o en guardia, no es razonable.</p>
         </div>
         <div class="tbl">
@@ -187,34 +222,45 @@
           <div class="tr" id="k4"><span>Ajuste por función renal</span><b class="num">8</b></div>
           <div class="tr" id="k5"><span>Embarazo</span><b class="num">8</b></div>
           <div class="tr" id="k6"><span>Lactancia</span><b class="num">8</b></div>
-          <div class="tot" id="tot"><div class="n num" id="totn">0</div><span>verificaciones<br />sobre un solo paciente</span></div>
+          <div class="tot"><div class="n num" id="totn">0</div><span>verificaciones<br />sobre un solo paciente</span></div>
         </div>
       </section>
 
-      <!-- S3: GFH -->
-      <section id="s3" class="clip dark" data-start="20.4" data-duration="7.8" data-track-index="0">
-        <div class="lock">
-          <div class="logo" id="lg3">G</div>
-          <div class="brand" id="br3">GFH</div>
-          <div class="tagl" id="tg3">Verificación clínica en el punto de atención</div>
-          <div class="facts" id="fc3">
-            <div class="fact">App móvil para médicos</div>
-            <div class="fact">Sobre los datos de cada paciente</div>
-            <div class="fact"><b>&lt;1 s</b> en completarlas todas</div>
-          </div>
+      <!-- 03: cambiar un fármaco -->
+      <section id="s3" class="clip dark later" data-start="14" data-duration="10.2" data-track-index="0">
+        <div class="hl" style="width: 820px">
+          <div class="eyebrow">Y cada cambio lo empieza de nuevo</div>
+          <h2>Cambiar un solo fármaco obliga a cruzarlo otra vez contra todo.</h2>
+          <p id="p3">Contra los otros siete, cada condición, la alergia, la función renal, el embarazo y la lactancia.</p>
         </div>
+        <div class="net">
+          <svg viewBox="0 0 760 760"><line x1="380" y1="80" x2="592" y2="168" /><line x1="380" y1="80" x2="680" y2="380" /><line x1="380" y1="80" x2="592" y2="592" /><line x1="380" y1="80" x2="380" y2="680" /><line x1="380" y1="80" x2="168" y2="592" /><line class="hot" id="ln0" x1="380" y1="80" x2="80" y2="380" /><line x1="380" y1="80" x2="168" y2="168" /><line x1="592" y1="168" x2="680" y2="380" /><line x1="592" y1="168" x2="592" y2="592" /><line x1="592" y1="168" x2="380" y2="680" /><line x1="592" y1="168" x2="168" y2="592" /><line class="hot" id="ln1" x1="592" y1="168" x2="80" y2="380" /><line x1="592" y1="168" x2="168" y2="168" /><line x1="680" y1="380" x2="592" y2="592" /><line x1="680" y1="380" x2="380" y2="680" /><line x1="680" y1="380" x2="168" y2="592" /><line class="hot" id="ln2" x1="680" y1="380" x2="80" y2="380" /><line x1="680" y1="380" x2="168" y2="168" /><line x1="592" y1="592" x2="380" y2="680" /><line x1="592" y1="592" x2="168" y2="592" /><line class="hot" id="ln3" x1="592" y1="592" x2="80" y2="380" /><line x1="592" y1="592" x2="168" y2="168" /><line x1="380" y1="680" x2="168" y2="592" /><line class="hot" id="ln4" x1="380" y1="680" x2="80" y2="380" /><line x1="380" y1="680" x2="168" y2="168" /><line class="hot" id="ln5" x1="168" y1="592" x2="80" y2="380" /><line x1="168" y1="592" x2="168" y2="168" /><line class="hot" id="ln7" x1="80" y1="380" x2="168" y2="168" /></svg>
+          <div class="nd" id="nd0" style="left: 380px; top: 80px">Coumadin</div><div class="nd" id="nd1" style="left: 592px; top: 168px">Bactrim</div><div class="nd" id="nd2" style="left: 680px; top: 380px">Zocor</div><div class="nd" id="nd3" style="left: 592px; top: 592px">Digoxina</div><div class="nd" id="nd4" style="left: 380px; top: 680px">Enalapril</div><div class="nd" id="nd5" style="left: 168px; top: 592px">Omeprazol</div><div class="nd" id="nd6" style="left: 80px; top: 380px">Paracetamol</div><div class="nd" id="nd7" style="left: 168px; top: 168px">Metformina</div>
+        </div>
+        <div class="checks"><div id="ch1">7 interacciones</div><div id="ch2">3 condiciones</div><div id="ch3">Alergia</div><div id="ch4">Función renal</div><div id="ch5">Embarazo</div><div id="ch6">Lactancia</div></div>
       </section>
 
-      <!-- S4: cockpit -->
-      <section id="s4" class="clip paper" data-start="28" data-duration="10.8" data-track-index="1">
+      <!-- 04: GFH las hace -->
+      <section id="s4" class="clip dark later" data-start="24" data-duration="7.2" data-track-index="1">
+        <div class="hl" style="width: 860px">
+          <div class="eyebrow">GFH · Gestión Farmacológica Hospitalaria</div>
+          <h2>GFH las hace todas, <em style="font-style: normal; color: #4fd1a5">en menos de un segundo</em>.</h2>
+          <p id="p4">Y las vuelve a hacer sola cada vez que cambia una dosis, un análisis o una condición.</p>
+        </div>
+        <div class="cells" id="cells"><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #ffcb66"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div><div class="cell"><i style="background: #4fd1a5"></i></div></div>
+        <div class="result" id="res4"><div><b class="num">84</b><span>verificaciones</span></div><div><b class="num">&lt;1 s</b><span>en completarlas</span></div><div><b class="num" style="color: #ffcb66">11</b><span>requieren revisión</span></div></div>
+      </section>
+
+      <!-- 05: cockpit -->
+      <section id="s5" class="clip paper later" data-start="31" data-duration="11.2" data-track-index="0">
         <div class="hl">
           <div class="eyebrow">Cockpit del paciente</div>
-          <h2 id="h4">Todo el paciente, en una sola pantalla.</h2>
-          <p id="p4">Lo más grave primero. Cuatro categorías: interacciones, condiciones y alergias, ajuste renal y ajuste hepático. Y el tratamiento, fármaco por fármaco.</p>
+          <h2 id="h5c">Todo el paciente, en una sola pantalla.</h2>
+          <p id="p5c">Lo más grave primero. Cuatro categorías: interacciones, condiciones y alergias, ajuste renal y ajuste hepático. Y el tratamiento, fármaco por fármaco.</p>
         </div>
-        <div class="phone" id="ph4">
+        <div class="phone" id="ph5">
           <div class="screen" data-layout-ignore>
-            <div class="layer" id="sc4">
+            <div class="layer" id="sc5">
               <div class="hero"><div><div class="nm">Rodríguez, Ana María</div><div class="ag">77 años · mujer</div></div><div class="add">+ Agregar</div></div>
               <div class="sup clcr">
                 <div class="ring"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="43" fill="none" stroke="#e3e9e5" stroke-width="10" /><circle cx="52" cy="52" r="43" fill="none" stroke="#ef4444" stroke-width="10" stroke-linecap="round" stroke-dasharray="63 270" /></svg><div class="v"><span>27,9</span><small>mL/min</small></div></div>
@@ -243,11 +289,11 @@
         </div>
       </section>
 
-      <!-- S5: ajuste renal en vivo -->
-      <section id="s5" class="clip paper" data-start="38.6" data-duration="8.4" data-track-index="0">
+      <!-- 06: ajuste renal -->
+      <section id="s6" class="clip paper later" data-start="42" data-duration="9.2" data-track-index="1">
         <div class="hl" style="width: 820px">
           <div class="eyebrow">Recalculado en el momento</div>
-          <h2 id="h5">Si sube la creatinina, el ajuste se recalcula.</h2>
+          <h2 id="h6r">Si sube la creatinina, el ajuste se recalcula.</h2>
           <p>Cockcroft-Gault, grado KDIGO y qué fármacos del tratamiento requieren ajuste.</p>
         </div>
         <div class="demo" id="dm">
@@ -269,14 +315,14 @@
         </div>
       </section>
 
-      <!-- S6: alternativas y dato faltante -->
-      <section id="s6" class="clip paper" data-start="46.8" data-duration="8.3" data-track-index="1">
+      <!-- 07: alternativas -->
+      <section id="s7" class="clip paper later" data-start="51" data-duration="6.4" data-track-index="0">
         <div class="hl">
           <div class="eyebrow">Criterio clínico</div>
-          <h2 id="h6">Alternativas evaluadas contra ese paciente.</h2>
-          <div class="neutral" id="nt"><div class="n">—</div><div><b>Ajuste hepático · sin evaluar</b><span>Falta la tabla por fármaco: la app lo declara, en lugar de suponer.</span></div></div>
+          <h2 id="h7">Alternativas evaluadas contra ese paciente.</h2>
+          <p>Cada alternativa ya cruzada con el tratamiento actual, y el reemplazo queda registrado.</p>
         </div>
-        <div class="phone" id="ph6">
+        <div class="phone" id="ph7">
           <div class="screen" data-layout-ignore>
             <div class="layer">
               <div class="topbar">Alternativas</div>
@@ -289,13 +335,12 @@
         </div>
       </section>
 
-      <!-- S7: foto, buscador y calculadoras -->
-      <section id="s7" class="clip paper" data-start="55" data-duration="10" data-track-index="0">
-        <div class="hl" id="hA"><div class="eyebrow">Carga del tratamiento</div><h2>Desde una foto, con revisión línea por línea.</h2><p>La foto solo asiste la carga: nada se crea sin la confirmación del médico, y el archivo nunca se guarda.</p></div>
-        <div class="hl" id="hB" style="opacity: 0"><div class="eyebrow">Sin crear un paciente</div><h2>Buscador de fármacos y calculadoras clínicas de uso libre.</h2></div>
-        <div class="phone" id="ph7">
+      <!-- 08: carga por foto -->
+      <section id="s8" class="clip paper later" data-start="57" data-duration="7.2" data-track-index="1">
+        <div class="hl"><div class="eyebrow">Ayuda en la consulta</div><h2>Cargá todo el tratamiento con una foto.</h2><p>Fotografiás el listado de medicación, GFH propone cada fármaco con su pauta y vos solo confirmás.</p></div>
+        <div class="phone" id="ph8">
           <div class="screen" data-layout-ignore>
-            <div class="layer" id="ly1">
+            <div class="layer" id="ly8">
               <div class="topbar">Revisar y completar</div>
               <div class="photo" id="pic">Coumadin 5 mg — 1 c/24 h<br />Bactrim forte — 1 c/12 h<br />Zocor 20 mg — 1 c/24 h<br />Digoxina 0,25 mg — 1 c/24 h</div>
               <div class="muted" style="font-size: 15px; color: #5c6b64; margin-bottom: 10px">Revisá cada línea y ajustá la pauta si hace falta.</div>
@@ -305,76 +350,68 @@
               <div class="sup ln" id="l4"><div class="ck">✓</div><div><b>Digoxina</b><span><tt>0.25 mg</tt> · cada 24 h</span></div></div>
               <div class="note">Nada se carga hasta que confirmes.</div>
             </div>
-            <div class="layer" id="ly2" style="opacity: 0">
+            
+          </div>
+        </div>
+      </section>
+
+      <!-- 09: herramientas -->
+      <section id="s9" class="clip paper later" data-start="64" data-duration="7.2" data-track-index="0">
+        <div class="hl" style="width: 760px"><div class="eyebrow">Incluidas, sin crear un paciente</div><h2>Más de 35 herramientas clínicas.</h2><p>Calculadoras y escalas de uso diario, junto a las verificaciones de interacciones, condiciones y ajuste por fármaco.</p></div>
+        <div class="gridtools" id="gt">
+          <span class="k">Interacción fármaco-fármaco</span><span class="k">Condición y alergia</span><span class="k">Ajuste renal por fármaco</span><span class="k">Ajuste hepático por fármaco</span>
+          <span>Clearance de creatinina</span><span>Child-Pugh</span><span>CHA2DS2-VASc</span><span>HAS-BLED</span><span>CURB-65</span><span>Wells (TEP)</span><span>MELD-Na</span><span>NIHSS</span><span>Escala de Glasgow</span><span>qSOFA</span><span>SOFA completo</span><span>QTc corregido</span><span>HEART score</span><span>Centor (McIsaac)</span><span>FIB-4</span><span>Riesgo cardiovascular</span><span>Colesterol LDL y no-HDL</span><span>Superficie corporal</span><span>Anion Gap</span><span>Fecha probable de parto</span><span>IMC</span><span>HbA1c</span>
+        </div>
+      </section>
+
+      <!-- 10: buscador -->
+      <section id="s10" class="clip paper later" data-start="71" data-duration="8.2" data-track-index="1">
+        <div class="hl"><div class="eyebrow">Buscador</div><h2>Todos los fármacos y medicamentos comerciales del Uruguay.</h2><p>Se busca por marca, como se receta, y cada ficha trae sus restricciones renales, hepáticas, en embarazo y en lactancia.</p></div>
+        <div class="phone" id="ph10">
+          <div class="screen" data-layout-ignore>
+            <div class="layer" id="lyA">
               <div class="topbar">Buscador</div>
-              <div class="search">Buscar por marca o principio activo</div>
-              <div class="eb">Herramientas</div>
-              <div class="chips">
-                <span class="chip">Clearance de creatinina</span><span class="chip">Child-Pugh</span><span class="chip">Interacción fármaco-fármaco</span><span class="chip">Condición y alergia</span><span class="chip">Ajuste renal por fármaco</span><span class="chip">CHA2DS2-VASc</span><span class="chip">HAS-BLED</span><span class="chip">CURB-65</span><span class="chip">Escala de Glasgow</span><span class="chip">QTc corregido</span><span class="chip">MELD-Na</span><span class="chip">Riesgo cardiovascular</span><span class="chip">Colesterol LDL y no-HDL</span><span class="chip">IMC</span>
+              <div class="search" id="q">Buscar por marca o principio activo</div>
+              <div class="eb">Medicamentos</div>
+              <div class="sup res" id="rs1"><div><b>Eliquis 5 mg</b><span>Apixabán · comprimidos</span></div></div>
+              <div class="sup res" id="rs2"><div><b>Eliquis 2,5 mg</b><span>Apixabán · comprimidos</span></div></div>
+            </div>
+            <div class="layer" id="lyB" style="opacity: 0">
+              <div class="topbar">Eliquis 5 mg</div>
+              <div class="muted" style="font-size: 15px; color: #5c6b64; text-align: center">Apixabán</div>
+              <div class="tabs"><span class="on">Info</span><span>Ficha técnica</span><span>Similares</span><span>Presentaciones</span></div>
+              <div class="eb">Restricciones</div>
+              <div class="rgrid">
+                <div class="sup rg"><b>Renal</b><span style="background: #e0f2fe; color: #075985">Ajustar según Clcr</span></div>
+                <div class="sup rg"><b>Hepático</b><span style="background: #eef1f0; color: #5c6b64">Sin datos</span></div>
+                <div class="sup rg"><b>Embarazo</b><span style="background: #fee7e7; color: #991b1b">Contraindicado</span></div>
+                <div class="sup rg"><b>Lactancia</b><span style="background: #eef1f0; color: #5c6b64">Sin datos</span></div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- S8: determinista -->
-      <section id="s8" class="clip dark" data-start="64.8" data-duration="11" data-track-index="1">
-        <div class="stmt">
-          <div class="eyebrow">Lo que nos diferencia</div>
-          <div class="mid" id="m1">Ninguna decisión clínica sale de <em>inteligencia artificial</em>.</div>
-          <div class="trio" id="trio">
-            <div class="tri"><b>Determinista</b><span>Tablas y reglas: ante los mismos datos, siempre el mismo resultado.</span></div>
-            <div class="tri"><b>Trazable</b><span>Cada severidad, dosis e interacción remite a su fuente.</span></div>
-            <div class="tri"><b>Honesto</b><span>Ante un dato ausente, lo declara: nunca supone que no hay riesgo.</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- S9: modelo -->
-      <section id="s9" class="clip paper" data-start="75.6" data-duration="10.6" data-track-index="0">
-        <div class="s9top"><div class="eyebrow">Modelo de negocio</div><h2 id="h9">Freemium, para el médico individual.</h2></div>
+      <!-- 11: planes -->
+      <section id="s11" class="clip paper later" data-start="79" data-duration="11.2" data-track-index="0">
+        <div class="s9top"><div class="eyebrow">Modelo de negocio</div><h2>Dos planes.</h2></div>
         <div class="plans">
-          <div class="plan" id="pl1"><div class="k">Gratis</div><h3>Para conocer el criterio</h3><ul><li>Un paciente con su cockpit completo</li><li>Calculadoras sin límite</li><li>Buscador de fármacos</li></ul></div>
-          <div class="plan pro" id="pl2"><div class="k">Suscripción</div><h3>Para la práctica diaria</h3><ul><li>Pacientes ilimitados, en grupos</li><li>Carga del tratamiento por foto</li><li>Mensual o anual, desde las tiendas</li></ul></div>
+          <div class="plan" id="pl1"><div class="k">Gratis</div><h3>Para conocer el criterio</h3><ul><li>Las herramientas clínicas, sin límite</li><li>El buscador y la ficha de cada fármaco</li><li>Un paciente con su cockpit completo</li></ul></div>
+          <div class="plan pro" id="pl2"><div class="k">PRO · suscripción</div><h3>Para la práctica diaria</h3><ul><li>Pacientes sin límite, organizados en grupos</li><li>Verificaciones rehechas ante cada cambio</li><li>Alternativas evaluadas y reemplazo registrado</li><li>Carga del tratamiento desde una foto</li><li>Historial completo de cada paciente</li><li>Cockpit disponible sin señal</li></ul></div>
         </div>
-        <div class="band" id="bd"><div>Uruguay primero</div><div>Expansión regional después</div><div>Español rioplatense</div></div>
       </section>
 
-      <!-- S10: estado y cierre -->
-      <section id="s10" class="clip dark" data-start="86" data-duration="9" data-track-index="1">
-        <div class="stmt" id="cat">
-          <div class="eyebrow">El catálogo clínico, hoy</div>
-          <div class="stats4">
-            <div class="sc"><b class="num">226</b><span>principios activos</span></div>
-            <div class="sc"><b class="num">628</b><span>alertas por condición</span></div>
-            <div class="sc"><b class="num">271</b><span>alternativas terapéuticas</span></div>
-            <div class="sc"><b class="num">228</b><span>fármacos con ajuste renal</span></div>
-          </div>
-        </div>
-        <div class="lock" id="end" style="opacity: 0">
-          <div class="logo" id="lg10">G</div>
+      <!-- 12: cierre -->
+      <section id="s12" class="clip dark later" data-start="90" data-duration="5" data-track-index="1">
+        <div class="lock">
+          <div class="logo" id="lgE">G</div>
           <div class="brand">GFH</div>
-          <div class="tagl">Verificación clínica en el punto de atención</div>
-          <div class="soon">En desarrollo · en revisión farmacéutica</div>
+          <div class="tagl">Gestión Farmacológica Hospitalaria</div>
         </div>
-        <div class="legal" id="lgl" style="opacity: 0">Uso profesional. No sustituye el juicio médico.</div>
       </section>
 
-      <!-- Voz -->
-      <audio id="v1" data-start="0.4" data-duration="6.42" data-track-index="3" data-volume="1" src="assets/vo/v1.wav"></audio>
-      <audio id="v2" data-start="7.4" data-duration="12.65" data-track-index="3" data-volume="1" src="assets/vo/v2.wav"></audio>
-      <audio id="v3" data-start="20.7" data-duration="6.84" data-track-index="3" data-volume="1" src="assets/vo/v3.wav"></audio>
-      <audio id="v4" data-start="28.3" data-duration="9.66" data-track-index="3" data-volume="1" src="assets/vo/v4.wav"></audio>
-      <audio id="v5" data-start="38.9" data-duration="7.48" data-track-index="3" data-volume="1" src="assets/vo/v5.wav"></audio>
-      <audio id="v6" data-start="47.1" data-duration="7.46" data-track-index="3" data-volume="1" src="assets/vo/v6.wav"></audio>
-      <audio id="v7" data-start="55.3" data-duration="9.08" data-track-index="3" data-volume="1" src="assets/vo/v7.wav"></audio>
-      <audio id="v8" data-start="65.1" data-duration="10.28" data-track-index="3" data-volume="1" src="assets/vo/v8.wav"></audio>
-      <audio id="v9" data-start="75.9" data-duration="9.81" data-track-index="3" data-volume="1" src="assets/vo/v9.wav"></audio>
-      <audio id="v10" data-start="86.3" data-duration="5.9" data-track-index="3" data-volume="1" src="assets/vo/v10.wav"></audio>
-      <!-- Música y efectos -->
-      <audio id="music" data-start="0" data-duration="95" data-track-index="5" data-volume="0.11" data-fade-out="2.5" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"></audio>
-      <audio id="x1" data-start="20.5" data-duration="0.18" data-track-index="6" data-volume="0.35" src="assets/sfx/impactSoft_medium_001.ogg"></audio>
-      <audio id="x2" data-start="91.1" data-duration="0.18" data-track-index="6" data-volume="0.35" src="assets/sfx/impactSoft_medium_001.ogg"></audio>
+      <!-- Música de fondo, sin voz -->
+      <audio id="music" data-start="0" data-duration="95" data-track-index="5" data-volume="0.32" data-fade-in="1" data-fade-out="3" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"></audio>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
@@ -384,52 +421,54 @@
       const $ = (id) => document.getElementById(id);
       const up = (sel, t, d = 0.5, y = 50) => tl.fromTo(sel, { opacity: 0, y }, { opacity: 1, y: 0, duration: d, ease: out }, t);
       const scene = (sel, a, b) => {
-        tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.25 }, a);
-        if (b) tl.to(sel, { opacity: 0, duration: 0.25 }, b);
+        tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.3 }, a);
+        if (b) tl.to(sel, { opacity: 0, duration: 0.3 }, b);
       };
       const phoneIn = (sel, t) => tl.fromTo(sel, { opacity: 0, y: 160 }, { opacity: 1, y: 0, duration: 0.6, ease: out }, t);
       const rowIn = (sel, t) => tl.fromTo(sel, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.3, ease: out }, t);
 
-      // S1 — the question (lands with the voice after the pause)
-      up("#e1", 0.3, 0.4, 20);
-      up("#q1", 4.3);
-      up("#q2", 4.7);
-      tl.to("#s1", { opacity: 0, duration: 0.2 }, 7.1);
+      // 01 — the question is on screen from frame 0
+      tl.to("#s1", { opacity: 0, duration: 0.3 }, 4.9);
 
-      // S2 — 84 cross-checks; rows follow the spoken list
-      scene("#s2", 7.1, 20.35);
-      up("#p1", 7.4);
+      // 02 — 84 cross-checks
+      scene("#s2", 5.0, 13.9);
       const sums = [28, 52, 60, 68, 76, 84];
       const acc = { v: 0 };
-      tl.fromTo("#tot", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 11.6);
-      [11.9, 12.7, 13.4, 14.0, 14.9, 15.6].forEach((t, i) => {
-        rowIn(["#k1", "#k2", "#k3", "#k4", "#k5", "#k6"][i], t);
+      ["#k1", "#k2", "#k3", "#k4", "#k5", "#k6"].forEach((s, i) => {
+        const t = 6.0 + i * 0.55;
+        rowIn(s, t);
         tl.to(acc, { v: sums[i], duration: 0.35, onUpdate: () => { $("totn").textContent = Math.round(acc.v); } }, t);
       });
-      up("#p2", 16.6, 0.5, 30);
+      up("#p2", 9.8, 0.5, 30);
 
-      // S3 — GFH
-      scene("#s3", 20.4, 28.0);
-      tl.fromTo("#lg3", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: pop }, 20.5);
-      up("#br3", 20.8, 0.4, 40);
-      up("#tg3", 21.1, 0.4, 30);
-      up("#fc3", 24.3, 0.45, 30);
+      // 03 — one changed drug re-crosses everything
+      scene("#s3", 14.0, 23.9);
+      tl.fromTo(".nd", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: out, stagger: 0.06 }, 14.3);
+      tl.to("#nd6", { scale: 1.15, duration: 0.25 }, 16.6);
+      tl.call(() => { $("nd6").textContent = "Ibuprofeno"; $("nd6").className = "nd new"; }, null, 16.85);
+      tl.call(() => { $("nd6").textContent = "Paracetamol"; $("nd6").className = "nd"; }, null, 16.84);
+      tl.to("#nd6", { scale: 1, duration: 0.3, ease: pop }, 16.9);
+      tl.to("#ln0", { opacity: 0.9, duration: 0.25 }, 17.40);tl.to("#ln1", { opacity: 0.9, duration: 0.25 }, 17.62);tl.to("#ln2", { opacity: 0.9, duration: 0.25 }, 17.84);tl.to("#ln3", { opacity: 0.9, duration: 0.25 }, 18.06);tl.to("#ln4", { opacity: 0.9, duration: 0.25 }, 18.28);tl.to("#ln5", { opacity: 0.9, duration: 0.25 }, 18.50);tl.to("#ln7", { opacity: 0.9, duration: 0.25 }, 18.72);
+      ["#ch1", "#ch2", "#ch3", "#ch4", "#ch5", "#ch6"].forEach((s, i) => tl.fromTo(s, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 19.4 + i * 0.3));
 
-      // S4 — cockpit, scrolled with the voice
-      scene("#s4", 28.0, 38.55);
-      up("#h4", 28.2);
-      phoneIn("#ph4", 28.3);
-      up("#p4", 31.9, 0.5, 30);
-      rowIn("#f1", 32.3);
-      rowIn("#f2", 32.6);
-      tl.to("#sc4", { y: -330, duration: 0.9, ease: "power2.inOut" }, 33.0);
-      ["#c1", "#c2", "#c3", "#c4"].forEach((s, i) => tl.fromTo(s, { opacity: 0.25, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.3, ease: pop }, 33.8 + i * 0.3));
-      tl.to("#sc4", { y: -720, duration: 1.0, ease: "power2.inOut" }, 35.8);
+      // 04 — GFH runs all 84 in under a second
+      scene("#s4", 24.0, 30.9);
+      tl.to("#cells .cell i", { opacity: 1, duration: 0.08, stagger: 0.009 }, 25.0);
+      up("#res4", 26.0, 0.5, 30);
+      up("#p4", 25.4, 0.5, 30);
 
-      // S5 — renal recalculation, same formula as the app
-      scene("#s5", 38.6, 46.75);
-      up("#h5", 38.8);
-      up("#dm", 39.0, 0.6, 60);
+      // 05 — cockpit
+      scene("#s5", 31.0, 41.9);
+      phoneIn("#ph5", 31.2);
+      rowIn("#f1", 32.4);
+      rowIn("#f2", 32.8);
+      tl.to("#sc5", { y: -330, duration: 0.9, ease: "power2.inOut" }, 35.0);
+      ["#c1", "#c2", "#c3", "#c4"].forEach((s, i) => tl.fromTo(s, { opacity: 0.25, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.3, ease: pop }, 35.8 + i * 0.3));
+      tl.to("#sc5", { y: -720, duration: 1.0, ease: "power2.inOut" }, 38.3);
+
+      // 06 — renal recalculation
+      scene("#s6", 42.0, 50.9);
+      up("#dm", 42.3, 0.6, 60);
       const cr = { v: 0.8 };
       const kdigo = (v) => (v >= 90 ? "G1" : v >= 60 ? "G2" : v >= 45 ? "G3a" : v >= 30 ? "G3b" : v >= 15 ? "G4" : "G5");
       const paint = () => {
@@ -446,45 +485,42 @@
         $("tf").style.width = px + "px";
       };
       paint();
-      tl.to(cr, { v: 1.6, duration: 2.6, ease: "power1.inOut", onUpdate: paint }, 41.6);
+      tl.to(cr, { v: 1.6, duration: 3.0, ease: "power1.inOut", onUpdate: paint }, 44.0);
 
-      // S6 — alternatives, then the missing-data rule
-      scene("#s6", 46.8, 54.85);
-      up("#h6", 47.0);
-      phoneIn("#ph6", 47.1);
-      ["#a1", "#a2", "#a3"].forEach((s, i) => rowIn(s, 48.0 + i * 0.4));
-      tl.fromTo("#nt", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: out }, 51.2);
+      // 07 — alternatives
+      scene("#s7", 51.0, 57.1);
+      phoneIn("#ph7", 51.2);
+      ["#a1", "#a2", "#a3"].forEach((s, i) => rowIn(s, 52.0 + i * 0.4));
 
-      // S7 — photo load, then search + tools
-      scene("#s7", 55.0, 64.75);
-      up("#hA", 55.2, 0.5, 30);
-      phoneIn("#ph7", 55.3);
-      tl.fromTo("#pic", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: out }, 56.0);
-      ["#l1", "#l2", "#l3", "#l4"].forEach((s, i) => rowIn(s, 57.0 + i * 0.35));
-      tl.to("#hA", { opacity: 0, duration: 0.3 }, 60.3);
-      tl.to("#ly1", { opacity: 0, duration: 0.3 }, 60.3);
-      tl.fromTo("#hB", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.45, ease: out }, 60.6);
-      tl.fromTo("#ly2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 60.6);
+      // 08 — photo load
+      scene("#s8", 57.0, 63.9);
+      phoneIn("#ph8", 57.2);
+      tl.fromTo("#pic", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: out }, 58.0);
+      ["#l1", "#l2", "#l3", "#l4"].forEach((s, i) => rowIn(s, 59.0 + i * 0.35));
 
-      // S8 — deterministic engine
-      scene("#s8", 64.8, 75.55);
-      up("#m1", 65.0, 0.5, 40);
-      up("#trio", 69.6, 0.5, 30);
+      // 09 — tools
+      scene("#s9", 64.0, 70.9);
+      tl.fromTo("#gt span", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.25, ease: out, stagger: 0.06 }, 64.5);
 
-      // S9 — business model
-      scene("#s9", 75.6, 86.0);
-      up("#h9", 75.8, 0.5, 30);
-      up("#pl1", 77.4, 0.45, 40);
-      up("#pl2", 79.4, 0.45, 40);
-      up("#bd", 82.8, 0.45, 30);
+      // 10 — search: type a brand, open its sheet
+      scene("#s10", 71.0, 78.9);
+      phoneIn("#ph10", 71.2);
+      const q = { n: 0 };
+      const word = "Eliquis";
+      tl.to(q, { n: word.length, duration: 0.8, ease: "none", onUpdate: () => { const k = Math.round(q.n); $("q").textContent = k ? word.slice(0, k) : "Buscar por marca o principio activo"; $("q").style.color = k ? "#122a23" : "#5c6b64"; } }, 72.2);
+      rowIn("#rs1", 73.1);
+      rowIn("#rs2", 73.3);
+      tl.to("#lyA", { opacity: 0, duration: 0.3 }, 74.6);
+      tl.fromTo("#lyB", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 74.8);
 
-      // S10 — catalog today, then outro
-      scene("#s10", 86.0, null);
-      up("#cat", 86.2, 0.5, 30);
-      tl.to("#cat", { opacity: 0, duration: 0.3 }, 90.6);
-      tl.fromTo("#end", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 90.9);
-      tl.fromTo("#lg10", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: pop }, 91.0);
-      tl.fromTo("#lgl", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 91.4);
+      // 11 — plans
+      scene("#s11", 79.0, 89.9);
+      up("#pl1", 79.6, 0.45, 40);
+      up("#pl2", 80.6, 0.45, 40);
+
+      // 12 — outro
+      scene("#s12", 90.0, null);
+      tl.fromTo("#lgE", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: pop }, 90.2);
       tl.to({}, { duration: 0.01 }, 94.99);
 
       window.__timelines["main"] = tl;
