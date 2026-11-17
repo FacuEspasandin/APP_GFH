@@ -206,10 +206,36 @@
       .src { display: inline-block; font-size: 13px; font-weight: 700; color: #005228; background: #e6efea; border-radius: 14px; padding: 5px 11px; margin-bottom: 16px; }
       .typing { display: inline-flex; gap: 6px; background: #fff; border-radius: 18px; padding: 14px 18px; margin-bottom: 12px; }
       .typing i { width: 9px; height: 9px; border-radius: 50%; background: #8ca39a; }
+
+      /* Ficha de fármaco */
+      .fh { padding: 18px 20px; margin-bottom: 12px; }
+      .fh .nm { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+      .fh .ds { font-size: 15px; color: #5c6b64; margin-top: 2px; }
+      .fh .pa { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 700; color: #005228; background: #e6efea; border-radius: 12px; padding: 4px 10px; }
+      .fh .atc { margin-top: 12px; padding-top: 10px; border-top: 1.5px solid #dde5e0; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; color: #5c6b64; }
+      .fh .atc span { font-family: "Plex", monospace; font-size: 13px; letter-spacing: 0; color: #122a23; background: #f3f6f3; border-radius: 8px; padding: 3px 8px; margin-left: 6px; }
+      .alertp { display: flex; gap: 10px; align-items: flex-start; background: #fee7e7; border-left: 5px solid #ef4444; border-radius: 14px; padding: 11px 13px; margin: 4px 0 12px; }
+      .alertp b { display: block; font-size: 15px; color: #991b1b; }
+      .alertp span { display: block; font-size: 13px; color: #7f1d1d; margin-top: 2px; }
+      .sect2 { font-size: 17px; font-weight: 800; margin: 4px 2px 9px; }
+      .rc { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+      .rc > div { background: #fff; border-radius: 16px; padding: 12px 8px; text-align: center; box-shadow: 0 4px 12px rgba(18, 42, 35, 0.06); }
+      .rc i { display: block; width: 14px; height: 14px; border-radius: 50%; margin: 0 auto 6px; }
+      .rc small { display: block; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #5c6b64; }
+      .rc b { display: block; font-size: 15px; margin-top: 2px; }
+      .irow { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
+      .irow tt { font-family: "Plex", monospace; font-weight: 600; color: #ea580c; background: #f3f6f3; border-radius: 8px; padding: 2px 8px; }
+      .comp { padding: 11px 14px; }
+      .comp b { display: block; font-size: 16px; }
+      .comp span { font-size: 13px; color: #5c6b64; }
+      .msec { display: flex; align-items: center; gap: 11px; padding: 10px 12px; margin-bottom: 7px; }
+      .msec i { width: 28px; height: 28px; border-radius: 8px; background: #e6efea; flex: none; }
+      .msec b { display: block; font-size: 15px; }
+      .msec span { display: block; font-size: 12.5px; color: #5c6b64; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="105" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="110" data-width="1920" data-height="1080">
       <!-- 01: la pregunta -->
       <section id="s1" class="clip dark" data-start="0" data-duration="5.2" data-track-index="0">
         <div class="stmt">
@@ -376,35 +402,47 @@
       </section>
 
       <!-- 10: buscador -->
-      <section id="s10" class="clip paper later" data-start="71" data-duration="8.2" data-track-index="1">
-        <div class="hl"><div class="eyebrow">Buscador</div><h2>Todos los fármacos y medicamentos comerciales del Uruguay.</h2><p>Se busca por marca, como se receta, y cada ficha trae sus restricciones renales, hepáticas, en embarazo y en lactancia.</p></div>
+      <section id="s10" class="clip paper later" data-start="71" data-duration="13.2" data-track-index="1">
+        <div class="hl"><div class="eyebrow">Buscador</div><h2>Todos los fármacos y medicamentos comerciales del Uruguay.</h2><p>Cada ficha trae sus restricciones, sus interacciones y la monografía completa.</p></div>
         <div class="phone" id="ph10">
           <div class="screen" data-layout-ignore>
             <div class="layer" id="lyA">
               <div class="topbar">Buscador</div>
               <div class="search" id="q">Buscar por marca o principio activo</div>
               <div class="eb">Medicamentos</div>
-              <div class="sup res" id="rs1"><div><b>Eliquis 5 mg</b><span>Apixabán · comprimidos</span></div></div>
-              <div class="sup res" id="rs2"><div><b>Eliquis 2,5 mg</b><span>Apixabán · comprimidos</span></div></div>
+              <div class="sup res" id="rs1"><div><b>Coumadin 5 mg</b><span>Warfarina · comprimido</span></div></div>
+              <div class="eb">Principio activo</div>
+              <div class="sup res" id="rs2"><div><b>Warfarina</b><span>Anticoagulantes</span></div></div>
             </div>
             <div class="layer" id="lyB" style="opacity: 0">
-              <div class="topbar">Eliquis 5 mg</div>
-              <div class="muted" style="font-size: 15px; color: #5c6b64; text-align: center">Apixabán</div>
-              <div class="tabs"><span class="on">Info</span><span>Ficha técnica</span><span>Similares</span><span>Presentaciones</span></div>
-              <div class="eb">Restricciones</div>
-              <div class="rgrid">
-                <div class="sup rg"><b>Renal</b><span style="background: #e0f2fe; color: #075985">Ajustar según Clcr</span></div>
-                <div class="sup rg"><b>Hepático</b><span style="background: #eef1f0; color: #5c6b64">Sin datos</span></div>
-                <div class="sup rg"><b>Embarazo</b><span style="background: #fee7e7; color: #991b1b">Contraindicado</span></div>
-                <div class="sup rg"><b>Lactancia</b><span style="background: #eef1f0; color: #5c6b64">Sin datos</span></div>
+              <div id="lyB2">
+                <div class="sup fh"><div class="nm">Coumadin</div><div class="ds">5 mg · Comprimido</div><span class="pa">Warfarina</span><div class="atc">CÓDIGO ATC<span>B01AA03</span></div></div>
+                <div class="tabs"><span class="on" id="tb1">Info</span><span id="tb2">Ficha técnica</span><span>Similares</span><span>Presentaciones</span></div>
+                <div class="alertp" id="al"><div><b>Embarazo</b><span>Contraindicado durante el embarazo.</span></div></div>
+                <div class="sect2">Restricciones</div>
+                <div class="rc">
+                  <div class="rcx"><i style="background: #075985"></i><small>Renal</small><b>Ajustar</b></div>
+                  <div class="rcx"><i style="background: #075985"></i><small>Hepático</small><b>Ajustar</b></div>
+                  <div class="rcx"><i style="background: #ef4444"></i><small>Embarazo</small><b>Evitar</b></div>
+                  <div class="rcx"><i style="background: #22c55e"></i><small>Lactancia</small><b>Sin ajuste</b></div>
+                </div>
+                <div class="sup irow" id="ir">Interacciones <tt>33</tt></div>
+                <div class="eb">Composición</div>
+                <div class="sup comp"><b>Warfarina</b><span>Anticoagulantes</span></div>
               </div>
+            </div>
+            <div class="layer" id="lyC" style="opacity: 0">
+              <div class="sup fh" style="padding: 14px 18px"><div class="nm" style="font-size: 22px">Coumadin</div><div class="ds">5 mg · Comprimido · Warfarina</div></div>
+              <div class="tabs"><span>Info</span><span class="on">Ficha técnica</span><span>Similares</span><span>Presentaciones</span></div>
+              <div class="sect2">Monografía</div>
+              <div class="sup msec ms"><i></i><div><b>Posología</b><span>Dosis, vía y frecuencia</span></div></div><div class="sup msec ms"><i></i><div><b>Interacciones</b><span>Con qué fármacos y alimentos</span></div></div><div class="sup msec ms"><i></i><div><b>Contraindicaciones</b><span>Cuándo no darlo</span></div></div><div class="sup msec ms"><i></i><div><b>Precauciones</b><span>Cuándo vigilar de cerca</span></div></div><div class="sup msec ms"><i></i><div><b>Embarazo</b><span>Uso durante la gestación</span></div></div><div class="sup msec ms"><i></i><div><b>Lactancia</b><span>Paso a leche y riesgo</span></div></div><div class="sup msec ms"><i></i><div><b>Reacciones adversas</b><span>Efectos por frecuencia</span></div></div><div class="sup msec ms"><i></i><div><b>Indicaciones</b><span>Para qué está aprobado</span></div></div><div class="sup msec ms"><i></i><div><b>Descripción</b><span>Grupo, mecanismo y farmacocinética</span></div></div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- 11: Vera -->
-      <section id="s13" class="clip paper later" data-start="79" data-duration="10.2" data-track-index="0">
+      <section id="s13" class="clip paper later" data-start="84" data-duration="10.2" data-track-index="0">
         <div class="hl"><div class="eyebrow">Vera · asistente</div><h2>Preguntale a Vera y tené la respuesta en segundos.</h2><p>Responde sobre interacciones, ajustes y fichas técnicas apoyándose en la base de GFH, y muestra de dónde sale cada dato.</p></div>
         <div class="phone" id="ph13">
           <div class="screen" data-layout-ignore>
@@ -421,7 +459,7 @@
       </section>
 
       <!-- 12: planes -->
-      <section id="s11" class="clip paper later" data-start="89" data-duration="11.2" data-track-index="0">
+      <section id="s11" class="clip paper later" data-start="94" data-duration="11.2" data-track-index="0">
         <div class="s9top"><div class="eyebrow">Modelo de negocio</div><h2>Dos planes.</h2></div>
         <div class="plans">
           <div class="plan" id="pl1"><div class="k">Gratis</div><h3>Para conocer el criterio</h3><ul><li>Las herramientas clínicas, sin límite</li><li>El buscador y la ficha de cada fármaco</li><li>Un paciente con su cockpit completo</li></ul></div>
@@ -430,7 +468,7 @@
       </section>
 
       <!-- 13: cierre -->
-      <section id="s12" class="clip dark later" data-start="100" data-duration="5" data-track-index="1">
+      <section id="s12" class="clip dark later" data-start="105" data-duration="5" data-track-index="1">
         <div class="lock">
           <div class="logo" id="lgE">G</div>
           <div class="brand">GFH</div>
@@ -439,7 +477,7 @@
       </section>
 
       <!-- Música de fondo, sin voz -->
-      <audio id="music" data-start="0" data-duration="105" data-track-index="5" data-volume="0.32" data-fade-in="1" data-fade-out="3" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"></audio>
+      <audio id="music" data-start="0" data-duration="110" data-track-index="5" data-volume="0.32" data-fade-in="1" data-fade-out="3" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"></audio>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
@@ -530,37 +568,44 @@
       scene("#s9", 64.0, 70.9);
       tl.fromTo("#gt span", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.25, ease: out, stagger: 0.06 }, 64.5);
 
-      // 10 — search: type a brand, open its sheet
-      scene("#s10", 71.0, 78.9);
+      // 10 — search: type a brand, open its sheet, then the monograph
+      scene("#s10", 71.0, 83.9);
       phoneIn("#ph10", 71.2);
       const q = { n: 0 };
-      const word = "Eliquis";
+      const word = "Coumadin";
       tl.to(q, { n: word.length, duration: 0.8, ease: "none", onUpdate: () => { const k = Math.round(q.n); $("q").textContent = k ? word.slice(0, k) : "Buscar por marca o principio activo"; $("q").style.color = k ? "#122a23" : "#5c6b64"; } }, 72.2);
       rowIn("#rs1", 73.1);
-      rowIn("#rs2", 73.3);
-      tl.to("#lyA", { opacity: 0, duration: 0.3 }, 74.6);
-      tl.fromTo("#lyB", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 74.8);
+      rowIn("#rs2", 73.4);
+      tl.to("#lyA", { opacity: 0, duration: 0.3 }, 74.5);
+      tl.fromTo("#lyB", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 74.7);
+      tl.fromTo("#al", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.3, ease: out }, 75.3);
+      tl.fromTo(".rcx", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.25, ease: pop, stagger: 0.12 }, 75.7);
+      tl.fromTo("#ir", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.3, ease: out }, 76.4);
+      tl.to("#lyB2", { y: -150, duration: 0.8, ease: "power2.inOut" }, 77.6);
+      tl.to("#lyB", { opacity: 0, duration: 0.3 }, 79.6);
+      tl.fromTo("#lyC", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 79.8);
+      tl.fromTo("#lyC .ms", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.25, ease: out, stagger: 0.1 }, 80.2);
 
       // 11 — Vera: ask, get a sourced answer
-      scene("#s13", 79.0, 88.9);
-      phoneIn("#ph13", 79.2);
-      tl.fromTo("#vq1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 80.2);
-      tl.fromTo("#vt1", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 80.7);
-      tl.to("#vt1 i", { y: -6, duration: 0.2, yoyo: true, repeat: 3, stagger: 0.1 }, 80.8);
-      tl.to("#vt1", { opacity: 0, duration: 0.2 }, 81.8);
-      tl.fromTo("#va1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: out }, 81.9);
-      tl.fromTo("#vq2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 84.6);
-      tl.fromTo("#va2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: out }, 85.6);
+      scene("#s13", 84, 93.9);
+      phoneIn("#ph13", 84.2);
+      tl.fromTo("#vq1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 85.2);
+      tl.fromTo("#vt1", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 85.7);
+      tl.to("#vt1 i", { y: -6, duration: 0.2, yoyo: true, repeat: 3, stagger: 0.1 }, 85.8);
+      tl.to("#vt1", { opacity: 0, duration: 0.2 }, 86.8);
+      tl.fromTo("#va1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: out }, 86.9);
+      tl.fromTo("#vq2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 89.6);
+      tl.fromTo("#va2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: out }, 90.6);
 
       // 12 — plans
-      scene("#s11", 89.0, 99.9);
-      up("#pl1", 89.6, 0.45, 40);
-      up("#pl2", 90.6, 0.45, 40);
+      scene("#s11", 94, 104.9);
+      up("#pl1", 94.6, 0.45, 40);
+      up("#pl2", 95.6, 0.45, 40);
 
       // 13 — outro
-      scene("#s12", 100.0, null);
-      tl.fromTo("#lgE", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: pop }, 100.2);
-      tl.to({}, { duration: 0.01 }, 104.99);
+      scene("#s12", 105, null);
+      tl.fromTo("#lgE", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: pop }, 105.2);
+      tl.to({}, { duration: 0.01 }, 109.99);
 
       window.__timelines["main"] = tl;
       tl.seek(0);

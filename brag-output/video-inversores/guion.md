@@ -1,4 +1,4 @@
-# GFH — Video para inversores (versión 3: sin voz, 1:45, 16:9)
+# GFH — Video para inversores (versión 4: sin voz, 1:50, 16:9)
 
 Música de fondo leve; todo se lee en pantalla. Cambios del dueño del 2026-11-17 aplicados escena por escena (ver `fotogramas-gfh-inversores-v3.pdf`).
 
@@ -13,10 +13,12 @@ Música de fondo leve; todo se lee en pantalla. Cambios del dueño del 2026-11-1
 | 07 | 0:51–0:57 | Alternativas | Alternativas evaluadas contra ese paciente; reemplazo registrado. |
 | 08 | 0:57–1:04 | Carga por foto | Cargá todo el tratamiento con una foto. |
 | 09 | 1:04–1:11 | Herramientas | Más de 35 herramientas clínicas (el código tiene 39). |
-| 10 | 1:11–1:19 | Buscador | Todos los fármacos y medicamentos comerciales del Uruguay; ficha de Eliquis 5 mg. |
-| 11 | 1:19–1:29 | Vera | Preguntale a Vera y tené la respuesta en segundos; dos preguntas con su fuente. |
-| 12 | 1:29–1:40 | Planes | Gratis y PRO, con lo que incluye cada uno. Sin precios. |
-| 13 | 1:40–1:45 | Cierre | Logo, GFH, Gestión Farmacológica Hospitalaria. |
+| 10 | 1:11–1:24 | Buscador | Búsqueda de Coumadin, ficha completa (restricciones, interacciones, composición) y monografía de warfarina. |
+| 11 | 1:24–1:34 | Vera | Preguntale a Vera y tené la respuesta en segundos; dos preguntas con su fuente. |
+| 12 | 1:34–1:45 | Planes | Gratis y PRO, con lo que incluye cada uno. Sin precios. |
+| 13 | 1:45–1:50 | Cierre | Logo, GFH, Gestión Farmacológica Hospitalaria. |
+
+La versión reel (`../video-inversores-reel/`, 1:39) no incluye la escena de planes.
 
 Eliminadas: dato faltante, "ninguna decisión sale de IA", catálogo de hoy.
 
