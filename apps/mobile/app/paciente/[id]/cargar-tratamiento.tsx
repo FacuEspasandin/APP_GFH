@@ -10,14 +10,17 @@ import * as API from '@/api/endpoints';
 import { borrarFotoLocal } from '@/api/limpieza-fotos';
 import {
   elegidasSinPauta,
-  elegirTodas,
   listasParaCrear,
+  type ConflictoDeLinea,
 } from '@/dominio/carga-tratamiento';
+import { invalidarPaciente } from '@/dominio/cockpit';
+import { useAviso } from '@/ui/aviso';
 import { useConsentimiento } from '@/ui/consentimiento';
 import { ConsultaPlegada, Veredicto } from '@/ui/herramienta';
 import { EncabezadoModal } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Boton, CampoTexto, Chip, BarraAccion } from '@/ui/kit';
+import { fondoSeveridad } from '@/ui/severidad';
 import { Superficie } from '@/ui/superficie';
 import { useColores } from '@/ui/tema';
 import { COLOR_SEVERIDAD, VIAS_OFRECIDAS, viaCorta } from '@gfh/shared-types';
@@ -37,7 +40,16 @@ interface Linea {
 
 /** Lo que el médico revisa y puede corregir antes de que se cree nada. */
 interface LineaRevisada extends Linea {
+  /** Identidad estable de la línea: la lista cambia de forma (las creadas se
+   *  marcan, las que chocan con una alergia esperan) y el índice no alcanza. */
+  uid: number;
   elegida: boolean;
+  /** Ya se creó: un reintento no la vuelve a mandar. */
+  creada?: boolean;
+  /** Lo que el backend dijo de una alergia que toca a esta línea (409). */
+  conflicto?: ConflictoDeLinea | null;
+  /** El médico confirmó el cruce por familia en ESTA línea. */
+  confirmaCruce?: boolean;
   dosisEditada: string;
   frecuenciaEditada: string;
   /**
@@ -68,6 +80,7 @@ export default function CargarTratamiento() {
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
+  const aviso = useAviso();
 
   const [crudo, setCrudo] = useState('');
   const [lineas, setLineas] = useState<LineaRevisada[] | null>(null);
@@ -86,8 +99,9 @@ export default function CargarTratamiento() {
   // salen de una foto — la revisión de la regla 2 no distingue de dónde vino
   // el texto.
   const aRevisadas = (ls: Linea[]): LineaRevisada[] =>
-    ls.map((l) => ({
+    ls.map((l, i) => ({
       ...l,
+      uid: i,
       elegida: false,
       dosisEditada: l.dosis ?? '',
       frecuenciaEditada: l.frecuencia ?? '',
@@ -100,6 +114,13 @@ export default function CargarTratamiento() {
       setOrigen('texto');
       setLineas(aRevisadas(r));
     },
+    // Sin esto el botón dejaba de girar y no pasaba nada: con el servidor
+    // dormido o sin red, el médico no sabía si había que esperar o reintentar.
+    onError: (e) =>
+      aviso.avisar(
+        e instanceof ErrorApi ? e.message : 'No se pudo buscar en el catálogo. Probá de nuevo.',
+        'error',
+      ),
   });
 
   // La imagen sale hacia un proveedor de reconocimiento de texto de un tercero
@@ -179,24 +200,75 @@ export default function CargarTratamiento() {
     }
   };
 
+  const marcar = (uid: number, cambio: Partial<LineaRevisada>) =>
+    setLineas((ls) => (ls ?? []).map((l) => (l.uid === uid ? { ...l, ...cambio } : l)));
+
   const confirmar = useMutation({
+    /**
+     * Una por una, y cada línea que sale bien se marca como creada AL MOMENTO:
+     * si la tercera falla, un reintento sigue desde la tercera y no duplica las
+     * dos primeras.
+     *
+     * El 409 por alergia no corta la tanda: queda anotado en esa línea y se
+     * sigue con las demás. La coincidencia exacta grave no se crea nunca; el
+     * cruce por familia espera que el médico lo confirme en esa línea
+     * (regla 4). Cualquier otro error sí corta y sube a `onError`.
+     */
     mutationFn: async () => {
+      let conAlergiaPendiente = 0;
       for (const l of listasParaCrear(lineas ?? [])) {
-        await API.agregarPrescripcion(pacienteId, {
-          productoComercialId: l.productoComercialIdSugerido,
-          // Lo que el médico dejó escrito, no un literal. Antes, sin dosis
-          // detectada, se creaba la prescripción con el texto "a confirmar"
-          // adentro del campo dosis y nadie volvía a mirarla.
-          dosis: l.dosisEditada.trim(),
-          frecuencia: l.frecuenciaEditada.trim(),
-          via: l.viaEditada,
-        });
+        try {
+          await API.agregarPrescripcion(pacienteId, {
+            productoComercialId: l.productoComercialIdSugerido,
+            // Lo que el médico dejó escrito, no un literal. Antes, sin dosis
+            // detectada, se creaba la prescripción con el texto "a confirmar"
+            // adentro del campo dosis y nadie volvía a mirarla.
+            dosis: l.dosisEditada.trim(),
+            frecuencia: l.frecuenciaEditada.trim(),
+            via: l.viaEditada,
+            ...(l.confirmaCruce ? { confirmarAlergiaCruzada: true } : {}),
+          });
+        } catch (e) {
+          if (
+            e instanceof ErrorApi &&
+            e.status === 409 &&
+            (e.codigo === 'ALERGIA_BLOQUEA' || e.codigo === 'ALERGIA_REQUIERE_CONFIRMACION')
+          ) {
+            marcar(l.uid, {
+              conflicto: { codigo: e.codigo, mensaje: e.message },
+              confirmaCruce: false,
+            });
+            conAlergiaPendiente += 1;
+            continue;
+          }
+          throw e;
+        }
+        marcar(l.uid, { creada: true, conflicto: null });
       }
+      return { conAlergiaPendiente };
     },
-    onSuccess: async () => {
+    onSuccess: async ({ conAlergiaPendiente }) => {
+      await invalidarPaciente(qc, pacienteId);
+      if (conAlergiaPendiente > 0) {
+        aviso.avisar(
+          conAlergiaPendiente === 1
+            ? 'Una línea necesita tu decisión por una alergia.'
+            : `${conAlergiaPendiente} líneas necesitan tu decisión por una alergia.`,
+          'error',
+        );
+        return;
+      }
       hapticaExito();
-      await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
       router.back();
+    },
+    onError: async (e) => {
+      // Las que salieron bien ya están creadas: el cockpit tiene que enterarse
+      // aunque la tanda haya fallado a la mitad.
+      await invalidarPaciente(qc, pacienteId);
+      aviso.avisar(
+        e instanceof ErrorApi ? e.message : 'No se pudo agregar al tratamiento. Probá de nuevo.',
+        'error',
+      );
     },
   });
 
@@ -220,7 +292,7 @@ export default function CargarTratamiento() {
               value={crudo}
               onChangeText={setCrudo}
               multiline
-              placeholder={'Eliquis 5 mg cada 12 h\nIbupirac 600 mg cada 8 h'}
+              placeholder={'Warfarina 5 mg cada 24 h\nEnalapril 10 mg cada 12 h'}
               placeholderTextColor={col.tenue}
               accessibilityLabel="Listado de medicación"
               className="min-h-area-texto rounded-control border border-line bg-surface px-4 py-4 text-body text-ink"
@@ -286,6 +358,7 @@ export default function CargarTratamiento() {
 
   // --- paso 2: revisar -----------------------------------------------------
   const elegidas = lineas.filter((l) => l.elegida);
+  const creadas = lineas.filter((l) => l.creada).length;
   const reconocidas = lineas.filter((l) => !l.requiereBusquedaManual);
   const sinMatch = lineas.length - reconocidas.length;
 
@@ -326,21 +399,19 @@ export default function CargarTratamiento() {
           <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
             {elegidas.length} de {reconocidas.length} elegidas
           </Text>
-          <Boton
-            tamano="chico"
-            variante="secundario"
-            icono="check"
-            onPress={() => setLineas((ls) => elegirTodas(ls ?? []))}
-          >
-            Elegir todas
-          </Boton>
+          {/* Sin «Elegir todas» (regla 2): cada línea se confirma con su
+              propia casilla, después de leerla. */}
         </View>
 
         {lineas.map((l, i) => (
           <FilaLinea
-            key={i}
+            key={l.uid}
             linea={l}
-            onAlternar={() => actualizar(i, { elegida: !l.elegida })}
+            // Al desmarcar se limpia lo que dijo el backend: vuelve a empezar.
+            onAlternar={() =>
+              actualizar(i, { elegida: !l.elegida, conflicto: null, confirmaCruce: false })
+            }
+            onConfirmarCruce={() => actualizar(i, { confirmaCruce: true })}
             onDosis={(v) => actualizar(i, { dosisEditada: v })}
             onFrecuencia={(v) => actualizar(i, { frecuenciaEditada: v })}
             onVia={(v) => actualizar(i, { viaEditada: v })}
@@ -359,15 +430,21 @@ export default function CargarTratamiento() {
       </ScrollView>
 
       <BarraAccion>
-        <Boton
-          onPress={() => confirmar.mutate()}
-          cargando={confirmar.isPending}
-          deshabilitado={listas.length === 0}
-        >
-          {listas.length === 0
-            ? 'Elegí al menos una línea'
-            : `Agregar ${listas.length} al tratamiento`}
-        </Boton>
+        {listas.length === 0 && creadas > 0 ? (
+          // Ya se agregó lo que se pudo: lo que queda esperando una decisión
+          // por alergia no se agrega solo.
+          <Boton onPress={() => router.back()}>Volver al paciente</Boton>
+        ) : (
+          <Boton
+            onPress={() => confirmar.mutate()}
+            cargando={confirmar.isPending}
+            deshabilitado={listas.length === 0}
+          >
+            {listas.length === 0
+              ? 'Elegí al menos una línea'
+              : `Agregar ${listas.length} al tratamiento`}
+          </Boton>
+        )}
       </BarraAccion>
       </KeyboardAvoidingView>
     </View>
@@ -380,16 +457,30 @@ function FilaLinea({
   onDosis,
   onFrecuencia,
   onVia,
+  onConfirmarCruce,
   onBuscarAMano,
 }: {
   linea: LineaRevisada;
   onAlternar: () => void;
+  onConfirmarCruce: () => void;
   onDosis: (v: string) => void;
   onFrecuencia: (v: string) => void;
   onVia: (v: string) => void;
   onBuscarAMano: () => void;
 }) {
   const col = useColores();
+
+  if (l.creada) {
+    return (
+      <Superficie elevacion="plana" className="mb-3.5 flex-row items-center px-3.5 py-3">
+        <Icono nombre="check" tamano={16} color={col.primary} />
+        <View className="ml-3 flex-1">
+          <Text className="text-body font-medio text-ink">{l.nombreSugerido}</Text>
+          <Text className="font-sans mt-0.5 text-meta text-ink-suave">Agregada al tratamiento</Text>
+        </View>
+      </Superficie>
+    );
+  }
 
   if (l.requiereBusquedaManual) {
     return (
@@ -477,6 +568,41 @@ function FilaLinea({
             {viaCorta(l.viaEditada)} · {l.dosis ?? 'dosis sin detectar'} · {l.frecuencia ?? 'frecuencia sin detectar'}
           </Text>
         )}
+
+        {/* El 409 de esta línea, dicho en la línea y no en un aviso que se va:
+            la coincidencia exacta grave no se puede agregar (se desmarca); el
+            cruce por familia pide la confirmación de este fármaco (regla 4). */}
+        {l.conflicto ? (
+          <View
+            className="mt-2.5 rounded-control px-3 py-2.5"
+            style={{
+              backgroundColor: fondoSeveridad(l.conflicto.codigo === 'ALERGIA_BLOQUEA' ? 0 : 3),
+              borderLeftWidth: 4,
+              borderLeftColor:
+                l.conflicto.codigo === 'ALERGIA_BLOQUEA' ? COLOR_SEVERIDAD.grave : COLOR_SEVERIDAD.media,
+            }}
+          >
+            <Text className="text-body font-fuerte text-ink">
+              {l.conflicto.codigo === 'ALERGIA_BLOQUEA' ? 'No se puede prescribir' : 'Alergia relacionada'}
+            </Text>
+            <Text className="font-sans mt-1 text-meta leading-5 text-ink-suave">{l.conflicto.mensaje}</Text>
+            {l.conflicto.codigo === 'ALERGIA_BLOQUEA' ? (
+              <Text className="font-sans mt-1 text-meta leading-5 text-ink-suave">
+                Desmarcala para seguir con las demás.
+              </Text>
+            ) : l.confirmaCruce ? (
+              <Text className="font-sans mt-1 text-meta leading-5 text-ink-suave">
+                Confirmada: se agrega con el botón de abajo.
+              </Text>
+            ) : (
+              <View className="mt-2">
+                <Boton tamano="chico" variante="secundario" onPress={onConfirmarCruce}>
+                  Confirmar y agregar
+                </Boton>
+              </View>
+            )}
+          </View>
+        ) : null}
       </View>
     </Superficie>
   );

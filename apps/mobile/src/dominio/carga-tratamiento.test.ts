@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   elegidasSinPauta,
-  elegirTodas,
+  esperaDecisionPorAlergia,
   lineasDelTexto,
   listasParaCrear,
   tienePauta,
@@ -79,18 +79,39 @@ describe('aviso de pauta incompleta', () => {
   });
 });
 
-describe('elegir todas', () => {
-  it('marca sólo las reconocidas', () => {
-    const l = [linea(), linea({ requiereBusquedaManual: true })];
-    const r = elegirTodas(l);
-    expect(r[0]!.elegida).toBe(true);
-    expect(r[1]!.elegida).toBe(false);
+describe('alergias en la carga (regla 4)', () => {
+  const lista = { elegida: true, dosisEditada: '5 mg', frecuenciaEditada: 'cada 12 h' };
+
+  it('la coincidencia exacta grave nunca se crea, ni confirmando', () => {
+    const l = [
+      linea({
+        ...lista,
+        conflicto: { codigo: 'ALERGIA_BLOQUEA', mensaje: 'x' },
+        confirmaCruce: true,
+      }),
+    ];
+    expect(listasParaCrear(l)).toHaveLength(0);
   });
 
-  it('no muta la lista original', () => {
-    const l = [linea()];
-    elegirTodas(l);
-    expect(l[0]!.elegida).toBe(false);
+  it('el cruce por familia espera la confirmación de esa línea', () => {
+    const conflicto = { codigo: 'ALERGIA_REQUIERE_CONFIRMACION', mensaje: 'x' };
+    expect(listasParaCrear([linea({ ...lista, conflicto })])).toHaveLength(0);
+    expect(listasParaCrear([linea({ ...lista, conflicto, confirmaCruce: true })])).toHaveLength(1);
+  });
+
+  it('una línea sin conflicto no espera nada', () => {
+    expect(esperaDecisionPorAlergia(linea(lista))).toBe(false);
+  });
+});
+
+describe('reintentar tras un fallo parcial', () => {
+  it('las líneas ya creadas no se vuelven a mandar', () => {
+    const l = [
+      linea({ elegida: true, creada: true, dosisEditada: '5 mg', frecuenciaEditada: 'cada 12 h' }),
+      linea({ elegida: true, dosisEditada: '10 mg', frecuenciaEditada: 'cada 24 h' }),
+    ];
+    expect(listasParaCrear(l)).toHaveLength(1);
+    expect(listasParaCrear(l)[0]!.dosisEditada).toBe('10 mg');
   });
 });
 
