@@ -15,33 +15,42 @@ import {
  * exacta deje de decirlo permitiría uno que no debería salir.
  */
 describe('consecuencia de una alergia (regla 4)', () => {
-  it('SÓLO la exacta y grave impide prescribir', () => {
-    expect(consecuenciaAlergia({ tipo: 'EXACTA', severidad: 'GRAVE', cruza: true }).texto).toBe(
-      'Impide prescribir',
-    );
+  // `tipo` es el valor REAL que devuelve el backend (Alergia.tipo): 'FARMACOLOGICA'
+  // (principio activo exacto) o 'GENERAL' (texto libre, sólo cruza por familia).
+  // Antes los tests fabricaban 'EXACTA'/'FAMILIA', que el backend nunca manda.
+  it('SÓLO la farmacológica (exacta) y grave impide prescribir', () => {
+    expect(
+      consecuenciaAlergia({ tipo: 'FARMACOLOGICA', severidad: 'GRAVE', cruza: true }).texto,
+    ).toBe('Impide prescribir');
   });
 
-  it('la exacta pero moderada no bloquea: pide confirmación', () => {
-    expect(consecuenciaAlergia({ tipo: 'EXACTA', severidad: 'MODERADA', cruza: true }).texto).toBe(
-      'Pide confirmación',
-    );
+  it('la farmacológica pero moderada no bloquea: pide confirmación', () => {
+    expect(
+      consecuenciaAlergia({ tipo: 'FARMACOLOGICA', severidad: 'MODERADA', cruza: true }).texto,
+    ).toBe('Pide confirmación');
   });
 
-  it('el cruce por familia NUNCA bloquea, ni siendo grave', () => {
-    expect(consecuenciaAlergia({ tipo: 'FAMILIA', severidad: 'GRAVE', cruza: true }).texto).toBe(
+  it('la farmacológica leve no bloquea: pide confirmación', () => {
+    expect(
+      consecuenciaAlergia({ tipo: 'FARMACOLOGICA', severidad: 'LEVE', cruza: true }).texto,
+    ).toBe('Pide confirmación');
+  });
+
+  it('la general (cruce por familia) NUNCA bloquea, ni siendo grave', () => {
+    expect(consecuenciaAlergia({ tipo: 'GENERAL', severidad: 'GRAVE', cruza: true }).texto).toBe(
       'Pide confirmación',
     );
   });
 
   it('la que no cruza no dispara nada', () => {
-    expect(consecuenciaAlergia({ tipo: 'EXACTA', severidad: 'GRAVE', cruza: false }).texto).toBe(
-      'No cruza con fármacos',
-    );
+    expect(
+      consecuenciaAlergia({ tipo: 'FARMACOLOGICA', severidad: 'GRAVE', cruza: false }).texto,
+    ).toBe('No cruza con fármacos');
   });
 
   it('la que bloquea se tiñe distinto de la que sólo avisa', () => {
-    const bloquea = consecuenciaAlergia({ tipo: 'EXACTA', severidad: 'GRAVE', cruza: true });
-    const avisa = consecuenciaAlergia({ tipo: 'FAMILIA', severidad: 'GRAVE', cruza: true });
+    const bloquea = consecuenciaAlergia({ tipo: 'FARMACOLOGICA', severidad: 'GRAVE', cruza: true });
+    const avisa = consecuenciaAlergia({ tipo: 'GENERAL', severidad: 'GRAVE', cruza: true });
     expect(bloquea.fondo).not.toBe(avisa.fondo);
   });
 });

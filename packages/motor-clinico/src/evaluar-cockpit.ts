@@ -239,7 +239,10 @@ export function evaluarCockpit(
           condicionNombre: c.grupoNombre ?? 'Alergia',
           farmacoNombre: comp.nombre,
           origen: 'ALERGIA',
-          severidad: severidadDesdeRango(c.rango),
+          // `severidad` es obligatoria en el tipo pero no decide nada para las
+          // alergias: manda `rango` (6 niveles), que ya trae severidad x cruce.
+          severidad: c.rango === 0 ? 'CONTRAINDICADO' : c.rango <= 3 ? 'EVITAR' : c.rango === 4 ? 'PRECAUCION' : 'INFO',
+          rango: c.rango,
           texto: textoAlergia(c.tipo, c.grupoNombre),
           estadoValidacion: 'PENDIENTE',
         });
@@ -309,13 +312,6 @@ function elegirAjustePorVia<T extends { viaAdministracion: string }>(
     ajustes.find((a) => a.viaAdministracion === via) ??
     ajustes.find((a) => a.viaAdministracion === 'NO_ESPECIFICADA')
   );
-}
-
-function severidadDesdeRango(rango: number): AlertaParaHallazgo['severidad'] {
-  if (rango === 0) return 'CONTRAINDICADO';
-  if (rango === 1) return 'EVITAR';
-  if (rango === 2) return 'PRECAUCION';
-  return 'INFO';
 }
 
 function textoAlergia(tipo: string, grupoNombre: string | null): string {

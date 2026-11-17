@@ -31,7 +31,11 @@ export function consecuenciaAlergia(a: AlergiaListable): Consecuencia {
   if (!a.cruza) {
     return { texto: 'No cruza con fármacos', fondo: '#EFF2EF', tinta: '#5C6B64' };
   }
-  if (a.tipo === 'EXACTA' && a.severidad === 'GRAVE') {
+  // `tipo` es el de la alergia cargada (FARMACOLOGICA | GENERAL), no el de la
+  // coincidencia. Una FARMACOLOGICA guarda el principio activo exacto: es la
+  // única que puede ser coincidencia exacta. Una GENERAL (texto libre mapeado a
+  // una familia) sólo cruza por familia y nunca bloquea.
+  if (a.tipo === 'FARMACOLOGICA' && a.severidad === 'GRAVE') {
     return { texto: 'Impide prescribir', fondo: '#FEE2E2', tinta: '#991B1B' };
   }
   return { texto: 'Pide confirmación', fondo: '#FEF3C7', tinta: '#92400E' };

@@ -92,6 +92,12 @@ export interface AlertaParaHallazgo {
   farmacoNombre: string;
   origen: 'CONDICION' | 'ALERGIA';
   severidad: SeveridadAlerta;
+  /**
+   * Rango ya resuelto en la escala de 6 niveles. Las alergias lo traen (viene de
+   * `rangoPorAlergia`, que mira severidad x tipo de coincidencia x nivel de
+   * cruce); las alertas de condición no, y caen a `RANGO_POR_SEVERIDAD_ALERTA`.
+   */
+  rango?: RangoGravedad;
   texto: string;
   estadoValidacion: EstadoValidacion;
 }
@@ -191,7 +197,7 @@ export function unificarHallazgos(entrada: EntradaUnificacion): ResultadoUnifica
     hallazgos.push({
       clave: claveHallazgo.alerta(a.prescripcionId, a.condicionId, a.origen),
       categoria: 'CONDICION', // incluye alergias — funcional §6.2
-      rango: RANGO_POR_SEVERIDAD_ALERTA[a.severidad],
+      rango: a.rango ?? RANGO_POR_SEVERIDAD_ALERTA[a.severidad],
       titulo: `${a.farmacoNombre} — ${a.condicionNombre}`,
       detalle: a.texto,
       prescripcionIds: [a.prescripcionId],
