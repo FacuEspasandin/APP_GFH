@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   destacados,
+  filaSinVerificarCompleto,
   hepaticoSinEvaluar,
   invalidarPaciente,
   opcionesDelPaciente,
@@ -167,6 +168,31 @@ describe('rutaEditarPrescripcion', () => {
     expect(ruta).toBe(
       '/prescripcion/pr9?paciente=pac1&nombre=Coumadin&dosis=5%20mg&frecuencia=cada%2024%20h&via=ORAL',
     );
+  });
+});
+
+describe('fila de tratamiento sin verificar completo (regla 5)', () => {
+  const sano = { esFarmacoLibre: false, espina: null } as const;
+
+  it('un fármaco libre nunca va en verde', () => {
+    expect(filaSinVerificarCompleto({ esFarmacoLibre: true, espina: null }, [])).toBe(true);
+  });
+
+  it('sin hallazgos y sin Clcr o sin Child-Pugh va en neutro', () => {
+    expect(filaSinVerificarCompleto(sano, [{ codigo: 'SIN_CLCR' }])).toBe(true);
+    expect(filaSinVerificarCompleto(sano, [{ codigo: 'SIN_CHILD_PUGH' }])).toBe(true);
+  });
+
+  it('con los datos cargados, sin hallazgos sí es verde', () => {
+    expect(filaSinVerificarCompleto(sano, [])).toBe(false);
+    // Clase cargada pero sin tabla para ningún fármaco: no es un dato que falte.
+    expect(filaSinVerificarCompleto(sano, [{ codigo: 'SIN_TABLA_HEPATICA' }])).toBe(false);
+  });
+
+  it('con hallazgos conserva su color de gravedad', () => {
+    expect(
+      filaSinVerificarCompleto({ esFarmacoLibre: false, espina: 1 }, [{ codigo: 'SIN_CLCR' }]),
+    ).toBe(false);
   });
 });
 

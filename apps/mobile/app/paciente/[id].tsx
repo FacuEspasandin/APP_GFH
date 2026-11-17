@@ -28,6 +28,7 @@ import { useSuspenderPrescripcion } from '@/ui/suspender-prescripcion';
 import { TarjetaHero, useColoresHero } from '@/ui/tarjeta-hero';
 import {
   destacados as hallazgosDestacados,
+  filaSinVerificarCompleto,
   hepaticoSinEvaluar,
   opcionesDelPaciente,
   peoresPorCategoria,
@@ -548,6 +549,7 @@ export default function CockpitPaciente() {
               >
                 <FilaTratamiento
                   prescripcion={pr}
+                  sinVerificar={filaSinVerificarCompleto(pr, data.avisos)}
                   onPress={() => abrir(`/paciente/${id}/hallazgos?prescripcion=${pr.id}`)}
                 />
               </FilaDeslizable>
@@ -652,9 +654,12 @@ function etiquetaOrigen(origen: string | null): string {
 
 function FilaTratamiento({
   prescripcion,
+  sinVerificar,
   onPress,
 }: {
   prescripcion: PrescripcionCockpit;
+  /** Libre, o sin hallazgos pero con un dato del paciente que falta: ni verde ni rojo. */
+  sinVerificar: boolean;
   onPress: () => void;
 }) {
   // Con hallazgos se eleva, sin hallazgos queda plano. El fármaco tranquilo no
@@ -668,12 +673,12 @@ function FilaTratamiento({
     <SuperficieTocable
       onPress={onPress}
       elevacion={conHallazgos ? 'media' : 'plana'}
-      // Un fármaco libre no se verifica: sin hallazgos NO es «verde». La franja
-      // verde diría «evaluado y seguro» (regla 5), así que va en neutro.
-      franja={prescripcion.esFarmacoLibre ? COLOR_SEVERIDAD.neutro : colorEspina(rango)}
+      // Sin verificar por completo, sin hallazgos NO es «verde»: la franja verde
+      // diría «evaluado y seguro» (regla 5), así que va en neutro.
+      franja={sinVerificar ? COLOR_SEVERIDAD.neutro : colorEspina(rango)}
       accesibilidad={
-        prescripcion.esFarmacoLibre
-          ? `${prescripcion.nombre}, no se verifica`
+        sinVerificar
+          ? `${prescripcion.nombre}, sin verificar por completo`
           : `${prescripcion.nombre}, ${prescripcion.conteoHallazgos} hallazgos`
       }
     >

@@ -67,6 +67,24 @@ export function renalSinEvaluar(avisos: readonly { codigo: string }[]): boolean 
 }
 
 /**
+ * La fila de un fármaco no puede ir en verde («evaluado, nada que decir»).
+ *
+ * Pasa con un fármaco libre (nunca se verifica) y con uno del catálogo sin
+ * hallazgos cuando al paciente le falta el Clcr o el Child-Pugh. La fila no
+ * trae si el fármaco tiene tabla de ajuste, así que se toma el criterio
+ * conservador: si falta el dato, neutro. Un fármaco CON hallazgos conserva su
+ * color de gravedad: ya dijo algo, y lo que dijo no deja de ser cierto.
+ */
+export function filaSinVerificarCompleto(
+  pr: { esFarmacoLibre: boolean; espina: RangoGravedad | null },
+  avisos: readonly { codigo: string }[],
+): boolean {
+  if (pr.esFarmacoLibre) return true;
+  if (pr.espina !== null) return false;
+  return renalSinEvaluar(avisos) || avisos.some((a) => a.codigo === 'SIN_CHILD_PUGH');
+}
+
+/**
  * Tras cambiar algo del paciente, todo lo que lo muestra queda viejo: el
  * cockpit, su fila en Pacientes (`inicio`, el tablero «a quién mirar primero»),
  * el historial, la ficha cruda que leen editar y función hepática, y la lista
