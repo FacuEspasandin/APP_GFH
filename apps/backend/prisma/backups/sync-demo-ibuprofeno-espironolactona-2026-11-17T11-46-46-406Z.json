@@ -1,0 +1,67 @@
+{
+  "_lea_esto": "Estado PREVIO de las filas que tocó sync-demo-ibuprofeno-espironolactona.ts. La alerta de Ibuprofeno se agrega (para deshacer: borrar esa fila). Para deshacer el renombre: volver nombre/nombreNormalizado a los valores de acá.",
+  "fecha": "2026-11-17T11:46:46.407Z",
+  "alertasIbuprofenoEmbarazo": [
+    {
+      "id": "c08d8987-6301-4b98-a9dc-0588bae963ff",
+      "principioActivoId": "1371356f-8278-4886-bf24-b73ac8e99c28",
+      "condicionClinicaId": "882c4c0e-8a26-412b-afd9-69f3df14457e",
+      "severidad": "CONTRAINDICADO",
+      "texto": "Contraindicado en el tercer trimestre.",
+      "fuente": "Curado GFH _REVISAR_",
+      "semanaMin": 28,
+      "semanaMax": null,
+      "estadoValidacion": "PENDIENTE",
+      "createdAt": "2026-09-03T12:41:48.526Z",
+      "updatedAt": "2026-09-03T12:41:48.526Z"
+    }
+  ],
+  "principioActivoViejo": {
+    "id": "5f091ff8-5086-4ca6-ba2f-2c4e16eec131",
+    "nombre": "Espirolactona",
+    "nombreNormalizado": "espirolactona",
+    "grupoTerapeutico": "Diuréticos",
+    "viaDefault": "NO_ESPECIFICADA",
+    "tieneAjusteRenal": true,
+    "tieneAjusteHepatico": false,
+    "codigoATC": "C03DA01",
+    "codFtm": null,
+    "capitulo": null,
+    "accionTerapeutica": null,
+    "definicionCorta": null,
+    "createdAt": "2026-08-09T15:27:25.133Z",
+    "updatedAt": "2026-09-03T13:28:45.880Z"
+  },
+  "genericos": [
+    {
+      "id": "064b30f2-aeb4-452a-837e-5ffd2884ed4f",
+      "nombreComercial": "Espirolactona",
+      "nombreNormalizado": "espirolactona",
+      "laboratorio": null,
+      "formaFarmaceutica": null,
+      "dosisTexto": null,
+      "codigoApiExterna": null,
+      "esGenerico": true,
+      "presentacion": null,
+      "condicionVenta": "DESCONOCIDA",
+      "vigente": true,
+      "estadoProveedor": null,
+      "codigoBarras": null,
+      "registroMsp": null,
+      "importadoAt": null,
+      "origenDato": null,
+      "createdAt": "2026-08-09T23:15:32.349Z",
+      "updatedAt": "2026-08-09T23:15:32.349Z"
+    }
+  ],
+  "interaccionesCuradas": [],
+  "alertaQueSeAgrega": {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Evidencia insuficiente en el resto del embarazo. No se aconseja su uso; evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 27
+  }
+}

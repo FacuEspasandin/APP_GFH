@@ -188,6 +188,7 @@ const PACIENTES: PacienteSpec[] = [
     alturaCm: 164,
     pesoKg: 64,
     creatininaMgDl: 0.8,
+    hepatico: { bilirrubinaMgDl: 1.0, albuminaGDl: 4.0, inr: 1.1, ascitis: 'AUSENTE', encefalopatia: 'AUSENTE' },
     condiciones: [],
     alergias: [],
     farmacos: [
@@ -195,7 +196,7 @@ const PACIENTES: PacienteSpec[] = [
       { pa: 'Omeprazol', dosis: '20 mg', frecuencia: 'cada 24 h', indicacion: 'Protección gástrica' },
       { pa: 'Sertralina', dosis: '50 mg', frecuencia: 'cada 24 h', indicacion: 'Ansiedad' },
     ],
-    muestra: 'Paciente sin hallazgos: función renal normal, ninguna interacción ni alerta. Es el «verde».',
+    muestra: 'Paciente sin hallazgos: función renal normal, Child-Pugh A y ninguna interacción ni alerta. Es el «verde».',
     esperados: [],
     sinHallazgos: true,
   },
@@ -268,6 +269,7 @@ const PACIENTES: PacienteSpec[] = [
     alturaCm: 160,
     pesoKg: 70,
     creatininaMgDl: 0.9,
+    hepatico: { bilirrubinaMgDl: 1.0, albuminaGDl: 4.0, inr: 1.1, ascitis: 'AUSENTE', encefalopatia: 'AUSENTE' },
     condiciones: [],
     alergias: [
       { tipo: 'FARMACOLOGICA', pa: 'Amoxicilina', severidad: 'GRAVE' },
@@ -275,7 +277,7 @@ const PACIENTES: PacienteSpec[] = [
     ],
     farmacos: [
       { pa: 'Azitromicina', dosis: '500 mg', frecuencia: 'cada 24 h', indicacion: 'Faringitis (alérgica a penicilinas)' },
-      { pa: 'Losartan', dosis: '50 mg', frecuencia: 'cada 24 h', indicacion: 'Hipertensión arterial' },
+      { pa: 'Amlodipino', dosis: '5 mg', frecuencia: 'cada 24 h', indicacion: 'Hipertensión arterial' },
     ],
     muestra:
       'Alergia GRAVE exacta a Amoxicilina: al agregarla, el sistema la BLOQUEA. Ampicilina (misma familia) y Sulfametoxazol (sulfas) piden confirmación.',
