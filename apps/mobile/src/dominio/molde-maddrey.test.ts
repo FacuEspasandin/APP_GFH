@@ -34,3 +34,12 @@ describe('molde de Maddrey', () => {
     expect(tramoDe(tramos, 33)?.rotulo).toContain('grave');
   });
 });
+
+describe('molde de Maddrey: valores sobre el tope del anillo', () => {
+  it('un valor por encima del máximo de dibujo sigue teniendo tramo (insignia)', () => {
+    const m = moldeMaddrey();
+    if (m.resultado.tipo !== 'anillo') throw new Error('debería ser anillo');
+    const ultimo = m.resultado.tramos[m.resultado.tramos.length - 1]!;
+    expect(tramoDe(m.resultado.tramos, 250)?.rotulo).toBe(ultimo.rotulo);
+  });
+});

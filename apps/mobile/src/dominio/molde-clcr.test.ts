@@ -1,3 +1,4 @@
+import { tramoDe } from '@gfh/shared-types';
 import { describe, expect, it } from 'vitest';
 
 import { calcularClcrParaMolde, moldeClcr } from './molde-clcr';
@@ -58,5 +59,15 @@ describe('calcularClcrParaMolde', () => {
       calcularClcrParaMolde({ ...completo, edadAnios: '999' }, {}),
     ).not.toThrow();
     expect(calcularClcrParaMolde({ ...completo, edadAnios: '999' }, {}).valor?.valor).toBeNull();
+  });
+});
+
+describe('molde de Clcr: valores sobre el tope del anillo', () => {
+  it('un Clcr por encima de 120 sigue cayendo en «Función preservada» (hay insignia)', () => {
+    const m = moldeClcr();
+    if (m.resultado.tipo !== 'anillo') throw new Error('no debería pasar');
+    // 135,8 es el Clcr real de un adulto joven (caso del test de arriba).
+    expect(tramoDe(m.resultado.tramos, 135.8)?.rotulo).toBe('Función preservada');
+    expect(tramoDe(m.resultado.tramos, 400)?.color).toBe('ok');
   });
 });

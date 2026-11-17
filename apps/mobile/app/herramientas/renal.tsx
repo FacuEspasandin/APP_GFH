@@ -29,6 +29,7 @@ interface Resultado {
   clcrOrigen: string | null;
   gradoKdigo: string | null;
   resultados: Array<{
+    principioActivoId?: string;
     nombre: string | null;
     sinDatos: boolean;
     rango: string | null;
@@ -36,7 +37,7 @@ interface Resultado {
     dosisFrNormal?: string;
     suplementoHd?: string | null;
     requiereRevision?: boolean;
-    rangoGravedad: 0 | 1 | 2 | 3 | null;
+    rangoGravedad: RangoGravedad | null;
     porEncimaDelTecho?: boolean;
   }>;
 }
@@ -216,6 +217,7 @@ export default function HerramientaRenal() {
     <ResultadoRenal
       datos={calcular.data}
       onCambiar={() => setEditando(true)}
+      nombres={Object.fromEntries(seleccion.map((s) => [s.id, s.nombre]))}
       consulta={{
         farmacos: seleccion.map((s) => s.nombre),
         detalle:
@@ -230,10 +232,12 @@ export default function HerramientaRenal() {
 function ResultadoRenal({
   datos,
   onCambiar,
+  nombres,
   consulta,
 }: {
   datos: Resultado;
   onCambiar: () => void;
+  nombres: Record<string, string>;
   consulta: { farmacos: string[]; detalle: string };
 }) {
   // Ordenados por gravedad y no por el orden en que se cargaron: lo
@@ -242,7 +246,10 @@ function ResultadoRenal({
     (a, b) => orden(a.rangoGravedad) - orden(b.rangoGravedad),
   );
 
-  const conAjuste = filas.filter((r) => r.rangoGravedad !== null && r.rangoGravedad <= 2).length;
+  // Pide tocar la dosis todo lo que genera un hallazgo real (rango 0-4:
+  // contraindicado, evitar, precaución, reducir dosis...). Sólo SIN_AJUSTE
+  // (null) y la nota al pie (5) no lo piden.
+  const conAjuste = filas.filter((r) => r.rangoGravedad !== null && r.rangoGravedad <= 4).length;
   const sinTabla = filas.filter((r) => r.sinDatos).length;
 
   return (
@@ -275,7 +282,9 @@ function ResultadoRenal({
           <FilaResultado
             key={i}
             rango={r.rangoGravedad}
-            titulo={r.nombre ?? 'Fármaco'}
+            titulo={
+              r.nombre ?? (r.principioActivoId ? nombres[r.principioActivoId] : undefined) ?? 'Fármaco'
+            }
             detalle={
               r.sinDatos
                 ? 'Sin tabla de ajuste renal. No hay recomendación que dar — eso no significa que no haga falta ajustar.'

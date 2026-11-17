@@ -32,3 +32,12 @@ describe('molde de Anion Gap', () => {
     expect(tramoDe(tramos, 17)?.rotulo).toContain('Elevado');
   });
 });
+
+describe('molde de Anion Gap: valores sobre el tope del anillo', () => {
+  it('un valor por encima del máximo de dibujo sigue teniendo tramo (insignia)', () => {
+    const m = moldeAnionGap();
+    if (m.resultado.tipo !== 'anillo') throw new Error('debería ser anillo');
+    const ultimo = m.resultado.tramos[m.resultado.tramos.length - 1]!;
+    expect(tramoDe(m.resultado.tramos, 45)?.rotulo).toBe(ultimo.rotulo);
+  });
+});

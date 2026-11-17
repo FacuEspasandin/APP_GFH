@@ -60,7 +60,7 @@ export function moldeClcr(): Molde {
       tramos: [
         { hasta: 29.9, rotulo: 'Insuficiencia grave', color: 'grave' },
         { hasta: 59.9, rotulo: 'Insuficiencia leve a moderada', color: 'media' },
-        { hasta: 120, rotulo: 'Función preservada', color: 'ok' },
+        { hasta: Infinity, rotulo: 'Función preservada', color: 'ok' },
       ],
     },
     limite:

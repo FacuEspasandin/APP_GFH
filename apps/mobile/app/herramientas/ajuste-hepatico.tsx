@@ -31,13 +31,14 @@ interface Resultado {
   puntos: number;
   glosa: string | null;
   resultados: Array<{
+    principioActivoId?: string;
     nombre: string | null;
     sinDatos: boolean;
     dosisFuncionNormal?: string;
     recomendacion: string | null;
     tipo: string | null;
     requiereRevision?: boolean;
-    rangoGravedad: 0 | 1 | 2 | 3 | null;
+    rangoGravedad: RangoGravedad | null;
   }>;
 }
 
@@ -218,6 +219,7 @@ export default function HerramientaAjusteHepatico() {
     <ResultadoHepatico
       datos={calcular.data}
       onCambiar={() => setEditando(true)}
+      nombres={Object.fromEntries(seleccion.map((s) => [s.id, s.nombre]))}
       consulta={{
         farmacos: seleccion.map((s) => s.nombre),
         detalle:
@@ -232,16 +234,20 @@ export default function HerramientaAjusteHepatico() {
 function ResultadoHepatico({
   datos,
   onCambiar,
+  nombres,
   consulta,
 }: {
   datos: Resultado;
   onCambiar: () => void;
+  nombres: Record<string, string>;
   consulta: { farmacos: string[]; detalle: string };
 }) {
   const col = useColores();
   const filas = [...datos.resultados].sort((a, b) => orden(a.rangoGravedad) - orden(b.rangoGravedad));
 
-  const conAjuste = filas.filter((r) => r.rangoGravedad !== null && r.rangoGravedad <= 2).length;
+  // Rango 0-4 = hallazgo real que pide tocar la dosis; null (SIN_AJUSTE) y la
+  // nota al pie (5) no.
+  const conAjuste = filas.filter((r) => r.rangoGravedad !== null && r.rangoGravedad <= 4).length;
   const sinTabla = filas.filter((r) => r.sinDatos).length;
 
   return (
@@ -267,7 +273,9 @@ function ResultadoHepatico({
           <FilaResultado
             key={i}
             rango={r.rangoGravedad}
-            titulo={r.nombre ?? 'Fármaco'}
+            titulo={
+              r.nombre ?? (r.principioActivoId ? nombres[r.principioActivoId] : undefined) ?? 'Fármaco'
+            }
             detalle={
               r.sinDatos
                 ? 'Sin tabla de ajuste hepático. No hay recomendación que dar — eso no significa que no haga falta ajustar.'

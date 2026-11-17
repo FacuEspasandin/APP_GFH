@@ -53,7 +53,7 @@ export function moldeFena(): Molde {
       tramos: [
         { hasta: 1, rotulo: 'Sugiere causa prerenal', color: 'ok' },
         { hasta: 2, rotulo: 'Zona indeterminada', color: 'media' },
-        { hasta: 10, rotulo: 'Sugiere necrosis tubular aguda (renal intrínseca)', color: 'grave' },
+        { hasta: Infinity, rotulo: 'Sugiere necrosis tubular aguda (renal intrínseca)', color: 'grave' },
       ],
     },
     limite:

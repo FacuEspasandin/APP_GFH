@@ -34,7 +34,7 @@ export function moldeAnionGap(): Molde {
       maximo: 30,
       tramos: [
         { hasta: 16, rotulo: 'Normal', color: 'ok' },
-        { hasta: 30, rotulo: 'Elevado — buscar causa de acidosis de brecha alta', color: 'grave' },
+        { hasta: Infinity, rotulo: 'Elevado — buscar causa de acidosis de brecha alta', color: 'grave' },
       ],
     },
     limite:

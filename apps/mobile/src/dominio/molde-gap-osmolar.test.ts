@@ -46,3 +46,12 @@ describe('molde de gap osmolar', () => {
     expect(tramoDe(tramos, 21)?.rotulo).toContain('tóxico');
   });
 });
+
+describe('molde de gap osmolar: valores sobre el tope del anillo', () => {
+  it('un valor por encima del máximo de dibujo sigue teniendo tramo (insignia)', () => {
+    const m = moldeGapOsmolar();
+    if (m.resultado.tipo !== 'anillo') throw new Error('debería ser anillo');
+    const ultimo = m.resultado.tramos[m.resultado.tramos.length - 1]!;
+    expect(tramoDe(m.resultado.tramos, 80)?.rotulo).toBe(ultimo.rotulo);
+  });
+});

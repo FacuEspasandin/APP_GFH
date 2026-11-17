@@ -34,7 +34,7 @@ export function moldeFib4(): Molde {
       tramos: [
         { hasta: 1.45, rotulo: 'Baja probabilidad de fibrosis avanzada', color: 'ok' },
         { hasta: 3.25, rotulo: 'Indeterminado', color: 'media' },
-        { hasta: 8, rotulo: 'Alta probabilidad de fibrosis avanzada', color: 'grave' },
+        { hasta: Infinity, rotulo: 'Alta probabilidad de fibrosis avanzada', color: 'grave' },
       ],
     },
     limite:

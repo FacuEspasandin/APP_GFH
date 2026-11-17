@@ -38,7 +38,7 @@ export function moldeGapOsmolar(): Molde {
       tramos: [
         { hasta: 10, rotulo: 'Normal', color: 'ok' },
         { hasta: 20, rotulo: 'Indeterminado', color: 'media' },
-        { hasta: 40, rotulo: 'Sugiere tóxico no medido', color: 'grave' },
+        { hasta: Infinity, rotulo: 'Sugiere tóxico no medido', color: 'grave' },
       ],
     },
     limite:

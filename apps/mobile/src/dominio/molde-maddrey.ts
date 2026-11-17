@@ -44,7 +44,7 @@ export function moldeMaddrey(): Molde {
       maximo: 100,
       tramos: [
         { hasta: 32, rotulo: 'No cumple criterio de gravedad (DF < 32)', color: 'ok' },
-        { hasta: 100, rotulo: 'Hepatitis alcohólica grave — considerar corticoides', color: 'grave' },
+        { hasta: Infinity, rotulo: 'Hepatitis alcohólica grave — considerar corticoides', color: 'grave' },
       ],
     },
     limite:

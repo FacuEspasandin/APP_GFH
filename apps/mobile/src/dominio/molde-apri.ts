@@ -40,7 +40,7 @@ export function moldeApri(): Molde {
       tramos: [
         { hasta: 0.5, rotulo: 'Baja probabilidad de fibrosis significativa', color: 'ok' },
         { hasta: 1.5, rotulo: 'Indeterminado', color: 'media' },
-        { hasta: 3, rotulo: 'Alta probabilidad de fibrosis significativa o cirrosis', color: 'grave' },
+        { hasta: Infinity, rotulo: 'Alta probabilidad de fibrosis significativa o cirrosis', color: 'grave' },
       ],
     },
     limite:

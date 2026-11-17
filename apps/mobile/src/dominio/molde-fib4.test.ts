@@ -31,3 +31,12 @@ describe('molde de FIB-4', () => {
     expect(tramoDe(tramos, 3.26)?.rotulo).toContain('Alta');
   });
 });
+
+describe('molde de FIB-4: valores sobre el tope del anillo', () => {
+  it('un valor por encima del máximo de dibujo sigue teniendo tramo (insignia)', () => {
+    const m = moldeFib4();
+    if (m.resultado.tipo !== 'anillo') throw new Error('debería ser anillo');
+    const ultimo = m.resultado.tramos[m.resultado.tramos.length - 1]!;
+    expect(tramoDe(m.resultado.tramos, 20)?.rotulo).toBe(ultimo.rotulo);
+  });
+});
