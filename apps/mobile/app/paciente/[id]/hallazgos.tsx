@@ -20,7 +20,6 @@ import {
   vistaDesdeParams,
   type FilaAgrupada,
 } from '@/dominio/hallazgos';
-import { FilaAnimada } from '@/ui/animacion';
 import { BotonAvatar, EncabezadoApp } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { Icono } from '@/ui/iconos';
@@ -155,6 +154,7 @@ export default function Hallazgos() {
       <EncabezadoApp derecha={derecha} />
       <ScrollView
         contentContainerClassName="px-margen pb-6 pt-3"
+        removeClippedSubviews={false}
         keyboardShouldPersistTaps="handled"
         refreshControl={
           <ControlRefrescar refrescando={refresco.refrescando} onRefrescar={refresco.onRefrescar} />
@@ -226,8 +226,8 @@ export default function Hallazgos() {
         </Superficie>
       ))}
 
-      {agruparHallazgos(lista).map((f, i) => (
-        <FilaAnimada key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} indice={i} conLayout={false}>
+      {agruparHallazgos(lista).map((f) => (
+        <View key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave}>
           <FilaHallazgo
             fila={f}
             nombres={nombres}
@@ -235,7 +235,7 @@ export default function Hallazgos() {
               router.push(`/paciente/${id}/alternativas?prescripcion=${pid}` as never)
             }
           />
-        </FilaAnimada>
+        </View>
       ))}
 
       {avisosRelevantes.map((a) => (
@@ -347,6 +347,7 @@ function PorCategoria({
             <View key={cat} collapsable={false}>
               <ScrollView
                 contentContainerClassName="px-margen pb-6 pt-3"
+                removeClippedSubviews={false}
                 refreshControl={
                   <ControlRefrescar refrescando={refresco.refrescando} onRefrescar={refresco.onRefrescar} />
                 }
@@ -364,10 +365,10 @@ function PorCategoria({
                   </Superficie>
                 ) : null}
 
-                {agruparHallazgos(lista).map((f, i) => (
-                  <FilaAnimada key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} indice={i} conLayout={false}>
+                {agruparHallazgos(lista).map((f) => (
+                  <View key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave}>
                     <FilaHallazgo fila={f} nombres={nombres} onAlternativas={onAlternativas} />
-                  </FilaAnimada>
+                  </View>
                 ))}
 
                 {avisos.map((a) => (

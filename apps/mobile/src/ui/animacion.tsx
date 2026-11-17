@@ -48,18 +48,10 @@ export function useAnimar(): boolean {
 export function FilaAnimada({
   children,
   indice = 0,
-  conLayout = true,
 }: {
   children: ReactNode;
   /** Escalona la aparición inicial de la lista. */
   indice?: number;
-  /**
-   * Anima el reacomodo cuando cambia el alto de las filas vecinas. Se apaga en
-   * listas con filas que se expanden y colapsan por su cuenta (los grupos de
-   * hallazgos): ahí la transición de layout dejaba la última fila sin alto, y
-   * desaparecía al abrir y cerrar un grupo.
-   */
-  conLayout?: boolean;
 }) {
   const anima = useAnimar();
   if (!anima) return <View>{children}</View>;
@@ -68,7 +60,7 @@ export function FilaAnimada({
     <Animated.View
       entering={FadeIn.duration(DURACION).delay(Math.min(indice, 8) * 25)}
       exiting={FadeOut.duration(DURACION)}
-      layout={conLayout ? LinearTransition.duration(DURACION) : undefined}
+      layout={LinearTransition.duration(DURACION)}
     >
       {children}
     </Animated.View>
