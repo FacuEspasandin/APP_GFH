@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
 import { SkeletonFormulario } from '@/ui/estados-sistema';
 import { PantallaConError } from '@/ui/resultado-consulta';
 import { CampoFecha } from '@/ui/campo-fecha';
@@ -66,8 +67,7 @@ export default function EditarPaciente() {
       }),
     onSuccess: async () => {
       hapticaExito();
-      await qc.invalidateQueries({ queryKey: ['inicio'] });
-      await qc.invalidateQueries({ queryKey: ['cockpit', id] });
+      await invalidarPaciente(qc, id);
       router.back();
     },
   });

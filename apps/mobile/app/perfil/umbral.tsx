@@ -28,7 +28,15 @@ export default function Umbral() {
   const guardar = (n: number) => {
     setElegido(n);
     void API.guardarConfiguracion({ umbralAdultoMayor: n })
-      .then(() => qc.invalidateQueries({ queryKey: ['configuracion'] }));
+      .then(() =>
+        Promise.all([
+          qc.invalidateQueries({ queryKey: ['configuracion'] }),
+          // El umbral decide cuándo se dispara «adulto mayor»: cambia las
+          // alertas del cockpit y la gravedad de cada fila de Pacientes.
+          qc.invalidateQueries({ queryKey: ['inicio'] }),
+          qc.invalidateQueries({ queryKey: ['cockpit'] }),
+        ]),
+      );
   };
 
   return (

@@ -56,6 +56,8 @@ const SIN_MENU = new Set([
   'login',
   'registro',
   'recuperar',
+  // Paso 2 de recuperar contraseña: sin sesión, igual que el paso 1.
+  'recuperar-confirmar',
   'disclaimer',
   'legal',
   'suscripcion-vencida',

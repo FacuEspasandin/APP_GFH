@@ -5,6 +5,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-na
 
 import type { Cockpit } from '@/api/tipos';
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
 import {
   calcularSiSePuede,
   leyendaDelCambio,
@@ -66,8 +67,7 @@ export default function DatosRenales() {
       }),
     onSuccess: async () => {
       hapticaExito();
-      await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
-      await qc.invalidateQueries({ queryKey: ['inicio'] });
+      await invalidarPaciente(qc, pacienteId);
       router.back();
     },
   });

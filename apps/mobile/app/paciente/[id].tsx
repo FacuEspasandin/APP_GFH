@@ -31,8 +31,10 @@ import {
   hepaticoSinEvaluar,
   opcionesDelPaciente,
   peoresPorCategoria,
+  renalSinEvaluar,
   rutaEditarPrescripcion,
 } from '@/dominio/cockpit';
+import { colorPorSeveridadAlergia } from '@/dominio/condiciones-alergias';
 import {
   claveColorPorClcr,
   colorEspina,
@@ -102,6 +104,17 @@ export default function CockpitPaciente() {
       }
     },
     enabled: Boolean(id),
+  });
+
+  // Las alergias cargadas, siempre a la vista (regla 4). El cockpit sólo trae
+  // las condiciones efectivas: una alergia sin cruces no genera hallazgo y
+  // quedaba invisible. Es la misma consulta que usa «Condiciones y alergias»,
+  // así que casi siempre sale de la caché. Sin ella (offline, paciente de
+  // demostración, error) no se dice «sin alergias»: simplemente no se muestran.
+  const { data: cargadas } = useQuery({
+    queryKey: ['condiciones-alergias', id],
+    queryFn: () => API.condicionesYAlergias(id),
+    enabled: Boolean(id) && Boolean(data) && !data?.esDemostracion && !data?.offline,
   });
 
   // Guarda en segundo plano el contexto crudo de este paciente, para poder
@@ -182,6 +195,8 @@ export default function CockpitPaciente() {
   const destacados = hallazgosDestacados(data.hallazgos);
 
   const hepaticoNoEvaluable = hepaticoSinEvaluar(data.avisos);
+  const renalNoEvaluable = renalSinEvaluar(data.avisos);
+  const alergias = cargadas?.alergias ?? [];
   const peorPorCategoria = peoresPorCategoria(data.hallazgos);
 
   return (
@@ -310,20 +325,47 @@ export default function CockpitPaciente() {
             </View>
           </View>
 
-          {data.condicionesEfectivas.length > 0 ? (
-            <Pressable
-              onPress={() => abrir(`/paciente/${id}/condiciones-alergias`)}
-              accessibilityRole="button"
-              accessibilityLabel="Ver condiciones y alergias"
-              className="mt-4 border-t border-line pt-3.5"
-            >
-              <View className="mb-2 flex-row items-center justify-between">
-                <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
-                  Condiciones Activas
-                </Text>
-                <Icono nombre="chevron" tamano={16} color={col.tenue} />
-              </View>
-              <View className="flex-row flex-wrap gap-1.5">
+          {/* Siempre visible, aunque no haya nada cargado: es la puerta a las
+              alergias (regla 4) y un bloque que desaparece cuando está vacío
+              no se distingue de uno que no existe. */}
+          <Pressable
+            onPress={() => abrir(`/paciente/${id}/condiciones-alergias`)}
+            accessibilityRole="button"
+            accessibilityLabel="Ver condiciones y alergias"
+            className="mt-4 border-t border-line pt-3.5"
+          >
+            <View className="mb-2 flex-row items-center justify-between">
+              <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-ink-suave">
+                Condiciones y alergias
+              </Text>
+              <Icono nombre="chevron" tamano={16} color={col.tenue} />
+            </View>
+            {data.condicionesEfectivas.length === 0 && alergias.length === 0 ? (
+              <Text className="font-sans text-meta text-ink-suave">
+                {cargadas
+                  ? 'Sin condiciones ni alergias cargadas'
+                  : 'Tocá para ver condiciones y alergias'}
+              </Text>
+            ) : null}
+            <View className="flex-row flex-wrap gap-1.5">
+              {alergias.map((a) => (
+                // Alergia: delineada con el color de su gravedad y la palabra
+                // «Alergia» antes del nombre — el color solo no alcanza.
+                <View
+                  key={a.id}
+                  className="flex-row items-center gap-1.5 rounded-full px-2.5 py-1"
+                  style={{ borderWidth: 1, borderColor: colorPorSeveridadAlergia(a.severidad) }}
+                >
+                  <View
+                    className="h-2 w-2 rounded-full"
+                    style={{ backgroundColor: colorPorSeveridadAlergia(a.severidad) }}
+                  />
+                  <Text className="text-eyebrow font-medio text-ink">
+                    Alergia: {a.nombre}
+                    {a.severidad === 'GRAVE' ? ' · grave' : ''}
+                  </Text>
+                </View>
+              ))}
               {data.condicionesEfectivas.map((c) => (
                 <View
                   key={c}
@@ -344,10 +386,8 @@ export default function CockpitPaciente() {
                   </Text>
                 </View>
               ))}
-              </View>
-            </Pressable>
-          ) : null}
-
+            </View>
+          </Pressable>
         </Superficie>
 
         {/* ---------- 2. Lo más grave ---------- */}
@@ -397,7 +437,11 @@ export default function CockpitPaciente() {
           {(Object.keys(NOMBRE_CATEGORIA) as CategoriaHallazgo[]).map((cat) => {
             const n = data.dashboard[cat];
             const rangoCat = peorPorCategoria[cat] ?? null;
-            const sinEvaluar = cat === 'AJUSTE_HEPATICO' && hepaticoNoEvaluable;
+            // «—» y no «0»: sin Clcr o sin Child-Pugh el ajuste no se evaluó, y
+            // un cero diría que se miró y no había nada (regla 5).
+            const sinEvaluar =
+              (cat === 'AJUSTE_HEPATICO' && hepaticoNoEvaluable) ||
+              (cat === 'AJUSTE_RENAL' && renalNoEvaluable);
             const color = rangoCat !== null ? colorEspina(rangoCat) : null;
             return (
               // Las que tienen hallazgos se elevan; las que están en cero
@@ -624,8 +668,14 @@ function FilaTratamiento({
     <SuperficieTocable
       onPress={onPress}
       elevacion={conHallazgos ? 'media' : 'plana'}
-      franja={colorEspina(rango)}
-      accesibilidad={`${prescripcion.nombre}, ${prescripcion.conteoHallazgos} hallazgos`}
+      // Un fármaco libre no se verifica: sin hallazgos NO es «verde». La franja
+      // verde diría «evaluado y seguro» (regla 5), así que va en neutro.
+      franja={prescripcion.esFarmacoLibre ? COLOR_SEVERIDAD.neutro : colorEspina(rango)}
+      accesibilidad={
+        prescripcion.esFarmacoLibre
+          ? `${prescripcion.nombre}, no se verifica`
+          : `${prescripcion.nombre}, ${prescripcion.conteoHallazgos} hallazgos`
+      }
     >
       <View className="flex-1 flex-row items-center px-3.5 py-3.5">
         <View className="flex-1">

@@ -3,8 +3,11 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 
+import { ErrorApi } from '@/api/cliente';
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
 import { buscar } from '@/dominio/busqueda';
+import { useAviso } from '@/ui/aviso';
 import { CampoFecha } from '@/ui/campo-fecha';
 import { aISO, validarFecha } from '@/ui/fecha';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
@@ -17,6 +20,7 @@ export default function AgregarCondicion() {
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
+  const aviso = useAviso();
   const [elegida, setElegida] = useState<string | null>(null);
   const [texto, setTexto] = useState('');
   /** Opcional y vacío por defecto: la mayoría de las condiciones se cargan sin
@@ -38,9 +42,11 @@ export default function AgregarCondicion() {
       }),
     onSuccess: async () => {
       hapticaExito();
-      await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
+      await invalidarPaciente(qc, pacienteId);
       router.back();
     },
+    onError: (e) =>
+      aviso.avisar(e instanceof ErrorApi ? e.message : 'No se pudo guardar. Probá de nuevo.', 'error'),
   });
 
   // Las sintéticas se derivan de datos del paciente, no se cargan a mano.

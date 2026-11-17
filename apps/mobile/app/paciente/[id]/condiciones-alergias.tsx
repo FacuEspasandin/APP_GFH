@@ -2,13 +2,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 
+import { ErrorApi } from '@/api/cliente';
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
 import {
   colorPorSeveridadAlergia,
   consecuenciaAlergia,
   crucesPorCondicion,
   textoCruces,
 } from '@/dominio/condiciones-alergias';
+import { useAviso } from '@/ui/aviso';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { SkeletonLista } from '@/ui/estados-sistema';
 import { PantallaConError } from '@/ui/resultado-consulta';
@@ -35,6 +38,9 @@ export default function CondicionesYAlergias() {
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
+  const aviso = useAviso();
+  const alFallar = (e: unknown) =>
+    aviso.avisar(e instanceof ErrorApi ? e.message : 'No se pudo quitar. Probá de nuevo.', 'error');
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['condiciones-alergias', pacienteId],
@@ -56,8 +62,7 @@ export default function CondicionesYAlergias() {
   const crucesListos = cockpit !== undefined;
 
   const invalidar = async () => {
-    await qc.invalidateQueries({ queryKey: ['condiciones-alergias', pacienteId] });
-    await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
+    await invalidarPaciente(qc, pacienteId);
   };
 
   const quitarCondicion = useMutation({
@@ -67,6 +72,7 @@ export default function CondicionesYAlergias() {
       hapticaExito();
       return invalidar();
     },
+    onError: alFallar,
   });
 
   const quitarAlergia = useMutation({
@@ -75,6 +81,7 @@ export default function CondicionesYAlergias() {
       hapticaExito();
       return invalidar();
     },
+    onError: alFallar,
   });
 
   const confirmar = (titulo: string, mensaje: string, accion: () => void) =>

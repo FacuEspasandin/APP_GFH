@@ -152,6 +152,33 @@ export function mensajeVacio(vista: Vista): string {
   }
 }
 
+/**
+ * Lo que NO se evaluó de un fármaco, dicho en neutro.
+ *
+ * «Sin hallazgos» sólo es cierto si se miró. Un fármaco libre no se verifica
+ * nunca, y sin Clcr o sin Child-Pugh el ajuste de dosis no corre: en los dos
+ * casos la lista vacía es falta de dato y no seguridad (regla 5), así que la
+ * pantalla lo dice en vez de pintar el verde de «no hay nada».
+ */
+export function noEvaluadoDelFarmaco(
+  prescripcion: { esFarmacoLibre: boolean } | null,
+  avisos: readonly { codigo: string }[],
+): string[] {
+  if (!prescripcion) return [];
+  if (prescripcion.esFarmacoLibre) {
+    return ['Este fármaco no está en el catálogo: no se verifica.'];
+  }
+
+  const salida: string[] = [];
+  if (avisos.some((a) => a.codigo === 'SIN_CLCR')) {
+    salida.push('No se evaluó el ajuste renal: faltan datos del paciente (Clcr).');
+  }
+  if (avisos.some((a) => a.codigo === 'SIN_CHILD_PUGH')) {
+    salida.push('No se evaluó el ajuste hepático: faltan datos del paciente (Child-Pugh).');
+  }
+  return salida;
+}
+
 type HallazgoAgrupable = {
   rango: 0 | 1 | 2 | 3 | 4 | 5;
   tipoRiesgo?: TipoRiesgoInteraccion;

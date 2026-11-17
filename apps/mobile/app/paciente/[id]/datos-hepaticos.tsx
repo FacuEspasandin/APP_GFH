@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
 import { cuerpoDeGuardado, evaluar, sePuedeGuardar, borradorDesde } from '@/dominio/hepatico';
 import {
   aBorradorDelMolde,
@@ -103,9 +104,7 @@ export default function DatosHepaticos() {
     },
     onSuccess: async () => {
       hapticaExito();
-      await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
-      await qc.invalidateQueries({ queryKey: ['historial', pacienteId] });
-      await qc.invalidateQueries({ queryKey: ['inicio'] });
+      await invalidarPaciente(qc, pacienteId);
       router.back();
     },
   });

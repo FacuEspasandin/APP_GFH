@@ -3,8 +3,10 @@ import { describe, expect, it } from 'vitest';
 import {
   destacados,
   hepaticoSinEvaluar,
+  invalidarPaciente,
   opcionesDelPaciente,
   peoresPorCategoria,
+  renalSinEvaluar,
   rutaEditarPrescripcion,
   type HallazgoResumible,
 } from './cockpit';
@@ -68,6 +70,17 @@ describe('ajuste hepático sin evaluar', () => {
   });
 });
 
+describe('ajuste renal sin evaluar', () => {
+  it('sin Clcr el motor avisa SIN_CLCR y el cockpit muestra «—», no «0»', () => {
+    expect(renalSinEvaluar([{ codigo: 'SIN_CLCR' }])).toBe(true);
+  });
+
+  it('con Clcr, cero significa cero', () => {
+    expect(renalSinEvaluar([])).toBe(false);
+    expect(renalSinEvaluar([{ codigo: 'SIN_CHILD_PUGH' }])).toBe(false);
+  });
+});
+
 /**
  * El menú de los «···».
  *
@@ -94,6 +107,7 @@ describe('opciones del paciente', () => {
       'Función renal',
       'Función hepática',
       'Embarazo y lactancia',
+      'Condiciones y alergias',
       'Ver historial',
     ]);
     expect(titulos.some((t) => t.startsWith('Agregar'))).toBe(false);
@@ -135,6 +149,7 @@ describe('opciones del paciente', () => {
       '/paciente/abc/datos-renales',
       '/paciente/abc/datos-hepaticos',
       '/paciente/abc/embarazo-lactancia',
+      '/paciente/abc/condiciones-alergias',
       '/paciente/abc/historial',
     ]);
   });
@@ -151,6 +166,27 @@ describe('rutaEditarPrescripcion', () => {
     });
     expect(ruta).toBe(
       '/prescripcion/pr9?paciente=pac1&nombre=Coumadin&dosis=5%20mg&frecuencia=cada%2024%20h&via=ORAL',
+    );
+  });
+});
+
+describe('invalidarPaciente', () => {
+  it('invalida todo lo que muestra al paciente, incluida su fila en Pacientes', async () => {
+    const llamadas: unknown[][] = [];
+    const qc = {
+      invalidateQueries: async ({ queryKey }: { queryKey: unknown[] }) => {
+        llamadas.push(queryKey);
+      },
+    };
+    await invalidarPaciente(qc as never, 'p1');
+    expect(llamadas).toEqual(
+      expect.arrayContaining([
+        ['cockpit', 'p1'],
+        ['inicio'],
+        ['historial', 'p1'],
+        ['paciente', 'p1'],
+        ['condiciones-alergias', 'p1'],
+      ]),
     );
   });
 });

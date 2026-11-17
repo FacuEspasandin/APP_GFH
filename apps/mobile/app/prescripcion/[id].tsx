@@ -3,7 +3,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 
+import { ErrorApi } from '@/api/cliente';
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
+import { useAviso } from '@/ui/aviso';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { hapticaExito } from '@/ui/haptica';
 import { Icono } from '@/ui/iconos';
@@ -39,6 +42,7 @@ export default function EditarPrescripcion() {
   }>();
   const router = useRouter();
   const qc = useQueryClient();
+  const aviso = useAviso();
   const col = useColores();
 
   const [f, setF] = useState({ dosis: dosis ?? '', frecuencia: frecuencia ?? '' });
@@ -46,9 +50,16 @@ export default function EditarPrescripcion() {
   const [estadoSel, setEstadoSel] = useState<string>(estado ?? 'ACTIVO');
 
   const invalidar = async () => {
-    if (paciente) await qc.invalidateQueries({ queryKey: ['cockpit', paciente] });
+    if (paciente) await invalidarPaciente(qc, paciente);
     router.back();
   };
+
+  const alFallar = (e: unknown) =>
+    aviso.avisar(e instanceof ErrorApi ? e.message : 'No se pudo guardar. Probá de nuevo.', 'error');
+
+  // El backend exige dosis y frecuencia (1 a 60 caracteres): vacías, el guardado
+  // rebotaba sin explicación.
+  const pautaCompleta = f.dosis.trim().length > 0 && f.frecuencia.trim().length > 0;
 
   const guardar = useMutation({
     mutationFn: () =>
@@ -59,11 +70,13 @@ export default function EditarPrescripcion() {
         estado: estadoSel,
       }),
     onSuccess: () => { hapticaExito(); return invalidar(); },
+    onError: alFallar,
   });
 
   const eliminar = useMutation({
     mutationFn: () => API.borrarPrescripcion(id),
     onSuccess: () => { hapticaExito(); return invalidar(); },
+    onError: alFallar,
   });
 
   return (
@@ -142,7 +155,11 @@ export default function EditarPrescripcion() {
         </CampoBento>
 
         <View className="mt-6">
-          <Boton onPress={() => guardar.mutate()} cargando={guardar.isPending}>
+          <Boton
+            onPress={() => guardar.mutate()}
+            cargando={guardar.isPending}
+            deshabilitado={!pautaCompleta}
+          >
             Guardar cambios
           </Boton>
         </View>

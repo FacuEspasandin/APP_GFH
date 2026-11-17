@@ -206,6 +206,9 @@ function Navegacion() {
         <Stack.Screen name="suscripcion-vencida" options={{ headerShown: false }} />
 
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        {/* Historial de Vera: dibuja su propio encabezado. Sin registrarla, el
+            Stack ponía el suyo y se veía la ruta cruda «chat/historial». */}
+        <Stack.Screen name="chat/historial" options={{ headerShown: false }} />
 
         <Stack.Screen name="crear-paciente" options={{ headerShown: false }} />
         <Stack.Screen name="crear-grupo" options={{ headerShown: false }} />

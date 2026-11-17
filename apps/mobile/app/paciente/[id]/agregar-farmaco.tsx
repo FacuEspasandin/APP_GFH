@@ -6,7 +6,9 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } fro
 import { ErrorApi } from '@/api/cliente';
 import { POR_PRODUCTO, useIndiceProductos } from '@/api/catalogo';
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
 import { buscar } from '@/dominio/busqueda';
+import { useAviso } from '@/ui/aviso';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
 import { EncabezadoConTitulo } from '@/ui/encabezado-app';
 import { hapticaAdvertencia, hapticaBloqueo, hapticaExito } from '@/ui/haptica';
@@ -44,6 +46,7 @@ export default function AgregarFarmaco() {
   const { id: pacienteId } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
+  const aviso = useAviso();
 
   const [consulta, setConsulta] = useState('');
   const [producto, setProducto] = useState<Producto | null>(null);
@@ -77,7 +80,7 @@ export default function AgregarFarmaco() {
       }),
     onSuccess: async () => {
       hapticaExito();
-      await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
+      await invalidarPaciente(qc, pacienteId);
       router.back();
     },
     onError: (e) => {
@@ -88,7 +91,11 @@ export default function AgregarFarmaco() {
         if (e.codigo === 'ALERGIA_BLOQUEA') hapticaBloqueo();
         else hapticaAdvertencia();
         setConflicto({ codigo: e.codigo, mensaje: e.message });
+        return;
       }
+      // Cualquier otro fallo (sin red, servidor dormido, tope): antes el botón
+      // dejaba de girar y no pasaba nada.
+      aviso.avisar(e instanceof ErrorApi ? e.message : 'No se pudo guardar. Probá de nuevo.', 'error');
     },
   });
 

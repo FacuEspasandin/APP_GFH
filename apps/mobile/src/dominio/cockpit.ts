@@ -1,3 +1,4 @@
+import type { QueryClient } from '@tanstack/react-query';
 import { type CategoriaHallazgo, type RangoGravedad } from '@gfh/shared-types';
 
 /**
@@ -57,6 +58,36 @@ export function hepaticoSinEvaluar(avisos: readonly { codigo: string }[]): boole
 }
 
 /**
+ * El ajuste renal no evalúa porque el paciente no tiene Clcr (ni cargado ni
+ * calculable: falta peso o creatinina). Muestra «—» y no «0»: un cero afirmaría
+ * que se miró la función renal y ningún fármaco pedía ajuste (regla 5).
+ */
+export function renalSinEvaluar(avisos: readonly { codigo: string }[]): boolean {
+  return avisos.some((a) => a.codigo === 'SIN_CLCR');
+}
+
+/**
+ * Tras cambiar algo del paciente, todo lo que lo muestra queda viejo: el
+ * cockpit, su fila en Pacientes (`inicio`, el tablero «a quién mirar primero»),
+ * el historial, la ficha cruda que leen editar y función hepática, y la lista
+ * de condiciones y alergias. React Native no tiene foco de ventana, así que
+ * nada se refresca solo al volver: hay que invalidar a mano y, mejor, desde
+ * un solo lugar para que ninguna pantalla se olvide de una.
+ */
+export function invalidarPaciente(
+  qc: QueryClient,
+  pacienteId: string | undefined,
+): Promise<unknown> {
+  return Promise.all([
+    qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] }),
+    qc.invalidateQueries({ queryKey: ['inicio'] }),
+    qc.invalidateQueries({ queryKey: ['historial', pacienteId] }),
+    qc.invalidateQueries({ queryKey: ['paciente', pacienteId] }),
+    qc.invalidateQueries({ queryKey: ['condiciones-alergias', pacienteId] }),
+  ]);
+}
+
+/**
  * Las opciones del menú de los «···»: lo que se le hace a un paciente que ya
  * existe.
  *
@@ -105,6 +136,14 @@ export function opcionesDelPaciente(
       icono: 'pulso',
     },
     {
+      // Regla 4: las alergias tienen que poder abrirse desde el paciente, no
+      // sólo desde el «+» que las agrega.
+      titulo: 'Condiciones y alergias',
+      ruta: `/paciente/${pacienteId}/condiciones-alergias`,
+      detalle: 'Diagnósticos y reacciones a fármacos',
+      icono: 'alerta',
+    },
+    {
       titulo: 'Ver historial',
       ruta: `/paciente/${pacienteId}/historial`,
       detalle: 'Todo lo que se hizo con este paciente',
@@ -113,7 +152,7 @@ export function opcionesDelPaciente(
   ];
 }
 
-type NombreIconoMenu = 'editar' | 'gota' | 'higado' | 'pulso' | 'reloj';
+type NombreIconoMenu = 'editar' | 'gota' | 'higado' | 'pulso' | 'alerta' | 'reloj';
 
 function redondear(n: number): string {
   return String(Number(n.toFixed(1)));

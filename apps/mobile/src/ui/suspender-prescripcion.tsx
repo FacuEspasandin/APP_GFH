@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pressable, Text } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
 import { useAviso } from './aviso';
 import { HojaInferior } from './hoja-inferior';
 import { Boton } from './kit';
@@ -39,7 +40,7 @@ export function useSuspenderPrescripcion(
     mutationFn: ({ id, estado }: { id: string; estado: 'ACTIVO' | 'SUSPENDIDO'; nombre: string }) =>
       API.actualizarPrescripcion(id, { estado }),
     onSuccess: async (_r, { id, estado, nombre }) => {
-      await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
+      await invalidarPaciente(qc, pacienteId);
       if (estado === 'SUSPENDIDO') {
         aviso.avisar(`${nombre} suspendido`, 'exito', {
           etiqueta: 'Deshacer',
@@ -61,8 +62,8 @@ export function useSuspenderPrescripcion(
     >
       <Text className="mb-1.5 mt-1 text-fila font-fuerte text-ink">¿Suspender {pendiente?.nombre}?</Text>
       <Text className="font-sans mb-4 text-meta leading-5 text-ink-suave">
-        Deja de entrar a las verificaciones de este paciente. Queda en el historial y lo podés
-        reactivar.
+        Deja de entrar a las verificaciones de este paciente. Queda en el historial. Podés
+        deshacerlo unos segundos.
       </Text>
       <Boton
         variante="destructivo"

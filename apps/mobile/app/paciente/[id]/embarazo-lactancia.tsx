@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
 import {
   cuerpoDeGuardado,
   estadoEmbarazo,
@@ -54,8 +55,7 @@ export default function EmbarazoYLactancia() {
       ),
     onSuccess: async () => {
       hapticaExito();
-      await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
-      await qc.invalidateQueries({ queryKey: ['inicio'] });
+      await invalidarPaciente(qc, pacienteId);
       router.back();
     },
   });

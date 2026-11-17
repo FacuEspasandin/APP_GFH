@@ -14,6 +14,7 @@ import {
   filtrarAvisos,
   filtrarHallazgos,
   mensajeVacio,
+  noEvaluadoDelFarmaco,
   TITULO_CATEGORIA,
   tituloDeVista,
   vistaDesdeParams,
@@ -121,6 +122,10 @@ export default function Hallazgos() {
       ? (data.prescripciones.find((x) => x.id === vista.prescripcionId) ?? null)
       : null;
 
+  // Sólo en la vista de un fármaco: es donde «sin hallazgos» se lee como «está
+  // bien» y puede ser, en realidad, que no se evaluó.
+  const noEvaluado = noEvaluadoDelFarmaco(prescripcionActual, data.avisos);
+
   /*
    * Entrando por una categoría, las cuatro se pueden deslizar.
    *
@@ -205,13 +210,21 @@ export default function Hallazgos() {
         </Superficie>
       ) : null}
 
-      {lista.length === 0 && avisosRelevantes.length === 0 ? (
+      {lista.length === 0 && avisosRelevantes.length === 0 && noEvaluado.length === 0 ? (
         // El panel vacío se colapsa a una línea verde, no a una tarjeta grande
         // que ocupe el lugar de algo que sí importa.
         <Superficie className="px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.ok }}>
           <Text className="font-sans text-meta text-ink">{mensajeVacio(vista)}</Text>
         </Superficie>
       ) : null}
+
+      {/* Lo que NO se miró va en neutro, nunca en verde: ni «seguro» ni
+          «peligroso», sin dato (regla 5). */}
+      {noEvaluado.map((t) => (
+        <Superficie key={t} className="mb-3.5 px-3.5 py-3" style={{ borderLeftWidth: 4, borderLeftColor: COLOR_SEVERIDAD.neutro }}>
+          <Text className="font-sans text-meta leading-5 text-ink">{t}</Text>
+        </Superficie>
+      ))}
 
       {agruparHallazgos(lista).map((f, i) => (
         <FilaAnimada key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} indice={i}>

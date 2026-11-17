@@ -6,6 +6,7 @@ import {
   filtrarAvisos,
   filtrarHallazgos,
   mensajeVacio,
+  noEvaluadoDelFarmaco,
   tituloDeVista,
   vistaDesdeParams,
   type Vista,
@@ -259,5 +260,28 @@ describe('agrupar hallazgos por riesgo compartido', () => {
       'riesgo:SANGRADO',
       'condicion:cond-hta',
     ]);
+  });
+});
+
+describe('lo que no se evaluó de un fármaco (regla 5)', () => {
+  it('un fármaco libre no se verifica: se dice, no se pinta de verde', () => {
+    expect(noEvaluadoDelFarmaco({ esFarmacoLibre: true }, [])).toEqual([
+      'Este fármaco no está en el catálogo: no se verifica.',
+    ]);
+  });
+
+  it('sin Clcr o sin Child-Pugh avisa que no se evaluó ese ajuste', () => {
+    const r = noEvaluadoDelFarmaco({ esFarmacoLibre: false }, [
+      { codigo: 'SIN_CLCR' },
+      { codigo: 'SIN_CHILD_PUGH' },
+    ]);
+    expect(r).toHaveLength(2);
+    expect(r[0]).toContain('ajuste renal');
+    expect(r[1]).toContain('ajuste hepático');
+  });
+
+  it('con los datos cargados no inventa avisos', () => {
+    expect(noEvaluadoDelFarmaco({ esFarmacoLibre: false }, [])).toEqual([]);
+    expect(noEvaluadoDelFarmaco(null, [{ codigo: 'SIN_CLCR' }])).toEqual([]);
   });
 });

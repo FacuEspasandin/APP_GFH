@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 
 import * as API from '@/api/endpoints';
+import { invalidarPaciente } from '@/dominio/cockpit';
 import { Icono } from '@/ui/iconos';
 import { hapticaExito } from '@/ui/haptica';
 import { BloqueFormulario } from '@/ui/bloque-formulario';
@@ -81,7 +82,7 @@ export default function AceptarAlternativa() {
       }),
     onSuccess: async () => {
       hapticaExito();
-      await qc.invalidateQueries({ queryKey: ['cockpit', pacienteId] });
+      await invalidarPaciente(qc, pacienteId);
       await qc.invalidateQueries({ queryKey: ['alternativas', pacienteId] });
       // Vuelve al cockpit, no a la lista de alternativas: lo que cambió es el
       // tratamiento y ahí es donde se ve.
