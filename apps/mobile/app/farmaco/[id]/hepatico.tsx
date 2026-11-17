@@ -92,11 +92,15 @@ function Contenido({ f }: { f: DetalleRestriccion }) {
 
       <PeldanosHepaticos peldanos={peldanos} />
 
-      <PieContexto>
-        La clase del paciente sale de la calculadora de Child-Pugh, que ya está
-        hecha. Lo que falta es esta tabla, por fármaco: sin ella el ajuste
-        hepático del cockpit queda en neutro.
-      </PieContexto>
+      {/* Sólo si falta la tabla: con tabla cargada, decir que «falta» contradice
+          los peldaños de arriba. */}
+      {!hayTabla ? (
+        <PieContexto>
+          La clase del paciente sale de la calculadora de Child-Pugh, que ya está
+          hecha. Lo que falta es esta tabla, por fármaco: sin ella el ajuste
+          hepático del cockpit queda en neutro.
+        </PieContexto>
+      ) : null}
     </>
   );
 }

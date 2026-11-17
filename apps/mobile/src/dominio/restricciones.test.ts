@@ -331,4 +331,17 @@ describe('nombres del catálogo', () => {
   it('las palabras completas pasan a caja normal', () => {
     expect(nombreFamilia('TIAZIDAS')).toBe('Tiazidas');
   });
+
+  it('los identificadores internos se traducen con un diccionario', () => {
+    expect(nombreFamilia('AHORRADORES_K')).toBe('Ahorradores de potasio');
+    expect(nombreFamilia('MACROLIDOS_INH')).toBe('Macrólidos y azoles');
+    expect(nombreFamilia('MACROLIDOS')).toBe('Macrólidos');
+    expect(nombreFamilia('CUMARINICOS')).toBe('Cumarínicos');
+    expect(nombreFamilia('IECA_ARA')).toBe('IECA/ARA');
+    expect(nombreFamilia('DIGOXINA_INHIBIDORES')).toBe('Fármacos que elevan la digoxina');
+  });
+
+  it('un identificador con guion bajo que no está en el diccionario no sale crudo', () => {
+    expect(nombreFamilia('NUEVA_FAMILIA')).toBe('Nueva Familia');
+  });
 });

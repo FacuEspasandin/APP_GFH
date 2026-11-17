@@ -280,6 +280,31 @@ export function nombreLegible(nombre: string): string {
  * normal, que es como se leen.
  */
 export function nombreFamilia(familia: string): string {
+  const conocido = NOMBRE_DE_FAMILIA[familia.toUpperCase()];
+  if (conocido) return conocido;
   const esSigla = familia.length <= 5 && familia === familia.toUpperCase();
-  return esSigla ? familia : nombreLegible(familia.toLowerCase());
+  // Los identificadores internos con guion bajo nunca se muestran crudos.
+  return esSigla ? familia : nombreLegible(familia.toLowerCase().replace(/_/g, ' '));
 }
+
+/**
+ * Nombre legible de las familias cuyo identificador del archivo de reglas no se
+ * lee solo (guion bajo, tilde que falta, o un sufijo interno como `_INH`).
+ *
+ * `MACROLIDOS_INH` NO es sólo azoles: la lista trae claritromicina y
+ * eritromicina junto con los azoles, todos inhibidores de CYP3A4. Por eso el
+ * rótulo nombra las dos clases.
+ */
+const NOMBRE_DE_FAMILIA: Record<string, string> = {
+  AHORRADORES_K: 'Ahorradores de potasio',
+  MACROLIDOS_INH: 'Macrólidos y azoles',
+  DIGOXINA_INHIBIDORES: 'Fármacos que elevan la digoxina',
+  MACROLIDOS: 'Macrólidos',
+  CUMARINICOS: 'Cumarínicos',
+  IECA_ARA: 'IECA/ARA',
+  ESTATINAS_3A4_ALTO: 'Estatinas (CYP3A4, alto riesgo)',
+  ESTATINAS_3A4: 'Estatinas (CYP3A4)',
+  ESTATINAS_TODAS: 'Estatinas',
+  OPIOIDES_SEROTONERGICOS: 'Opioides serotoninérgicos',
+  ANTIACIDOS_CATIONES: 'Antiácidos con cationes',
+};

@@ -120,3 +120,26 @@ describe('el conteo', () => {
     expect(contar(CATALOGO, '', CAMPOS)).toBe(CATALOGO.length);
   });
 });
+
+describe('grafías alternativas del catálogo', () => {
+  const FARMACOS = [{ nombre: 'Espirolactona' }, { nombre: 'Enalapril' }];
+
+  it('«espironolactona» encuentra el fármaco cargado como «Espirolactona»', () => {
+    expect(buscar(FARMACOS, 'espironolactona', POR_NOMBRE).map((f) => f.nombre)).toEqual([
+      'Espirolactona',
+    ]);
+  });
+
+  it('la grafía del catálogo sigue encontrándolo', () => {
+    expect(buscar(FARMACOS, 'espirol', POR_NOMBRE)).toHaveLength(1);
+  });
+
+  it('también por el principio activo de un producto', () => {
+    const productos = [{ nombre: 'Aldactone' }];
+    const campos: Campos<{ nombre: string }> = {
+      nombre: (x) => x.nombre,
+      tambien: () => ['Espirolactona'],
+    };
+    expect(buscar(productos, 'espironolactona', campos)).toHaveLength(1);
+  });
+});

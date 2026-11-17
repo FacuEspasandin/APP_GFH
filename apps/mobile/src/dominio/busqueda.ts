@@ -66,17 +66,46 @@ export const PESO = {
   nada: 0,
 } as const;
 
-export function peso<T>(item: T, consultaPlana: string, campos: Campos<T>): number {
-  const nombre = plano(campos.nombre(item));
+/**
+ * Grafías que el catálogo escribe distinto de como se busca.
+ *
+ * «Espirolactona» es la grafía con la que está cargado el fármaco (errata);
+ * el nombre correcto es «espironolactona», que es lo que escribe un médico.
+ * Mientras el catálogo no se corrige en origen, la búsqueda encuentra las dos.
+ * Cada par es [grafía del catálogo, grafía correcta], ya en forma plana.
+ */
+const ALIAS_DE_BUSQUEDA: ReadonlyArray<readonly [string, string]> = [
+  ['espirolactona', 'espironolactona'],
+];
 
+/** El texto plano más sus equivalentes de ALIAS_DE_BUSQUEDA. */
+function variantes(textoPlano: string): string[] {
+  const out = [textoPlano];
+  for (const [catalogo, correcta] of ALIAS_DE_BUSQUEDA) {
+    if (textoPlano.includes(catalogo)) out.push(textoPlano.replace(catalogo, correcta));
+  }
+  return out;
+}
+
+function pesoDeNombre(nombre: string, consultaPlana: string): number {
   if (nombre.startsWith(consultaPlana)) return PESO.empieza;
   // Una palabra interna que arranca con la consulta: «Dolo-Ibuprofeno» con
   // «ibu». El separador puede ser espacio, guión, barra o paréntesis.
   if (new RegExp(`[\\s\\-/(.,]${escapar(consultaPlana)}`).test(nombre)) return PESO.palabra;
   if (nombre.includes(consultaPlana)) return PESO.contiene;
+  return PESO.nada;
+}
+
+export function peso<T>(item: T, consultaPlana: string, campos: Campos<T>): number {
+  const nombre = plano(campos.nombre(item));
+
+  const delNombre = Math.max(...variantes(nombre).map((v) => pesoDeNombre(v, consultaPlana)));
+  if (delNombre > PESO.nada) return delNombre;
 
   const alias = campos.tambien?.(item) ?? [];
-  if (alias.some((t) => plano(t).includes(consultaPlana))) return PESO.tambien;
+  if (alias.some((t) => variantes(plano(t)).some((v) => v.includes(consultaPlana)))) {
+    return PESO.tambien;
+  }
 
   return PESO.nada;
 }

@@ -1,6 +1,6 @@
 import { FlashList } from '@shopify/flash-list';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { ErrorApi } from '@/api/cliente';
@@ -12,7 +12,7 @@ import {
   type PrincipioActivoResumen,
   type ProductoResumen,
 } from '@/api/catalogo';
-import { buscar, contar } from '@/dominio/busqueda';
+import { buscar, plano } from '@/dominio/busqueda';
 import { cambiaDeLetra, inicialDe, textoConteo } from '@/dominio/catalogo';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { ErrorGenerico, SinConexion, Skeleton } from '@/ui/estados-sistema';
@@ -62,6 +62,11 @@ export default function Buscador() {
   // sabemos qué estaba buscando.
   const { q } = useLocalSearchParams<{ q?: string }>();
   const [consulta, setConsulta] = useState(q ?? '');
+  // La pantalla de la pestaña no se desmonta: si otra pantalla vuelve a mandar
+  // acá con un término distinto, el estado inicial ya no alcanza.
+  useEffect(() => {
+    if (q !== undefined) setConsulta(q);
+  }, [q]);
   // "Todos" mezcla medicamento + fármaco, como buscaba siempre el buscador.
   // "Medicamentos"/"ATC" cortan a un solo tipo — ATC busca por fármaco, no
   // por el código en sí (eso vive en la ficha, no acá).
@@ -86,20 +91,12 @@ export default function Buscador() {
     () => buscar(todos, texto, POR_PRODUCTO),
     [todos, texto],
   );
-  const coincidenciasProductos = useMemo(
-    () => contar(todos, texto, POR_PRODUCTO),
-    [todos, texto],
-  );
-
   // Los fármacos sólo se buscan con algo escrito: sin consulta, volcar los 631
   // sueltos no orienta a nadie — para eso ya está el catálogo de productos A-Z.
   const listaFarmacos = useMemo(
     () => (buscando ? buscar(todosFarmacos, texto, POR_PRINCIPIO_ACTIVO) : []),
     [todosFarmacos, texto, buscando],
   );
-
-  const coincidencias =
-    pestana === 'ATC' ? contar(todosFarmacos, texto, POR_PRINCIPIO_ACTIVO) : coincidenciasProductos;
 
   /** Tocar un fármaco no abre una ficha suelta (regla no negociable 8: el
    *  buscador siempre resuelve a producto comercial) — cambia a la pestaña de
@@ -113,13 +110,35 @@ export default function Buscador() {
   // Una sola lista para el FlashList, tageada por tipo: "Todos" mezcla las dos
   // fuentes (fármacos sólo cuando hay algo escrito — sueltos y sin consulta no
   // orientan), "Medicamentos"/"ATC" cortan a una.
+  // Un fármaco que ya tiene su genérico en la lista de productos es el mismo
+  // resultado dos veces: en «Todos» se muestra sólo el genérico.
+  const conGenerico = useMemo(() => {
+    const nombres = new Set<string>();
+    for (const p of todos) {
+      if (p.esGenerico) for (const pa of p.principiosActivos) nombres.add(plano(pa));
+    }
+    return nombres;
+  }, [todos]);
+
   const filas = useMemo((): Fila[] => {
     const productos: Fila[] = listaProductos.map((item) => ({ tipo: 'producto', item }));
     const farmacosFilas: Fila[] = listaFarmacos.map((item) => ({ tipo: 'farmaco', item }));
     if (pestana === 'Medicamentos') return productos;
     if (pestana === 'ATC') return farmacosFilas;
-    return buscando ? [...productos, ...farmacosFilas] : productos;
-  }, [pestana, listaProductos, listaFarmacos, buscando]);
+    if (!buscando) return productos;
+    const sinRepetir = farmacosFilas.filter(
+      (f) => f.tipo === 'farmaco' && !conGenerico.has(plano(f.item.nombre)),
+    );
+    return [...productos, ...sinRepetir];
+  }, [pestana, listaProductos, listaFarmacos, buscando, conGenerico]);
+
+  // Lo que se cuenta es lo que se ve. Sin texto en ATC no hay lista —y el total
+  // de productos del catálogo no es de lo que habla esa pestaña—.
+  const textoDelConteo = textoConteo(
+    buscando,
+    filas.length,
+    pestana === 'ATC' ? undefined : todos.length,
+  );
 
 
   return (
@@ -152,9 +171,9 @@ export default function Buscador() {
           vertical es todo. */}
 
       <View className="mb-1 flex-row items-center">
-        <Eyebrow>{buscando ? 'Resultados' : 'Catálogo'}</Eyebrow>
+        <Eyebrow>{buscando ? 'Resultados' : pestana === 'ATC' ? 'Fármacos' : 'Catálogo'}</Eyebrow>
         <Text className="font-mono mb-1.5 ml-2 text-eyebrow text-tenue">
-          {textoConteo(buscando, coincidencias, todos.length)}
+          {textoDelConteo}
         </Text>
       </View>
 
@@ -182,6 +201,11 @@ export default function Buscador() {
               <Estado
                 titulo="Sin resultados"
                 detalle={`Nada coincide con «${texto}» en ${pestana === 'ATC' ? 'los fármacos' : 'esta categoría'}.`}
+              />
+            ) : pestana === 'ATC' ? (
+              <Estado
+                titulo="Escribí un fármaco o una clase"
+                detalle="Esta pestaña busca por principio activo y por clase terapéutica."
               />
             ) : null
           }

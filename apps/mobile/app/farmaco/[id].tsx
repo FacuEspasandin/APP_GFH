@@ -267,7 +267,8 @@ function Encabezado({ f }: { f: Ficha }) {
     <Superficie elevacion="media" className="mb-4 p-5">
       <Text className="text-titular font-extra leading-9 text-ink">{f.nombreComercial}</Text>
       <Text className="mt-0.5 text-body text-ink-suave">
-        {[f.dosisTexto, f.formaFarmaceutica].filter(Boolean).join(' ') || 'Sin dosis registrada'}
+        {[f.dosisTexto, f.formaFarmaceutica].filter(Boolean).join(' ') ||
+          (f.esGenerico ? 'Genérico' : 'Principio activo')}
       </Text>
       {f.laboratorio ? (
         <Text className="mt-1 text-meta font-medio text-ink-suave">{f.laboratorio}</Text>
