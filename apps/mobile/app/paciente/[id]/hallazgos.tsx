@@ -444,7 +444,10 @@ function TarjetaGrupoRiesgo({
         accessibilityLabel={`${grupo.etiqueta}, ${grupo.hallazgos.length} hallazgos`}
       >
         <Superficie elevacion={grupo.peor <= 1 ? 'media' : 'plana'} franja={colorEspina(grupo.peor)}>
-          <View className="flex-1 flex-row items-center justify-between gap-2 px-3.5 py-3.5">
+          {/* Sin `flex-1`: dentro de la tarjeta (columna de alto automático) hacía
+              que, al reacomodarse la lista, la fila midiera 0 de alto y se
+              pisara con las vecinas. */}
+          <View className="flex-row items-center justify-between gap-2 px-3.5 py-3.5">
             <View className="flex-1">
               <Text className="text-fila font-medio text-ink">{grupo.etiqueta}</Text>
               <Text className="font-sans mt-0.5 text-meta text-ink-suave">
@@ -491,7 +494,7 @@ function Tarjeta({
 
   return (
     <Superficie elevacion={pesa ? 'media' : 'plana'} franja={colorEspina(hallazgo.rango)} className="mb-3.5">
-      <View className="flex-1 px-3.5 py-3.5">
+      <View className="px-3.5 py-3.5">
         <TituloConEtiqueta titulo={hallazgo.titulo} etiqueta={<EtiquetaEstado rango={hallazgo.rango} />} />
 
         {hallazgo.subtitulo ? (
