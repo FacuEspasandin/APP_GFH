@@ -111,3 +111,56 @@ describe('el catálogo real trae las condiciones sintéticas', () => {
     },
   );
 });
+
+/**
+ * Los AINE no son un grupo para el motor: cada fármaco tiene SUS filas de
+ * embarazo en el catálogo. Si a Ibuprofeno le falta la fila "antes de la 28", con
+ * 12 o 24 semanas no alerta y la ausencia se lee como seguridad (regla 5).
+ */
+describe('AINE en embarazo: Ibuprofeno se comporta como Naproxeno', () => {
+  interface FilaAlerta {
+    principioActivoNombre: string;
+    condicionCodigo: string;
+    severidad: string;
+    semanaMin: number | null;
+    semanaMax: number | null;
+  }
+  const ALERTAS = JSON.parse(
+    fs.readFileSync(
+      path.resolve(__dirname, '../../../docs/data/alertas-condicion-farmaco.json'),
+      'utf8',
+    ),
+  ) as FilaAlerta[];
+
+  /** Severidades que se mostrarían para el fármaco con esa semana de gestación. */
+  const severidadesEnSemana = (farmaco: string, semana: number | null) =>
+    ALERTAS.filter(
+      (a) =>
+        a.principioActivoNombre === farmaco &&
+        a.condicionCodigo === 'EMBARAZO' &&
+        aplicaEnSemana(a.semanaMin, a.semanaMax, semana),
+    ).map((a) => a.severidad);
+
+  it.each([
+    [12, ['EVITAR']],
+    [24, ['EVITAR']],
+    [27, ['EVITAR']],
+    [28, ['CONTRAINDICADO']],
+    [36, ['CONTRAINDICADO']],
+  ])('Ibuprofeno con %i semanas: %j', (semana, esperado) => {
+    expect(severidadesEnSemana('Ibuprofeno', semana)).toEqual(esperado);
+  });
+
+  it.each([12, 24, 27, 28, 36, null])(
+    'con %s semanas Ibuprofeno y Naproxeno dan el mismo resultado',
+    (semana) => {
+      expect(severidadesEnSemana('Ibuprofeno', semana).sort()).toEqual(
+        severidadesEnSemana('Naproxeno', semana).sort(),
+      );
+    },
+  );
+
+  it('sin semana registrada alerta con las dos ventanas (no se descarta el riesgo)', () => {
+    expect(severidadesEnSemana('Ibuprofeno', null).sort()).toEqual(['CONTRAINDICADO', 'EVITAR']);
+  });
+});

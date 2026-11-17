@@ -96,8 +96,9 @@ describe('invariante de severidad: gana la más grave', () => {
  * El otro riesgo silencioso. Motor §5.2 / §11.2.
  *
  * Un nombre mal escrito no rompe nada: esa regla no matchea nunca y la
- * interacción DESAPARECE. Escribir "Espironolactona" en vez de "Espirolactona"
- * —como la nombra el catálogo SEN— borra ocho pares sin un solo error.
+ * interacción DESAPARECE. Escribir una grafía distinta de la que tiene el
+ * catálogo ("Espironolactona") en una sola de las fuentes borra ocho pares sin
+ * un solo error.
  */
 describe('grafía: todo nombre citado existe en el catálogo', () => {
   const enCatalogo = new Set(PAS.map((p) => normalizar(p.nombre)));
@@ -116,9 +117,9 @@ describe('grafía: todo nombre citado existe en el catálogo', () => {
     expect(ausentes).toEqual([]);
   });
 
-  it('"Espirolactona" es la grafía del catálogo, y "Espironolactona" no existe', () => {
-    expect(enCatalogo.has(normalizar('Espirolactona'))).toBe(true);
-    expect(enCatalogo.has(normalizar('Espironolactona'))).toBe(false);
+  it('"Espironolactona" es la grafía del catálogo, y la errata "Espirolactona" ya no existe', () => {
+    expect(enCatalogo.has(normalizar('Espironolactona'))).toBe(true);
+    expect(enCatalogo.has(normalizar('Espirolactona'))).toBe(false);
   });
 
   it('MACROLIDOS_INH está declarada y no la usa ninguna regla', () => {

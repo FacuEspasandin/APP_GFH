@@ -2052,7 +2052,7 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Espirolactona",
+    "principioActivoNombre": "Espironolactona",
     "condicionCodigo": "HIPERPOTASEMIA",
     "severidad": "EVITAR",
     "texto": "Diurético ahorrador de potasio en hiperpotasemia: agrava la elevación del potasio.",
@@ -2880,7 +2880,7 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Espirolactona",
+    "principioActivoNombre": "Espironolactona",
     "condicionCodigo": "ERC",
     "severidad": "PRECAUCION",
     "texto": "Diurético ahorrador de potasio en ERC: mayor riesgo de hiperpotasemia. Controlar potasio y función renal.",
@@ -3735,7 +3735,7 @@
     "semanaMax": null
   },
   {
-    "principioActivoNombre": "Espirolactona",
+    "principioActivoNombre": "Espironolactona",
     "condicionCodigo": "ADULTO_MAYOR",
     "severidad": "PRECAUCION",
     "texto": "Beers: antagonista de aldosterona en el adulto mayor, sobre todo con IECA/ARA-II o Clcr < 30: controlar el potasio de cerca por riesgo de hiperpotasemia.",
@@ -4966,6 +4966,15 @@
     "fuente": "Curado GFH _REVISAR_",
     "semanaMin": 28,
     "semanaMax": null
+  },
+  {
+    "principioActivoNombre": "Ibuprofeno",
+    "condicionCodigo": "EMBARAZO",
+    "severidad": "EVITAR",
+    "texto": "Evidencia insuficiente en el resto del embarazo. No se aconseja su uso; evaluar riesgo/beneficio.",
+    "fuente": "Curado GFH _REVISAR_",
+    "semanaMin": null,
+    "semanaMax": 27
   },
   {
     "principioActivoNombre": "Naproxeno",
