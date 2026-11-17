@@ -195,10 +195,21 @@
       .plan h3 { font-size: 46px; margin: 6px 0 14px; }
       .plans { top: 300px; }
       .s9top { top: 80px; }
+
+      /* Vera */
+      .vhead { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 18px; }
+      .vhead i { width: 34px; height: 34px; border-radius: 50%; background: #005228; color: #4fd1a5; font-style: normal; font-weight: 800; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+      .vhead b { font-size: 22px; }
+      .bq { margin-left: auto; max-width: 82%; background: #005228; color: #fff; border-radius: 22px 22px 6px 22px; padding: 14px 18px; font-size: 17px; font-weight: 600; margin-bottom: 12px; }
+      .ba { max-width: 92%; background: #fff; border-radius: 22px 22px 22px 6px; padding: 15px 18px; font-size: 16px; line-height: 1.45; box-shadow: 0 6px 18px rgba(18, 42, 35, 0.08); margin-bottom: 8px; }
+      .ba b { font-weight: 700; }
+      .src { display: inline-block; font-size: 13px; font-weight: 700; color: #005228; background: #e6efea; border-radius: 14px; padding: 5px 11px; margin-bottom: 16px; }
+      .typing { display: inline-flex; gap: 6px; background: #fff; border-radius: 18px; padding: 14px 18px; margin-bottom: 12px; }
+      .typing i { width: 9px; height: 9px; border-radius: 50%; background: #8ca39a; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="95" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="105" data-width="1920" data-height="1080">
       <!-- 01: la pregunta -->
       <section id="s1" class="clip dark" data-start="0" data-duration="5.2" data-track-index="0">
         <div class="stmt">
@@ -392,8 +403,25 @@
         </div>
       </section>
 
-      <!-- 11: planes -->
-      <section id="s11" class="clip paper later" data-start="79" data-duration="11.2" data-track-index="0">
+      <!-- 11: Vera -->
+      <section id="s13" class="clip paper later" data-start="79" data-duration="10.2" data-track-index="0">
+        <div class="hl"><div class="eyebrow">Vera · asistente</div><h2>Preguntale a Vera y tené la respuesta en segundos.</h2><p>Responde sobre interacciones, ajustes y fichas técnicas apoyándose en la base de GFH, y muestra de dónde sale cada dato.</p></div>
+        <div class="phone" id="ph13">
+          <div class="screen" data-layout-ignore>
+            <div class="layer">
+              <div class="vhead"><i>V</i><b>Vera</b></div>
+              <div class="bq" id="vq1">¿Digoxina con un Clcr de 35?</div>
+              <div style="position: relative"><div class="typing" id="vt1" style="position: absolute; left: 0; top: 0"><i></i><i></i><i></i></div>
+              <div id="va1"><div class="ba">Con Clcr entre 10 y 50 mL/min, la digoxina requiere <b>reducir dosis e intervalo</b>: 75 a 25 % de la dosis, o cada 36 h.</div><div class="src">Ajuste renal — Digoxina</div></div></div>
+              <div class="bq" id="vq2">¿Y con claritromicina?</div>
+              <div id="va2"><div class="ba">Interacción <b>alta</b>: aumenta los niveles de digoxina, con riesgo de toxicidad. Reducir la dosis y controlar digoxinemia y potasio.</div><div class="src">Interacciones</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12: planes -->
+      <section id="s11" class="clip paper later" data-start="89" data-duration="11.2" data-track-index="0">
         <div class="s9top"><div class="eyebrow">Modelo de negocio</div><h2>Dos planes.</h2></div>
         <div class="plans">
           <div class="plan" id="pl1"><div class="k">Gratis</div><h3>Para conocer el criterio</h3><ul><li>Las herramientas clínicas, sin límite</li><li>El buscador y la ficha de cada fármaco</li><li>Un paciente con su cockpit completo</li></ul></div>
@@ -401,8 +429,8 @@
         </div>
       </section>
 
-      <!-- 12: cierre -->
-      <section id="s12" class="clip dark later" data-start="90" data-duration="5" data-track-index="1">
+      <!-- 13: cierre -->
+      <section id="s12" class="clip dark later" data-start="100" data-duration="5" data-track-index="1">
         <div class="lock">
           <div class="logo" id="lgE">G</div>
           <div class="brand">GFH</div>
@@ -411,7 +439,7 @@
       </section>
 
       <!-- Música de fondo, sin voz -->
-      <audio id="music" data-start="0" data-duration="95" data-track-index="5" data-volume="0.32" data-fade-in="1" data-fade-out="3" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"></audio>
+      <audio id="music" data-start="0" data-duration="105" data-track-index="5" data-volume="0.32" data-fade-in="1" data-fade-out="3" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"></audio>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
@@ -513,15 +541,26 @@
       tl.to("#lyA", { opacity: 0, duration: 0.3 }, 74.6);
       tl.fromTo("#lyB", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 74.8);
 
-      // 11 — plans
-      scene("#s11", 79.0, 89.9);
-      up("#pl1", 79.6, 0.45, 40);
-      up("#pl2", 80.6, 0.45, 40);
+      // 11 — Vera: ask, get a sourced answer
+      scene("#s13", 79.0, 88.9);
+      phoneIn("#ph13", 79.2);
+      tl.fromTo("#vq1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 80.2);
+      tl.fromTo("#vt1", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 80.7);
+      tl.to("#vt1 i", { y: -6, duration: 0.2, yoyo: true, repeat: 3, stagger: 0.1 }, 80.8);
+      tl.to("#vt1", { opacity: 0, duration: 0.2 }, 81.8);
+      tl.fromTo("#va1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: out }, 81.9);
+      tl.fromTo("#vq2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: out }, 84.6);
+      tl.fromTo("#va2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: out }, 85.6);
 
-      // 12 — outro
-      scene("#s12", 90.0, null);
-      tl.fromTo("#lgE", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: pop }, 90.2);
-      tl.to({}, { duration: 0.01 }, 94.99);
+      // 12 — plans
+      scene("#s11", 89.0, 99.9);
+      up("#pl1", 89.6, 0.45, 40);
+      up("#pl2", 90.6, 0.45, 40);
+
+      // 13 — outro
+      scene("#s12", 100.0, null);
+      tl.fromTo("#lgE", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: pop }, 100.2);
+      tl.to({}, { duration: 0.01 }, 104.99);
 
       window.__timelines["main"] = tl;
       tl.seek(0);
