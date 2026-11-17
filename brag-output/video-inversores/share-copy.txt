@@ -1,0 +1,1 @@
+GFH: verificación clínica en el punto de atención. Interacciones, condiciones y alergias, ajuste renal, embarazo y lactancia, verificados sobre los datos de cada paciente, con un motor determinista.
