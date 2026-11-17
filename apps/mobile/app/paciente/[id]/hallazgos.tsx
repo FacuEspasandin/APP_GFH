@@ -227,7 +227,7 @@ export default function Hallazgos() {
       ))}
 
       {agruparHallazgos(lista).map((f) => (
-        <View key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave}>
+        <View key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} collapsable={false}>
           <FilaHallazgo
             fila={f}
             nombres={nombres}
@@ -344,8 +344,9 @@ function PorCategoria({
           const avisos = filtrarAvisos(suVista, data.avisos);
 
           return (
-            <View key={cat} collapsable={false}>
+            <View key={cat} collapsable={false} style={{ flex: 1 }}>
               <ScrollView
+                style={{ flex: 1 }}
                 contentContainerClassName="px-margen pb-6 pt-3"
                 removeClippedSubviews={false}
                 refreshControl={
@@ -366,7 +367,7 @@ function PorCategoria({
                 ) : null}
 
                 {agruparHallazgos(lista).map((f) => (
-                  <View key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave}>
+                  <View key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} collapsable={false}>
                     <FilaHallazgo fila={f} nombres={nombres} onAlternativas={onAlternativas} />
                   </View>
                 ))}
