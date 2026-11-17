@@ -227,7 +227,7 @@ export default function Hallazgos() {
       ))}
 
       {agruparHallazgos(lista).map((f, i) => (
-        <FilaAnimada key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} indice={i}>
+        <FilaAnimada key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} indice={i} conLayout={false}>
           <FilaHallazgo
             fila={f}
             nombres={nombres}
@@ -365,7 +365,7 @@ function PorCategoria({
                 ) : null}
 
                 {agruparHallazgos(lista).map((f, i) => (
-                  <FilaAnimada key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} indice={i}>
+                  <FilaAnimada key={f.tipo === 'grupo' ? f.clave : f.hallazgo.clave} indice={i} conLayout={false}>
                     <FilaHallazgo fila={f} nombres={nombres} onAlternativas={onAlternativas} />
                   </FilaAnimada>
                 ))}
