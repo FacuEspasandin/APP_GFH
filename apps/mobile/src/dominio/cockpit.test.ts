@@ -7,6 +7,7 @@ import {
   invalidarPaciente,
   opcionesDelPaciente,
   peoresPorCategoria,
+  precargarCockpits,
   renalSinEvaluar,
   rutaEditarPrescripcion,
   type HallazgoResumible,
@@ -193,6 +194,49 @@ describe('fila de tratamiento sin verificar completo (regla 5)', () => {
     expect(
       filaSinVerificarCompleto({ esFarmacoLibre: false, espina: 1 }, [{ codigo: 'SIN_CLCR' }]),
     ).toBe(false);
+  });
+});
+
+describe('precargarCockpits', () => {
+  const qcFalso = () => {
+    const claves: string[] = [];
+    return {
+      claves,
+      qc: {
+        prefetchQuery: async ({ queryKey, queryFn }: { queryKey: unknown[]; queryFn: () => Promise<unknown> }) => {
+          claves.push(queryKey.join(':'));
+          await queryFn();
+        },
+      },
+    };
+  };
+
+  it('pide cockpit y alergias de cada paciente, y salta el de demostración', async () => {
+    const { qc, claves } = qcFalso();
+    await precargarCockpits(
+      qc as never,
+      ['a', 'b', 'demo-paciente-1', 'c', 'd'],
+      async () => null,
+      async () => null,
+    );
+    expect(claves.sort()).toEqual(
+      ['a', 'b', 'c', 'd'].flatMap((id) => [`cockpit:${id}`, `condiciones-alergias:${id}`]).sort(),
+    );
+  });
+
+  it('un pedido que falla no frena a los demás', async () => {
+    const { qc, claves } = qcFalso();
+    await expect(
+      precargarCockpits(
+        qc as never,
+        ['a', 'b'],
+        async (id) => {
+          if (id === 'a') throw new Error('sin señal');
+        },
+        async () => null,
+      ),
+    ).resolves.toBeUndefined();
+    expect(claves).toContain('cockpit:b');
   });
 });
 

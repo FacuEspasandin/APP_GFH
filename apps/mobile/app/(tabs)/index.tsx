@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, Stack, useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { usePlan } from '@/api/plan';
 import { buscar } from '@/dominio/busqueda';
+import { precargarCockpits } from '@/dominio/cockpit';
 import { detalleDeAcceso, esDePago, rutaNuevoPaciente, rutaPaywall } from '@/dominio/plan-gratis';
 import type { FilaPaciente } from '@/api/tipos';
 import * as API from '@/api/endpoints';
@@ -55,6 +56,15 @@ export default function Pacientes() {
   });
   // Por prefijo: alcanza también a la vista "Por grupo", que pide `['inicio', '']`.
   const refresco = useRefrescar([['inicio']]);
+
+  // Con la lista ya a la vista, se adelanta el cockpit de cada paciente: al
+  // tocarlo se abre al instante en vez de esperar varios segundos al servidor.
+  const qc = useQueryClient();
+  const idsParaPrecargar = (data?.pacientes ?? []).map((p) => p.id).join(',');
+  useEffect(() => {
+    if (!idsParaPrecargar) return;
+    void precargarCockpits(qc, idsParaPrecargar.split(','), API.cockpit, API.condicionesYAlergias);
+  }, [qc, idsParaPrecargar]);
 
   // Con el plan gratis lleno, "Nuevo paciente" lleva al paywall directo. El
   // formulario también se protege solo, pero mandar ahí para que rebote deja

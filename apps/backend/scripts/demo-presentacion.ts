@@ -217,12 +217,16 @@ const PACIENTES: PacienteSpec[] = [
       { pa: 'Warfarina', dosis: '5 mg', frecuencia: 'cada 24 h', indicacion: 'Anticoagulación por fibrilación auricular' },
       { pa: 'Claritromicina', dosis: '500 mg', frecuencia: 'cada 12 h', indicacion: 'Neumonía' },
       { pa: 'Simvastatina', dosis: '20 mg', frecuencia: 'cada 24 h', indicacion: 'Dislipemia' },
+      { pa: 'Amiodarona', dosis: '200 mg', frecuencia: 'cada 24 h', indicacion: 'Control de ritmo en fibrilación auricular' },
     ],
     muestra:
-      'Warfarina + Claritromicina (Alta: sube el INR) y Claritromicina + Simvastatina (Contraindicada: rabdomiólisis).',
+      'Interacciones AGRUPADAS por mecanismo: «Sangrado» (Warfarina + Claritromicina, Warfarina + Amiodarona) y «Miopatía / rabdomiólisis» (Claritromicina + Simvastatina, contraindicada; Simvastatina + Amiodarona). Más Amiodarona + Claritromicina (QT), suelta.',
     esperados: [
       { categoria: 'INTERACCION', incluye: ['warfarina', 'claritromicina'], rango: 2 },
       { categoria: 'INTERACCION', incluye: ['claritromicina', 'simvastatina'], rango: 0 },
+      { categoria: 'INTERACCION', incluye: ['warfarina', 'amiodarona'], rango: 2 },
+      { categoria: 'INTERACCION', incluye: ['simvastatina', 'amiodarona'], rango: 2 },
+      { categoria: 'INTERACCION', incluye: ['amiodarona', 'claritromicina'], rango: 2 },
     ],
   },
   {

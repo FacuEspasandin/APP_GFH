@@ -105,6 +105,49 @@ export function invalidarPaciente(
   ]);
 }
 
+/** Cuánto vale una precarga: lo que tarda un médico en tocar un paciente de la
+ *  lista. Pasado eso se vuelve a pedir. */
+const VIGENCIA_PRECARGA_MS = 60_000;
+/** Pedidos en paralelo: el servidor es chico y la espera es de red, no de CPU. */
+const PRECARGA_EN_PARALELO = 3;
+
+/**
+ * Trae en segundo plano el cockpit (y las alergias que muestra) de los
+ * pacientes de la lista, para que al tocar uno ya esté. Cada consulta al
+ * servidor cruza de región hasta la base, así que abrirlo en frío tarda varios
+ * segundos.
+ *
+ * No cambia lo que se muestra: el cockpit mantiene `staleTime: 0`, o sea que al
+ * abrirse vuelve a pedir y se actualiza solo. Lo precargado es sólo lo que se
+ * ve mientras llega la versión fresca. Un fallo se ignora: abrir el paciente
+ * hace su propio pedido y muestra su propio error.
+ */
+export async function precargarCockpits(
+  qc: QueryClient,
+  ids: readonly string[],
+  traerCockpit: (id: string) => Promise<unknown>,
+  traerAlergias: (id: string) => Promise<unknown>,
+): Promise<void> {
+  const pendientes = ids.filter((id) => !id.startsWith('demo-'));
+  const trabajador = async () => {
+    for (let id = pendientes.shift(); id !== undefined; id = pendientes.shift()) {
+      await Promise.allSettled([
+        qc.prefetchQuery({
+          queryKey: ['cockpit', id],
+          queryFn: () => traerCockpit(id),
+          staleTime: VIGENCIA_PRECARGA_MS,
+        }),
+        qc.prefetchQuery({
+          queryKey: ['condiciones-alergias', id],
+          queryFn: () => traerAlergias(id),
+          staleTime: VIGENCIA_PRECARGA_MS,
+        }),
+      ]);
+    }
+  };
+  await Promise.all(Array.from({ length: PRECARGA_EN_PARALELO }, trabajador));
+}
+
 /**
  * Las opciones del menú de los «···»: lo que se le hace a un paciente que ya
  * existe.
