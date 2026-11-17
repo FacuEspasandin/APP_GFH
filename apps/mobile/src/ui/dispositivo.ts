@@ -47,6 +47,13 @@ export function dondeCorre(): string | null {
 }
 
 /**
+ * ¿Es la demo web (la app dentro del navegador, con marco de teléfono)?
+ * Ahí no hay Google, ni alta de cuentas, ni borrado de cuenta, ni huella ni
+ * push: las cuentas se entregan armadas y se comparten con gente de afuera.
+ */
+export const ES_DEMO_WEB = Platform.OS === 'web';
+
+/**
  * Teléfono o tablet, para la regla de una sesión por tipo de dispositivo.
  *
  * Lo decide `expo-device` con lo que reporta el sistema, no el tamaño de la

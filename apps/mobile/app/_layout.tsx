@@ -5,9 +5,9 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaInsetsContext, SafeAreaProvider } from 'react-native-safe-area-context';
 
 import * as API from '@/api/endpoints';
 import {
@@ -30,6 +30,32 @@ import { activarPantallaCompletaWeb } from '@/ui/pantalla-completa-web';
 import { BarraTeclado } from '@/ui/teclado';
 import { coloresChrome, ProveedorTema, useTema } from '@/ui/tema';
 import { TIPO } from '@/ui/tokens';
+
+/**
+ * Demo web: la app corre dentro del iframe del marco de teléfono (ver
+ * `demo-web/marco.html`). En un navegador no hay isla ni barra de inicio, así que
+ * sin esto el contenido arranca pegado al borde y la pantalla se ve más apretada
+ * que en un iPhone. Se fijan los márgenes de un iPhone 15 (isla arriba, barra de
+ * inicio abajo); el marco dibuja encima la isla y la barra. Fuera del marco
+ * —la demo abierta directo en un teléfono— valen los márgenes reales.
+ */
+function estaEnElMarco(): boolean {
+  if (Platform.OS !== 'web' || typeof window === 'undefined') return false;
+  try {
+    // El marco sólo se dibuja en pantallas anchas (ver el CSS de marco.html); en un
+    // teléfono la app ocupa toda la ventana y no hay nada que simular.
+    return window.self !== window.top && window.parent.innerWidth > 560;
+  } catch {
+    return false;
+  }
+}
+const ENMARCADA = estaEnElMarco();
+const MARGENES_IPHONE = { top: 59, bottom: 34, left: 0, right: 0 };
+
+function MargenesDelMarco({ children }: { children: React.ReactNode }) {
+  if (!ENMARCADA) return <>{children}</>;
+  return <SafeAreaInsetsContext.Provider value={MARGENES_IPHONE}>{children}</SafeAreaInsetsContext.Provider>;
+}
 
 /* Antes de que se monte nada: un error en el primer render también tiene que
    reportarse. Sin DSN configurado no hace nada — ver `api/errores.ts`. */
@@ -84,6 +110,7 @@ export default function LayoutRaiz() {
     >
       <ProveedorTema>
         <SafeAreaProvider>
+          <MargenesDelMarco>
           <GestureHandlerRootView style={{ flex: 1 }}>
             {/*
              * Sin `KeyboardProvider` de `react-native-keyboard-controller` a
@@ -115,6 +142,7 @@ export default function LayoutRaiz() {
               <Navegacion />
             </ProveedorAviso>
           </GestureHandlerRootView>
+          </MargenesDelMarco>
         </SafeAreaProvider>
       </ProveedorTema>
     </PersistQueryClientProvider>

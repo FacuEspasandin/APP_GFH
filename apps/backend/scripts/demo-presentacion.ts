@@ -94,6 +94,9 @@ const APLICAR = process.argv.includes('--aplicar');
 const PREFIJO_DEMO = 'DEMO-PRES-';
 const EMAIL = (process.env.GFH_PRESENTACION_EMAIL ?? '').trim().toLowerCase();
 const PASSWORD = process.env.GFH_PRESENTACION_PASSWORD ?? '';
+// GFH_PRESENTACION_PLAN=gratis → cuenta SIN suscripción y SIN pacientes propios: es el plan gratis
+// tal cual lo vería un médico recién llegado (paciente de demostración, buscador, 10 consultas).
+const GRATIS = process.env.GFH_PRESENTACION_PLAN === 'gratis';
 const CUENTAS_DE_DESARROLLO = ['demo@gfh.app', 'gratis@gfh.app'];
 
 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(EMAIL)) {
@@ -801,7 +804,7 @@ async function main() {
   console.log(`  estado           : ${existente ? 'EXISTE → se actualiza' : 'NO EXISTE → se crea'}`);
   console.log('  se deja así      :');
   console.log('    · contraseña con Argon2id (el mismo hash que el registro)');
-  console.log(`    · suscripción ACTIVA (premium, App Store) hasta ${fmtFecha(FIN_SUSCRIPCION)}` + (existente?.suscripcion ? `  [hoy: ${existente.suscripcion.estado} hasta ${fmtFecha(existente.suscripcion.periodoActualFin)}]` : '  [hoy: sin suscripción]'));
+  console.log(GRATIS ? '    · SIN suscripción (plan gratis) y sin pacientes propios' : `    · suscripción ACTIVA (premium, App Store) hasta ${fmtFecha(FIN_SUSCRIPCION)}` + (existente?.suscripcion ? `  [hoy: ${existente.suscripcion.estado} hasta ${fmtFecha(existente.suscripcion.periodoActualFin)}]` : '  [hoy: sin suscripción]'));
   console.log(`    · disclaimer v${VERSION_DISCLAIMER} aceptado`);
   console.log(`    · términos v${VERSION_CONSENTIMIENTO.TERMINOS}, Vera v${VERSION_CONSENTIMIENTO.VERA} y foto v${VERSION_CONSENTIMIENTO.FOTO} aceptados`);
   console.log('    · tema CLARO, notificaciones push apagadas, estado ACTIVO, sin bloqueo por intentos');
@@ -910,11 +913,15 @@ async function main() {
         ultimoEventoId: `presentacion-${medico.id}`,
         ultimoEventoTipo: 'INITIAL_PURCHASE',
       };
-      await tx.suscripcion.upsert({
-        where: { medicoId: medico.id },
-        update: suscripcion,
-        create: { medicoId: medico.id, ...suscripcion },
-      });
+      if (GRATIS) {
+        await tx.suscripcion.deleteMany({ where: { medicoId: medico.id } });
+      } else {
+        await tx.suscripcion.upsert({
+          where: { medicoId: medico.id },
+          update: suscripcion,
+          create: { medicoId: medico.id, ...suscripcion },
+        });
+      }
 
       const grupoId = new Map<Grupo, string>();
       for (const nombre of ['Consultorio', 'CTI'] as const) {
@@ -930,7 +937,7 @@ async function main() {
       await tx.paciente.deleteMany({ where: { medicoId: medico.id, documento: { startsWith: PREFIJO_DEMO } } });
 
       const base = AHORA.getTime() - 30 * 60_000; // los eventos del historial, con minutos de diferencia
-      for (const p of PACIENTES) {
+      for (const p of GRATIS ? [] : PACIENTES) {
         const d = derivados.get(p.numero)!;
         let minuto = 0;
         const evento = (e: { tipo: Prisma.EventoPacienteUncheckedCreateWithoutPacienteInput['tipo']; titulo: string; detalle?: string | null; cambios?: Prisma.InputJsonValue }) => ({

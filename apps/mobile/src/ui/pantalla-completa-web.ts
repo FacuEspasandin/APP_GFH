@@ -40,7 +40,11 @@ export function activarPantallaCompletaWeb(): void {
   const estilo = document.createElement('style');
   estilo.textContent = `
     html, body { background-color: #F3F6F3; overscroll-behavior: none; }
-    body { -webkit-tap-highlight-color: transparent; }
+    body { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+    input, textarea { -webkit-user-select: text; user-select: text; }
+    /* Un teléfono no muestra barras de desplazamiento. */
+    * { scrollbar-width: none; }
+    ::-webkit-scrollbar { display: none; }
   `;
   document.head.appendChild(estilo);
 }

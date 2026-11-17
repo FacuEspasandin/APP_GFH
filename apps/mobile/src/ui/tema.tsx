@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useColorScheme } from 'nativewind';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { Platform } from 'react-native';
 
 import { api, haySesionSincrona, suscribirseASesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
@@ -61,7 +62,10 @@ export function ProveedorTema({ children }: { children: ReactNode }) {
     staleTime: 5 * 60 * 1000,
   });
 
-  const tema = data?.tema ?? 'SISTEMA';
+  const temaGuardado = data?.tema ?? 'SISTEMA';
+  // Demo web: «Sistema» sigue al modo oscuro del navegador de quien mira, y la demo
+  // se ve distinta a la del teléfono. Se parte siempre de claro; Perfil → Tema sigue andando.
+  const tema = Platform.OS === 'web' && temaGuardado === 'SISTEMA' ? 'CLARO' : temaGuardado;
 
   useEffect(() => {
     setColorScheme(tema === 'CLARO' ? 'light' : tema === 'OSCURO' ? 'dark' : 'system');

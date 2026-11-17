@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ES_DEMO_WEB } from '@/ui/dispositivo';
 import { estiloSombra } from '@/ui/superficie';
 import { FIJO } from '@/ui/tokens';
 
@@ -43,15 +44,17 @@ export default function Bienvenida() {
         </Text>
       </Pressable>
 
-      <Pressable
-        onPress={() => router.push('/registro')}
-        accessibilityRole="button"
-        className="mt-2 h-14 items-center justify-center rounded-full border border-blanco"
-      >
-        <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-blanco">
-          Registrarme
-        </Text>
-      </Pressable>
+      {!ES_DEMO_WEB ? (
+        <Pressable
+          onPress={() => router.push('/registro')}
+          accessibilityRole="button"
+          className="mt-2 h-14 items-center justify-center rounded-full border border-blanco"
+        >
+          <Text className="font-fuerte text-eyebrow uppercase tracking-wider text-blanco">
+            Registrarme
+          </Text>
+        </Pressable>
+      ) : null}
 
       <Text className="font-sans mt-4 text-center text-eyebrow leading-4 text-blanco/60">
         Herramienta de apoyo a la decisión clínica. No sustituye el juicio del médico tratante.

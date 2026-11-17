@@ -9,6 +9,7 @@ import { consumirAvisoDeSesion, iniciarSesion } from '@/api/cliente';
 import * as API from '@/api/endpoints';
 import { iniciarSesionGoogle } from '@/api/google-signin';
 import { BotonGoogle } from '@/ui/boton-google';
+import { ES_DEMO_WEB } from '@/ui/dispositivo';
 import { BotonVolverFlotante } from '@/ui/boton-volver';
 import { Disclaimer } from '@/ui/disclaimer';
 import { Icono, type NombreIcono } from '@/ui/iconos';
@@ -162,6 +163,9 @@ export default function Login() {
           </Boton>
         </Superficie>
 
+        {/* En la demo web no hay Google (no tiene cliente web configurado). */}
+        {!ES_DEMO_WEB ? (
+        <>
         <View className="my-5 flex-row items-center gap-3">
           <View className="h-px flex-1" style={{ backgroundColor: col.line }} />
           <Text className="text-meta text-ink-suave">o</Text>
@@ -191,6 +195,8 @@ export default function Login() {
           </Text>
           .
         </Text>
+        </>
+        ) : null}
       </ScrollView>
 
       <Disclaimer />

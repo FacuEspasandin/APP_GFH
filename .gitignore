@@ -43,3 +43,7 @@ docs/.documento-completo-temp.html
 
 # Volcados de jerarquía de UI de Android (uiautomator), de sesiones de debug.
 scratch-ui*.xml
+
+# demo web (Vercel)
+dist-demo/
+dist-web/

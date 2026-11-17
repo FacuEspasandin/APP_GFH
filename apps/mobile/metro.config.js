@@ -24,6 +24,13 @@ config.resolver.resolveRequest = (contexto, nombre, plataforma) => {
   if (plataforma === 'web' && nombre === 'react-native-pager-view') {
     return { type: 'sourceFile', filePath: path.resolve(raizProyecto, 'web-stubs/pager-view.js') };
   }
+  // El motor clínico y sus reglas no viajan al navegador (ver el stub).
+  if (plataforma === 'web' && /(^|\/)offline-cockpit$/.test(nombre)) {
+    return { type: 'sourceFile', filePath: path.resolve(raizProyecto, 'web-stubs/offline-cockpit.js') };
+  }
+  if (plataforma === 'web' && nombre.startsWith('@gfh/motor-clinico')) {
+    return { type: 'empty' };
+  }
   return (resolverPorDefecto ?? contexto.resolveRequest)(contexto, nombre, plataforma);
 };
 

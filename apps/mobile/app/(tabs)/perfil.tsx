@@ -4,6 +4,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { api, cerrarSesionLocal } from '@/api/cliente';
 import * as API from '@/api/endpoints';
+import { ES_DEMO_WEB } from '@/ui/dispositivo';
 import { EncabezadoApp } from '@/ui/encabezado-app';
 import { Icono } from '@/ui/iconos';
 import { Boton, Eyebrow, Pantalla } from '@/ui/kit';
@@ -81,7 +82,9 @@ export default function PerfilPantalla() {
           titulo="Datos personales"
           onPress={() => router.push('/perfil/cuenta')}
         />
-        <Opcion icono="candado" titulo="Contraseña" onPress={() => router.push('/perfil/password')} />
+        {!ES_DEMO_WEB ? (
+          <Opcion icono="candado" titulo="Contraseña" onPress={() => router.push('/perfil/password')} />
+        ) : null}
         <Opcion
           icono="dispositivo"
           titulo="Sesiones activas"
@@ -108,16 +111,20 @@ export default function PerfilPantalla() {
         />
         {/* Es del TELÉFONO y no de la cuenta: por eso no muestra valor traído
             del servidor como las otras dos. Ver `api/bloqueo.ts`. */}
-        <Opcion
-          icono="candado"
-          titulo="Bloqueo con huella"
-          onPress={() => router.push('/perfil/bloqueo')}
-        />
-        <Opcion
-          icono="campana"
-          titulo="Notificaciones"
-          onPress={() => router.push('/perfil/notificaciones')}
-        />
+        {!ES_DEMO_WEB ? (
+          <Opcion
+            icono="candado"
+            titulo="Bloqueo con huella"
+            onPress={() => router.push('/perfil/bloqueo')}
+          />
+        ) : null}
+        {!ES_DEMO_WEB ? (
+          <Opcion
+            icono="campana"
+            titulo="Notificaciones"
+            onPress={() => router.push('/perfil/notificaciones')}
+          />
+        ) : null}
         {/* Estaba enterrado dentro de "Tema y notificaciones" pese a decidir
             qué alertas se disparan. Ahora se lee sin entrar. */}
         <Opcion
@@ -162,15 +169,17 @@ export default function PerfilPantalla() {
         </Boton>
       </View>
 
-      <Pressable
-        onPress={() => router.push('/perfil/eliminar-cuenta')}
-        accessibilityRole="button"
-        className="mt-1.5 min-h-11 items-center justify-center"
-      >
-        <Text className="text-meta font-medio" style={{ color: col.peligro }}>
-          Eliminar cuenta
-        </Text>
-      </Pressable>
+      {!ES_DEMO_WEB ? (
+        <Pressable
+          onPress={() => router.push('/perfil/eliminar-cuenta')}
+          accessibilityRole="button"
+          className="mt-1.5 min-h-11 items-center justify-center"
+        >
+          <Text className="text-meta font-medio" style={{ color: col.peligro }}>
+            Eliminar cuenta
+          </Text>
+        </Pressable>
+      ) : null}
 
       <Text className="mb-2 mt-4 font-mono text-center text-eyebrow text-tenue">GFH Móvil 0.0.1</Text>
       </Pantalla>

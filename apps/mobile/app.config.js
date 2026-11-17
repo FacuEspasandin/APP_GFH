@@ -15,6 +15,12 @@
 const PERFILES_DE_TIENDA = new Set(['preview', 'production']);
 
 module.exports = ({ config }) => {
+  // Demo web (`pnpm demo-web`): la app se sirve en /app y la página que la rodea con un
+  // marco de teléfono vive en la raíz. Ver `demo-web/README.md`.
+  if (process.env.GFH_DEMO_WEB === '1') {
+    return { ...config, experiments: { ...config.experiments, baseUrl: '/app' } };
+  }
+
   const perfil = process.env.EAS_BUILD_PROFILE;
   if (!perfil || !PERFILES_DE_TIENDA.has(perfil)) return config;
 
