@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import PagerView from 'react-native-pager-view';
 
 import type { Cockpit, Hallazgo } from '@/api/tipos';
 import * as API from '@/api/endpoints';
@@ -126,14 +125,14 @@ export default function Hallazgos() {
   const noEvaluado = noEvaluadoDelFarmaco(prescripcionActual, data.avisos);
 
   /*
-   * Entrando por una categoría, las cuatro se pueden deslizar.
+   * Entrando por una categoría, las cuatro se alternan con los chips de arriba.
    *
    * Antes, ver otra verificación del mismo paciente era volver al cockpit y
    * tocar otra tarjeta. Comparar interacciones contra ajuste renal —que es lo
    * que se hace cuando algo no cierra— eran cuatro toques.
    *
    * Sólo en esta vista. Por fármaco, por avisos y en «todos» no hay entre qué
-   * deslizar, y un gesto que a veces hace algo y a veces no se siente roto.
+   * alternar, y una barra que a veces hace algo y a veces no se siente rota.
    */
   if (vista.tipo === 'categoria') {
     return (
@@ -250,10 +249,9 @@ export default function Hallazgos() {
 }
 
 /**
- * Las cuatro verificaciones, deslizables.
+ * Las cuatro verificaciones, una por vez.
  *
- * Los chips de arriba no son decoración: sin ellos el gesto es invisible.
- * Además llevan el conteo y el color del peor hallazgo de cada categoría, que
+ * Los chips de arriba eligen cuál se ve. Además llevan el conteo y el color del peor hallazgo de cada categoría, que
  * es lo que decide a cuál moverse — y esa es información que en el cockpit ya
  * está, así que repetirla acá no obliga a volver para saberlo.
  */
@@ -273,7 +271,6 @@ function PorCategoria({
   const col = useColores();
   const router = useRouter();
   const refresco = useRefrescar([['cockpit', pacienteId]]);
-  const pager = useRef<PagerView>(null);
   const arranque = Math.max(0, CATEGORIA_HALLAZGO.indexOf(inicial));
   const [actual, setActual] = useState(arranque);
 
@@ -299,10 +296,7 @@ function PorCategoria({
           return (
             <Pressable
               key={cat}
-              // `setPage` y no `setState`: mover el pager dispara
-              // `onPageSelected`, así el chip y la página nunca se
-              // desincronizan. Actualizar los dos por separado sí puede.
-              onPress={() => pager.current?.setPage(i)}
+              onPress={() => setActual(i)}
               accessibilityRole="tab"
               accessibilityState={{ selected: activo }}
               accessibilityLabel={`${TITULO_CATEGORIA[cat]}, ${suyos.length} hallazgos`}
@@ -332,19 +326,17 @@ function PorCategoria({
         })}
       </ScrollView>
 
-      <PagerView
-        ref={pager}
-        style={{ flex: 1 }}
-        initialPage={arranque}
-        onPageSelected={(e) => setActual(e.nativeEvent.position)}
-      >
-        {CATEGORIA_HALLAZGO.map((cat) => {
+      {/* Una sola lista, la de la categoría elegida. Antes eran las cuatro en un
+          `PagerView` deslizable, y un `ScrollView` anidado en el pager se
+          rompía al abrir y cerrar un grupo: saltaba arriba de todo y la última
+          fila quedaba aplastada. Sin pager no hay scroll anidado. */}
+      {[CATEGORIA_HALLAZGO[actual] ?? CATEGORIA_HALLAZGO[0]!].map((cat) => {
           const suVista = { tipo: 'categoria', categoria: cat } as const;
           const lista = filtrarHallazgos(suVista, data.hallazgos);
           const avisos = filtrarAvisos(suVista, data.avisos);
 
           return (
-            <View key={cat} collapsable={false} style={{ flex: 1 }}>
+            <View key={cat} className="flex-1">
               <ScrollView
                 style={{ flex: 1 }}
                 contentContainerClassName="px-margen pb-6 pt-3"
@@ -380,8 +372,7 @@ function PorCategoria({
               </ScrollView>
             </View>
           );
-        })}
-      </PagerView>
+      })}
     </View>
   );
 }
